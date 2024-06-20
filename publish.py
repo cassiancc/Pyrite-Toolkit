@@ -1,7 +1,7 @@
 import os, glob, re, requests
 
 # Variables
-modVersion = "0.13"
+modVersion = "0.14.1"
 # pyrite-forge-1.20.1-0.13.jar
 
 fabric = "/fabric/build/libs"
@@ -25,23 +25,15 @@ class version:
 # Base folders
 base = "/home/cassian/Desktop/Minecraft/Mods/Pyrite"
 wild = version("/Pyrite (1.19)", "1.19.2", "forge")
-trails = version("/Pyrite (1.20)", "1.20.1", "forge")
+trails = version("/Pyrite (1.20.1)", "1.20.1", "forge")
 armored = version("/Pyrite (1.20.5)", "1.20.6", "neoforge")
+tricky = version("/Pyrite (1.21)", "1.21", "neoforge")
 
 
 currentTemplate = "pyrite-[a-z]*-"+modVersion+"-[0-9.]*.jar"
 
-
-commonProjects = [
-   wild.commonPath,
-   trails.commonPath,
-   armored.commonPath
-]
-
-versions = [
-    wild.path,
-    trails.path,
-    armored.path,
+activeVersions = [
+    wild, trails, tricky, armored
 ]
 
 activeProjects = [
@@ -50,13 +42,15 @@ activeProjects = [
     trails.fabricPath,
     trails.forgePath,
     armored.fabricPath,
-    armored.forgePath
+    armored.forgePath,
+    tricky.fabricPath,
+    tricky.forgePath
 ]
 
 def clearAll():
     # clear common folders
-    for project in commonProjects:
-        for f in glob.glob(project + '/*'):
+    for project in activeVersions:
+        for f in glob.glob(project.commonPath + '/*'):
             os.remove(f)
     # Clear gradle of all but most recent version.
     for project in activeProjects:
@@ -69,8 +63,8 @@ def clearAll():
     
 
 def buildAll():
-    for project in versions:
-        os.chdir(f'{project}')
+    for project in activeVersions:
+        os.chdir(f'{project.path}')
         os.system(f"./gradlew build")
             
 def uploadAll():
@@ -84,9 +78,9 @@ def uploadAll():
 
 def publish():
     # Clear current gradle folders.
-    # clearAll()
+    clearAll()
     # # Build most recent version of active mods.
-    # buildAll()
+    buildAll()
     # Clear other files.
     # print(armored.forgePath)
     uploadAll()

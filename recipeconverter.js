@@ -1,7 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-const dir = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20.5)/src/main/resources/data/pyrite/recipes`
+const dir = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20.5)/common/src/main/resources/data/pyrite/recipes`
 
 
 fs.readdir(dir, (err, files) => {

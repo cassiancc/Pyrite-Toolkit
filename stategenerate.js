@@ -62,6 +62,13 @@ const walls = [
 
 ];
 
+const trialsWalls = [
+  "polished_tuff_wall",
+  "tuff_brick_wall",
+  "tuff_wall"
+
+];
+
 const cut = [
   "iron",
   "gold",
@@ -140,6 +147,8 @@ function generateResources() {
     writeFenceGates(stainedBlockTemplate, namespace, plankBase)
     writePlanks(stainedBlockTemplate, dye, namespace, plankBase)
     writeCraftingTableBlock(stainedBlockTemplate, dye, namespace, plankBase)
+    writeLadders(stainedBlockTemplate, dye, namespace, plankBase)
+    // writeChests(stainedBlockTemplate, dye, namespace, plankBase)
     writeDoors(stainedBlockTemplate, dye, namespace, plankBase)
     writeTrapdoors(stainedBlockTemplate, dye, namespace, plankBase)
 
@@ -161,11 +170,13 @@ function generateResources() {
 
     // Lamps
     writeLamps(dye, dye, namespace)
-    writeTorchBlock(dye+"_torch", "pyrite", dye, "pyrite")
-    writeBlock(dye+"_framed_glass", dye, "pyrite", "dyed_framed_glass", "framed_glass")
-    printLang(dye + "_framed_glass")
+    // writeTorchBlock(dye+"_torch", "pyrite", dye, "pyrite")
+      writeLeverBlock(dye+"_torch_lever", "pyrite", dye+"_torch", "pyrite")
 
-    // writePaneBlock(dye+"_framed_glass", "pyrite", dye+"_framed_glass", dye)
+    writeBlock(dye+"_framed_glass", dye, "pyrite", "dyed_framed_glass", "framed_glass", `"render_type": "minecraft:translucent"`)
+    // printLang(dye + "_framed_glass")
+
+    writePaneBlock(dye+"_framed_glass", "pyrite", dye+"_framed_glass", dye)
 
 
 
@@ -200,6 +211,8 @@ function generateResources() {
   // writeDoors(redShroom, "mushroom", namespace, redBase)
   // writeTrapdoors(redShroom, "mushroom", namespace, redBase)
   writeCraftingTableBlock(redShroom, "mushroom", namespace, redBase)
+  writeLadders(redShroom, "mushroom", namespace, redBase)
+
 
   // writeLogs(redShroom, namespace, redBase)
 
@@ -214,6 +227,8 @@ function generateResources() {
   // writeDoors(brownShroom, "mushroom", namespace, brownBase)
   // writeTrapdoors(brownShroom, "mushroom", namespace, brownBase)
   writeCraftingTableBlock(brownShroom, "mushroom", namespace, brownBase)
+  writeLadders(brownShroom, "mushroom", namespace, brownBase)
+
 
   // writeLogs(brownShroom, namespace, brownBase)
   writeBricks("charred_nether", "charred_nether", namespace)
@@ -286,6 +301,15 @@ function generateResources() {
   // writeWallGates("blue_nether_brick", namespace, "blue_nether_bricks")
 
   walls.forEach(function(wall) {
+    let blockTemplate = wall
+    baseBlock = blockTemplate
+    baseBlock = `${baseBlock.replace("brick", "bricks")}`
+    baseBlock = `${baseBlock.replace("tile", "tiles")}`
+    // writeWallGates(blockTemplate, namespace, baseBlock, "minecraft")
+
+  })
+
+  trialsWalls.forEach(function(wall) {
     let blockTemplate = wall
     baseBlock = blockTemplate
     baseBlock = `${baseBlock.replace("brick", "bricks")}`
@@ -376,8 +400,8 @@ function writeOldBlockstate(block, blockState, namespace) {
   fs.writeFile(`${paths.infiniteblockstates}${block}.json`, blockState, function (err) { if (err) throw err; });
 }
 
-function writePlankBlockModels(block, namespace, baseBlock) {
-  blockModel = generateBlockModel(block, namespace, baseBlock)
+function writePlankBlockModels(block, namespace, baseBlock, model, render_type) {
+  blockModel = generateBlockModel(block, namespace, baseBlock, model, render_type)
   fs.writeFile(`${paths.models}${block}.json`, blockModel, function (err) {
     if (err) throw err;
 
@@ -386,7 +410,7 @@ function writePlankBlockModels(block, namespace, baseBlock) {
 
 function writeMirroredBricksBlockModels(block, namespace, baseBlock) {
   fs.writeFile(`${paths.models}${block}.json`, generateBlockModel(block, namespace, baseBlock), function (err) {if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_north_west_mirrored.json`, generateBlockModel(block, namespace, baseBlock, "cube_north_west_mirrored_all"), function (err) {if (err) throw err;});
+  fs.writeFile(`${paths.models}${block}_north_west_mirrored.json`, generateBlockModel(block, namespace, baseBlock, "minecraft:block/cube_north_west_mirrored_all"), function (err) {if (err) throw err;});
 
 }
 
@@ -399,12 +423,15 @@ function writeCraftingTableBlockModels(block, namespace, baseBlock) {
 }
 
 function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
+  if (namespace == "minecraft") {
+    fs.writeFile(`${paths.models}${block}_upright.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "upright"), function (err) {if (err) throw err;});
+
+  }
   if (altNamespace == undefined) {
     altNamespace = namespace
   }
   fs.writeFile(`${paths.models}${block}.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace), function (err) {if (err) throw err;});
   fs.writeFile(`${paths.models}${block}_on.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "on"), function (err) {if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_upright.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "upright"), function (err) {if (err) throw err;});
   fs.writeFile(`${paths.models}${block}_wall.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "wall"), function (err) {if (err) throw err;});
 
 
@@ -414,7 +441,7 @@ function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
   if (altNamespace == undefined) {
     altNamespace = namespace
   }
-  fs.writeFile(`${paths.models}${block}_upright.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch"), function (err) {if (err) throw err;});
+  fs.writeFile(`${paths.models}${baseBlock}_upright.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch"), function (err) {if (err) throw err;});
   fs.writeFile(`${paths.models}${block}_wall.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch_wall"), function (err) {if (err) throw err;});
 
 
@@ -507,189 +534,23 @@ function writeWallBlockModels(block, namespace, baseBlock) {
 
 
 function writePaneBlockModels(block, namespace, baseBlock) {
-  capModel = `{
-    "ambientocclusion": false,
+  
+  fs.writeFile(`${paths.models}${block}_post.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_post"), function (err) {if (err) throw err;});
+  fs.writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"), function (err) {    if (err) throw err;});
+  fs.writeFile(`${paths.models}${block}_noside.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside"), function (err) {if (err) throw err;});
+  fs.writeFile(`${paths.models}${block}_side_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"), function (err) {if (err) throw err;});
+  fs.writeFile(`${paths.models}${block}_noside_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside_alt"), function (err) {if (err) throw err;});
+}
+
+function generatePaneBlockModels(block, namespace, baseBlock, model) {
+  return `{
+    "parent": "minecraft:block/${model}",
     "textures": {
-        "particle": "pyrite:block/${block}",
-        "bars": "pyrite:block/${block}",
-        "edge": "pyrite:block/${block}"
+      "pane": "pyrite:block/${baseBlock}",
+      "edge": "pyrite:block/framed_glass_pane_top"
     },
-    "elements": [
-        {   "from": [ 8, 0, 8 ],
-            "to": [ 8, 16, 9 ],
-            "faces": {
-                "west": { "uv": [ 8, 0, 7, 16 ], "texture": "#bars" },
-                "east": { "uv": [ 7, 0, 8, 16 ], "texture": "#bars" }
-            }
-        },
-        {   "from": [ 7, 0, 9 ],
-            "to": [ 9, 16, 9 ],
-            "faces": {
-                "north": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" },
-                "south": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" }
-            }
-        }
-    ]
-}
-`
-capModelAlt = `{
-  "ambientocclusion": false,
-  "textures": {
-    "particle": "${namespace}:block/${block}",
-    "bars": "${namespace}:block/${block}",
-    "edge": "${namespace}:block/${block}"
-  },
-  "elements": [
-      {   "from": [ 8, 0, 7 ],
-          "to": [ 8, 16, 8 ],
-          "faces": {
-              "west": { "uv": [ 8, 0, 9, 16 ], "texture": "#bars" },
-              "east": { "uv": [ 9, 0, 8, 16 ], "texture": "#bars" }
-          }
-      },
-      {   "from": [ 7, 0, 7 ],
-          "to": [ 9, 16, 7 ],
-          "faces": {
-              "north": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },
-              "south": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }
-          }
-      }
-  ]
-}`
-sideModelAlt = `
-{
-  "ambientocclusion": false,
-  "textures": {
-    "particle": "${namespace}:block/${block}",
-    "bars": "${namespace}:block/${block}",
-    "edge": "${namespace}:block/${block}"
-  },
-  "elements": [
-      {   "from": [ 8, 0, 8 ],
-          "to": [ 8, 16, 16 ],
-          "faces": {
-              "west": { "uv": [ 8, 0, 0, 16 ], "texture": "#bars" },
-              "east": { "uv": [ 0, 0, 8, 16 ], "texture": "#bars" }
-          }
-      },
-      {   "from": [ 7, 0, 9 ],
-          "to": [ 9, 16, 16 ],
-          "faces": {
-              "south": { "uv": [ 7, 0, 9, 16 ], "texture": "#edge", "cullface": "south" },
-              "down":  { "uv": [ 9, 9, 7, 16 ], "texture": "#edge" },
-              "up":    { "uv": [ 7, 9, 9, 16 ], "texture": "#edge" }
-          }
-      },
-      {   "from": [ 7, 0.001, 9 ],
-          "to": [ 9, 0.001, 16 ],
-          "faces": {
-              "down":  { "uv": [ 9, 9, 7, 16 ], "texture": "#edge" },
-              "up":    { "uv": [ 7, 9, 9, 16 ], "texture": "#edge" }
-          }
-      },
-      {   "from": [ 7, 15.999, 9 ],
-          "to": [ 9, 15.999, 16 ],
-          "faces": {
-              "down":  { "uv": [ 9, 9, 7, 16 ], "texture": "#edge" },
-              "up":    { "uv": [ 7, 9, 9, 16 ], "texture": "#edge" }
-          }
-      }
-  ]
-}
-`
-postModelEnds = `
-{
-  "ambientocclusion": false,
-  "textures": {
-    "particle": "${namespace}:block/${block}",
-    "edge": "${namespace}:block/${block}"
-  },
-  "elements": [
-      {   "from": [ 7, 0.001, 7 ],
-          "to": [ 9, 0.001, 9 ],
-          "faces": {
-              "down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },
-              "up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }
-          }
-      },
-      {   "from": [ 7, 15.999, 7 ],
-          "to": [ 9, 15.999, 9 ],
-          "faces": {
-              "down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },
-              "up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }
-          }
-      }
-  ]
-}
-`
-  postModel = `{
-    "ambientocclusion": false,
-    "textures": {
-      "particle": "${namespace}:block/${block}",
-      "bars": "${namespace}:block/${block}"
-    },
-    "elements": [
-        {   "from": [ 8, 0, 7 ],
-            "to": [ 8, 16, 9 ],
-            "faces": {
-                "west": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },
-                "east": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }
-            }
-        },
-        {   "from": [ 7, 0, 8 ],
-            "to": [ 9, 16, 8 ],
-            "faces": {
-                "north": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },
-                "south": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }
-            }
-        }
-    ]
-}
-`
-  sideModel = `{
-    "ambientocclusion": false,
-    "textures": {
-        "particle": "${namespace}:block/${block}",
-        "bars": "${namespace}:block/${block}",
-        "edge": "${namespace}:block/${block}"
-    },
-    "elements": [
-        {   "from": [ 8, 0, 0 ],
-            "to": [ 8, 16, 8 ],
-            "faces": {
-                "west": { "uv": [ 16, 0,  8, 16 ], "texture": "#bars" },
-                "east": { "uv": [  8, 0, 16, 16 ], "texture": "#bars" }
-            }
-        },
-        {   "from": [ 7, 0, 0 ],
-            "to": [ 9, 16, 7 ],
-            "faces": {
-                "north": { "uv": [ 7, 0, 9, 16 ], "texture": "#edge", "cullface": "north" }
-            }
-        },
-        {   "from": [ 7, 0.001, 0 ],
-            "to": [ 9, 0.001, 7 ],
-            "faces": {
-                "down":  { "uv": [ 9, 0, 7, 7 ], "texture": "#edge" },
-                "up":    { "uv": [ 7, 0, 9, 7 ], "texture": "#edge" }
-            }
-        },
-        {   "from": [ 7, 15.999, 0 ],
-            "to": [ 9, 15.999, 7 ],
-            "faces": {
-                "down":  { "uv": [ 9, 0, 7, 7 ], "texture": "#edge" },
-                "up":    { "uv": [ 7, 0, 9, 7 ], "texture": "#edge" }
-            }
-        }
-    ]
-}
-`
-  fs.writeFile(`${paths.models}${block}_cap.json`, capModel, function (err) {if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_cap_alt.json`, capModelAlt, function (err) {if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_post.json`, postModel, function (err) {if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_side.json`, sideModel, function (err) {    if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_side_alt.json`, sideModelAlt, function (err) {if (err) throw err;});
-  fs.writeFile(`${paths.models}${block}_post_ends.json`, postModelEnds, function (err) {if (err) throw err;});
+    "render_type": "translucent"
+  }`
 }
 
 function writeStairBlockModels(block, namespace, baseBlock) {
@@ -1090,7 +951,7 @@ function writeTrapdoors(block, dye, namespace, baseBlock) {
 }
 
 
-function writeBlock(block, dye, namespace, special, baseBlock) {
+function writeBlock(block, dye, namespace, special, baseBlock, render_type) {
   blockState = `{
     "variants": {
       "": {
@@ -1099,7 +960,7 @@ function writeBlock(block, dye, namespace, special, baseBlock) {
     }
   }`
   writeBlockstate(block, blockState, namespace)
-  writePlankBlockModels(block, namespace, baseBlock)
+  writePlankBlockModels(block, namespace, baseBlock, undefined, render_type)
   writeBlockItemModel(block, namespace)
   createTags(block, namespace)
   writeLootTables(block, namespace)
@@ -1111,10 +972,17 @@ function writeBlock(block, dye, namespace, special, baseBlock) {
 }
 
 function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
+  let uprightBlock;
+  if (namespace == "minecraft") {
+    uprightBlock = block
+  }
+  else {
+    uprightBlock = baseBlock
+  }
   blockState = `{
     "variants": {
       "face=ceiling,facing=east,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "x": 180,
         "y": 270
       },
@@ -1124,7 +992,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
         "y": 270
       },
       "face=ceiling,facing=north,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "x": 180,
         "y": 180
       },
@@ -1134,7 +1002,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
         "y": 180
       },
       "face=ceiling,facing=south,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "x": 180
       },
       "face=ceiling,facing=south,powered=true": {
@@ -1142,7 +1010,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
         "x": 180
       },
       "face=ceiling,facing=west,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "x": 180,
         "y": 90
       },
@@ -1152,7 +1020,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
         "y": 90
       },
       "face=floor,facing=east,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "y": 90
       },
       "face=floor,facing=east,powered=true": {
@@ -1160,13 +1028,13 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
         "y": 90
       },
       "face=floor,facing=north,powered=false": {
-        "model": "${namespace}:block/${block}_upright"
+        "model": "${namespace}:block/${uprightBlock}_upright"
       },
       "face=floor,facing=north,powered=true": {
         "model": "${namespace}:block/${block}"
       },
       "face=floor,facing=south,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "y": 180
       },
       "face=floor,facing=south,powered=true": {
@@ -1174,7 +1042,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
         "y": 180
       },
       "face=floor,facing=west,powered=false": {
-        "model": "${namespace}:block/${block}_upright",
+        "model": "${namespace}:block/${uprightBlock}_upright",
         "y": 270
       },
       "face=floor,facing=west,powered=true": {
@@ -1219,9 +1087,10 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
   }`
   writeBlockstate(block, blockState, namespace)
   writeLeverBlockModels(block, namespace, baseBlock)
-  writeUniqueBlockItemModel(block, namespace, "minecraft", baseBlock)
+  writeUniqueBlockItemModel(block, namespace, "pyrite", baseBlock)
   writeLootTables(block, namespace)
-  writeRecipes(block, "torch_lever", baseBlock, "pyrite", "minecraft")
+  writeRecipes(block, "torch_lever", baseBlock, "pyrite", "pyrite")
+  printLang(block)
 
 
 
@@ -1327,6 +1196,66 @@ function writeCraftingTableBlock(block, dye, namespace, baseBlock, altNamespace)
 
 }
 
+function writeLadders(block, dye, namespace, baseBlock, altNamespace) {
+  if (altNamespace == undefined ){
+    altNamespace = namespace
+  }
+  block += "_ladder" 
+  blockState = `{
+    "variants": {
+      "facing=east": {
+        "model": "${namespace}:block/${block}",
+        "y": 90
+      },
+      "facing=north": {
+        "model": "${namespace}:block/${block}"
+      },
+      "facing=south": {
+        "model": "${namespace}:block/${block}",
+        "y": 180
+      },
+      "facing=west": {
+        "model": "${namespace}:block/${block}",
+        "y": 270
+      }
+    }
+  }`
+  writeBlockstate(block, blockState, namespace)
+  writePlankBlockModels(block, namespace, baseBlock, "pyrite:block/template_ladder")
+  writeUniqueBlockItemModel(block, namespace)
+  writeLootTables(block, namespace)
+  writeRecipes(block, "ladder", baseBlock, namespace, altNamespace)
+  
+
+
+
+}
+
+
+function writeChests(block, dye, namespace, baseBlock, altNamespace) {
+  if (altNamespace == undefined ){
+    altNamespace = namespace
+  }
+  block += "_chest" 
+  blockState = `{
+    "variants": {
+      "": {
+        "model": "${namespace}:block/${block}"
+      }
+    }
+  }`
+  writeBlockstate(block, blockState, namespace)
+  writePlankBlockModels(block, namespace, baseBlock)
+  writeUniqueBlockItemModel(block, namespace)
+  writeLootTables(block, namespace)
+  writeRecipes(block, "chest", baseBlock, namespace, altNamespace)
+  printLang(block)
+  
+
+
+
+}
+
 
 function writeFlower(block, dye, namespace, special, baseBlock) {
   blockState = `{
@@ -1382,7 +1311,7 @@ function writePaneBlock(block, namespace, baseBlock, dye) {
   block = block + "_pane"
   writeBlockstate(block, generatePaneBlockState(block, namespace, baseBlock), namespace)
   writePaneBlockModels(block, namespace, baseBlock)
-  writeBlockItemModel(block, namespace)
+  writeUniqueBlockItemModel(block, namespace, namespace, baseBlock)
   createTags(block, namespace)
   writeLootTables(block, namespace)
   writeRecipes(block, "glass_pane", dye)
@@ -2246,7 +2175,30 @@ function generateRecipes(block, type, other, namespace, altNamespace, itemORid) 
     }
 }`
   }
-  if (type == "terracotta") {
+  else if (type == "ladder") {
+    recipe = `        {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "C C",
+      "CDC",
+      "C C"
+    ],
+    "key": {
+      "C": {
+        "item": "minecraft:stick"
+      },
+      "D": {
+        "item": "${altNamespace}:${other}"
+      }
+    },
+    "result": {
+      "item": "${namespace}:${block}",
+      "id": "${namespace}:${block}",
+      "count": 3
+    }
+}`
+  }
+  else if (type == "terracotta") {
     other = `${other}_dye`
     altNamespace = changeDyeNamespace(other)
     recipe = `        {
@@ -2665,6 +2617,27 @@ function generateRecipes(block, type, other, namespace, altNamespace, itemORid) 
       },
       "D": {
         "item": "${altNamespace}:${dye}"
+      }
+    },
+    "result": {
+      "item": "${namespace}:${block}",
+      "id": "${namespace}:${block}",
+      "count": 8
+    }
+}`
+  }
+  else if (type == "glass_pane") {
+    const dye = `${other}_dye`
+    altNamespace = changeDyeNamespace(dye)
+    recipe = `        {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "CCC",
+      "CCC"
+    ],
+    "key": {
+      "C": {
+        "item": "${namespace}:${other}_framed_glass"
       }
     },
     "result": {
@@ -3151,10 +3124,7 @@ function generateRecipes(block, type, other, namespace, altNamespace, itemORid) 
 
 function writeRecipes(block, type, other, namespace, altNamespace) {
   recipe = generateRecipes(block, type, other, namespace, altNamespace)
-  fs.writeFile(`${paths.recipes}${block}.json`, recipe, function (err) {
-    if (err) throw err;
-
-  });
+  fs.writeFile(`${paths.recipes}${block}.json`, recipe, function (err) {if (err) throw err;});
 }
 
 function writeStonecutterRecipes(block, type, other, namespace, altNamespace, addon) {
@@ -3545,16 +3515,24 @@ function generateTrapdoorBlockState(block, namespace, baseBlock) {
 }
 
 
-function generateBlockModel(block, namespace, baseBlock, model) {
+function generateBlockModel(block, namespace, baseBlock, model, render_type) {
   if (model == undefined) {
-    model = "cube_all"
+    model = "minecraft:block/cube_all"
   }
+  if (render_type == undefined) {
+    render_type = ""
+  }
+  else {
+    render_type = "," + render_type
+  }
+
   return `{
-    "parent": "minecraft:block/${model}",
+    "parent": "${model}",
     "textures": {
       "all": "${namespace}:block/${block}"
-    }
+    }${render_type}
   }`
+  
 }
 
 function generateCraftingTableBlockModel(block, namespace, baseBlock) {
@@ -3590,7 +3568,7 @@ function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addo
     addon = `_${addon}`
     if (addon == "_wall") {
       return `{
-        "parent": "${altNamespace}:block/wall_${baseBlock}",
+        "parent": "${altNamespace}:block/${baseBlock}_wall",
         "render_type": "cutout"
     }`
     }
