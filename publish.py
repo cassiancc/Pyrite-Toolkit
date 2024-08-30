@@ -1,7 +1,7 @@
 import os, glob, re, requests
 
 # Variables
-modVersion = "0.14.1"
+modVersion = "0.14.2"
 # pyrite-forge-1.20.1-0.13.jar
 
 fabric = "/fabric/build/libs"
