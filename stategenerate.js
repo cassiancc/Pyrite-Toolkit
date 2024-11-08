@@ -424,22 +424,22 @@ function generateResources() {
   // })
 
 
-  // vanillaWood.forEach(function (dye) {
-  //   let stainedBlockTemplate = dye
-  //   plankBase = stainedBlockTemplate + "_planks"
-  //   namespace = "pyrite"
-  //   writeCraftingTableBlock(stainedBlockTemplate, dye, namespace, plankBase, "minecraft")
+  vanillaWood.forEach(function (dye) {
+    let stainedBlockTemplate = dye
+    plankBase = stainedBlockTemplate + "_planks"
+    namespace = "pyrite"
+    writeCraftingTableBlock(stainedBlockTemplate + "_crafting_table", namespace, plankBase, "minecraft")
 
-  // })
+  })
 
 
-  // const shroomBlockTemplate = "_mushroom"
-  // const redShroom = "red" + shroomBlockTemplate
-  // const brownShroom = "brown" + shroomBlockTemplate
-  // generateWoodSet(redShroom)
-  // red_stem = new Block(redShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
-  // generateWoodSet(brownShroom)
-  // brown_stem = new Block(brownShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
+  const shroomBlockTemplate = "_mushroom"
+  const redShroom = "red" + shroomBlockTemplate
+  const brownShroom = "brown" + shroomBlockTemplate
+  generateWoodSet(redShroom)
+  red_stem = new Block(redShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
+  generateWoodSet(brownShroom)
+  brown_stem = new Block(brownShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
 
   // writeSlabs("cobblestone_brick", "pyrite", "cobblestone_bricks")
   // writeStairs("cobblestone_brick", "pyrite", "cobblestone_bricks")
@@ -2265,16 +2265,16 @@ function itemOrId() {
   else return "item";
 }
 
-function addIngredients(ingredients, ingredient) {
+function addIngredients(ingredientArray, ingredient) {
   if (enableNewRecipes() == true) {
-    ingredients.push(ingredient)
+    ingredientArray.push(ingredient)
   }
   else  {
     if (ingredient[0] == "#") {
-      ingredients.push({"tag": ingredient.slice(1)}) 
+      ingredientArray.push({"tag": ingredient.slice(1)}) 
     }
     else {
-      ingredients.push({"item": ingredient})  
+      ingredientArray.push({"item": ingredient})  
     }
   }
 }
@@ -2285,12 +2285,13 @@ function generateShapelessRecipe(ingredients, result, quantity) {
       "ingredients": []
     }
     if (ingredients instanceof Array) {
-      ingredients.forEach(function(ingredient) {
-        addIngredients(recipe.ingredients, ingredient)
+      console.log(ingredients)
+      ingredients.forEach(function(i) {
+        addIngredients(recipe.ingredients, i)
       })
     }
     else {
-      addIngredients(recipe.ingredients, ingredient)
+      addIngredients(recipe.ingredients, ingredients)
     }
     
     recipe.result =  JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
@@ -2311,11 +2312,10 @@ function generateShapelessRecipe(ingredients, result, quantity) {
         })
       }
       else {
-        addIngredients(recipe.ingredients, ingredient)
+        addIngredients(recipe.ingredients, ingredients)
       }
       
       recipe.result =  JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
-      console.log(recipe)
   
       return recipe
   
@@ -2404,19 +2404,10 @@ function writeDoorLootTables(block, namespace) {
 }
 
 `
-  fs.writeFile(`${paths.loot}${block}.json`, lootTable, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.loot}${block}.json`, lootTable);
 }
 
 function createDyeRecipe(namespace, block, altNamespace, altBlock, other, itemOrTag, baseNamespace) {
-  let itemOrID;
-  if (version == "1.21.1" || version == "1.21.4") {
-    itemOrID = "id"
-  }
-  else itemOrID = "item"
-
 if (baseNamespace == undefined) {
   baseNamespace = altNamespace
 }
@@ -2436,15 +2427,13 @@ if (baseNamespace == undefined) {
       }
     },
     "result": {
-      "${itemOrID}": "${namespace}:${block}",
+      "${itemOrId()}": "${namespace}:${block}",
       "count": 8
     }
 }`
 }
 
 function generateRecipes(block, type, other, namespace, altNamespace) {
-  console.log("E", type)
-
   if (namespace == undefined) {
     namespace = "pyrite"
   }
@@ -2501,7 +2490,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   else if (type == "glowing_obsidian") {
     recipe = generateShapedRecipe([{"X":`minecraft:crying_obsidian`}, {"#":`minecraft:magma_block`}], `pyrite:glowing_obsidian`, 4, ["X#","#X"])
   }
-  else if (type.contains("cut_")) {
+  else if (type.includes("cut_")) {
     baseBlock = type.split("_")[1]
     baseBlock = baseBlock + "_block"
     recipe = generateShapedRecipe([{"X":`minecraft:${baseBlock}`}], `pyrite:${type}`, 4, ["##","##"])
@@ -2592,8 +2581,8 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   }
   else if (type == "stairs") {
     recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 4, [
-      "C",
-      "CC",
+      "C  ",
+      "CC ",
       "CCC"
     ])
     }
