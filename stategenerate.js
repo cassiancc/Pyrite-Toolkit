@@ -2534,7 +2534,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     recipe = generateShapedRecipe([{"X":`minecraft:${baseBlock}`}], `pyrite:${type}`, 4, ["##","##"])
   }
   else if (type == "framed_glass") {
-    recipe = generateShapedRecipe([{"X":`minecraft:glass`}, {"X":`minecraft:iron_nugget`}], `pyrite:${type}`, 4, [
+    recipe = generateShapedRecipe([{"#":`minecraft:glass`}, {"X":`minecraft:iron_nugget`}], `pyrite:${type}`, 4, [
       "X#X",
       "#X#",
       "X#X"
@@ -2548,47 +2548,15 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   else if (type == "glass_pane") {
     const dye = `${other}_dye`
     altNamespace = changeDyeNamespace(dye)
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      "CCC",
-      "CCC"
-    ],
-    "key": {
-      "C": {
-        "item": "${namespace}:${block.replace("_pane", "")}"
-      }
-    },
-    "result": {
-      "item": "${namespace}:${other}",
-      "id": "${namespace}:${other}",
-      "count": 8
-  }
-}
-`
+    recipe = generateShapedRecipe([{"C":`${namespace}:${block.replace("_pane", "")}`}], `${namespace}:${other}`, 8, ["CCC","CCC"])
   }
   else if (type == "lamp") {
     if (block == "glowstone_lamp") {
-      recipe = `{
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "X#X",
-          "#X#",
-          "X#X"
-        ],
-        "key": {
-          "#": {
-            "item": "minecraft:glowstone"
-          },
-          "X": {
-            "item": "minecraft:iron_nugget"
-          }
-        },
-        "result": {
-          "item": "pyrite:glowstone_lamp",
-        "count": 4
-        }
-      }`
+      recipe = generateShapedRecipe([{"#":`minecraft:glowstone`}, {"X":`minecraft:iron_nugget`}], `pyrite:${block}`, 4, [
+        "X#X",
+        "#X#",
+        "X#X"
+      ])
     } else {
       other = `${other}_dye`
       altNamespace = changeDyeNamespace(other)
@@ -2611,25 +2579,10 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
       }`
     }
     else if (block == "blue_nether_bricks") {
-      recipe = `{
-        "type": "minecraft:crafting_shaped",
-        "category": "building",
-        "key": {
-          "N": {
-            "item": "minecraft:nether_brick"
-          },
-          "W": {
-            "item": "minecraft:warped_fungus"
-          }
-        },
-        "pattern": [
-          "NW",
-          "WN"
-        ],
-        "result": {
-          "item": "pyrite:blue_nether_bricks"
-        }
-      }`
+      recipe = generateShapedRecipe([{"N":`minecraft:nether_brick`}, {"W":`minecraft:warped_fungus`}], `pyrite:${block}`, 1, [
+        "NW",
+        "WN"
+      ])
     }
     else {
       other = `${other}_dye`
@@ -2638,330 +2591,103 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     }
   }
   else if (type == "resource_bricks") {
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
+    recipe = generateShapedRecipe([{"D":`minecraft:${other}`}], `${namespace}:${block}`, 4, [
       "DD",
       "DD"
-    ],
-    "key": {
-      "D": {
-        "item": "minecraft:${other}"
-      }
-    },
-    "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
-      "count": 4
-    }
-    }`
+    ])
   }
   else if (type == "nostalgia") {
     recipe = generateShapelessRecipe([`pyrite:nostalgia_dye`, `minecraft:${other}`], `pyrite:${block}`, 1)
   }
   else if (type == "chiseled_resource") {
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
+    recipe = generateShapedRecipe([{"D":`minecraft:${other}`}], `${namespace}:${block}`, 4, [
       "D",
       "D"
-    ],
-    "key": {
-      "D": {
-        "item": "minecraft:${other}"
-      }
-    },
-    "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
-      "count": 4
-    }
-    }`
+    ])
   }
   else if (type == "chiseled_pillar") {
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
+    recipe = generateShapedRecipe([{"D":`minecraft:${other}`}], `${namespace}:${block}`, 4, [
       "D",
       "D"
-    ],
-    "key": {
-      "D": {
-        "item": "minecraft:${other}"
-      }
-    },
-    "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
-      "count": 4
-    }
-    }`
+    ])
   }
   else if (type == "bars") {
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
+    recipe = generateShapedRecipe([{"D":`pyrite:cut_${other}`}], `${namespace}:${block}`, 4, [
       "DDD",
       "DDD"
-    ],
-    "key": {
-      "D": {
-        "item": "${namespace}:cut_${other}"
-      }
-    },
-    "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
-      "count": 4
-    }
-    }`
+    ])
   }
   else if (type == "stairs") {
-    recipe = `        {
-      "type": "minecraft:crafting_shaped",
-      "pattern": [
-        "C  ",
-        "CC ",
-        "CCC"
-      ],
-      "key": {
-        "C": {
-          "item": "${namespace}:${other}"
-        }
-      },
-      "result": {
-        "item": "${namespace}:${block}",
-        "id": "${namespace}:${block}",
-        "count": 4
-      }
-  }`}
+    recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 4, [
+      "C",
+      "CC",
+      "CCC"
+    ])
+    }
   else if (type == "wall") {
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
+    recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 6, [
       "CCC",
       "CCC"
-    ],
-    "key": {
-      "C": {
-        "item": "${namespace}:${other}"
-      }
-    },
-    "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
-      "count": 6
+    ])
     }
-}`}
   else if (type == "slabs") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CCC"
-        ],
-        "key": {
-          "C": {
-            "item": "${namespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 6
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 6, [
+      "CCC"
+    ])
   }
   else if (type == "plates") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CC"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 1
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, ["CC"])
   }
   else if (type == "door") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CC",
-          "CC",
-          "CC"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 3
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, [
+      "CC",
+      "CC",
+      "CC"
+    ])
   }
   else if (type == "crafting_table") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CC",
-          "CC"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 1
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, [
+      "CC",
+      "CC"
+    ])
   }
   else if (type == "trapdoor") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CCC",
-          "CCC"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 2
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 2, [
+      "CCC",
+      "CCC"
+    ])
   }
   else if (type == "carpet") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CC"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 3
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 3, [
+      "CC"
+    ])
   }
   else if (type == "fences") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "CSC",
-          "CSC"
-        ],
-        "key": {
-          "C": {
-            "item": "${namespace}:${other}"
-          },
-          "S": {
-            "item": "minecraft:stick"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 1
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${namespace}:${other}`}, {"S":`minecraft:stick`}], `${namespace}:${block}`, 1, [
+      "CSC",
+      "CSC"
+    ])
   }
   else if (type == "fence_gates") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "SCS",
-          "SCS"
-        ],
-        "key": {
-          "C": {
-            "item": "${namespace}:${other}"
-          },
-          "S": {
-            "item": "minecraft:stick"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 1
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${namespace}:${other}`}, {"S":`minecraft:stick`}], `${namespace}:${block}`, 1, [
+      "SCS",
+      "SCS"
+    ])
   }
   else if (type == "wall_gates") {
     baseWall = other
     baseWall = `${baseWall.replace("bricks", "brick")}`
     baseWall = `${baseWall.replace("tiles", "tile")}`
     baseWall = baseWall + "_wall"
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "SCS",
-          "SCS"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          },
-          "S": {
-            "item": "${altNamespace}:${baseWall}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 6
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}, {"S":`${altNamespace}:${baseWall}`}], `${namespace}:${block}`, 6, [
+      "SCS",
+      "SCS"
+    ])
   }
   else if (type == "buttons") {
-    recipe = `        
-      {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "C"
-        ],
-        "key": {
-          "C": {
-            "item": "${altNamespace}:${other}"
-          }
-        },
-        "result": {
-          "item": "${namespace}:${block}",
-          "id": "${namespace}:${block}",
-          "count": 1
-        }
-      }`
+    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, [
+      "C"
+    ])
   }
   else if (type == "metal_buttons") {
     recipe = generateShapelessRecipe([`${altNamespace}:${other}`, `#${altNamespace}:buttons`], `${namespace}:${block}`, 1)
