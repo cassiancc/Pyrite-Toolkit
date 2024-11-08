@@ -451,7 +451,7 @@ function generateResources() {
   // // writeBlock("mossy_cobblestone_bricks", "mossy_cobblestone_bricks", "pyrite", "mossy_cobblestone_bricks")
 
   writeBlock("cobblestone_bricks", "pyrite", "cobblestone_bricks", "cobblestone_bricks")
-  // writeBlock("smooth_stone_bricks", "smooth_stone_bricks", "pyrite", "smooth_stone_bricks")
+  writeBlock("smooth_stone_bricks", "pyrite", "smooth_stone_bricks", "smooth_stone_bricks")
   // writeBrickSlab("smooth_stone", namespace)
   // writeBrickStairs("smooth_stone", namespace)
   // writeBrickWall("smooth_stone", namespace)
@@ -800,43 +800,21 @@ function generatePaneBlockModels(block, namespace, baseBlock, model) {
   }`
 }
 
+function generateStairBlockModel(block,namespace,baseBlock, model) {
+  return `{
+    "parent": "minecraft:block/${model}",
+    "textures": {
+      "bottom": "${namespace}:block/${baseBlock}",
+      "top": "${namespace}:block/${baseBlock}",
+      "side": "${namespace}:block/${baseBlock}"
+    }
+  }`
+}
+
 function writeStairBlockModels(block, namespace, baseBlock) {
-  stairModel = `{
-    "parent": "minecraft:block/stairs",
-    "textures": {
-      "bottom": "${namespace}:block/${baseBlock}",
-      "top": "${namespace}:block/${baseBlock}",
-      "side": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  stairModelInner = `{
-      "parent": "minecraft:block/inner_stairs",
-      "textures": {
-        "bottom": "${namespace}:block/${baseBlock}",
-        "top": "${namespace}:block/${baseBlock}",
-        "side": "${namespace}:block/${baseBlock}"
-      }
-  }`
-  stairModelOuter = `{
-    "parent": "minecraft:block/outer_stairs",
-    "textures": {
-      "bottom": "${namespace}:block/${baseBlock}",
-      "top": "${namespace}:block/${baseBlock}",
-      "side": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  fs.writeFile(`${paths.models}${block}.json`, stairModel, function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_inner.json`, stairModelInner, function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_outer.json`, stairModelOuter, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.models}${block}.json`, generateStairBlockModel(block, namespace, baseBlock, "stairs"));
+  writeFile(`${paths.models}${block}_inner.json`, generateStairBlockModel(block, namespace, baseBlock, "inner_stairs"));
+  writeFile(`${paths.models}${block}_outer.json`, generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
 }
 
 function writeButtonBlockModels(block, namespace, baseBlock) {
@@ -2358,9 +2336,7 @@ ${tags}
     ]
   }`
 
-  fs.writeFile(`${paths.mctags}${file}`, tags, function (err) {
-    if (err) throw err;
-  });
+  writeFile(`${paths.mctags}${file}`, tags);
 
 }
 
@@ -2389,10 +2365,7 @@ function writeLootTables(block, namespace) {
   }
 
 `
-  fs.writeFile(`${paths.loot}${block}.json`, lootTable, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.loot}${block}.json`, lootTable);
 }
 
 
@@ -2738,10 +2711,7 @@ function writeStonecutterRecipes(block, type, other, namespace, altNamespace, ad
     "result": "${namespace}:${block}",
     "count": ${quantity}
   }`
-  fs.writeFile(`${paths.recipes}${addon}${block}_stonecutting.json`, recipe, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.recipes}${addon}${block}_stonecutting.json`, recipe)
 
 }
 
