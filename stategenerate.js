@@ -2274,18 +2274,33 @@ function generateShapelessRecipe(ingredients, result, quantity) {
   }
 
   function generateShapedRecipe(ingredients, result, quantity, shape) {
+    let newIngredients = {};
+    if (!enableNewRecipes()) {
+      const keys = Object.keys(ingredients)
+      const values = Object.values(ingredients)
+      console.log(keys, values)
+      let i = 0;
+      values.forEach(function(value) {
+        let itemortag;
+        if (value.indexOf(0) == "#") {
+          value = value.slice(1)
+          itemortag = "tag"
+        }
+        else {
+          itemortag = "item"
+        }
+        Object.assign(newIngredients, JSON.parse(`{"${keys[0]}": {"${itemortag}": "${value}"}}`))
+        i++
+      })
+    }
+    else {newIngredients = ingredients}
+
     recipe = {
         "type": "minecraft:crafting_shaped",
         "ingredients": [],
-        "pattern": shape
-      }
-      if (ingredients instanceof Array) {
-        ingredients.forEach(function(ingredient) {
-          addIngredients(recipe.ingredients, ingredient)
-        })
-      }
-      else {
-        addIngredients(recipe.ingredients, ingredients)
+        "pattern": shape,
+        "ingredients": newIngredients
+        
       }
       
       recipe.result =  JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
@@ -2426,7 +2441,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     }
   }
   else if (type == "ladder") {
-    recipe =  generateShapedRecipe([{"C": `minecraft:stick`}, {"D": `${altNamespace}:${other}`}], `${namespace}:${block}`, 3, ["C C","CDC","C C"])
+    recipe =  generateShapedRecipe({"C": `minecraft:stick`, "D": `${altNamespace}:${other}`}, `${namespace}:${block}`, 3, ["C C","CDC","C C"])
   }
   else if (type == "terracotta") {
     other = `${other}_dye`
@@ -2435,7 +2450,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   }
   if (type == "terracotta_bricks") {
     altNamespace = changeDyeNamespace(other)
-    recipe = generateShapedRecipe([{"C": `${altNamespace}:${other}`}], `${namespace}:${block}`, 3, ["CC","CC"])
+    recipe = generateShapedRecipe({"C": `${altNamespace}:${other}`}, `${namespace}:${block}`, 3, ["CC","CC"])
   }
   else if (type == "torch") {
     other = `${other}_dye`
@@ -2452,24 +2467,24 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     recipe = generateShapelessRecipe([`${altNamespace}:${other}`, "minecraft:lever"], `${namespace}:${block}`, 1)
   }
   else if (type == "cobblestone_bricks") {
-    recipe = generateShapedRecipe([{"C": `minecraft:cobblestone`}], `pyrite:cobblestone_bricks`, 4, ["CC","CC"])
+    recipe = generateShapedRecipe({"C": `minecraft:cobblestone`}, `pyrite:cobblestone_bricks`, 4, ["CC","CC"])
   }
   else if (type == "smooth_stone_bricks") {
-    recipe = generateShapedRecipe([{"C":`minecraft:smooth_stone`}], `pyrite:smooth_stone_bricks`, 4, ["CC","CC"])
+    recipe = generateShapedRecipe({"C":`minecraft:smooth_stone`}, `pyrite:smooth_stone_bricks`, 4, ["CC","CC"])
   }
   else if (type == "mossy_cobblestone_bricks") {
     recipe = ``
   }
   else if (type == "glowing_obsidian") {
-    recipe = generateShapedRecipe([{"X":`minecraft:crying_obsidian`}, {"#":`minecraft:magma_block`}], `pyrite:glowing_obsidian`, 4, ["X#","#X"])
+    recipe = generateShapedRecipe({"X":`minecraft:crying_obsidian`, "#":`minecraft:magma_block`}, `pyrite:glowing_obsidian`, 4, ["X#","#X"])
   }
   else if (type.includes("cut_")) {
     baseBlock = type.split("_")[1]
     baseBlock = baseBlock + "_block"
-    recipe = generateShapedRecipe([{"X":`minecraft:${baseBlock}`}], `pyrite:${type}`, 4, ["##","##"])
+    recipe = generateShapedRecipe({"X":`minecraft:${baseBlock}`}, `pyrite:${type}`, 4, ["##","##"])
   }
   else if (type == "framed_glass") {
-    recipe = generateShapedRecipe([{"#":`minecraft:glass`}, {"X":`minecraft:iron_nugget`}], `pyrite:${type}`, 4, [
+    recipe = generateShapedRecipe({"#":`minecraft:glass`,"X":`minecraft:iron_nugget`}, `pyrite:${type}`, 4, [
       "X#X",
       "#X#",
       "X#X"
@@ -2483,11 +2498,11 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   else if (type == "glass_pane") {
     const dye = `${other}_dye`
     altNamespace = changeDyeNamespace(dye)
-    recipe = generateShapedRecipe([{"C":`${namespace}:${block.replace("_pane", "")}`}], `${namespace}:${other}`, 8, ["CCC","CCC"])
+    recipe = generateShapedRecipe({"C":`${namespace}:${block.replace("_pane", "")}`}, `${namespace}:${other}`, 8, ["CCC","CCC"])
   }
   else if (type == "lamp") {
     if (block == "glowstone_lamp") {
-      recipe = generateShapedRecipe([{"#":`minecraft:glowstone`}, {"X":`minecraft:iron_nugget`}], `pyrite:${block}`, 4, [
+      recipe = generateShapedRecipe({"#":`minecraft:glowstone`}, {"X":`minecraft:iron_nugget`}, `pyrite:${block}`, 4, [
         "X#X",
         "#X#",
         "X#X"
@@ -2514,7 +2529,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
       }`
     }
     else if (block == "blue_nether_bricks") {
-      recipe = generateShapedRecipe([{"N":`minecraft:nether_brick`}, {"W":`minecraft:warped_fungus`}], `pyrite:${block}`, 1, [
+      recipe = generateShapedRecipe({"N":`minecraft:nether_brick`}, {"W":`minecraft:warped_fungus`}, `pyrite:${block}`, 1, [
         "NW",
         "WN"
       ])
@@ -2526,7 +2541,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     }
   }
   else if (type == "resource_bricks") {
-    recipe = generateShapedRecipe([{"D":`minecraft:${other}`}], `${namespace}:${block}`, 4, [
+    recipe = generateShapedRecipe({"D":`minecraft:${other}`}, `${namespace}:${block}`, 4, [
       "DD",
       "DD"
     ])
@@ -2535,76 +2550,76 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     recipe = generateShapelessRecipe([`pyrite:nostalgia_dye`, `minecraft:${other}`], `pyrite:${block}`, 1)
   }
   else if (type == "chiseled_resource") {
-    recipe = generateShapedRecipe([{"D":`minecraft:${other}`}], `${namespace}:${block}`, 4, [
+    recipe = generateShapedRecipe({"D":`minecraft:${other}`}, `${namespace}:${block}`, 4, [
       "D",
       "D"
     ])
   }
   else if (type == "chiseled_pillar") {
-    recipe = generateShapedRecipe([{"D":`minecraft:${other}`}], `${namespace}:${block}`, 4, [
+    recipe = generateShapedRecipe({"D":`minecraft:${other}`}, `${namespace}:${block}`, 4, [
       "D",
       "D"
     ])
   }
   else if (type == "bars") {
-    recipe = generateShapedRecipe([{"D":`pyrite:cut_${other}`}], `${namespace}:${block}`, 4, [
+    recipe = generateShapedRecipe({"D":`pyrite:cut_${other}`}, `${namespace}:${block}`, 4, [
       "DDD",
       "DDD"
     ])
   }
   else if (type == "stairs") {
-    recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 4, [
+    recipe = generateShapedRecipe({"C":`pyrite:${other}`}, `${namespace}:${block}`, 4, [
       "C  ",
       "CC ",
       "CCC"
     ])
     }
   else if (type == "wall") {
-    recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 6, [
+    recipe = generateShapedRecipe({"C":`pyrite:${other}`}, `${namespace}:${block}`, 6, [
       "CCC",
       "CCC"
     ])
     }
   else if (type == "slabs") {
-    recipe = generateShapedRecipe([{"C":`pyrite:${other}`}], `${namespace}:${block}`, 6, [
+    recipe = generateShapedRecipe({"C":`pyrite:${other}`}, `${namespace}:${block}`, 6, [
       "CCC"
     ])
   }
   else if (type == "plates") {
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, ["CC"])
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`}, `${namespace}:${block}`, 1, ["CC"])
   }
   else if (type == "door") {
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, [
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`}, `${namespace}:${block}`, 1, [
       "CC",
       "CC",
       "CC"
     ])
   }
   else if (type == "crafting_table") {
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, [
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`}, `${namespace}:${block}`, 1, [
       "CC",
       "CC"
     ])
   }
   else if (type == "trapdoor") {
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 2, [
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`}, `${namespace}:${block}`, 2, [
       "CCC",
       "CCC"
     ])
   }
   else if (type == "carpet") {
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 3, [
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`}, `${namespace}:${block}`, 3, [
       "CC"
     ])
   }
   else if (type == "fences") {
-    recipe = generateShapedRecipe([{"C":`${namespace}:${other}`}, {"S":`minecraft:stick`}], `${namespace}:${block}`, 1, [
+    recipe = generateShapedRecipe({"C":`${namespace}:${other}`, "S":`minecraft:stick`}, `${namespace}:${block}`, 1, [
       "CSC",
       "CSC"
     ])
   }
   else if (type == "fence_gates") {
-    recipe = generateShapedRecipe([{"C":`${namespace}:${other}`}, {"S":`minecraft:stick`}], `${namespace}:${block}`, 1, [
+    recipe = generateShapedRecipe({"C":`${namespace}:${other}`, "S":`minecraft:stick`}, `${namespace}:${block}`, 1, [
       "SCS",
       "SCS"
     ])
@@ -2614,13 +2629,13 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     baseWall = `${baseWall.replace("bricks", "brick")}`
     baseWall = `${baseWall.replace("tiles", "tile")}`
     baseWall = baseWall + "_wall"
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}, {"S":`${altNamespace}:${baseWall}`}], `${namespace}:${block}`, 6, [
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`, "S":`${altNamespace}:${baseWall}`}, `${namespace}:${block}`, 6, [
       "SCS",
       "SCS"
     ])
   }
   else if (type == "buttons") {
-    recipe = generateShapedRecipe([{"C":`${altNamespace}:${other}`}], `${namespace}:${block}`, 1, [
+    recipe = generateShapedRecipe({"C":`${altNamespace}:${other}`}, `${namespace}:${block}`, 1, [
       "C"
     ])
   }
