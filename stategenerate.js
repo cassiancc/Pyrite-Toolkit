@@ -2,6 +2,10 @@ const { create } = require('domain');
 var fs = require('fs');
 const { basename } = require('path');
 
+globalNamespace = "pyrite"
+globalBaseNamespace = "minecraft"
+
+
 vanillaDyes = [
   "white",
   "orange",
@@ -94,7 +98,7 @@ paths = {
   origin: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/`,
   cavesp2: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.18)/src/main/resources/`,
   wild: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.19)/src/main/resources/`,
-  trailstales: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20)/common/src/main/resources/`,
+  trailstales: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources`,
   trailstales5: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20.5)/src/main/resources/`,
   infinite: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/`,
 
@@ -103,7 +107,7 @@ paths = {
 
 
   //legacy
-  base: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20)/common/src/main/resources/`,
+  base: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/`,
   infinitemodels: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/assets/pyrite/models/block/`,
   infiniteblockstates: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/assets/pyrite/blockstates/`,
   potatorecipes: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20.5)/src/main/resources/data/pyrite/recipes/`,
@@ -135,10 +139,30 @@ paths = Object.assign(paths, {
   itemModels: `${paths.assets}/models/item/`,
   tags: `${paths.data}/tags/`,
   mctags: `${paths.mcdata}/tags/`,
-  loot: `${paths.data}/loot_tables/blocks/`,
-  recipes: `${paths.data}/recipes/`
 
 })
+
+const version = "1.21.4"
+
+if (version == "1.20.1") {
+  paths = Object.assign(paths, {
+
+    loot: `${paths.data}loot_tables/blocks/`,
+    recipes: `${paths.data}/recipes/`
+  
+  })
+}
+
+
+
+if (version == "1.21.1" || version == "1.21.4") {
+  paths = Object.assign(paths, {
+
+    loot: `${paths.data}loot_table/blocks/`,
+    recipes: `${paths.data}/recipe/`
+  
+  })
+}
 
 let blockIDs = []
 let blockTranslations = {
@@ -296,8 +320,8 @@ function generateResources() {
   // writeLeverBlock("soul_torch_lever", "pyrite", "soul_torch")
 
   torch_lever = new Block("torch_lever", globalNamespace, globalBaseNamespace, "torch_lever", "torch", "torch")
-  redstone_torch_lever = new Block("redstone_torch_lever", globalNamespace, globalBaseNamespace, "torch_lever", "redstone_torch", "torch")
-  soul_torch_lever = new Block("soul_torch_lever", globalNamespace, globalBaseNamespace, "torch_lever", "soul_torch", "torch")
+  // redstone_torch_lever = new Block("redstone_torch_lever", globalNamespace, globalBaseNamespace, "torch_lever", "redstone_torch", "torch")
+  // soul_torch_lever = new Block("soul_torch_lever", globalNamespace, globalBaseNamespace, "torch_lever", "soul_torch", "torch")
 
 
 
@@ -353,51 +377,51 @@ function generateResources() {
     })
   }
 
-  dyes.forEach(function (dye) {
-    let stainedBlockTemplate = dye + "_stained"
-    plankBase = stainedBlockTemplate + "_planks"
-    namespace = "pyrite"
+  // dyes.forEach(function (dye) {
+  //   let stainedBlockTemplate = dye + "_stained"
+  //   plankBase = stainedBlockTemplate + "_planks"
+  //   namespace = "pyrite"
 
-    writeButtons(stainedBlockTemplate, namespace, plankBase)
-    writeStairs(stainedBlockTemplate, namespace, plankBase)
-    writeSlabs(stainedBlockTemplate, namespace, plankBase)
-    writePlates(stainedBlockTemplate, namespace, plankBase)
-    writeFences(stainedBlockTemplate, namespace, plankBase)
-    writeFenceGates(stainedBlockTemplate, namespace, plankBase)
-    writePlanks(stainedBlockTemplate, dye, namespace, plankBase)
-    writeCraftingTableBlock(stainedBlockTemplate, dye, namespace, plankBase)
-    writeLadders(stainedBlockTemplate, dye, namespace, plankBase)
-    // writeChests(stainedBlockTemplate, dye, namespace, plankBase)
-    writeDoors(stainedBlockTemplate, dye, namespace, plankBase)
-    writeTrapdoors(stainedBlockTemplate, dye, namespace, plankBase)
+  //   writeButtons(stainedBlockTemplate, namespace, plankBase)
+  //   writeStairs(stainedBlockTemplate, namespace, plankBase)
+  //   writeSlabs(stainedBlockTemplate, namespace, plankBase)
+  //   writePlates(stainedBlockTemplate, namespace, plankBase)
+  //   writeFences(stainedBlockTemplate, namespace, plankBase)
+  //   writeFenceGates(stainedBlockTemplate, namespace, plankBase)
+  //   writePlanks(stainedBlockTemplate, dye, namespace, plankBase)
+  //   writeCraftingTableBlock(stainedBlockTemplate, dye, namespace, plankBase)
+  //   writeLadders(stainedBlockTemplate, dye, namespace, plankBase)
+  //   // writeChests(stainedBlockTemplate, dye, namespace, plankBase)
+  //   writeDoors(stainedBlockTemplate, dye, namespace, plankBase)
+  //   writeTrapdoors(stainedBlockTemplate, dye, namespace, plankBase)
 
-    // Bricks
-    let blockTemplate = dye
-    baseBlock = blockTemplate + "_bricks"
-    // writeBricks(dye, dye, namespace)
-    writeBrickSlab(blockTemplate, namespace)
-    writeBrickStairs(blockTemplate, namespace)
-    writeBrickWall(blockTemplate, namespace)
-    writeWallGates(blockTemplate + "_brick", namespace, blockTemplate+"_bricks")
+  //   // Bricks
+  //   let blockTemplate = dye
+  //   baseBlock = blockTemplate + "_bricks"
+  //   // writeBricks(dye, dye, namespace)
+  //   // writeBrickSlab(blockTemplate, namespace)
+  //   // writeBrickStairs(blockTemplate, namespace)
+  //   // writeBrickWall(blockTemplate, namespace)
+  //   // writeWallGates(blockTemplate + "_brick", namespace, blockTemplate+"_bricks")
 
-    baseBlock = dye + "_terracotta"
-    writeTerracottaBricks(dye + "_terracotta", dye, namespace)
-    writeBrickSlab(dye + "_terracotta", namespace)
-    writeBrickStairs(dye + "_terracotta", namespace)
-    writeBrickWall(dye + "_terracotta", namespace)
-    writeWallGates(dye + "_terracotta_brick", namespace, dye+"_terracotta_bricks")
+  //   baseBlock = dye + "_terracotta"
+  //   writeTerracottaBricks(dye + "_terracotta", dye, namespace)
+  //   // writeBrickSlab(dye + "_terracotta", namespace)
+  //   // writeBrickStairs(dye + "_terracotta", namespace)
+  //   // writeBrickWall(dye + "_terracotta", namespace)
+  //   // writeWallGates(dye + "_terracotta_brick", namespace, dye+"_terracotta_bricks")
 
-    // Lamps
-    lamp = new Block(dye + "_lamp", globalNamespace, undefined, "lamp", dye, "lamp")
-    //Torches
-    torch = new Block(dye + "_torch", globalNamespace, undefined, "torch", dye, "torch")
-    //Torch Levers
-    torch_lever = new Block(dye + "_torch_lever", globalNamespace, globalNamespace, "torch_lever", dye, "torch")
-    //Framed Glass
-    framed_glass = new Block(dye + "_framed_glass", globalNamespace, undefined, "stained_framed_glass", dye, "stained_framed_glass")
-    //Framed Glass Panes
-    framed_glass = new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
-  })
+  //   // Lamps
+  //   lamp = new Block(dye + "_lamp", globalNamespace, undefined, "lamp", dye, "lamp")
+  //   //Torches
+  //   torch = new Block(dye + "_torch", globalNamespace, undefined, "torch", dye, "torch")
+  //   //Torch Levers
+  //   torch_lever = new Block(dye + "_torch_lever", globalNamespace, globalNamespace, "torch_lever", dye, "torch")
+  //   //Framed Glass
+  //   framed_glass = new Block(dye + "_framed_glass", globalNamespace, undefined, "stained_framed_glass", dye, "stained_framed_glass")
+  //   //Framed Glass Panes
+  //   framed_glass = new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
+  // })
 
 
   // vanillaWood.forEach(function (dye) {
@@ -409,28 +433,28 @@ function generateResources() {
   // })
 
 
-  const shroomBlockTemplate = "_mushroom"
-  const redShroom = "red" + shroomBlockTemplate
-  const brownShroom = "brown" + shroomBlockTemplate
-  generateWoodSet(redShroom)
-  red_stem = new Block(redShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
-  generateWoodSet(brownShroom)
-  brown_stem = new Block(brownShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
+  // const shroomBlockTemplate = "_mushroom"
+  // const redShroom = "red" + shroomBlockTemplate
+  // const brownShroom = "brown" + shroomBlockTemplate
+  // generateWoodSet(redShroom)
+  // red_stem = new Block(redShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
+  // generateWoodSet(brownShroom)
+  // brown_stem = new Block(brownShroom + "_stem", globalNamespace, undefined, "mushroom_stem", redShroom + "_planks", "wood")
 
-  writeSlabs("cobblestone_brick", "pyrite", "cobblestone_bricks")
-  writeStairs("cobblestone_brick", "pyrite", "cobblestone_bricks")
-  writeWalls("cobblestone_brick", "pyrite", "cobblestone_bricks")
-  writeStairs("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
-  writeSlabs("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
+  // writeSlabs("cobblestone_brick", "pyrite", "cobblestone_bricks")
+  // writeStairs("cobblestone_brick", "pyrite", "cobblestone_bricks")
+  // writeWalls("cobblestone_brick", "pyrite", "cobblestone_bricks")
+  // writeStairs("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
+  // writeSlabs("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
 
-  writeWalls("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
-  // writeBlock("mossy_cobblestone_bricks", "mossy_cobblestone_bricks", "pyrite", "mossy_cobblestone_bricks")
+  // writeWalls("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
+  // // writeBlock("mossy_cobblestone_bricks", "mossy_cobblestone_bricks", "pyrite", "mossy_cobblestone_bricks")
 
-  writeBlock("cobblestone_bricks", "cobblestone_bricks", "pyrite", "cobblestone_bricks")
-  writeBlock("smooth_stone_bricks", "smooth_stone_bricks", "pyrite", "smooth_stone_bricks")
-  writeBrickSlab("smooth_stone", namespace)
-  writeBrickStairs("smooth_stone", namespace)
-  writeBrickWall("smooth_stone", namespace)
+  // writeBlock("cobblestone_bricks", "cobblestone_bricks", "pyrite", "cobblestone_bricks")
+  // writeBlock("smooth_stone_bricks", "smooth_stone_bricks", "pyrite", "smooth_stone_bricks")
+  // writeBrickSlab("smooth_stone", namespace)
+  // writeBrickStairs("smooth_stone", namespace)
+  // writeBrickWall("smooth_stone", namespace)
   // writeWallGates("smooth_stone_brick", namespace, "smooth_stone_bricks")
 
 
@@ -465,17 +489,17 @@ function generateResources() {
 
 
 
-  modDyes.forEach(function (dye) {
-    namespace = "pyrite"
-    // writeDye(dye, dye, namespace)
-    // writeWool(dye, dye, namespace)
+  // modDyes.forEach(function (dye) {
+  //   namespace = "pyrite"
+  //   // writeDye(dye, dye, namespace)
+  //   // writeWool(dye, dye, namespace)
 
-    // writeCarpet(dye + "_carpet", namespace, dye + "_wool")
-    // writeTerracotta(dye, dye, namespace)
+  //   // writeCarpet(dye + "_carpet", namespace, dye + "_wool")
+  //   // writeTerracotta(dye, dye, namespace)
 
 
-  })
-  namespace = "pyrite"
+  // })
+  // namespace = "pyrite"
 
   // writeLamps("glowstone", "glowstone", namespace)
   // writeLamps("lit_redstone", "lit_redstone", namespace, "minecraft")
@@ -495,108 +519,108 @@ function generateResources() {
   // writeBrickWall("blue_nether", namespace)
   // writeWallGates("blue_nether_brick", namespace, "blue_nether_bricks")
 
-  writeVanillaWalls(walls)
+  // writeVanillaWalls(walls)
   // writeVanillaWalls(trialsWalls)
 
 
 
 
-  cut.forEach(function (block) {
-    const ogBaseBlock = block;
-    let baseBlock = block
-    if (block == "copper") { }
-    else if (block == "exposed_copper") { }
-    else if (block == "oxidized_copper") { }
-    else if (block == "weathered_copper") { }
-    else {
-      baseBlock = baseBlock + "_block"
-    }
-    const baseIngot = block + "_ingot"
-    // writeBlock(`cut_${block}`, "cut_iron", "pyrite", `cut_${block}`)
-    // writeSlabs(`cut_${block}`, "pyrite", `cut_${block}`)
-    // writeStairs(`cut_${block}`, "pyrite", `cut_${block}`)
-    // writeWalls(`cut_${block}`, "pyrite")
-    // writeWallGates(`cut_${block}`, namespace, `cut_${block}`, namespace)
+  // cut.forEach(function (block) {
+  //   const ogBaseBlock = block;
+  //   let baseBlock = block
+  //   if (block == "copper") { }
+  //   else if (block == "exposed_copper") { }
+  //   else if (block == "oxidized_copper") { }
+  //   else if (block == "weathered_copper") { }
+  //   else {
+  //     baseBlock = baseBlock + "_block"
+  //   }
+  //   const baseIngot = block + "_ingot"
+  //   // writeBlock(`cut_${block}`, "cut_iron", "pyrite", `cut_${block}`)
+  //   // writeSlabs(`cut_${block}`, "pyrite", `cut_${block}`)
+  //   // writeStairs(`cut_${block}`, "pyrite", `cut_${block}`)
+  //   // writeWalls(`cut_${block}`, "pyrite")
+  //   // writeWallGates(`cut_${block}`, namespace, `cut_${block}`, namespace)
 
-    //  writeSlabs(`smooth_${block}`, "pyrite", `smooth_${block}`)
-    // writeStairs(`smooth_${block}`, "pyrite", `smooth_${block}`)
-    // writeWalls(`smooth_${block}`, "pyrite")
-    // writeWallGates(`smooth_${block}`, namespace, `smooth_${block}`, namespace)
+  //   //  writeSlabs(`smooth_${block}`, "pyrite", `smooth_${block}`)
+  //   // writeStairs(`smooth_${block}`, "pyrite", `smooth_${block}`)
+  //   // writeWalls(`smooth_${block}`, "pyrite")
+  //   // writeWallGates(`smooth_${block}`, namespace, `smooth_${block}`, namespace)
 
-    // writeBlock(`${block}_bricks`, "cut_"+baseBlock, "pyrite",  "resource_bricks")
-    // writeChiseledBlock(`chiseled_${block}_block`, baseBlock, "pyrite",  "chiseled_resource")
-    // writeChiseledBlock(`${block}_pillar`, baseBlock, "pyrite",  "resource_pillar")
-    // writeBlock(`smooth_${block}`, baseBlock, "pyrite",  "smooth_resource")
-    // writeBarBlock(block, "pyrite", baseBlock)
-    // writeDoors(block, "dye", "pyrite", baseBlock)
-    // writeTrapdoors(block, "dye", "pyrite", baseBlock)
-    // writeBlock(`nostalgia_${block}_block`, baseBlock, "pyrite",  "nostalgia")
-
-    // writeButtons(block, "pyrite", baseBlock, "minecraft")
-    // writePlates(block, "pyrite", baseBlock, "minecraft")
-
-
-  })
-
-  trialsWalls.forEach(function(wall) {
-    let blockTemplate = wall
-    baseBlock = blockTemplate
-    baseBlock = `${baseBlock.replace("brick", "bricks")}`
-    baseBlock = `${baseBlock.replace("tile", "tiles")}`
-    // writeWallGates(blockTemplate, namespace, baseBlock, "minecraft")
-
-  // writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
-  // writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
-  // writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
-  // writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
-  // writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_top", namespace)
-
-  // writeFenceGates("nether_brick", namespace, "nether_bricks", "minecraft")
-  // writeFlower("rose", namespace, "pyrite")
-  // writeFlower("blue_rose", namespace, "pyrite")
-  // writeFlower("orange_rose", namespace, "pyrite")
-  // writeFlower("white_rose", namespace, "pyrite")
-  // writeFlower("pink_rose", namespace, "pyrite")
-  // writeFlower("paeonia", namespace, "pyrite")
-  // writeFlower("pink_daisy", namespace, "pyrite")
-  // writeFlower("buttercup", namespace, "pyrite")
-
-
-  // //   // writeStonecutterRecipes(`${block}_button`, "block", baseBlock, "pyrite", "minecraft")
-  // //   writeStonecutterRecipes(`smooth_${block}_wall_gate`, "wall", "smooth_"+ogBaseBlock, "pyrite", "pyrite")
+  //   // writeBlock(`${block}_bricks`, "cut_"+baseBlock, "pyrite",  "resource_bricks")
+  //   // writeChiseledBlock(`chiseled_${block}_block`, baseBlock, "pyrite",  "chiseled_resource")
+  //   // writeChiseledBlock(`${block}_pillar`, baseBlock, "pyrite",  "resource_pillar")
+  //   // writeBlock(`smooth_${block}`, baseBlock, "pyrite",  "smooth_resource")
+  //   // writeBarBlock(block, "pyrite", baseBlock)
+  //   // writeDoors(block, "dye", "pyrite", baseBlock)
+  //   // writeTrapdoors(block, "dye", "pyrite", baseBlock)
+  //   // writeBlock(`nostalgia_${block}_block`, baseBlock, "pyrite",  "nostalgia")
 
   //   // writeButtons(block, "pyrite", baseBlock, "minecraft")
   //   // writePlates(block, "pyrite", baseBlock, "minecraft")
-  //   // writeRecipes(block+"_pressure_plate", "plates", baseIngot, "pyrite", "minecraft")
-  //   // printLang(`${block}_button`)
-  //   // if (baseBlock == "quartz_block") {
-  //   //   console.log(`"pyrite:smooth_${block}_slab",`)
-  //   //   console.log(`"pyrite:smooth_${block}_stairs",`)
-  //   //   console.log(`"pyrite:smooth_${block}_wall_gate",`)
-  //   //   console.log(`"pyrite:smooth_${block}_wall",`)
-  //   // }
+
 
   // })
 
+//   trialsWalls.forEach(function(wall) {
+//     let blockTemplate = wall
+//     baseBlock = blockTemplate
+//     baseBlock = `${baseBlock.replace("brick", "bricks")}`
+//     baseBlock = `${baseBlock.replace("tile", "tiles")}`
+//     // writeWallGates(blockTemplate, namespace, baseBlock, "minecraft")
 
-  // writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
-  // writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
-  // writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
-  // writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
-  // writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_top", namespace)
+//   // writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
+//   // writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
+//   // writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
+//   // writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
+//   // writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_top", namespace)
 
-  // writeFenceGates("nether_brick", namespace, "nether_bricks", "minecraft")
-  // writeFlower("rose", namespace, "pyrite")
-  // writeFlower("blue_rose", namespace, "pyrite")
-  // writeFlower("orange_rose", namespace, "pyrite")
-  // writeFlower("white_rose", namespace, "pyrite")
-  // writeFlower("pink_rose", namespace, "pyrite")
-  // writeFlower("paeonia", namespace, "pyrite")
-  // writeFlower("pink_daisy", namespace, "pyrite")
-  // writeFlower("buttercup", namespace, "pyrite")
+//   // writeFenceGates("nether_brick", namespace, "nether_bricks", "minecraft")
+//   // writeFlower("rose", namespace, "pyrite")
+//   // writeFlower("blue_rose", namespace, "pyrite")
+//   // writeFlower("orange_rose", namespace, "pyrite")
+//   // writeFlower("white_rose", namespace, "pyrite")
+//   // writeFlower("pink_rose", namespace, "pyrite")
+//   // writeFlower("paeonia", namespace, "pyrite")
+//   // writeFlower("pink_daisy", namespace, "pyrite")
+//   // writeFlower("buttercup", namespace, "pyrite")
 
 
-}}
+//   // //   // writeStonecutterRecipes(`${block}_button`, "block", baseBlock, "pyrite", "minecraft")
+//   // //   writeStonecutterRecipes(`smooth_${block}_wall_gate`, "wall", "smooth_"+ogBaseBlock, "pyrite", "pyrite")
+
+//   //   // writeButtons(block, "pyrite", baseBlock, "minecraft")
+//   //   // writePlates(block, "pyrite", baseBlock, "minecraft")
+//   //   // writeRecipes(block+"_pressure_plate", "plates", baseIngot, "pyrite", "minecraft")
+//   //   // printLang(`${block}_button`)
+//   //   // if (baseBlock == "quartz_block") {
+//   //   //   console.log(`"pyrite:smooth_${block}_slab",`)
+//   //   //   console.log(`"pyrite:smooth_${block}_stairs",`)
+//   //   //   console.log(`"pyrite:smooth_${block}_wall_gate",`)
+//   //   //   console.log(`"pyrite:smooth_${block}_wall",`)
+//   //   // }
+
+//   // })
+
+
+//   // writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
+//   // writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
+//   // writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
+//   // writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
+//   // writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_top", namespace)
+
+//   // writeFenceGates("nether_brick", namespace, "nether_bricks", "minecraft")
+//   // writeFlower("rose", namespace, "pyrite")
+//   // writeFlower("blue_rose", namespace, "pyrite")
+//   // writeFlower("orange_rose", namespace, "pyrite")
+//   // writeFlower("white_rose", namespace, "pyrite")
+//   // writeFlower("pink_rose", namespace, "pyrite")
+//   // writeFlower("paeonia", namespace, "pyrite")
+//   // writeFlower("pink_daisy", namespace, "pyrite")
+//   // writeFlower("buttercup", namespace, "pyrite")
+
+
+}
 
 
 
@@ -610,6 +634,13 @@ function writeLang() {
 
 function writeFile(path, data) {
   const demoMode = false
+  if (data instanceof Object) {
+    data = JSON.stringify(data)
+  }
+  else {
+    data = JSON.parse(data)
+    data = JSON.stringify(data)
+  }
   if (demoMode == false) {
     fs.writeFile(path, data, function (err) { if (err) throw err; })
   }
@@ -721,60 +752,34 @@ function printBlock(block) {
 
 }
 
+function generateWallBlockModel(block, namespace, baseBlock, parent) {
+  return `{
+      "parent": "minecraft:block/${parent}",
+      "textures": {
+        "wall": "${namespace}:block/${baseBlock}"
+      }
+    }`
+}
+
 function writeWallBlockModels(block, namespace, baseBlock) {
-  postModel = `{
-    "parent": "minecraft:block/template_wall_post",
-    "textures": {
-      "wall": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  postModel = `{
-    "parent": "minecraft:block/template_wall_post",
-    "textures": {
-      "wall": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  sideModel = `{
-    "parent": "minecraft:block/template_wall_side",
-    "textures": {
-      "wall": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  invModel = `{
-    "parent": "minecraft:block/wall_inventory",
-    "textures": {
-      "wall": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  tallModel = `{
-    "parent": "minecraft:block/template_wall_side_tall",
-    "textures": {
-      "wall": "${namespace}:block/${baseBlock}"
-    }
-  }`
-  fs.writeFile(`${paths.models}${block}_post.json`, postModel, function (err) {
-    if (err) throw err;
+  postModel = generateWallBlockModel(block, namespace, baseBlock, "template_wall_post")
+  sideModel = generateWallBlockModel(block, namespace, baseBlock, "template_wall_side")
+  invModel = generateWallBlockModel(block, namespace, baseBlock, "wall_inventory")
+  tallModel = generateWallBlockModel(block, namespace, baseBlock, "template_wall_side_tall")
 
-  });
-  fs.writeFile(`${paths.models}${block}_side.json`, sideModel, function (err) {
-    if (err) throw err;
+  writeFile(`${paths.models}${block}_post.json`, postModel)
+  writeFile(`${paths.models}${block}_side.json`, sideModel)
+  writeFile(`${paths.models}${block}_inventory.json`, invModel)
+  writeFile(`${paths.models}${block}_side_tall.json`, tallModel)
 
-  });
-  fs.writeFile(`${paths.models}${block}_inventory.json`, invModel, function (err) {
-    if (err) throw err;
 
-  });
-  fs.writeFile(`${paths.models}${block}_side_tall.json`, tallModel, function (err) {
-    if (err) throw err;
-
-  });
 }
 
 
 function writePaneBlockModels(block, namespace, baseBlock) {
 
   writeFile(`${paths.models}${block}_post.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_post"))
-  writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"), function (err) { if (err) throw err; });
+  writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
   writeFile(`${paths.models}${block}_noside.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside"))
   writeFile(`${paths.models}${block}_side_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
   writeFile(`${paths.models}${block}_noside_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside_alt"))
@@ -2114,7 +2119,27 @@ function writeStairs(block, namespace, baseBlock) {
 
 }
 
+function writeBrickSlab(block, namespace, baseBlock) {
+  writeSlabs(block, namespace, baseBlock)
 
+
+
+}
+
+function writeBrickStairs(block, namespace, baseBlock) {
+  writeStairs(block, namespace, baseBlock)
+
+
+
+}
+
+
+function writeBrickWall(block, namespace, baseBlock) {
+  writeWalls(block, namespace, baseBlock)
+
+
+
+}
 
 
 
@@ -2244,6 +2269,54 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 }
 
 
+function enableNewRecipes() {
+  if (version == "1.21.2" || version == "1.21.3" || version == "1.21.4") {
+    return true;
+  }
+  else return false;
+}
+
+function itemOrId() {
+  if (version == "1.21.2" || version == "1.21.3" || version == "1.21.4") {
+    return "id";
+  }
+  else return "item";
+}
+
+function addIngredients(ingredients, ingredient) {
+  if (enableNewRecipes() == true) {
+    ingredients.push(ingredient)
+  }
+  else  {
+    if (ingredient[0] == "#") {
+      ingredients.push({"tag": ingredient.slice(1)}) 
+    }
+    else {
+      ingredients.push({"item": ingredient})  
+    }
+  }
+}
+
+function generateShapelessRecipe(ingredients, result, quantity) {
+  recipe = {
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": []
+    }
+    if (ingredients instanceof Array) {
+      ingredients.forEach(function(ingredient) {
+        addIngredients(recipe.ingredients, ingredient)
+      })
+    }
+    else {
+      addIngredients(recipe.ingredients, ingredient)
+    }
+    
+    recipe.result =  JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
+
+    return recipe
+
+  }
+
 function createTags(block) {
   tags += `    "pyrite:${block}",\n`
 
@@ -2339,6 +2412,11 @@ function writeDoorLootTables(block, namespace) {
 }
 
 function createDyeRecipe(namespace, block, altNamespace, altBlock, other, itemOrTag, baseNamespace) {
+  let itemOrID;
+  if (version == "1.21.1" || version == "1.21.4") {
+    itemOrID = "id"
+  }
+  else itemOrID = "item"
 
 if (baseNamespace == undefined) {
   baseNamespace = altNamespace
@@ -2359,8 +2437,7 @@ if (baseNamespace == undefined) {
       }
     },
     "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
+      "${itemOrID}": "${namespace}:${block}",
       "count": 8
     }
 }`
@@ -2377,19 +2454,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 
   if (type == "planks") {
     if ((other == "red_mushroom") || (other == "brown_mushroom")) {
-      recipe = `{
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "pyrite:${other}_stem"
-          }
-        ],
-        "result": {
-          "item": "pyrite:${block}",
-          "id": "pyrite:${block}",
-          "count": 4
-        }
-      }`
+      recipe =  generateShapelessRecipe(`pyrite:${other}_stem`, `${namespace}:${block}`, 4)
     }
     else {
       other = other.replace("stained", "dye")
@@ -2414,8 +2479,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
       }
     },
     "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
+      "${itemOrID}": "${namespace}:${block}",
       "count": 3
     }
 }`
@@ -2439,8 +2503,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
       }
     },
     "result": {
-      "item": "${namespace}:${block}",
-      "id": "${namespace}:${block}",
+      "${itemOrID}": "${namespace}:${block}",
       "count": 4
     }
 }`
@@ -2448,59 +2511,16 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   else if (type == "torch") {
     other = `${other}_dye`
     altNamespace = changeDyeNamespace(other)
-    recipe = `{
-      "type": "minecraft:crafting_shapeless",
-      "ingredients": [
-        {
-          "item": "${altNamespace}:${other}"
-        },
-        {
-          "item": "minecraft:torch"
-        }
-      ],
-      "result": {
-        "item": "${namespace}:${block}",
-        "id": "${namespace}:${block}",
-        "count": 1
-      }
-    }`
+    ingredients = [`${altNamespace}:${other}`, "minecraft:torch"]
+    result = `"${namespace}:${block}"`
+    
+    recipe = generateShapelessRecipe(ingredients, result, 1)
   }
   else if (type == "wool") {
-    recipe = `{
-      "type": "minecraft:crafting_shapeless",
-      "category": "misc",
-      "ingredients": [
-        {
-          "item": "${namespace}:${other}_dye"
-        },
-        {
-          "item": "minecraft:white_wool"
-        }
-      ],
-      "result": {
-        "count": 1,
-        "item": "${namespace}:${block}",
-        "id": "${namespace}:${block}"
-      }
-    }`
+    recipe = generateShapelessRecipe([`pyrite:${other}_dye`, "minecraft:white_wool"], `${namespace}:${block}`, 1)
   }
   else if (type == "torch_lever") {
-    recipe = `{
-      "type": "minecraft:crafting_shapeless",
-      "ingredients": [
-        {
-          "item": "${altNamespace}:${other}"
-        },
-        {
-          "item": "minecraft:lever"
-        }
-      ],
-      "result": {
-        "item": "${namespace}:${block}",
-        "id": "${namespace}:${block}",
-        "count": 1
-      }
-    }`
+    recipe = generateShapelessRecipe([`${altNamespace}:other`, "minecraft:lever"], `${namespace}:${block}`, 1)
   }
   else if (type == "cobblestone_bricks") {
     recipe = `    {
@@ -2905,23 +2925,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     }`
   }
   else if (type == "nostalgia") {
-    recipe = `{
-      "type": "minecraft:crafting_shapeless",
-      "category": "misc",
-      "ingredients": [
-        {
-          "item": "pyrite:nostalgia_dye"
-        },
-        {
-          "item": "minecraft:${other}"
-        }
-      ],
-      "result": {
-        "count": 1,
-        "item": "pyrite:${block}",
-        "id": "pyrite:${block}"
-      }
-    }`
+    recipe = generateShapelessRecipe([`pyrite:nostalgia_dye`, `minecraft:${other}`], `pyrite:${block}`, 1)
   }
   else if (type == "chiseled_resource") {
     recipe = `        {
@@ -3228,23 +3232,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
       }`
   }
   else if (type == "metal_buttons") {
-    recipe = `{
-      "type": "minecraft:crafting_shapeless",
-      "category": "misc",
-      "ingredients": [
-        {
-          "item": "${altNamespace}:${other}"
-        },
-        {
-          "tag": "${altNamespace}:buttons"
-        }
-      ],
-      "result": {
-        "count": 1,
-        "item": "${namespace}:${block}",
-        "id": "${namespace}:${block}"
-      }
-    }`
+    recipe = generateShapelessRecipe([`${altNamespace}:${other}`, `#${altNamespace}:buttons`], `${namespace}:${block}`, 1)
   }
 
   return recipe
