@@ -450,7 +450,7 @@ function generateResources() {
   // writeWalls("mossy_cobblestone_brick", "pyrite", "mossy_cobblestone_bricks")
   // // writeBlock("mossy_cobblestone_bricks", "mossy_cobblestone_bricks", "pyrite", "mossy_cobblestone_bricks")
 
-  // writeBlock("cobblestone_bricks", "cobblestone_bricks", "pyrite", "cobblestone_bricks")
+  writeBlock("cobblestone_bricks", "pyrite", "cobblestone_bricks", "cobblestone_bricks")
   // writeBlock("smooth_stone_bricks", "smooth_stone_bricks", "pyrite", "smooth_stone_bricks")
   // writeBrickSlab("smooth_stone", namespace)
   // writeBrickStairs("smooth_stone", namespace)
@@ -638,8 +638,12 @@ function writeFile(path, data) {
     data = JSON.stringify(data)
   }
   else {
-    data = JSON.parse(data)
-    data = JSON.stringify(data)
+    try {
+      data = JSON.parse(data)
+      data = JSON.stringify(data)
+    }
+    catch {}
+    
   }
   if (demoMode == false) {
     fs.writeFile(path, data, function (err) { if (err) throw err; })
@@ -1149,7 +1153,7 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
   writeMirroredBricksBlockModels(block, namespace, baseBlock)
   writeBlockItemModel(block, namespace)
   createTags(block, namespace)
-  writeRecipes(block, special, baseBlock)
+  writeRecipes(block, special, baseBlock, namespace)
 
 
 }
@@ -2317,6 +2321,28 @@ function generateShapelessRecipe(ingredients, result, quantity) {
 
   }
 
+  function generateShapedRecipe(ingredients, result, quantity, shape) {
+    recipe = {
+        "type": "minecraft:crafting_shaped",
+        "ingredients": [],
+        "shape": shape
+      }
+      if (ingredients instanceof Array) {
+        ingredients.forEach(function(ingredient) {
+          addIngredients(recipe.ingredients, ingredient)
+        })
+      }
+      else {
+        addIngredients(recipe.ingredients, ingredient)
+      }
+      
+      recipe.result =  JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
+      console.log(recipe)
+  
+      return recipe
+  
+    }
+
 function createTags(block) {
   tags += `    "pyrite:${block}",\n`
 
@@ -2444,6 +2470,8 @@ if (baseNamespace == undefined) {
 }
 
 function generateRecipes(block, type, other, namespace, altNamespace) {
+  console.log("E", type)
+
   if (namespace == undefined) {
     namespace = "pyrite"
   }
@@ -2463,26 +2491,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     }
   }
   else if (type == "ladder") {
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      "C C",
-      "CDC",
-      "C C"
-    ],
-    "key": {
-      "C": {
-        "item": "minecraft:stick"
-      },
-      "D": {
-        "item": "${altNamespace}:${other}"
-      }
-    },
-    "result": {
-      "${itemOrID}": "${namespace}:${block}",
-      "count": 3
-    }
-}`
+    recipe =  generateShapedRecipe([{"C": `minecraft:stick`}, {"D": `${altNamespace}:${other}`}], `${namespace}:${block}`, 3, ["C C","CDC","C C"])
   }
   else if (type == "terracotta") {
     other = `${other}_dye`
@@ -2491,22 +2500,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   }
   if (type == "terracotta_bricks") {
     altNamespace = changeDyeNamespace(other)
-    recipe = `        {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      "CC",
-      "CC"
-    ],
-    "key": {
-      "C": {
-        "item": "${altNamespace}:${other}"
-      }
-    },
-    "result": {
-      "${itemOrID}": "${namespace}:${block}",
-      "count": 4
-    }
-}`
+    recipe = generateShapedRecipe([{"C": `${altNamespace}:${other}`}], `${namespace}:${block}`, 3, ["CC","CC"])
   }
   else if (type == "torch") {
     other = `${other}_dye`
@@ -2523,290 +2517,28 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     recipe = generateShapelessRecipe([`${altNamespace}:other`, "minecraft:lever"], `${namespace}:${block}`, 1)
   }
   else if (type == "cobblestone_bricks") {
-    recipe = `    {
-      "type": "minecraft:crafting_shaped",
-      "pattern": [
-        "CC",
-        "CC"
-      ],
-      "key": {
-        "C": {
-          "item": "minecraft:cobblestone"
-        }
-      },
-      "result": {
-        "item": "pyrite:cobblestone_bricks",
-        "count": 4
-      }
-    }
-`
+    recipe = generateShapedRecipe([{"C": `minecraft:cobblestone`}], `pyrite:cobblestone_bricks`, 4, ["CC","CC"])
   }
   else if (type == "smooth_stone_bricks") {
-    recipe = `    {
-      "type": "minecraft:crafting_shaped",
-      "pattern": [
-        "CC",
-        "CC"
-      ],
-      "key": {
-        "C": {
-          "item": "minecraft:smooth_stone"
-        }
-      },
-      "result": {
-        "item": "pyrite:smooth_stone_bricks",
-        "count": 4
-      }
-    }
-`
+    recipe = generateShapedRecipe([{"C":`minecraft:smooth_stone`}], `pyrite:smooth_stone_bricks`, 4, ["CC","CC"])
   }
   else if (type == "mossy_cobblestone_bricks") {
     recipe = ``
   }
   else if (type == "glowing_obsidian") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "pattern": [
-        "X#",
-        "#X"
-      ],
-      "key": {
-        "#": {
-          "item": "minecraft:crying_obsidian"
-        },
-        "X": {
-          "item": "minecraft:magma_block"
-        }
-      },
-      "result": {
-        "item": "pyrite:glowing_obsidian",
-        "count": 4
-      }
-    }
-`
+    recipe = generateShapedRecipe([{"X":`minecraft:crying_obsidian`}, {"#":`minecraft:magma_block`}], `pyrite:glowing_obsidian`, 4, ["X#","#X"])
   }
-  else if (type == "cut_iron") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:iron_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_iron"
-      }
-    }
-`
-  }
-  else if (type == "cut_gold") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:gold_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_gold"
-      }
-    }
-`
-  }
-  else if (type == "cut_amethyst") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:iron_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_amethyst"
-      }
-    }
-`
-  }
-  else if (type == "cut_emerald") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:emerald_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_emerald"
-      }
-    }
-`
-  }
-  else if (type == "cut_diamond") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:diamond_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_diamond"
-      }
-    }
-`
-  }
-  else if (type == "cut_lapis") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:lapis_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_lapis"
-      }
-    }
-`
-  }
-  else if (type == "cut_amethyst") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:amethyst_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_amethyst"
-      }
-    }
-`
-  }
-  else if (type == "cut_emerald") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:emerald_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_emerald"
-      }
-    }
-`
-  }
-  else if (type == "cut_quartz") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:iron_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_quartz"
-      }
-    }
-`
-  }
-  else if (type == "cut_netherite") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "category": "building",
-      "key": {
-        "#": {
-          "item": "minecraft:netherite_block"
-        }
-      },
-      "pattern": [
-        "##",
-        "##"
-      ],
-      "result": {
-        "count": 4,
-        "item": "pyrite:cut_netherite"
-      }
-    }
-`
+  else if (type.contains("cut_")) {
+    baseBlock = type.split("_")[1]
+    baseBlock = baseBlock + "_block"
+    recipe = generateShapedRecipe([{"X":`minecraft:${baseBlock}`}], `pyrite:${type}`, 4, ["##","##"])
   }
   else if (type == "framed_glass") {
-    recipe = `{
-      "type": "minecraft:crafting_shaped",
-      "pattern": [
-        "X#X",
-        "#X#",
-        "X#X"
-      ],
-      "key": {
-        "#": {
-          "item": "minecraft:glass"
-        },
-        "X": {
-          "item": "minecraft:iron_nugget"
-        }
-      },
-      "result": {
-        "item": "pyrite:framed_glass",
-      "count": 4
-      }
-    }
-`
+    recipe = generateShapedRecipe([{"X":`minecraft:glass`}, {"X":`minecraft:iron_nugget`}], `pyrite:${type}`, 4, [
+      "X#X",
+      "#X#",
+      "X#X"
+    ])
   }
   else if ((type == "dyed_framed_glass") || (type == "stained_framed_glass")) {
     const dye = `${other}_dye`
