@@ -2278,7 +2278,6 @@ function generateShapelessRecipe(ingredients, result, quantity) {
     if (!enableNewRecipes()) {
       const keys = Object.keys(ingredients)
       const values = Object.values(ingredients)
-      console.log(keys, values)
       let i = 0;
       values.forEach(function(value) {
         let itemortag;
@@ -2536,7 +2535,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     else {
       other = `${other}_dye`
       altNamespace = changeDyeNamespace(other)
-      recipe = createDyeRecipe(namespace, block, altNamespace, "bricks", other, "item")
+      recipe = generateShapedRecipe({"C": `${altNamespace}:${other}`, "D": `minecraft:bricks`}, `pyrite:${block}`, 4, ["CCC","CDC","CCC"])
     }
   }
   else if (type == "resource_bricks") {
