@@ -2289,7 +2289,7 @@ function generateShapelessRecipe(ingredients, result, quantity) {
         else {
           itemortag = "item"
         }
-        Object.assign(newIngredients, JSON.parse(`{"${keys[0]}": {"${itemortag}": "${value}"}}`))
+        Object.assign(newIngredients, JSON.parse(`{"${keys[i]}": {"${itemortag}": "${value}"}}`))
         i++
       })
     }
@@ -2297,9 +2297,8 @@ function generateShapelessRecipe(ingredients, result, quantity) {
 
     recipe = {
         "type": "minecraft:crafting_shaped",
-        "ingredients": [],
         "pattern": shape,
-        "ingredients": newIngredients
+        "key": newIngredients
         
       }
       
