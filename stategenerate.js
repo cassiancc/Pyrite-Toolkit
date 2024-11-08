@@ -142,7 +142,7 @@ paths = Object.assign(paths, {
 
 })
 
-const version = "1.21.4"
+const version = "1.21.1"
 
 if (version == "1.20.1") {
   paths = Object.assign(paths, {
@@ -2476,7 +2476,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     recipe = generateShapelessRecipe([`pyrite:${other}_dye`, "minecraft:white_wool"], `${namespace}:${block}`, 1)
   }
   else if (type == "torch_lever") {
-    recipe = generateShapelessRecipe([`${altNamespace}:other`, "minecraft:lever"], `${namespace}:${block}`, 1)
+    recipe = generateShapelessRecipe([`${altNamespace}:${other}`, "minecraft:lever"], `${namespace}:${block}`, 1)
   }
   else if (type == "cobblestone_bricks") {
     recipe = generateShapedRecipe([{"C": `minecraft:cobblestone`}], `pyrite:cobblestone_bricks`, 4, ["CC","CC"])
