@@ -2,8 +2,11 @@ const { create } = require('domain');
 var fs = require('fs');
 const { basename } = require('path');
 
-globalNamespace = "pyrite"
-globalBaseNamespace = "minecraft"
+const globalNamespace = "pyrite"
+const globalBaseNamespace = "minecraft"
+const version = "1.21.1"
+const majorVersion = version.split(".")[1]
+const minorVersion = version.split(".")[2]
 
 
 vanillaDyes = [
@@ -142,9 +145,8 @@ paths = Object.assign(paths, {
 
 })
 
-const version = "1.21.1"
 
-if (version == "1.20.1") {
+if (majorVersion == "20") {
   paths = Object.assign(paths, {
 
     loot: `${paths.data}loot_tables/blocks/`,
@@ -155,7 +157,7 @@ if (version == "1.20.1") {
 
 
 
-if (version == "1.21.1" || version == "1.21.4") {
+if (majorVersion == "21") {
   paths = Object.assign(paths, {
 
     loot: `${paths.data}loot_table/blocks/`,
@@ -377,51 +379,23 @@ function generateResources() {
     })
   }
 
-  // dyes.forEach(function (dye) {
-  //   let stainedBlockTemplate = dye + "_stained"
-  //   plankBase = stainedBlockTemplate + "_planks"
-  //   namespace = "pyrite"
+  dyes.forEach(function (dye) {
+      let stainedBlockTemplate = dye + "_stained"
+      generateWoodSet(stainedBlockTemplate)
+      generateBrickSet(dye)
+      generateBrickSet(dye + "_terracotta", "terracotta_bricks")
 
-  //   writeButtons(stainedBlockTemplate, namespace, plankBase)
-  //   writeStairs(stainedBlockTemplate, namespace, plankBase)
-  //   writeSlabs(stainedBlockTemplate, namespace, plankBase)
-  //   writePlates(stainedBlockTemplate, namespace, plankBase)
-  //   writeFences(stainedBlockTemplate, namespace, plankBase)
-  //   writeFenceGates(stainedBlockTemplate, namespace, plankBase)
-  //   writePlanks(stainedBlockTemplate, dye, namespace, plankBase)
-  //   writeCraftingTableBlock(stainedBlockTemplate, dye, namespace, plankBase)
-  //   writeLadders(stainedBlockTemplate, dye, namespace, plankBase)
-  //   // writeChests(stainedBlockTemplate, dye, namespace, plankBase)
-  //   writeDoors(stainedBlockTemplate, dye, namespace, plankBase)
-  //   writeTrapdoors(stainedBlockTemplate, dye, namespace, plankBase)
-
-  //   // Bricks
-  //   let blockTemplate = dye
-  //   baseBlock = blockTemplate + "_bricks"
-  //   // writeBricks(dye, dye, namespace)
-  //   // writeBrickSlab(blockTemplate, namespace)
-  //   // writeBrickStairs(blockTemplate, namespace)
-  //   // writeBrickWall(blockTemplate, namespace)
-  //   // writeWallGates(blockTemplate + "_brick", namespace, blockTemplate+"_bricks")
-
-  //   baseBlock = dye + "_terracotta"
-  //   writeTerracottaBricks(dye + "_terracotta", dye, namespace)
-  //   // writeBrickSlab(dye + "_terracotta", namespace)
-  //   // writeBrickStairs(dye + "_terracotta", namespace)
-  //   // writeBrickWall(dye + "_terracotta", namespace)
-  //   // writeWallGates(dye + "_terracotta_brick", namespace, dye+"_terracotta_bricks")
-
-  //   // Lamps
-  //   lamp = new Block(dye + "_lamp", globalNamespace, undefined, "lamp", dye, "lamp")
-  //   //Torches
-  //   torch = new Block(dye + "_torch", globalNamespace, undefined, "torch", dye, "torch")
-  //   //Torch Levers
-  //   torch_lever = new Block(dye + "_torch_lever", globalNamespace, globalNamespace, "torch_lever", dye, "torch")
-  //   //Framed Glass
-  //   framed_glass = new Block(dye + "_framed_glass", globalNamespace, undefined, "stained_framed_glass", dye, "stained_framed_glass")
-  //   //Framed Glass Panes
-  //   framed_glass = new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
-  // })
+    // Lamps
+    lamp = new Block(dye + "_lamp", globalNamespace, undefined, "lamp", dye, "lamp")
+    //Torches
+    torch = new Block(dye + "_torch", globalNamespace, undefined, "torch", dye, "torch")
+    //Torch Levers
+    torch_lever = new Block(dye + "_torch_lever", globalNamespace, globalNamespace, "torch_lever", dye, "torch")
+    //Framed Glass
+    framed_glass = new Block(dye + "_framed_glass", globalNamespace, undefined, "stained_framed_glass", dye, "stained_framed_glass")
+    //Framed Glass Panes
+    framed_glass = new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
+  })
 
 
   vanillaWood.forEach(function (dye) {
@@ -2252,14 +2226,14 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 
 
 function enableNewRecipes() {
-  if (version == "1.21.2" || version == "1.21.3" || version == "1.21.4") {
+  if ((majorVersion == "21") && (minorVersion != "1")) {
     return true;
   }
   else return false;
 }
 
 function itemOrId() {
-  if (version == "1.21.2" || version == "1.21.3" || version == "1.21.4") {
+  if ((majorVersion == "21") && (minorVersion != "1")) {
     return "id";
   }
   else return "item";
@@ -2285,7 +2259,6 @@ function generateShapelessRecipe(ingredients, result, quantity) {
       "ingredients": []
     }
     if (ingredients instanceof Array) {
-      console.log(ingredients)
       ingredients.forEach(function(i) {
         addIngredients(recipe.ingredients, i)
       })
@@ -2468,7 +2441,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
     other = `${other}_dye`
     altNamespace = changeDyeNamespace(other)
     ingredients = [`${altNamespace}:${other}`, "minecraft:torch"]
-    result = `"${namespace}:${block}"`
+    result = `${namespace}:${block}`
     
     recipe = generateShapelessRecipe(ingredients, result, 1)
   }
