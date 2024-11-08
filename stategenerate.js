@@ -5,8 +5,8 @@ const { basename } = require('path');
 const globalNamespace = "pyrite"
 const globalBaseNamespace = "minecraft"
 const version = "1.21.1"
-const majorVersion = version.split(".")[1]
-const minorVersion = version.split(".")[2]
+const majorVersion = parseInt(version.split(".")[1])
+const minorVersion = parseInt(version.split(".")[2])
 
 
 vanillaDyes = [
@@ -146,7 +146,7 @@ paths = Object.assign(paths, {
 })
 
 
-if (majorVersion == "20") {
+if (majorVersion >= 20) {
   paths = Object.assign(paths, {
 
     loot: `${paths.data}loot_tables/blocks/`,
@@ -157,7 +157,7 @@ if (majorVersion == "20") {
 
 
 
-if (majorVersion == "21") {
+if (majorVersion <= 21) {
   paths = Object.assign(paths, {
 
     loot: `${paths.data}loot_table/blocks/`,
@@ -285,7 +285,7 @@ class Block {  // Create a class
       writePlates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
     }
     else {
-      console.log(blockType)
+      // console.log(blockType)
       writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
     }
 
@@ -2226,14 +2226,14 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 
 
 function enableNewRecipes() {
-  if ((majorVersion == "21") && (minorVersion != "1")) {
+  if (((majorVersion == 21) && (minorVersion != 1)) || (majorVersion > 21)) {
     return true;
   }
   else return false;
 }
 
 function itemOrId() {
-  if ((majorVersion == "21") && (minorVersion != "1")) {
+  if ((majorVersion <= 21)) {
     return "id";
   }
   else return "item";
@@ -2277,7 +2277,7 @@ function generateShapelessRecipe(ingredients, result, quantity) {
     recipe = {
         "type": "minecraft:crafting_shaped",
         "ingredients": [],
-        "shape": shape
+        "pattern": shape
       }
       if (ingredients instanceof Array) {
         ingredients.forEach(function(ingredient) {
