@@ -442,34 +442,34 @@ function generateResources() {
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
 	writeBlock("nostalgia_grass_turf", "pyrite", "nostalgia_grass_turf", "nostalgia_grass", undefined, "pyrite", "pyrite:nostalgia_grass_block_top")
-	writeSlabs("nostalgia_grass_slab", "pyrite", "nostalgia_grass_block_top")
-	writeStairs("nostalgia_grass_stairs", "pyrite", "nostalgia_grass_block_top")
+	writeSlabsV2("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
+	writeStairsV2("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_block_top", namespace)
 
 
 
 	writeBlock("podzol_turf", "pyrite", "podzol_turf", "podzol", undefined, "minecraft", "minecraft:podzol_top")
-	writeSlabs("podzol_slab", "pyrite", "podzol_top", "minecraft")
-	writeStairs("podzol_stairs", "pyrite", "podzol_top", "minecraft")
+	writeSlabsV2("podzol_slab", "podzol_turf", "minecraft:podzol_top")
+	writeStairsV2("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
 	writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
 
 
 
 	writeBlock("grass_turf", "pyrite", "grass_turf", "grass_turf", undefined, "minecraft", "minecraft:grass_block_top")
-	writeSlabs("grass_slab", "pyrite", "grass_block_top", "minecraft")
-	writeStairs("grass_stairs", "pyrite", "grass_block_top", "minecraft")
+	writeSlabsV2("grass_slab", "grass_turf", "minecraft:grass_block_top")
+	writeStairsV2("grass_stairs", "grass_turf", "grass_block_top")
 	writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
 
 
 	writeBlock("mycelium_turf", "pyrite", "mycelium_turf", "mycelium", undefined, "minecraft", "minecraft:mycelium_top")
-	writeSlabs("mycelium_slab", "pyrite", "mycelium_top", "minecraft")
-	writeStairs("mycelium_stairs", "pyrite", "mycelium_top", "minecraft")
+	writeSlabsV2("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
+	writeStairsV2("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
 	writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
 
 
 	writeBlock("path_turf", "pyrite", "path_turf", "mycelium", undefined, "minecraft", "minecraft:dirt_path_top")
-	writeSlabs("path_slab", "pyrite", "dirt_path_top", "minecraft")
-	writeStairs("path_stairs", "pyrite", "dirt_path_top", "minecraft")
+	writeSlabsV2("path_slab", "path_turf", "minecraft:dirt_path_top")
+	writeStairsV2("path_stairs", "path_turf", "minecraft:dirt_path_top")
 	writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
 
 
@@ -2002,6 +2002,7 @@ function generateStairBlockstate(block, namespace) {
       }`
 }
 
+// DEPRECATED - STAIR GENERATOR
 function writeStairs(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
@@ -2012,25 +2013,35 @@ function writeStairs(block, namespace, baseBlock, altNamespace) {
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
 	writeRecipes(block, "stairs", baseBlock, namespace)
+}
 
-	// writeStonecutterRecipes(block, "wall", baseBlock, namespace, namespace)
-
-
-
-
+// V2 - STAIR GENERATOR
+function writeStairsV2(block, baseBlock, texture) {
+	let textureNamespace, texturePath;
+	if (texture.includes(":")) {
+		textureNamespace = texture.split(":")[0]
+		texturePath = texture.split(":")[1]
+	}
+	else {
+		textureNamespace = globalNamespace;
+		texturePath = texture;
+	}
+	
+	let stairBlockState = generateStairBlockstate(block, globalNamespace)
+	writeBlockstate(block, stairBlockState, globalNamespace)
+	writeStairBlockModels(block, textureNamespace, baseBlock)
+	writeBlockItemModel(block, globalNamespace)
+	createTags(block, globalNamespace)
+	writeRecipes(block, "stairs", baseBlock, globalNamespace)
 }
 
 function writeBrickSlab(block, namespace, baseBlock) {
 	writeSlabs(block, namespace, baseBlock)
 
-
-
 }
 
 function writeBrickStairs(block, namespace, baseBlock) {
 	writeStairs(block, namespace, baseBlock)
-
-
 
 }
 
@@ -2043,7 +2054,7 @@ function writeBrickWall(block, namespace, baseBlock) {
 }
 
 
-
+// DEPRECATED - SLAB GENERATOR
 function writeSlabs(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace == undefined) {
 		altNamespace = namespace
@@ -2054,6 +2065,31 @@ function writeSlabs(block, namespace, baseBlock, altNamespace) {
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
 	writeRecipes(block, "slabs", baseBlock, namespace)
+
+	// writeStonecutterRecipes(block, "slab", baseBlock, namespace, namespace)
+
+
+
+}
+
+// V2 - STAIR GENERATOR
+function writeSlabsV2(block, baseBlock, texture) {
+	let textureNamespace, texturePath;
+	if (texture.includes(":")) {
+		textureNamespace = texture.split(":")[0]
+		texturePath = texture.split(":")[1]
+	}
+	else {
+		textureNamespace = globalNamespace;
+		texturePath = texture;
+	}
+	
+	let slabBlockState = generateSlabBlockState(block, globalNamespace, baseBlock)
+	writeBlockstate(block, slabBlockState, globalNamespace)
+	writeSlabBlockModels(block, textureNamespace, baseBlock)
+	writeBlockItemModel(block, globalNamespace)
+	createTags(block, globalNamespace)
+	writeRecipes(block, "slabs", baseBlock, globalNamespace)
 
 	// writeStonecutterRecipes(block, "slab", baseBlock, namespace, namespace)
 
@@ -2160,6 +2196,20 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	if (namespace === undefined) {
 		namespace = "pyrite"
 	}
+	writeBlockstate(block, generateCarpetBlockState(block, namespace, baseBlock), "pyrite")
+	writeCarpetBlockModels(block, altNamespace, baseBlock)
+	writeBlockItemModel(block, namespace)
+	if (baseBlock.search("_top") !== -1) {
+		baseBlock = baseBlock.split("_top")[0]
+
+	}
+	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
+
+
+}
+
+function writeCarpetV2(block, baseBlock, texture) {
+		
 	writeBlockstate(block, generateCarpetBlockState(block, namespace, baseBlock), "pyrite")
 	writeCarpetBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
