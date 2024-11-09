@@ -2449,7 +2449,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		else {
 			other = other.replace("stained", "dye")
 			altNamespace = changeDyeNamespace(other)
-			recipe = generateShapedRecipe({ "D": `${altNamespace}:${other}`, "C": `#minecraft:planks` }, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
+			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": `${altNamespace}:${other}`}, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
 		}
 	}
 	else if (type === "ladder") {
