@@ -774,6 +774,10 @@ function generateStairBlockModel(block, namespace, baseBlock, model) {
 }
 
 function writeStairBlockModels(block, namespace, baseBlock) {
+  if (baseBlock.includes(":")) {
+		namespace = baseBlock.split(":")[0]
+		baseBlock = baseBlock.split(":")[1]
+	}
 	writeFile(`${paths.models}${block}.json`, generateStairBlockModel(block, namespace, baseBlock, "stairs"));
 	writeFile(`${paths.models}${block}_inner.json`, generateStairBlockModel(block, namespace, baseBlock, "inner_stairs"));
 	writeFile(`${paths.models}${block}_outer.json`, generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
@@ -807,6 +811,11 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 }
 
 function writeSlabBlockModels(block, namespace, baseBlock) {
+
+  if (baseBlock.includes(":")) {
+		namespace = baseBlock.split(":")[0]
+		baseBlock = baseBlock.split(":")[1]
+	}
 	slabModel = `{
         "parent": "minecraft:block/slab",
         "textures": {
@@ -2484,7 +2493,8 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if (type.includes("cut_")) {
 		let baseBlock = type.split("_")[1]
 		baseBlock = baseBlock + "_block"
-		recipe = generateShapedRecipe({ "X": `minecraft:${baseBlock}` }, `pyrite:${type}`, 4, ["##", "##"])
+		console.log(type, baseBlock)
+		recipe = generateShapedRecipe({ "#": `minecraft:${baseBlock}` }, `pyrite:${type}`, 4, ["##", "##"])
 	}
 	else if (type === "framed_glass") {
 		recipe = generateShapedRecipe({ "#": `minecraft:glass`, "X": `minecraft:iron_nugget` }, `pyrite:${type}`, 4, [
