@@ -1027,9 +1027,9 @@ function writePlanks(block, dye, namespace, baseBlock) {
 	block = block + "_planks"
 	writeBlock(block, dye, namespace, "planks", baseBlock)
 }
-function writeTerracotta(block, dye, namespace, baseBlock) {
+function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
-	writeBlock(block, dye, namespace, "terracotta", baseBlock)
+	writeBlock(block, namespace, "terracotta", dye)
 }
 
 function writeLamps(block, dye, namespace) {
@@ -1040,7 +1040,7 @@ function writeLamps(block, dye, namespace) {
 
 function writeWool(block, dye, namespace) {
 	block = block + "_wool"
-	writeBlock(block, dye, namespace, "wool")
+	writeBlock(block, namespace, "wool", dye)
 
 }
 
