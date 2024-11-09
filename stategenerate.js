@@ -427,39 +427,50 @@ function generateResources() {
   generateBrickSet("smooth_stone_bricks", "smooth_stone_bricks")
 
 
-  writeBlock("nostalgia_cobblestone", "nostalgia_cobblestone", "pyrite", "nostalgia_cobblestone")
-  writeBlock("nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone", "pyrite", "nostalgia_mossy_cobblestone")
-  writeBlock("nostalgia_netherrack", "nostalgia_netherrack", "pyrite", "nostalgia_netherrack")
-  writeBlock("nostalgia_gravel", "nostalgia_gravel", "pyrite", "nostalgia_gravel")
-  writeBlock("nostalgia_gravel", "nostalgia_gravel", "pyrite", "nostalgia_gravel")
-  writeBlock("nostalgia_grass_block", "nostalgia_grass_block", "pyrite", "nostalgia_grass_block")
+  writeBlock("nostalgia_cobblestone", "pyrite", "nostalgia_cobblestone", "nostalgia_cobblestone")
+  writeBlock("nostalgia_mossy_cobblestone", "pyrite", "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
+  writeBlock("nostalgia_netherrack", "pyrite", "nostalgia_netherrack", "nostalgia_netherrack")
+  writeBlock("nostalgia_gravel", "pyrite", "nostalgia_gravel", "nostalgia_gravel")
+  writeBlock("nostalgia_gravel", "pyrite", "nostalgia_gravel", "nostalgia_gravel")
+  writeBlock("nostalgia_grass_block", "pyrite", "nostalgia_grass_block", "nostalgia_grass_block")
 
-  writeBlock("framed_glass", "framed_glass", "pyrite", "framed_glass", "framed_glass")
-  writePaneBlock("framed_glass", "pyrite", "framed_glass")
-
-  writePaneBlock("framed_glass", "pyrite", "framed_glass")
+  // writeBlock("framed_glass", "pyrite", "framed_glass", "framed_glass", "framed_glass")
+  writePaneBlock("framed_glass_pane", "pyrite", "framed_glass")
+  //Framed Glass
+  new Block("framed_glass", globalNamespace, undefined, "framed_glass", "framed_glass", "framed_glass")
+  // Framed Glass Panes
+  // new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
   writeBlock("nostalgia_grass_turf", "pyrite", "nostalgia_grass_turf", "nostalgia_grass", undefined, "pyrite", "pyrite:nostalgia_grass_top")
   writeSlabs("nostalgia_grass_slab", "pyrite", "nostalgia_grass_block_top")
   writeStairs("nostalgia_grass_stairs", "pyrite", "nostalgia_grass_block_top")
+  writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_block_top", namespace)
+
 
   
   writeBlock("podzol_turf", "pyrite", "podzol_turf", "podzol", undefined, "minecraft", "minecraft:podzol_top")
   writeSlabs("podzol_slab", "pyrite", "podzol_top", "minecraft")
   writeStairs("podzol_stairs", "pyrite", "podzol_top", "minecraft")
+  writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
+
+  
 
   writeBlock("grass_turf", "pyrite", "grass_turf", "grass_turf", undefined, "minecraft", "minecraft:grass_block_top")
   writeSlabs("grass_slab", "pyrite", "grass_block_top", "minecraft")
   writeStairs("grass_stairs", "pyrite", "grass_block_top", "minecraft")
+  writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
+
 
   writeBlock("mycelium_turf", "pyrite", "mycelium_turf", "mycelium", undefined, "minecraft", "minecraft:mycelium_top")
   writeSlabs("mycelium_slab", "pyrite", "mycelium_top", "minecraft")
   writeStairs("mycelium_stairs", "pyrite", "mycelium_top", "minecraft")
+  writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
 
 
-  writeBlock("path_turf", "pyrite", "path_turf", "mycelium", undefined, "minecraft", "minecraft:path_top")
-  writeSlabs("path_slab", "pyrite", "path_top", "minecraft")
-  writeStairs("path_stairs", "pyrite", "path_top", "minecraft")
+  writeBlock("path_turf", "pyrite", "path_turf", "mycelium", undefined, "minecraft", "minecraft:dirt_path_top")
+  writeSlabs("path_slab", "pyrite", "dirt_path_top", "minecraft")
+  writeStairs("path_stairs", "pyrite", "dirt_path_top", "minecraft")
+  writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
   
 
 
@@ -533,11 +544,7 @@ function generateResources() {
     // printLang(`${block}_button`)
   })
 
-  writeCarpet("grass_carpet", namespace, "grass_block_top", "minecraft")
-  writeCarpet("mycelium_carpet", namespace, "mycelium_top", "minecraft")
-  writeCarpet("path_carpet", namespace, "dirt_path_top", "minecraft")
-  writeCarpet("podzol_carpet", namespace, "podzol_top", "minecraft")
-  writeCarpet("nostalgia_grass_carpet", namespace, "nostalgia_grass_block_top", namespace)
+
 
   writeFenceGates("nether_brick", namespace, "nether_bricks", "minecraft")
   writeFlower("rose", globalNamespace)
@@ -2412,7 +2419,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
   else if (type === "glass_pane") {
     const dye = `${other}_dye`
     altNamespace = changeDyeNamespace(dye)
-    recipe = generateShapedRecipe({"C":`${namespace}:${block.replace("_pane", "")}`}, `${namespace}:${other}`, 8, ["CCC","CCC"])
+    recipe = generateShapedRecipe({"C":`${namespace}:${block.replace("_pane", "")}`}, `${namespace}:${block}`, 8, ["CCC","CCC"])
   }
   else if (type === "lamp") {
     if (block === "glowstone_lamp") {
