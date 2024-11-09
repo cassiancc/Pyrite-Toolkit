@@ -439,15 +439,28 @@ function generateResources() {
 
   writePaneBlock("framed_glass", "pyrite", "framed_glass")
 
-  writeBlock("grass_turf", "grass_turf", "pyrite", "grass_block_top")
-  writeSlabs("grass_turf_slab", "pyrite", "grass_block_top")
-  writeStairs("grass_turf_stairs", "pyrite", "grass_turf_block_top")
-  writeBlock("nostalgia_grass_turf", "nostalgia_grass_turf", "pyrite", "nostalgia_grass_top")
+  writeBlock("nostalgia_grass_turf", "pyrite", "nostalgia_grass_turf", "nostalgia_grass", undefined, "pyrite", "pyrite:nostalgia_grass_top")
   writeSlabs("nostalgia_grass_slab", "pyrite", "nostalgia_grass_block_top")
   writeStairs("nostalgia_grass_stairs", "pyrite", "nostalgia_grass_block_top")
 
-  generateTurfSet("podzol", "turf", "minecraft", "podzol_top")
+  
+  writeBlock("podzol_turf", "pyrite", "podzol_turf", "podzol", undefined, "minecraft", "minecraft:podzol_top")
+  writeSlabs("podzol_slab", "pyrite", "podzol_top", "minecraft")
+  writeStairs("podzol_stairs", "pyrite", "podzol_top", "minecraft")
 
+  writeBlock("grass_turf", "pyrite", "grass_turf", "grass_turf", undefined, "minecraft", "minecraft:grass_block_top")
+  writeSlabs("grass_slab", "pyrite", "grass_block_top", "minecraft")
+  writeStairs("grass_stairs", "pyrite", "grass_block_top", "minecraft")
+
+  writeBlock("mycelium_turf", "pyrite", "mycelium_turf", "mycelium", undefined, "minecraft", "minecraft:mycelium_top")
+  writeSlabs("mycelium_slab", "pyrite", "mycelium_top", "minecraft")
+  writeStairs("mycelium_stairs", "pyrite", "mycelium_top", "minecraft")
+
+
+  writeBlock("path_turf", "pyrite", "path_turf", "mycelium", undefined, "minecraft", "minecraft:path_top")
+  writeSlabs("path_slab", "pyrite", "path_top", "minecraft")
+  writeStairs("path_stairs", "pyrite", "path_top", "minecraft")
+  
 
 
 
@@ -539,7 +552,7 @@ function generateResources() {
 
     // writeStonecutterRecipes(`${block}_button`, "block", baseBlock, "pyrite", "minecraft")
 
-  writeFenceGates("nether_brick", namespace, "nether_bricks", "minecraft")
+  writeFenceGates("nether_brick_fence_gate", namespace, "nether_bricks", "minecraft")
   writeFlower("rose", namespace, "pyrite")
   writeFlower("blue_rose", namespace, "pyrite")
   writeFlower("orange_rose", namespace, "pyrite")
@@ -612,9 +625,7 @@ function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
     writeFile(`${paths.models}${block}_upright.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "upright"))
 
   }
-  if (altNamespace == undefined) {
-    altNamespace = namespace
-  }
+  altNamespace = getAltNamespace(namespace, altNamespace)
   writeFile(`${paths.models}${block}.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace))
   writeFile(`${paths.models}${block}_on.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "on"))
   writeFile(`${paths.models}${block}_wall.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "wall"))
@@ -623,14 +634,14 @@ function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
 }
 
 function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
-  if (altNamespace === undefined) {
-    altNamespace = namespace
-  }
+  altNamespace = getAltNamespace(namespace, altNamespace)
   writeFile(`${paths.models}${baseBlock}_upright.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch"))
   writeFile(`${paths.models}${block}_wall.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch_wall"))
 
 
 }
+
+
 
 
 function writeCubeColumnBlockModels(block, namespace, baseBlock) {
@@ -768,22 +779,12 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
             "texture": "${namespace}:block/${baseBlock}"
         }
       }`
-  fs.writeFile(`${paths.models}${block}.json`, buttonModel, function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_inventory.json`, buttonModelInventory, function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_pressed.json`, buttonModelPressed, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.models}${block}.json`, buttonModel)
+  writeFile(`${paths.models}${block}_inventory.json`, buttonModelInventory);
+  writeFile(`${paths.models}${block}_pressed.json`, buttonModelPressed);
 }
 
 function writeSlabBlockModels(block, namespace, baseBlock) {
-
   slabModel = `{
         "parent": "minecraft:block/slab",
         "textures": {
@@ -801,14 +802,8 @@ function writeSlabBlockModels(block, namespace, baseBlock) {
         }
     }`
 
-  fs.writeFile(`${paths.models}${block}.json`, slabModel, function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_top.json`, slabModelTop, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.models}${block}.json`, slabModel);
+  writeFile(`${paths.models}${block}_top.json`, slabModelTop);
 }
 
 function writePlateBlockModels(block, namespace, baseBlock) {
@@ -826,14 +821,8 @@ function writePlateBlockModels(block, namespace, baseBlock) {
         }
       }`
 
-  fs.writeFile(`${paths.models}${block}.json`, plateModel, function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_down.json`, plateModelDown, function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.models}${block}.json`, plateModel);
+  writeFile(`${paths.models}${block}_down.json`, plateModelDown);
 }
 
 function generateFenceBlockModels(block, baseBlock, namespace, model) {
@@ -846,18 +835,9 @@ function generateFenceBlockModels(block, baseBlock, namespace, model) {
 }
 
 function writeFenceBlockModels(block, baseBlock, namespace) {
-  writeFile(`${paths.models}${block}_post.json`, generateFenceBlockModels(block, baseBlock, namespace, "fence_post"), function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_side.json`, generateFenceBlockModels(block, baseBlock, namespace, "fence_side"), function (err) {
-    if (err) throw err;
-
-  });
-  fs.writeFile(`${paths.models}${block}_inventory.json`, generateFenceBlockModels(block, baseBlock, namespace, "fence_inventory"), function (err) {
-    if (err) throw err;
-
-  });
+  writeFile(`${paths.models}${block}_post.json`, generateFenceBlockModels(block, baseBlock, namespace, "fence_post"));
+  writeFile(`${paths.models}${block}_side.json`, generateFenceBlockModels(block, baseBlock, namespace, "fence_side"));
+  writeFile(`${paths.models}${block}_inventory.json`, generateFenceBlockModels(block, baseBlock, namespace, "fence_inventory"));
 }
 
 function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNamespace) {
@@ -960,9 +940,7 @@ function writeTrapdoorItemModel(block, namespace) {
   let modelItem = `{
         "parent": "${namespace}:block/${block}_bottom"
       }`
-  fs.writeFile(`${paths.itemModels}${block}.json`, modelItem, function (err) {
-    if (err) throw err;
-  });
+  writeFile(`${paths.itemModels}${block}.json`, modelItem);
 }
 
 
@@ -976,9 +954,7 @@ function writeUniqueItemModel(block, namespace) {
       "layer0": "${namespace}:item/${block}"
     }
   }`
-  fs.writeFile(`${paths.itemModels}${block}.json`, modelItem, function (err) {
-    if (err) throw err;
-  });
+  writeFile(`${paths.itemModels}${block}.json`, modelItem);
 }
 
 function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
@@ -1085,7 +1061,14 @@ function writeTrapdoors(block, namespace, baseBlock) {
 }
 
 
-function writeBlock(block, namespace, blockType, baseBlock, render_type) {
+function writeBlock(block, namespace, blockType, baseBlock, render_type, altNamespace, texture) {
+  if (altNamespace === undefined) {
+    altNamespace = namespace;
+
+  }
+  if (texture == undefined) {
+    texture = baseBlock
+  }
   let blockState = `{
     "variants": {
       "": {
@@ -1094,7 +1077,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type) {
     }
   }`
   writeBlockstate(block, blockState, namespace)
-  writePlankBlockModels(block, namespace, baseBlock, undefined, render_type)
+  writePlankBlockModels(block, namespace, texture, undefined, render_type)
   writeBlockItemModel(block, namespace)
   createTags(block, namespace)
   writeLootTables(block, namespace)
@@ -1775,10 +1758,8 @@ function writeWalls(block, namespace, baseBlock) {
 
 }
 
-
-
-function writeStairs(block, namespace, baseBlock) {
-  let stairBlockState = `{
+function generateStairBlockstate(block, namespace) {
+return `{
         "variants": {
           "facing=east,half=bottom,shape=inner_left": {
             "model": "${namespace}:block/${block}_inner",
@@ -1987,8 +1968,15 @@ function writeStairs(block, namespace, baseBlock) {
           }
         }
       }`
+}
+
+function writeStairs(block, namespace, baseBlock, altNamespace) {
+  if (altNamespace === undefined) {
+    altNamespace = namespace
+  }
+  let stairBlockState = generateStairBlockstate(block, namespace)
   writeBlockstate(block, stairBlockState, namespace)
-  writeStairBlockModels(block, namespace, baseBlock)
+  writeStairBlockModels(block, altNamespace, baseBlock)
   writeBlockItemModel(block, namespace)
   createTags(block, namespace)
   writeRecipes(block, "stairs", baseBlock, namespace)
@@ -2024,10 +2012,13 @@ function writeBrickWall(block, namespace, baseBlock) {
 
 
 
-function writeSlabs(block, namespace, baseBlock) {
+function writeSlabs(block, namespace, baseBlock, altNamespace) {
+  if (altNamespace == undefined) {
+    altNamespace = namespace
+  }
   let slabBlockState = generateSlabBlockState(block, namespace, baseBlock)
   writeBlockstate(block, slabBlockState, namespace)
-  writeSlabBlockModels(block, namespace, baseBlock)
+  writeSlabBlockModels(block, altNamespace, baseBlock)
   writeBlockItemModel(block, namespace)
   createTags(block, namespace)
   writeRecipes(block, "slabs", baseBlock, namespace)
@@ -2971,7 +2962,11 @@ function generateBlockModel(block, namespace, baseBlock, model, render_type) {
     render_type = ""
   }
   else {
-    render_type = "," + render_type
+    render_type = `,${render_type}`
+  }
+  if (baseBlock.includes(":")) {
+    namespace = baseBlock.split(":")[0]
+    block = baseBlock.split(":")[1]
   }
 
   return `{
@@ -3380,4 +3375,11 @@ function changeDyeNamespace(other) {
   else {
     return "minecraft"
   }
+}
+
+function getAltNamespace(namespace, altNamespace) {
+  if (altNamespace === undefined) {
+    altNamespace = namespace
+  } 
+  return altNamespace
 }
