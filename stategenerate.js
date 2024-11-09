@@ -533,8 +533,8 @@ function generateResources() {
 		writeChiseledBlock(`chiseled_${block}_block`, baseBlock, "pyrite", "chiseled_resource")
 		writeChiseledBlock(`${block}_pillar`, baseBlock, "pyrite", "resource_pillar")
 		writeBarBlock(block, "pyrite", baseBlock)
-		writeDoors(block, "pyrite", baseBlock)
-		writeTrapdoors(block, "pyrite", baseBlock)
+		writeDoors(`${block}_door`, "pyrite", baseBlock)
+		writeTrapdoors(`${block}_trapdoor`, "pyrite", baseBlock)
 		writeBlock(`nostalgia_${block}_block`, "pyrite", "nostalgia", baseBlock)
 
 		writeButtons(block + "_button", "pyrite", baseBlock, "minecraft")
@@ -2018,6 +2018,9 @@ function writeStairs(block, namespace, baseBlock, altNamespace) {
 // V2 - STAIR GENERATOR
 function writeStairsV2(block, baseBlock, texture) {
 	let textureNamespace, texturePath;
+	if (texture == undefined) {
+		texture = baseBlock;
+	}
 	if (texture.includes(":")) {
 		textureNamespace = texture.split(":")[0]
 		texturePath = texture.split(":")[1]
@@ -2029,7 +2032,7 @@ function writeStairsV2(block, baseBlock, texture) {
 	
 	let stairBlockState = generateStairBlockstate(block, globalNamespace)
 	writeBlockstate(block, stairBlockState, globalNamespace)
-	writeStairBlockModels(block, textureNamespace, baseBlock)
+	writeStairBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, globalNamespace)
 	createTags(block, globalNamespace)
 	writeRecipes(block, "stairs", baseBlock, globalNamespace)
@@ -2075,6 +2078,9 @@ function writeSlabs(block, namespace, baseBlock, altNamespace) {
 // V2 - STAIR GENERATOR
 function writeSlabsV2(block, baseBlock, texture) {
 	let textureNamespace, texturePath;
+	if (texture == undefined) {
+		texture = baseBlock;
+	}
 	if (texture.includes(":")) {
 		textureNamespace = texture.split(":")[0]
 		texturePath = texture.split(":")[1]
@@ -2086,7 +2092,7 @@ function writeSlabsV2(block, baseBlock, texture) {
 	
 	let slabBlockState = generateSlabBlockState(block, globalNamespace, baseBlock)
 	writeBlockstate(block, slabBlockState, globalNamespace)
-	writeSlabBlockModels(block, textureNamespace, baseBlock)
+	writeSlabBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, globalNamespace)
 	createTags(block, globalNamespace)
 	writeRecipes(block, "slabs", baseBlock, globalNamespace)
@@ -2129,7 +2135,7 @@ function writeButtons(block, namespace, baseBlock, altNamespace) {
 	writeButtonBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
 	createTags(block)
-	writeRecipes(block, "buttons", baseBlock)
+	writeRecipes(block, "buttons", baseBlock, namespace, altNamespace)
 
 
 }
@@ -2279,9 +2285,10 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 		let i = 0;
 		values.forEach(function (value) {
 			let itemOrTag;
-			if (value.indexOf(0) === "#") {
+			if (value.charAt(0) == "#") {
 				value = value.slice(1)
 				itemOrTag = "tag"
+				
 			}
 			else {
 				itemOrTag = "item"
@@ -2433,7 +2440,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		else {
 			other = other.replace("stained", "dye")
 			altNamespace = changeDyeNamespace(other)
-			recipe = createDyeRecipe(namespace, block, altNamespace, "planks", other, "tag")
+			recipe = generateShapedRecipe({ "D": `${altNamespace}:${other}`, "C": `#minecraft:planks` }, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
 		}
 	}
 	else if (type === "ladder") {
@@ -2571,7 +2578,10 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "wall") {
-		recipe = generateShapedRecipe({ "C": `pyrite:${other}` }, `${namespace}:${block}`, 6, [
+		if (!other.includes(":")) {
+			other = `pyrite:${other}`
+		}
+		recipe = generateShapedRecipe({ "C": `${other}` }, `${namespace}:${block}`, 6, [
 			"CCC",
 			"CCC"
 		])
@@ -2625,7 +2635,10 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		baseWall = `${baseWall.replace("bricks", "brick")}`
 		baseWall = `${baseWall.replace("tiles", "tile")}`
 		baseWall = baseWall + "_wall"
-		recipe = generateShapedRecipe({ "C": `${altNamespace}:${other}`, "S": `${altNamespace}:${baseWall}` }, `${namespace}:${block}`, 6, [
+		if (!other.includes(":")) {
+			other = `pyrite:${other}`
+		}
+		recipe = generateShapedRecipe({ "C": `${other}`, "S": `${altNamespace}:${baseWall}` }, `${namespace}:${block}`, 6, [
 			"SCS",
 			"SCS"
 		])
