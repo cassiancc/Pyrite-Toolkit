@@ -461,8 +461,11 @@ function generateResources() {
 
 	})
 
-	writeLamps("glowstone", "glowstone", globalNamespace)
-	writeLamps("lit_redstone", "lit_redstone", globalNamespace, vanillaNamespace)
+	writeLamps("glowstone_lamp", "glowstone")
+	writeLamps("lit_redstone_lamp", "lit_redstone", "minecraft:redstone_lamp_on")
+
+  writeBlock("glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
+  writeBlock("nostalgia_glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
 
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
 	generateBrickSet("blue_nether_bricks", "blue_nether_bricks")
@@ -1005,16 +1008,13 @@ function writeTerracotta(block, dye, namespace) {
 	writeBlock(block, namespace, "terracotta", dye)
 }
 
-function writeLamps(block, dye, namespace) {
-	block = block + "_lamp"
-	writeBlock(block, dye, namespace, "lamps")
-
+function writeLamps(block, dye, texture) {
+	writeBlock(block, globalNamespace, "lamps", dye, undefined, undefined, texture, false)
 }
 
 function writeWool(block, dye, namespace) {
 	block = block + "_wool"
 	writeBlock(block, namespace, "wool", dye)
-
 }
 
 function writeTerracottaBricks(block, namespace, special, baseBlock) {
@@ -1031,9 +1031,6 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	createTags(block, namespace)
 	writeRecipes(block, special, baseBlock, namespace)
   writeStonecutterRecipes(block, baseBlock, 1)
-
-
-
 }
 
 function writeDye(item, dye, namespace) {
@@ -1044,9 +1041,7 @@ function writeDye(item, dye, namespace) {
 
 function writeItem(item, namespace) {
 	writeUniqueItemModel(item, namespace)
-
 }
-
 
 function writeDoors(block, namespace, baseBlock) {
 	doorBlockState = generateDoorBlockState(block, namespace, baseBlock)
@@ -1056,8 +1051,6 @@ function writeDoors(block, namespace, baseBlock) {
 	writeUniqueItemModel(block, namespace)
 	createTags(block, namespace)
 	writeRecipes(block, "door", baseBlock)
-
-
 }
 
 function writeTrapdoors(block, namespace, baseBlock) {
@@ -1097,9 +1090,6 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
   if (shouldGenerateStonecutterRecipes === true) {
     writeStonecutterRecipes(block, baseBlock, 1)
   }
-
-
-
 }
 
 function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
@@ -1227,9 +1217,6 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 	writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "torch_lever", baseBlock, namespace, altNamespace)
-
-
-
 }
 
 function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
@@ -1245,41 +1232,33 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
         "x": 180,
         "y": 180
       },
-      
       "face=ceiling,facing=south": {
         "model": "${namespace}:block/${block}_upright",
         "x": 180
       },
-      
       "face=ceiling,facing=west": {
         "model": "${namespace}:block/${block}_upright",
         "x": 180,
         "y": 90
       },
-      
       "face=floor,facing=east": {
         "model": "${namespace}:block/${block}_upright",
         "y": 90
       },
-      
       "face=floor,facing=north": {
         "model": "${namespace}:block/${block}_upright"
       },
-      
       "face=floor,facing=south": {
         "model": "${namespace}:block/${block}_upright",
         "y": 180
       },
-      
       "face=floor,facing=west": {
         "model": "${namespace}:block/${block}_upright",
         "y": 270
       },
-      
       "face=wall,facing=east": {
         "model": "${namespace}:block/${block}_wall"
       },
-      
       "face=wall,facing=north": {
         "model": "${namespace}:block/${block}_wall",
         "y": 270
@@ -1288,12 +1267,10 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
         "model": "${namespace}:block/${block}_wall",
         "y": 90
       },
-    
       "face=wall,facing=west": {
         "model": "${namespace}:block/${block}_wall",
         "y": 180
       }
-      
     }
   }`
 	writeBlockstate(block, blockState, namespace)
@@ -1301,12 +1278,7 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	writeUniqueBlockItemModel(block, namespace, namespace, block)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
-
-
-
 }
-
-
 
 function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
@@ -1323,7 +1295,6 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
-
 }
 
 function writeLadders(block, namespace, baseBlock, altNamespace) {
@@ -1354,12 +1325,7 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	writeUniqueBlockItemModel(block, namespace, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "ladder", baseBlock, namespace, altNamespace)
-
-
-
-
 }
-
 
 function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
@@ -1378,11 +1344,7 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 	writeUniqueBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "chest", baseBlock, namespace, altNamespace)
-
-
-
 }
-
 
 function writeFlower(block, namespace) {
 	let blockState = `{
@@ -1398,9 +1360,6 @@ function writeFlower(block, namespace) {
 	// createTags(block, namespace)
 	writeLootTables(block, namespace)
 	// writeRecipes(block, special, dye)
-
-
-
 
 }
 
@@ -1428,9 +1387,6 @@ function writeChiseledBlock(block, dye, namespace, special, baseBlock) {
 	writeLootTables(block, namespace)
 	writeRecipes(block, special, dye)
 
-
-
-
 }
 
 function writePaneBlock(block, namespace, baseBlock) {
@@ -1441,8 +1397,6 @@ function writePaneBlock(block, namespace, baseBlock) {
 	createTags(block, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "glass_pane", baseBlock)
-
-
 }
 
 function writeBarBlock(block, namespace, baseBlock) {
@@ -1454,7 +1408,6 @@ function writeBarBlock(block, namespace, baseBlock) {
 	createTags(block, namespace)
 	writeLootTables(block, namespace)
 	// writeRecipes(block, "bars", baseBlock)
-
 
 }
 
@@ -1666,8 +1619,6 @@ function writeLogs(block, namespace, special) {
 
 
 }
-// writeBlock("glowing_obsidian", "glowing_obsidian", globalNamespace, "glowing_obsidian")
-// writeBlock("nostalgia_glowing_obsidian", "glowing_obsidian", globalNamespace, "glowing_obsidian")
 
 function writeWalls(block, namespace, baseBlock, altNamespace) {
 	if (namespace === undefined) {
