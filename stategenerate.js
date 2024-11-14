@@ -4,7 +4,7 @@ const { basename } = require('path');
 
 const globalNamespace = "pyrite"
 const vanillaNamespace = "minecraft"
-const mcVersion = "1.21.1"
+const mcVersion = "1.21.4"
 const majorVersion = parseInt(mcVersion.split(".")[1])
 const minorVersion = parseInt(mcVersion.split(".")[2])
 
@@ -993,10 +993,32 @@ function writeBlockItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	let modelItem = `{
-        "parent": "${namespace}:block/${block}"
-      }`
-	writeFile(`${paths.itemModels}${block}.json`, modelItem);
+  if ((majorVersion > 21) || ((majorVersion == 21)&& (minorVersion >= 4))) {
+    const item = 
+    {
+      "model": {
+        "type": "minecraft:model",
+        "model": `${namespace}:block/${block}`
+      }
+    }
+    writeFile(`${paths.assets}items/${block}.json`, item);
+
+    const modelItem = 
+    {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": `${namespace}:block/${block}`
+      }
+    }
+    writeFile(`${paths.itemModels}${block}.json`, modelItem);
+  }
+  else {
+    const modelItem = `{
+      "parent": "${namespace}:block/${block}"
+    }`
+    writeFile(`${paths.itemModels}${block}.json`, modelItem);
+  }
+
 }
 
 function writeTrapdoorItemModel(block, namespace) {
@@ -1011,13 +1033,18 @@ function writeUniqueItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	let modelItem = `{
-    "parent": "minecraft:item/generated",
-    "textures": {
-      "layer0": "${namespace}:item/${block}"
-    }
-  }`
-	writeFile(`${paths.itemModels}${block}.json`, modelItem);
+  if ((majorVersion > 21) || ((majorVersion == 21)&& (minorVersion >= 4))) {
+    writeUniqueBlockItemModel(block, namespace, namespace, block)
+  }
+  else {
+    let modelItem = `{
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "${namespace}:item/${block}"
+      }
+    }`
+    writeFile(`${paths.itemModels}${block}.json`, modelItem);
+  }
 }
 
 function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
@@ -1030,13 +1057,25 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	if (baseBlock === undefined) {
 		baseBlock = block
 	}
-	let modelItem = `{
-    "parent": "minecraft:item/generated",
-    "textures": {
-      "layer0": "${altNamespace}:block/${baseBlock}"
+  if ((majorVersion > 21) || ((majorVersion == 21)&& (minorVersion >= 4))) {
+    const modelItem = {
+      "model": {
+        "type": "minecraft:model",
+        "model": `${altNamespace}:item/${baseBlock}`
+      }
     }
-  }`
-	writeFile(`${paths.itemModels}${block}.json`, modelItem)
+    writeFile(`${paths.assets}items/${block}.json`, modelItem);
+  }
+  else {
+    const modelItem = `{
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "${altNamespace}:block/${baseBlock}"
+      }
+    }`
+    writeFile(`${paths.itemModels}${block}.json`, modelItem)
+  }
+
 }
 
 
@@ -2649,8 +2688,8 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 }
 
 function writeRecipes(block, type, other, namespace, altNamespace) {
-	let recipe = generateRecipes(block, type, other, namespace, altNamespace)
-	if (recipe !== "") {
+  let recipe = generateRecipes(block, type, other, namespace, altNamespace)
+	if ((recipe !== "")) {
 		writeFile(`${paths.recipes}${block}.json`, recipe)
 	}
 }
