@@ -2,12 +2,11 @@ const { create } = require('domain');
 const fs = require('fs');
 const { basename } = require('path');
 
-const globalNamespace = "pyrite"
-const vanillaNamespace = "minecraft"
-const mcVersion = "1.21.4"
-const majorVersion = parseInt(mcVersion.split(".")[1])
-const minorVersion = parseInt(mcVersion.split(".")[2])
-
+const globalNamespace = "pyrite";
+const vanillaNamespace = "minecraft";
+const mcVersion = "1.21.1";
+const majorVersion = parseInt(mcVersion.split(".")[1]);
+const minorVersion = parseInt(mcVersion.split(".")[2]);
 
 const vanillaDyes = [
 	"white",
@@ -361,6 +360,17 @@ function generateResources() {
 		})
 	}
 
+	function writeCraftingTablesFromArray(woodArray, namespace) {
+		if (namespace == undefined) {
+			namespace = vanillaNamespace
+		}
+		woodArray.forEach(function (dye) {
+			const template = dye
+			const plankBase = template + "_planks"
+			writeCraftingTableBlock(template + "_crafting_table", globalNamespace, plankBase, namespace)
+		})
+	}
+
 	dyes.forEach(function (dye) {
 		let stainedBlockTemplate = dye + "_stained"
 		generateWoodSet(stainedBlockTemplate)
@@ -379,14 +389,10 @@ function generateResources() {
 		new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
 	})
 
-
-	vanillaWood.forEach(function (dye) {
-		let stainedBlockTemplate = dye
-		plankBase = stainedBlockTemplate + "_planks"
-		writeCraftingTableBlock(stainedBlockTemplate + "_crafting_table", globalNamespace, plankBase, vanillaNamespace)
-
-	})
-
+	writeCraftingTablesFromArray(vanillaWood, vanillaNamespace)
+	if (versionAbove("1.21.4")) {
+		writeCraftingTablesFromArray(winterDropWoods, vanillaNamespace)
+	}
 
 	const shroomBlockTemplate = "_mushroom"
 	const redShroom = "red" + shroomBlockTemplate
@@ -584,7 +590,7 @@ function generateResources() {
 	writeFlower("pink_daisy", globalNamespace)
 	writeFlower("buttercup", globalNamespace)
 
-
+	writeLang()
 }
 
 
@@ -707,7 +713,7 @@ function generateLangObject(block, type, namespace) {
 	let langBlock = block
 	langBlock = langBlock.replaceAll("_", " ")
 	langBlock = langBlock.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(); });
-
+	
 	blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${type}.${namespace}.${block}": "${langBlock}"}`))
 
 
@@ -993,7 +999,7 @@ function writeBlockItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "block", block)
 		const modelItem =
 		{
@@ -1028,7 +1034,7 @@ function writeWinterDropItem(namespace, folder, path, model) {
 }
 
 function writeTrapdoorItemModel(block, namespace) {
-	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "block", block, `${block}_bottom`)
 	}
 	let modelItem = `{
@@ -1042,7 +1048,7 @@ function writeUniqueItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "item", block, block)
 	}
 	else {
@@ -1066,7 +1072,7 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	if (baseBlock === undefined) {
 		baseBlock = block
 	}
-	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(altNamespace, "item", block, baseBlock)
 	}
 	else {
@@ -1086,7 +1092,7 @@ function writeInventoryModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "block", block, `${block}_inventory`)
 	}
 	else {
@@ -1139,6 +1145,7 @@ function writeDye(item, dye, namespace) {
 }
 
 function writeItem(item, namespace) {
+	generateLangObject(item, "item", globalNamespace)
 	writeUniqueItemModel(item, namespace)
 }
 
@@ -1149,6 +1156,7 @@ function writeDoors(block, namespace, baseBlock) {
 	writeDoorBlockModels(block, namespace)
 	writeUniqueItemModel(block, namespace)
 	createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "door", baseBlock)
 }
 
@@ -1158,6 +1166,7 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	writeTrapdoorBlockModels(block, namespace, baseBlock)
 	writeTrapdoorItemModel(block, namespace)
 	writeLootTables(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "trapdoor", baseBlock)
 
 }
@@ -1183,7 +1192,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
 	writeLootTables(block, namespace)
-
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, blockType, baseBlock, namespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -1393,6 +1402,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, blockState, namespace)
 	writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
 }
 
@@ -1457,6 +1467,7 @@ function writeFlower(block, namespace) {
 	writeFlowerBlockModels(block, namespace)
 	writeUniqueBlockItemModel(block, namespace)
 	// createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeLootTables(block, namespace)
 	// writeRecipes(block, special, dye)
 
@@ -1483,6 +1494,7 @@ function writeChiseledBlock(block, dye, namespace, special, baseBlock) {
 	writeCubeColumnBlockModels(block, namespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, special, dye)
 
@@ -1496,6 +1508,7 @@ function writePaneBlock(block, namespace, baseBlock) {
 	createTags(block, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "glass_pane", baseBlock)
+	generateLangObject(block, "block", globalNamespace)
 }
 
 function writeBarBlock(block, namespace, baseBlock) {
@@ -1505,6 +1518,7 @@ function writeBarBlock(block, namespace, baseBlock) {
 	writePaneBlockModels(block, namespace, baseBlock)
 	writeUniqueBlockItemModel(block, namespace)
 	createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeLootTables(block, namespace)
 	// writeRecipes(block, "bars", baseBlock)
 
@@ -1821,6 +1835,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	writeWallBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
 	createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "wall", baseBlock, altNamespace)
 	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
 
@@ -2048,6 +2063,7 @@ function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateSt
 	writeStairBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "stairs", baseBlock, namespace)
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
@@ -2074,6 +2090,7 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	writeStairBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, globalNamespace)
 	createTags(block, globalNamespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "stairs", baseBlock, globalNamespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -2110,6 +2127,7 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	writeSlabBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "slabs", baseBlock, namespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -2140,6 +2158,7 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	writeSlabBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, globalNamespace)
 	createTags(block, globalNamespace)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "slabs", baseBlock, globalNamespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -2168,6 +2187,7 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	writePlateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)
 	createTags(block, namespace, baseBlock)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "plates", baseBlock)
 
 }
@@ -2185,6 +2205,7 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	writeButtonBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
 	createTags(block)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, type, baseBlock, namespace, altNamespace)
 
 
@@ -2213,6 +2234,7 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	writeFenceGateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
 	createTags(block, namespace, baseBlock)
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
 
 
@@ -2229,6 +2251,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	let fenceGateBlockState = generateFenceGateBlockState(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, globalNamespace, baseBlock)
 	writeWallGateBlockModels(block, altNamespace, baseBlock)
+	generateLangObject(block, "block", globalNamespace)
 	writeBlockItemModel(block, globalNamespace, baseBlock)
 	createTags(block, namespace, baseBlock)
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
@@ -2259,6 +2282,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 		baseBlock = baseBlock.split("_top")[0]
 
 	}
+	generateLangObject(block, "block", globalNamespace)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 
 
@@ -3529,4 +3553,17 @@ function id(namespace, path) {
 	}
 	// If not, create a new identified path.
 	return namespace + ":" + path
+}
+
+function versionAbove(version) {
+	const localMajor = parseInt(version.split(".")[1])
+	const localMinor = parseInt(version.split(".")[2])
+
+	if ((localMajor > majorVersion) || (majorVersion == localMajor) && (minorVersion >= localMinor)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
 }
