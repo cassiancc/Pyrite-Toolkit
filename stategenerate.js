@@ -474,7 +474,9 @@ function generateResources() {
 
 	writeWallGatesFromArray(vanillaWalls)
 	writeWallGatesFromArray(trickyTrialsWalls)
-	writeWallGatesFromArray(winterDropWalls)
+  if (majorVersion > 22 || (mcVersion == "1.21.4")) {
+    writeWallGatesFromArray(winterDropWalls)
+  }
 
 	cut.forEach(function (block) {
 		let baseBlock = block
@@ -2382,26 +2384,9 @@ function createDyeRecipe(namespace, block, altNamespace, altBlock, other, itemOr
 	if (baseNamespace === undefined) {
 		baseNamespace = altNamespace
 	}
-	return `{
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-      "CCC",
-      "CDC",
-      "CCC"
-    ],
-    "key": {
-      "C": {
-        "${itemOrTag}": "${baseNamespace}:${altBlock}"
-      },
-      "D": {
-        "item": "${altNamespace}:${other}"
-      }
-    },
-    "result": {
-      "${itemOrId()}": "${namespace}:${block}",
-      "count": 8
-    }
-}`
+  return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": `${altNamespace}:${other}`}, id(globalNamespace, block), 8, ["CCC", "CDC", "CCC"])
+
+  
 }
 
 function generateRecipes(block, type, other, namespace, altNamespace) {
@@ -2429,7 +2414,8 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if (type === "terracotta") {
 		other = `${other}_dye`
 		altNamespace = getDyeNamespace(other)
-		recipe = createDyeRecipe(namespace, block, altNamespace, "terracotta", other, "item")
+    //FIX
+		recipe = createDyeRecipe(namespace, block, altNamespace, "minecraft:terracotta", other, "item")
 	}
 	if (type === "terracotta_bricks") {
 		altNamespace = getDyeNamespace(other)
@@ -3453,5 +3439,10 @@ function getAltNamespace(namespace, altNamespace) {
 }
 
 function id(namespace, path) {
+  // If path somehow includes an identifier already, use the path instead.
+  if (path.includes(":")) {
+    return path
+  }
+  // If not, create a new identified path.
   return namespace + ":" + path
 }
