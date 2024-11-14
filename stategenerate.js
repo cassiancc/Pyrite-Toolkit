@@ -614,8 +614,8 @@ function writeOldBlockstate(block, blockState, namespace) {
 	writeFile(`${paths.infiniteBlockstates}${block}.json`, blockState)
 }
 
-function writePlankBlockModels(block, namespace, baseBlock, model, render_type) {
-	let blockModel = generateBlockModel(block, namespace, block, model, render_type)
+function writePlankBlockModels(block, namespace, texture, model, render_type) {
+	let blockModel = generateBlockModel(block, namespace, texture, model, render_type)
 	writeFile(`${paths.models}${block}.json`, blockModel)
 }
 
