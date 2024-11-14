@@ -44,7 +44,7 @@ const vanillaWood = [
 	"spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped"
 ]
 
-const walls = [
+const vanillaWalls = [
 	"cobblestone",
 	"mossy_cobblestone",
 	"stone_brick",
@@ -70,11 +70,19 @@ const walls = [
 
 ];
 
-const trialsWalls = [
+const trickyTrialsWalls = [
 	"polished_tuff_wall",
 	"tuff_brick_wall",
 	"tuff_wall"
 
+];
+
+const winterDropWalls = [
+	"resin_brick_wall"
+];
+
+const winterDropWoods = [
+	"pale_oak"
 ];
 
 const cut = [
@@ -143,24 +151,17 @@ paths = Object.assign(paths, {
 
 })
 
-
 if (majorVersion >= 20) {
 	paths = Object.assign(paths, {
-
 		loot: `${paths.data}loot_tables/blocks/`,
 		recipes: `${paths.data}/recipes/`
-
 	})
 }
 
-
-
 if (majorVersion <= 21) {
 	paths = Object.assign(paths, {
-
 		loot: `${paths.data}loot_table/blocks/`,
 		recipes: `${paths.data}/recipe/`
-
 	})
 }
 
@@ -327,14 +328,12 @@ function generateResources() {
       baseBlock = template
     }
 
-		const bricksBase = brickBase + "s"
-
-		// const brickBase = template + "_brick"
-		let bricks = new Block(bricksBase, globalNamespace, undefined, type, baseBlock, type)
-		let slabs = new Block(brickBase + "_slab", globalNamespace, undefined, "slab", bricksBase, type)
-		let stairs = new Block(brickBase + "_stairs", globalNamespace, undefined, "stairs", bricksBase, type)
-		let wall = new Block(brickBase + "_wall", globalNamespace, undefined, "wall", bricksBase, type)
-		let wall_gate = new Block(brickBase + "_wall_gate", globalNamespace, undefined, "wall_gate", bricksBase, type)
+    const bricksBase = brickBase + "s"
+		new Block(bricksBase, globalNamespace, undefined, type, baseBlock, type)
+		new Block(brickBase + "_slab", globalNamespace, undefined, "slab", bricksBase, type)
+		new Block(brickBase + "_stairs", globalNamespace, undefined, "stairs", bricksBase, type)
+		new Block(brickBase + "_wall", globalNamespace, undefined, "wall", bricksBase, type)
+		new Block(brickBase + "_wall_gate", globalNamespace, undefined, "wall_gate", bricksBase, type)
 
 	}
 
@@ -343,21 +342,22 @@ function generateResources() {
 		if (type === undefined) {
 			type = "turf"
 		}
-		let bricks = new Block(turfBase + "_turf", globalNamespace, baseNamespace, type, texture, type)
-		let slabs = new Block(turfBase + "_slab", globalNamespace, baseNamespace, "slab", texture, type)
-		let stairs = new Block(turfBase + "_stairs", globalNamespace, baseNamespace, "stairs", texture, type)
-
+    
+		new Block(turfBase + "_turf", globalNamespace, baseNamespace, type, texture, type)
+		new Block(turfBase + "_slab", globalNamespace, baseNamespace, "slab", texture, type)
+		new Block(turfBase + "_stairs", globalNamespace, baseNamespace, "stairs", texture, type)
 	}
 
-	function writeVanillaWalls(array) {
+	function writeWallGatesFromArray(array, namespace) {
+    if (namespace == undefined) {
+      namespace = vanillaNamespace;
+    }
 		array.forEach(function (wall) {
 			let blockTemplate = wall.replace("_wall", "")
 			let baseBlock = blockTemplate
 			baseBlock = `${baseBlock.replace("brick", "bricks")}`
 			baseBlock = `${baseBlock.replace("tile", "tiles")}`
-			let wall_gate = new Block(blockTemplate + "_wall_gate", globalNamespace, vanillaNamespace, "wall_gate", baseBlock, "stone")
-
-
+			new Block(blockTemplate + "_wall_gate", globalNamespace, namespace, "wall_gate", baseBlock, "stone")
 		})
 	}
 
@@ -374,9 +374,9 @@ function generateResources() {
 		//Torch Levers
 		torch_lever = new Block(dye + "_torch_lever", globalNamespace, globalNamespace, "torch_lever", dye, "torch")
 		//Framed Glass
-		let framed_glass = new Block(dye + "_framed_glass", globalNamespace, undefined, "stained_framed_glass", dye, "stained_framed_glass")
+		new Block(dye + "_framed_glass", globalNamespace, undefined, "stained_framed_glass", dye, "stained_framed_glass")
 		//Framed Glass Panes
-		let framed_glass_pane = new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
+		new Block(dye + "_framed_glass_pane", globalNamespace, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
 	})
 
 
@@ -432,8 +432,8 @@ function generateResources() {
 
 	writeBlock("grass_turf", globalNamespace, "grass_turf", "grass_turf", undefined, vanillaNamespace, "minecraft:grass_block_top")
 	writeSlabsV2("grass_slab", "grass_turf", "minecraft:grass_block_top")
-	writeStairsV2("grass_stairs", "grass_turf", "grass_block_top")
-	writeCarpet("grass_carpet", globalNamespace, "grass_block_top", vanillaNamespace)
+	writeStairsV2("grass_stairs", "grass_turf", "minecraft:grass_block_top")
+	writeCarpet("grass_carpet", globalNamespace, "minecraft:grass_block_top", vanillaNamespace)
 
 
 	writeBlock("mycelium_turf", globalNamespace, "mycelium_turf", "mycelium", undefined, vanillaNamespace, "minecraft:mycelium_top")
@@ -466,12 +466,15 @@ function generateResources() {
 
   writeBlock("glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
   writeBlock("nostalgia_glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
+  writeBlock("locked_chest", globalNamespace, "locked_chest", "locked_chest")
+
 
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
 	generateBrickSet("blue_nether_bricks", "blue_nether_bricks")
 
-	writeVanillaWalls(walls)
-	writeVanillaWalls(trialsWalls)
+	writeWallGatesFromArray(vanillaWalls)
+	writeWallGatesFromArray(trickyTrialsWalls)
+	writeWallGatesFromArray(winterDropWalls)
 
 
 
@@ -497,6 +500,7 @@ function generateResources() {
 		let smoothNamespace = globalNamespace
 		if (block === "quartz") {
 			smoothNamespace = vanillaNamespace
+      baseBlock = "minecraft:quartz_block_bottom"
 		}
 		else {
 			writeBlock(`smooth_${block}`, globalNamespace, "smooth_resource", baseBlock)
@@ -521,7 +525,7 @@ function generateResources() {
 
 	})
 
-	trialsWalls.forEach(function (wall) {
+	trickyTrialsWalls.forEach(function (wall) {
 		let blockTemplate = wall
 		let baseBlock = blockTemplate
 		baseBlock = `${baseBlock.replace("brick", "bricks")}`
@@ -587,6 +591,10 @@ function writeFile(path, data) {
 	}
 }
 
+function readFile(path) {
+  return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
+}
+
 function writeBlockstate(block, blockState, namespace) {
 	writeFile(`${paths.blockstates}${block}.json`, blockState)
 }
@@ -596,7 +604,7 @@ function writeOldBlockstate(block, blockState, namespace) {
 }
 
 function writePlankBlockModels(block, namespace, baseBlock, model, render_type) {
-	let blockModel = generateBlockModel(block, namespace, baseBlock, model, render_type)
+	let blockModel = generateBlockModel(block, namespace, block, model, render_type)
 	writeFile(`${paths.models}${block}.json`, blockModel)
 }
 
@@ -739,6 +747,17 @@ function generatePaneBlockModels(block, namespace, baseBlock, model) {
 }
 
 function generateStairBlockModel(block, namespace, baseBlock, model) {
+  if (baseBlock === "grass_block_top") {
+    if (model === "stairs") {
+      return readFile("./overrides/models/grass_stairs.json")
+    }
+    else if (model === "inner_stairs") {
+      return readFile("./overrides/models/grass_stairs_inner.json")
+    }
+    else if (model === "outer_stairs") {
+      return readFile("./overrides/models/grass_stairs_outer.json")
+    }
+  }
 	return `{
     "parent": "minecraft:block/${model}",
     "textures": {
@@ -786,31 +805,33 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}_pressed.json`, buttonModelPressed);
 }
 
-function writeSlabBlockModels(block, namespace, baseBlock) {
+function generateSlabBlockModel(block, namespace, baseBlock, model) { 
+  if (baseBlock === "grass_block_top") {
+    if (model === "slab") {
+      return readFile("./overrides/models/grass_slab.json")
+    }
+    else if (model === "slab_top") {
+      return readFile("./overrides/models/grass_slab_top.json")
+    }
+  }
+  return `{
+        "parent": "minecraft:block/${model}",
+        "textures": {
+        "bottom": "${namespace}:block/${baseBlock}",
+        "top": "${namespace}:block/${baseBlock}",
+        "side": "${namespace}:block/${baseBlock}"
+        }
+    }`
+  
+}
 
+function writeSlabBlockModels(block, namespace, baseBlock) {
   if (baseBlock.includes(":")) {
 		namespace = baseBlock.split(":")[0]
 		baseBlock = baseBlock.split(":")[1]
 	}
-	slabModel = `{
-        "parent": "minecraft:block/slab",
-        "textures": {
-        "bottom": "${namespace}:block/${baseBlock}",
-        "top": "${namespace}:block/${baseBlock}",
-        "side": "${namespace}:block/${baseBlock}"
-        }
-    }`
-	slabModelTop = `{
-        "parent": "minecraft:block/slab_top",
-        "textures": {
-        "bottom": "${namespace}:block/${baseBlock}",
-        "top": "${namespace}:block/${baseBlock}",
-        "side": "${namespace}:block/${baseBlock}"
-        }
-    }`
-
-	writeFile(`${paths.models}${block}.json`, slabModel);
-	writeFile(`${paths.models}${block}_top.json`, slabModelTop);
+	writeFile(`${paths.models}${block}.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab"));
+	writeFile(`${paths.models}${block}_top.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
 }
 
 function writePlateBlockModels(block, namespace, baseBlock) {
@@ -2449,7 +2470,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if (type === "glass_pane") {
 		const dye = `${other}_dye`
 		altNamespace = getDyeNamespace(dye)
-		recipe = generateShapedRecipe({ "C": `${namespace}:${block.replace("_pane", "")}` }, `${namespace}:${block}`, 8, ["CCC", "CCC"])
+		recipe = generateShapedRecipe({ "C": `${namespace}:${block.replace("_pane", "")}` }, `${namespace}:${block}`, 16, ["CCC", "CCC"])
 	}
 	else if (type === "lamp") {
 		if (block === "glowstone_lamp") {
@@ -3003,6 +3024,9 @@ function generateBlockModel(block, namespace, baseBlock, model, render_type) {
 		namespace = baseBlock.split(":")[0]
 		block = baseBlock.split(":")[1]
 	}
+  if (baseBlock.includes("turf")) {   
+    return readFile(`./overrides/models/${baseBlock}.json`)
+  }
 
 	return `{
     "parent": "${model}",
