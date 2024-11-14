@@ -524,7 +524,7 @@ function generateResources() {
 		writeBarBlock(block, globalNamespace, baseBlock)
     // Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
     if (block.includes("copper")) {
-      if (majorVersion >= 21) {
+      if (majorVersion <= 21) {
         writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
         writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
       }
