@@ -477,20 +477,21 @@ function generateResources() {
 	writeWallGatesFromArray(winterDropWalls)
 
 	cut.forEach(function (block) {
-		const ogBaseBlock = block;
 		let baseBlock = block
 		let altNamespace;
     let cutBlockID = `cut_${block}`
+    let baseTexture = block + "_block";
     // Overrides for Copper blocks.
 		if (block === "copper" || block === "exposed_copper" || block === "oxidized_copper" || block === "weathered_copper") {
+      baseTexture = block;
 			altNamespace = vanillaNamespace
       // Vanilla swaps Cut and Oxidization state
       cutBlockID = cutBlockID.replace("cut_weathered", "weathered_cut")
       cutBlockID = cutBlockID.replace("cut_oxidized", "oxidized_cut")
       cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
-		} 
+		}
     else {
-			baseBlock = baseBlock + "_block"
+			baseBlock = baseTexture;
 			altNamespace = globalNamespace
 			writeBlock(cutBlockID, globalNamespace, "cut_iron", cutBlockID)
 			writeSlabs(`${cutBlockID}_slab`, globalNamespace, cutBlockID, undefined, true)
@@ -502,6 +503,7 @@ function generateResources() {
 
     // Overrides for Quartz Blocks
 		if (block === "quartz") {
+      baseTexture = baseBlock + "_top"
       // Vanilla uses quartz's bottom texture instead of a dedicated smooth texture.
       writeWalls(`smooth_${block}_wall`, globalNamespace, `minecraft:quartz_block_bottom`)
       writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `minecraft:quartz_block_bottom`, globalNamespace)
@@ -524,8 +526,12 @@ function generateResources() {
 		writeTrapdoors(`${block}_trapdoor`, globalNamespace, baseBlock)
 		writeBlock(`nostalgia_${block}_block`, globalNamespace, "nostalgia", baseBlock)
 
-		writeButtons(block + "_button", globalNamespace, baseBlock, vanillaNamespace)
-		writePlates(block + "_pressure_plate", globalNamespace, baseBlock, vanillaNamespace)
+    // Unoxidized Copper Blocks use `copper_block` as their texture ID
+    if (block === "copper") {
+      baseTexture = baseBlock + "_block";
+    }
+		writeButtons(block + "_button", globalNamespace, baseTexture, vanillaNamespace)
+		writePlates(block + "_pressure_plate", globalNamespace, baseTexture, vanillaNamespace)
 
 
 	})
