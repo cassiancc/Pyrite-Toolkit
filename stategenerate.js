@@ -713,10 +713,9 @@ function generateLangObject(block, type, namespace) {
 	let langBlock = block
 	langBlock = langBlock.replaceAll("_", " ")
 	langBlock = langBlock.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(); });
-	
-	blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${type}.${namespace}.${block}": "${langBlock}"}`))
-
-
+	const key = `${type}.${namespace}.${block}`
+	const value = `${langBlock}`
+	blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`))
 }
 
 function printLang(block, type) {
