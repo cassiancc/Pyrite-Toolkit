@@ -3424,7 +3424,15 @@ function generateDoorBlockModels(block, namespace, baseBlock, modelID) {
 }
 
 function getDyeNamespace(dye) {
-	dye = dye.replace("terracotta", "dye")
+  if (dye.includes(":")) {
+    return dye.split(":")[0]
+  }
+  if (dye.includes("terracotta")) {
+    dye = dye.replace("terracotta", "dye")
+  }
+  if (!dye.includes("_dye")) {
+    dye = dye + "_dye"
+  }
 
 	if ((dye === "glow_dye") || (dye === "dragon_dye") || (dye === "star_dye") || (dye === "honey_dye") || (dye === "rose_dye") || (dye === "nostalgia_dye") || (dye === "poisonous_dye")) {
 		return globalNamespace
