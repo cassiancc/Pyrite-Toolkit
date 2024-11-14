@@ -476,28 +476,33 @@ function generateResources() {
 	writeWallGatesFromArray(trickyTrialsWalls)
 	writeWallGatesFromArray(winterDropWalls)
 
-
-
-
 	cut.forEach(function (block) {
 		const ogBaseBlock = block;
 		let baseBlock = block
 		let altNamespace;
+    let cutBlockID = `cut_${block}`
+    // Overrides for Copper blocks.
 		if (block === "copper" || block === "exposed_copper" || block === "oxidized_copper" || block === "weathered_copper") {
 			altNamespace = vanillaNamespace
-		} else {
+      // Vanilla swaps Cut and Oxidization state
+      cutBlockID = cutBlockID.replace("cut_weathered", "weathered_cut")
+      cutBlockID = cutBlockID.replace("cut_oxidized", "oxidized_cut")
+      cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
+		} 
+    else {
 			baseBlock = baseBlock + "_block"
 			altNamespace = globalNamespace
-			writeBlock(`cut_${block}`, globalNamespace, "cut_iron", `cut_${block}`)
-			writeSlabs(`cut_${block}_slab`, globalNamespace, `cut_${block}`, undefined, true)
-			writeStairs(`cut_${block}_stairs`, globalNamespace, `cut_${block}`)
+			writeBlock(cutBlockID, globalNamespace, "cut_iron", cutBlockID)
+			writeSlabs(`${cutBlockID}_slab`, globalNamespace, cutBlockID, undefined, true)
+			writeStairs(`${cutBlockID}_stairs`, globalNamespace, cutBlockID)
 		}
-		const baseIngot = block + "_ingot"
+    
+		writeWalls(`cut_${block}_wall`, globalNamespace, id(altNamespace, cutBlockID))
+		writeWallGates(`cut_${block}_wall_gate`, globalNamespace, id(altNamespace, cutBlockID), globalNamespace)
 
-		writeWalls(`cut_${block}_wall`, globalNamespace, `${altNamespace}:cut_${block}`)
-		writeWallGates(`cut_${block}_wall_gate`, globalNamespace, `${altNamespace}:cut_${block}`, globalNamespace)
-
+    // Overrides for Quartz Blocks
 		if (block === "quartz") {
+      // Vanilla uses quartz's bottom texture instead of a dedicated smooth texture.
       writeWalls(`smooth_${block}_wall`, globalNamespace, `minecraft:quartz_block_bottom`)
       writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `minecraft:quartz_block_bottom`, globalNamespace)
 		}
@@ -3437,4 +3442,8 @@ function getAltNamespace(namespace, altNamespace) {
 		altNamespace = namespace
 	}
 	return altNamespace
+}
+
+function id(namespace, path) {
+  return namespace + ":" + path
 }
