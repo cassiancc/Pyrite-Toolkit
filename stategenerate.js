@@ -3021,7 +3021,7 @@ function generateTrapdoorBlockState(block, namespace, baseBlock) {
 }
 
 
-function generateBlockModel(block, namespace, baseBlock, model, render_type) {
+function generateBlockModel(block, namespace, texture, model, render_type) {
 	if (model === undefined) {
 		model = "minecraft:block/cube_all"
 	}
@@ -3031,12 +3031,14 @@ function generateBlockModel(block, namespace, baseBlock, model, render_type) {
 	else {
 		render_type = `,${render_type}`
 	}
-	if (baseBlock.includes(":")) {
-		namespace = baseBlock.split(":")[0]
-		block = baseBlock.split(":")[1]
+  // Extract namespace and block from texture, if present.
+	if (texture.includes(":")) {
+		namespace = texture.split(":")[0]
+		block = texture.split(":")[1]
 	}
-  if (baseBlock.includes("turf")) {   
-    return readFile(`./overrides/models/${baseBlock}.json`)
+  // Override for Grass Turf for colour provider tinting.
+  if (texture.includes("minecraft:grass_block_top")) {   
+    return readFile(`./overrides/models/grass_turf.json`)
   }
 
 	return `{
