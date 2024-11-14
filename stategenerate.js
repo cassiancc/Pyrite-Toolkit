@@ -473,7 +473,7 @@ function generateResources() {
 	generateBrickSet("blue_nether_bricks", "blue_nether_bricks")
 
 	writeWallGatesFromArray(vanillaWalls)
-	writeWallGatesFromArray(trickyTrialsWalls)
+	writeWallGatesFromArray(trickyTrialsWalls, vanillaNamespace)
   if (majorVersion > 22 || (mcVersion == "1.21.4")) {
     writeWallGatesFromArray(winterDropWalls)
   }
@@ -516,16 +516,24 @@ function generateResources() {
 			writeStairs(`smooth_${block}_stairs`, globalNamespace, `smooth_${block}`, undefined, true)
       writeWalls(`smooth_${block}_wall`, globalNamespace, `smooth_${block}`)
       writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `smooth_${block}`, globalNamespace)
+      writeBlock(block + "_bricks", globalNamespace, "resource_bricks", id(altNamespace, cutBlockID), undefined, globalNamespace, undefined, true)
 		}
 
-
-
-		writeBlock(`${block}_bricks`, globalNamespace, "cut_" + baseBlock, "resource_bricks")
 		writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
 		writeChiseledBlock(`${block}_pillar`, baseBlock, globalNamespace, "resource_pillar")
 		writeBarBlock(block, globalNamespace, baseBlock)
-		writeDoors(`${block}_door`, globalNamespace, baseBlock)
-		writeTrapdoors(`${block}_trapdoor`, globalNamespace, baseBlock)
+    // Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
+    if (block.includes("copper")) {
+      if (majorVersion >= 21) {
+        writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
+        writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
+      }
+    }
+    else {
+      writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
+      writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
+    }
+
 		writeBlock(`nostalgia_${block}_block`, globalNamespace, "nostalgia", baseBlock)
 
     // Unoxidized Copper Blocks use `copper_block` as their texture ID
@@ -1757,7 +1765,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	writeInventoryModel(block, namespace)
 	createTags(block, namespace)
 	writeRecipes(block, "wall", baseBlock, altNamespace)
-	writeStonecutterRecipes(id(namespace, block), `${namespace}:${baseBlock}`, 1)
+	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
 
 }
 
@@ -2510,7 +2518,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		}
 	}
 	else if (type === "resource_bricks") {
-		recipe = generateShapedRecipe({ "D": id(vanillaNamespace, other)}, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": other}, id(namespace, block), 4, [
 			"DD",
 			"DD"
 		])
