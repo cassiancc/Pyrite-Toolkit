@@ -519,17 +519,18 @@ function generateResources() {
       writeBlock(block + "_bricks", globalNamespace, "resource_bricks", id(altNamespace, cutBlockID), undefined, globalNamespace, undefined, true)
 		}
 
-		writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
 		writeChiseledBlock(`${block}_pillar`, baseBlock, globalNamespace, "resource_pillar")
 		writeBarBlock(block, globalNamespace, baseBlock)
     // Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
     if (block.includes("copper")) {
-      if (majorVersion <= 21) {
+      if (majorVersion < 21) {
+        writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
         writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
         writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
       }
     }
     else {
+      writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
       writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
       writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
     }
@@ -540,9 +541,11 @@ function generateResources() {
     if (block === "copper") {
       baseTexture = baseBlock + "_block";
     }
-		writeButtons(block + "_button", globalNamespace, baseTexture, vanillaNamespace)
-		writePlates(block + "_pressure_plate", globalNamespace, baseTexture, vanillaNamespace)
-
+		writeButtons(block + "_button", globalNamespace, id(vanillaNamespace, baseTexture), vanillaNamespace, "metal_buttons")
+    // Iron and Gold Pressure Plates already exist.
+    if (!((block === "gold") || (block === "iron"))) {
+      writePlates(block + "_pressure_plate", globalNamespace, id(vanillaNamespace, baseTexture), vanillaNamespace)
+    }
 
 	})
 
@@ -803,6 +806,10 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 	if (namespace == undefined) {
 		namespace = globalNamespace
 	}
+  if (baseBlock.includes(":")) {
+    namespace = baseBlock.split(":")[0]
+    baseBlock = baseBlock.split(":")[1]
+  }
 	buttonModel = `{
         "parent": "minecraft:block/button",
         "textures": {
@@ -856,7 +863,10 @@ function writeSlabBlockModels(block, namespace, baseBlock) {
 }
 
 function writePlateBlockModels(block, namespace, baseBlock) {
-
+  if (baseBlock.includes(":")) {
+    namespace = baseBlock.split(":")[0]
+    baseBlock = baseBlock.split(":")[1]
+  }
 	plateModel = `{
         "parent": "minecraft:block/pressure_plate_up",
         "textures": {
@@ -2116,16 +2126,19 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 }
 
 
-function writeButtons(block, namespace, baseBlock, altNamespace) {
+function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
+  if (type == undefined) {
+    type = "buttons"
+  }
 	let buttonBlockState = generateButtonBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, buttonBlockState)
 	writeButtonBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
 	createTags(block)
-	writeRecipes(block, "buttons", baseBlock, namespace, altNamespace)
+	writeRecipes(block, type, baseBlock, namespace, altNamespace)
 
 
 }
@@ -2566,6 +2579,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "plates") {
+    other = other.replace("_top", "")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, ["CC"])
 	}
 	else if (type === "door") {
@@ -2621,6 +2635,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "buttons") {
+    other = other.replace("_top", "")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, [
 			"C"
 		])
