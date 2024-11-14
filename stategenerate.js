@@ -187,13 +187,13 @@ class Block {  // Create a class
 		//Add to global list of block translations.
 		this.addTranslation()
 
-    let stonelike;
-    if ((material === "stone") || (material.includes("brick"))) {
-      stonelike = true;
-    }
-    else {
-      stonelike = false;
-    }
+		let stonelike;
+		if ((material === "stone") || (material.includes("brick"))) {
+			stonelike = true;
+		}
+		else {
+			stonelike = false;
+		}
 
 		//Generate block state
 		if (blockType === "block") {
@@ -324,11 +324,11 @@ function generateResources() {
 		else {
 			brickBase = template.slice(0, -1)
 		}
-    if (baseBlock === undefined) {
-      baseBlock = template
-    }
+		if (baseBlock === undefined) {
+			baseBlock = template
+		}
 
-    const bricksBase = brickBase + "s"
+		const bricksBase = brickBase + "s"
 		new Block(bricksBase, globalNamespace, undefined, type, baseBlock, type)
 		new Block(brickBase + "_slab", globalNamespace, undefined, "slab", bricksBase, type)
 		new Block(brickBase + "_stairs", globalNamespace, undefined, "stairs", bricksBase, type)
@@ -342,16 +342,16 @@ function generateResources() {
 		if (type === undefined) {
 			type = "turf"
 		}
-    
+
 		new Block(turfBase + "_turf", globalNamespace, baseNamespace, type, texture, type)
 		new Block(turfBase + "_slab", globalNamespace, baseNamespace, "slab", texture, type)
 		new Block(turfBase + "_stairs", globalNamespace, baseNamespace, "stairs", texture, type)
 	}
 
 	function writeWallGatesFromArray(array, namespace) {
-    if (namespace == undefined) {
-      namespace = vanillaNamespace;
-    }
+		if (namespace == undefined) {
+			namespace = vanillaNamespace;
+		}
 		array.forEach(function (wall) {
 			let blockTemplate = wall.replace("_wall", "")
 			let baseBlock = blockTemplate
@@ -464,9 +464,9 @@ function generateResources() {
 	writeLamps("glowstone_lamp", "glowstone")
 	writeLamps("lit_redstone_lamp", "lit_redstone", "minecraft:redstone_lamp_on")
 
-  writeBlock("glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
-  writeBlock("nostalgia_glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
-  writeBlock("locked_chest", globalNamespace, "locked_chest", "locked_chest")
+	writeBlock("glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
+	writeBlock("nostalgia_glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
+	writeBlock("locked_chest", globalNamespace, "locked_chest", "locked_chest")
 
 
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
@@ -474,78 +474,78 @@ function generateResources() {
 
 	writeWallGatesFromArray(vanillaWalls)
 	writeWallGatesFromArray(trickyTrialsWalls, vanillaNamespace)
-  if (majorVersion > 22 || (mcVersion == "1.21.4")) {
-    writeWallGatesFromArray(winterDropWalls)
-  }
+	if (majorVersion > 22 || (mcVersion == "1.21.4")) {
+		writeWallGatesFromArray(winterDropWalls)
+	}
 
 	cut.forEach(function (block) {
 		let baseBlock = block
 		let altNamespace;
-    let cutBlockID = `cut_${block}`
-    let baseTexture = block + "_block";
-    // Overrides for Copper blocks.
+		let cutBlockID = `cut_${block}`
+		let baseTexture = block + "_block";
+		// Overrides for Copper blocks.
 		if (block === "copper" || block === "exposed_copper" || block === "oxidized_copper" || block === "weathered_copper") {
-      baseTexture = block;
+			baseTexture = block;
 			altNamespace = vanillaNamespace
-      // Vanilla swaps Cut and Oxidization state
-      cutBlockID = cutBlockID.replace("cut_weathered", "weathered_cut")
-      cutBlockID = cutBlockID.replace("cut_oxidized", "oxidized_cut")
-      cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
+			// Vanilla swaps Cut and Oxidization state
+			cutBlockID = cutBlockID.replace("cut_weathered", "weathered_cut")
+			cutBlockID = cutBlockID.replace("cut_oxidized", "oxidized_cut")
+			cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
 		}
-    else {
+		else {
 			baseBlock = baseTexture;
 			altNamespace = globalNamespace
 			writeBlock(cutBlockID, globalNamespace, "cut_iron", cutBlockID)
 			writeSlabs(`${cutBlockID}_slab`, globalNamespace, cutBlockID, undefined, true)
 			writeStairs(`${cutBlockID}_stairs`, globalNamespace, cutBlockID)
 		}
-    
+
 		writeWalls(`cut_${block}_wall`, globalNamespace, id(altNamespace, cutBlockID))
 		writeWallGates(`cut_${block}_wall_gate`, globalNamespace, id(altNamespace, cutBlockID), globalNamespace)
 
-    // Overrides for Quartz Blocks
+		// Overrides for Quartz Blocks
 		if (block === "quartz") {
-      baseTexture = baseBlock + "_top"
-      // Vanilla uses quartz's bottom texture instead of a dedicated smooth texture.
-      writeWalls(`smooth_${block}_wall`, globalNamespace, `minecraft:quartz_block_bottom`)
-      writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `minecraft:quartz_block_bottom`, globalNamespace)
+			baseTexture = baseBlock + "_top"
+			// Vanilla uses quartz's bottom texture instead of a dedicated smooth texture.
+			writeWalls(`smooth_${block}_wall`, globalNamespace, `minecraft:quartz_block_bottom`)
+			writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `minecraft:quartz_block_bottom`, globalNamespace)
 		}
 		else {
 			writeBlock(`smooth_${block}`, globalNamespace, "smooth_resource", baseBlock)
 			writeSlabs(`smooth_${block}_slab`, globalNamespace, `smooth_${block}`, undefined, true)
 			writeStairs(`smooth_${block}_stairs`, globalNamespace, `smooth_${block}`, undefined, true)
-      writeWalls(`smooth_${block}_wall`, globalNamespace, `smooth_${block}`)
-      writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `smooth_${block}`, globalNamespace)
-      writeBlock(block + "_bricks", globalNamespace, "resource_bricks", id(altNamespace, cutBlockID), undefined, globalNamespace, undefined, true)
+			writeWalls(`smooth_${block}_wall`, globalNamespace, `smooth_${block}`)
+			writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `smooth_${block}`, globalNamespace)
+			writeBlock(block + "_bricks", globalNamespace, "resource_bricks", id(altNamespace, cutBlockID), undefined, globalNamespace, undefined, true)
 		}
 
 		writeChiseledBlock(`${block}_pillar`, baseBlock, globalNamespace, "resource_pillar")
 		writeBarBlock(block, globalNamespace, baseBlock)
-    // Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
-    if (block.includes("copper")) {
-      if (majorVersion < 21) {
-        writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
-        writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
-        writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
-      }
-    }
-    else {
-      writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
-      writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
-      writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
-    }
+		// Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
+		if (block.includes("copper")) {
+			if (majorVersion < 21) {
+				writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
+				writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
+				writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
+			}
+		}
+		else {
+			writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
+			writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
+			writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
+		}
 
 		writeBlock(`nostalgia_${block}_block`, globalNamespace, "nostalgia", baseBlock)
 
-    // Unoxidized Copper Blocks use `copper_block` as their texture ID
-    if (block === "copper") {
-      baseTexture = baseBlock + "_block";
-    }
+		// Unoxidized Copper Blocks use `copper_block` as their texture ID
+		if (block === "copper") {
+			baseTexture = baseBlock + "_block";
+		}
 		writeButtons(block + "_button", globalNamespace, id(vanillaNamespace, baseTexture), vanillaNamespace, "metal_buttons")
-    // Iron and Gold Pressure Plates already exist.
-    if (!((block === "gold") || (block === "iron"))) {
-      writePlates(block + "_pressure_plate", globalNamespace, id(vanillaNamespace, baseTexture), vanillaNamespace)
-    }
+		// Iron and Gold Pressure Plates already exist.
+		if (!((block === "gold") || (block === "iron"))) {
+			writePlates(block + "_pressure_plate", globalNamespace, id(vanillaNamespace, baseTexture), vanillaNamespace)
+		}
 
 	})
 
@@ -555,7 +555,7 @@ function generateResources() {
 		baseBlock = `${baseBlock.replace("brick", "bricks")}`
 		baseBlock = `${baseBlock.replace("tile", "tiles")}`
 		writeWallGates(blockTemplate, globalNamespace, baseBlock, vanillaNamespace)
-		writeStonecutterRecipes(blockTemplate, vanillaNamespace+baseBlock, 1)
+		writeStonecutterRecipes(blockTemplate, vanillaNamespace + baseBlock, 1)
 
 	})
 
@@ -616,7 +616,7 @@ function writeFile(path, data) {
 }
 
 function readFile(path) {
-  return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
+	return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
 }
 
 function writeBlockstate(block, blockState, namespace) {
@@ -725,11 +725,11 @@ function printBlock(block) {
 
 function generateWallBlockModel(block, namespace, baseBlock, parent) {
 	return `{
-      "parent": "minecraft:block/${parent}",
-      "textures": {
-        "wall": "${namespace}:block/${baseBlock}"
-      }
-    }`
+	  "parent": "minecraft:block/${parent}",
+	  "textures": {
+		"wall": "${namespace}:block/${baseBlock}"
+	  }
+	}`
 }
 
 function writeWallBlockModels(block, namespace, baseBlock) {
@@ -761,39 +761,39 @@ function writePaneBlockModels(block, namespace, baseBlock) {
 
 function generatePaneBlockModels(block, namespace, baseBlock, model) {
 	return `{
-    "parent": "minecraft:block/${model}",
-    "textures": {
-      "pane": "pyrite:block/${baseBlock}",
-      "edge": "pyrite:block/framed_glass_pane_top"
-    },
-    "render_type": "translucent"
+	"parent": "minecraft:block/${model}",
+	"textures": {
+	  "pane": "pyrite:block/${baseBlock}",
+	  "edge": "pyrite:block/framed_glass_pane_top"
+	},
+	"render_type": "translucent"
   }`
 }
 
 function generateStairBlockModel(block, namespace, baseBlock, model) {
-  if (baseBlock === "grass_block_top") {
-    if (model === "stairs") {
-      return readFile("./overrides/models/grass_stairs.json")
-    }
-    else if (model === "inner_stairs") {
-      return readFile("./overrides/models/grass_stairs_inner.json")
-    }
-    else if (model === "outer_stairs") {
-      return readFile("./overrides/models/grass_stairs_outer.json")
-    }
-  }
+	if (baseBlock === "grass_block_top") {
+		if (model === "stairs") {
+			return readFile("./overrides/models/grass_stairs.json")
+		}
+		else if (model === "inner_stairs") {
+			return readFile("./overrides/models/grass_stairs_inner.json")
+		}
+		else if (model === "outer_stairs") {
+			return readFile("./overrides/models/grass_stairs_outer.json")
+		}
+	}
 	return `{
-    "parent": "minecraft:block/${model}",
-    "textures": {
-      "bottom": "${namespace}:block/${baseBlock}",
-      "top": "${namespace}:block/${baseBlock}",
-      "side": "${namespace}:block/${baseBlock}"
-    }
+	"parent": "minecraft:block/${model}",
+	"textures": {
+	  "bottom": "${namespace}:block/${baseBlock}",
+	  "top": "${namespace}:block/${baseBlock}",
+	  "side": "${namespace}:block/${baseBlock}"
+	}
   }`
 }
 
 function writeStairBlockModels(block, namespace, baseBlock) {
-  if (baseBlock.includes(":")) {
+	if (baseBlock.includes(":")) {
 		namespace = baseBlock.split(":")[0]
 		baseBlock = baseBlock.split(":")[1]
 	}
@@ -806,55 +806,55 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 	if (namespace == undefined) {
 		namespace = globalNamespace
 	}
-  if (baseBlock.includes(":")) {
-    namespace = baseBlock.split(":")[0]
-    baseBlock = baseBlock.split(":")[1]
-  }
+	if (baseBlock.includes(":")) {
+		namespace = baseBlock.split(":")[0]
+		baseBlock = baseBlock.split(":")[1]
+	}
 	buttonModel = `{
-        "parent": "minecraft:block/button",
-        "textures": {
-          "texture": "${namespace}:block/${baseBlock}"
-        }
-      }`
+		"parent": "minecraft:block/button",
+		"textures": {
+		  "texture": "${namespace}:block/${baseBlock}"
+		}
+	  }`
 	buttonModelInventory = `{
-        "parent": "minecraft:block/button_inventory",
-        "textures": {
-            "texture": "${namespace}:block/${baseBlock}"
-        }
-      }`
+		"parent": "minecraft:block/button_inventory",
+		"textures": {
+			"texture": "${namespace}:block/${baseBlock}"
+		}
+	  }`
 	buttonModelPressed = `{
-        "parent": "minecraft:block/button_pressed",
-        "textures": {
-            "texture": "${namespace}:block/${baseBlock}"
-        }
-      }`
+		"parent": "minecraft:block/button_pressed",
+		"textures": {
+			"texture": "${namespace}:block/${baseBlock}"
+		}
+	  }`
 	writeFile(`${paths.models}${block}.json`, buttonModel)
 	writeFile(`${paths.models}${block}_inventory.json`, buttonModelInventory);
 	writeFile(`${paths.models}${block}_pressed.json`, buttonModelPressed);
 }
 
-function generateSlabBlockModel(block, namespace, baseBlock, model) { 
-  if (baseBlock === "grass_block_top") {
-    if (model === "slab") {
-      return readFile("./overrides/models/grass_slab.json")
-    }
-    else if (model === "slab_top") {
-      return readFile("./overrides/models/grass_slab_top.json")
-    }
-  }
-  return `{
-        "parent": "minecraft:block/${model}",
-        "textures": {
-        "bottom": "${namespace}:block/${baseBlock}",
-        "top": "${namespace}:block/${baseBlock}",
-        "side": "${namespace}:block/${baseBlock}"
-        }
-    }`
-  
+function generateSlabBlockModel(block, namespace, baseBlock, model) {
+	if (baseBlock === "grass_block_top") {
+		if (model === "slab") {
+			return readFile("./overrides/models/grass_slab.json")
+		}
+		else if (model === "slab_top") {
+			return readFile("./overrides/models/grass_slab_top.json")
+		}
+	}
+	return `{
+		"parent": "minecraft:block/${model}",
+		"textures": {
+		"bottom": "${namespace}:block/${baseBlock}",
+		"top": "${namespace}:block/${baseBlock}",
+		"side": "${namespace}:block/${baseBlock}"
+		}
+	}`
+
 }
 
 function writeSlabBlockModels(block, namespace, baseBlock) {
-  if (baseBlock.includes(":")) {
+	if (baseBlock.includes(":")) {
 		namespace = baseBlock.split(":")[0]
 		baseBlock = baseBlock.split(":")[1]
 	}
@@ -863,22 +863,22 @@ function writeSlabBlockModels(block, namespace, baseBlock) {
 }
 
 function writePlateBlockModels(block, namespace, baseBlock) {
-  if (baseBlock.includes(":")) {
-    namespace = baseBlock.split(":")[0]
-    baseBlock = baseBlock.split(":")[1]
-  }
+	if (baseBlock.includes(":")) {
+		namespace = baseBlock.split(":")[0]
+		baseBlock = baseBlock.split(":")[1]
+	}
 	plateModel = `{
-        "parent": "minecraft:block/pressure_plate_up",
-        "textures": {
-          "texture": "${namespace}:block/${baseBlock}"
-        }
-      }`
+		"parent": "minecraft:block/pressure_plate_up",
+		"textures": {
+		  "texture": "${namespace}:block/${baseBlock}"
+		}
+	  }`
 	plateModelDown = `{
-        "parent": "minecraft:block/pressure_plate_down",
-        "textures": {
-          "texture": "${namespace}:block/${baseBlock}"
-        }
-      }`
+		"parent": "minecraft:block/pressure_plate_down",
+		"textures": {
+		  "texture": "${namespace}:block/${baseBlock}"
+		}
+	  }`
 
 	writeFile(`${paths.models}${block}.json`, plateModel);
 	writeFile(`${paths.models}${block}_down.json`, plateModelDown);
@@ -888,7 +888,7 @@ function generateFenceBlockModels(block, baseBlock, namespace, model) {
 	return `{
   "parent": "minecraft:block/${model}",
   "textures": {
-    "texture": "${namespace}:block/${baseBlock}"
+	"texture": "${namespace}:block/${baseBlock}"
   }
 }`
 }
@@ -901,10 +901,10 @@ function writeFenceBlockModels(block, baseBlock, namespace) {
 
 function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNamespace) {
 	return `{
-    "parent": "${altNamespace}:block/${model}",
-    "textures": {
-      "texture": "${namespace}:block/${baseBlock}"
-    }
+	"parent": "${altNamespace}:block/${model}",
+	"textures": {
+	  "texture": "${namespace}:block/${baseBlock}"
+	}
   }`
 }
 
@@ -956,32 +956,32 @@ function writeTrapdoorBlockModels(block, namespace, baseBlock) {
 
 function writeCarpetBlockModels(block, namespace, baseBlock) {
 	let carpetModel = `{
-    "parent": "minecraft:block/carpet",
-    "textures": {
-      "wool": "${namespace}:block/${baseBlock}"
-    }
+	"parent": "minecraft:block/carpet",
+	"textures": {
+	  "wool": "${namespace}:block/${baseBlock}"
+	}
   }`
 	if (block === "grass_carpet") {
 		carpetModel = `{
-      "parent": "minecraft:block/carpet",
-      "textures": {
-        "wool": "minecraft:block/grass_block_top"
-      },
-      "elements": [
-        {   "from": [ 0, 0, 0 ],
-            "to": [ 16, 1, 16 ],
-            "faces": {
-              "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wool", "cullface": "down", "tintindex": 0  },
-              "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",    "cullface": "up", "tintindex": 0 },
-              "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "north", "tintindex": 0  },
-              "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "south", "tintindex": 0  },
-              "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "west", "tintindex": 0  },
-              "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "east", "tintindex": 0  }
-    
-            }
-        }
-    ]
-    }`
+	  "parent": "minecraft:block/carpet",
+	  "textures": {
+		"wool": "minecraft:block/grass_block_top"
+	  },
+	  "elements": [
+		{   "from": [ 0, 0, 0 ],
+			"to": [ 16, 1, 16 ],
+			"faces": {
+			  "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wool", "cullface": "down", "tintindex": 0  },
+			  "up":	{ "uv": [ 0, 0, 16, 16 ], "texture": "#wool",	"cullface": "up", "tintindex": 0 },
+			  "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "north", "tintindex": 0  },
+			  "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "south", "tintindex": 0  },
+			  "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "west", "tintindex": 0  },
+			  "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#wool",   "cullface": "east", "tintindex": 0  }
+	
+			}
+		}
+	]
+	}`
 	}
 
 	writeFile(`${paths.models}${block}.json`, carpetModel);
@@ -993,38 +993,47 @@ function writeBlockItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-  if ((majorVersion > 21) || ((majorVersion == 21)&& (minorVersion >= 4))) {
-    const item = 
-    {
-      "model": {
-        "type": "minecraft:model",
-        "model": `${namespace}:block/${block}`
-      }
-    }
-    writeFile(`${paths.assets}items/${block}.json`, item);
-
-    const modelItem = 
-    {
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": `${namespace}:block/${block}`
-      }
-    }
-    writeFile(`${paths.itemModels}${block}.json`, modelItem);
-  }
-  else {
-    const modelItem = `{
-      "parent": "${namespace}:block/${block}"
-    }`
-    writeFile(`${paths.itemModels}${block}.json`, modelItem);
-  }
+	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+		writeWinterDropItem(namespace, "block", block)
+		const modelItem =
+		{
+			"parent": "minecraft:item/generated",
+			"textures": {
+				"layer0": `${namespace}:block/${block}`
+			}
+		}
+		writeFile(`${paths.itemModels}${block}.json`, modelItem);
+	}
+	else {
+		const modelItem = `{
+	  "parent": "${namespace}:block/${block}"
+	}`
+		writeFile(`${paths.itemModels}${block}.json`, modelItem);
+	}
 
 }
 
+function writeWinterDropItem(namespace, folder, path, model) {
+	if (model == undefined) {
+		model = path
+	}
+	const item =
+	{
+		"model": {
+			"type": "minecraft:model",
+			"model": `${namespace}:${folder}/${model}`
+		}
+	}
+	writeFile(`${paths.assets}items/${path}.json`, item);
+}
+
 function writeTrapdoorItemModel(block, namespace) {
+	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+		writeWinterDropItem(namespace, "block", block, `${block}_bottom`)
+	}
 	let modelItem = `{
-        "parent": "${namespace}:block/${block}_bottom"
-      }`
+		"parent": "${namespace}:block/${block}_bottom"
+	  }`
 	writeFile(`${paths.itemModels}${block}.json`, modelItem);
 }
 
@@ -1033,18 +1042,18 @@ function writeUniqueItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-  if ((majorVersion > 21) || ((majorVersion == 21)&& (minorVersion >= 4))) {
-    writeUniqueBlockItemModel(block, namespace, namespace, block)
-  }
-  else {
-    let modelItem = `{
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "${namespace}:item/${block}"
-      }
-    }`
-    writeFile(`${paths.itemModels}${block}.json`, modelItem);
-  }
+	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+		writeWinterDropItem(namespace, "item", block, block)
+	}
+	else {
+		let modelItem = `{
+	  "parent": "minecraft:item/generated",
+	  "textures": {
+		"layer0": "${namespace}:item/${block}"
+	  }
+	}`
+		writeFile(`${paths.itemModels}${block}.json`, modelItem);
+	}
 }
 
 function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
@@ -1057,24 +1066,18 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	if (baseBlock === undefined) {
 		baseBlock = block
 	}
-  if ((majorVersion > 21) || ((majorVersion == 21)&& (minorVersion >= 4))) {
-    const modelItem = {
-      "model": {
-        "type": "minecraft:model",
-        "model": `${altNamespace}:item/${baseBlock}`
-      }
-    }
-    writeFile(`${paths.assets}items/${block}.json`, modelItem);
-  }
-  else {
-    const modelItem = `{
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "${altNamespace}:block/${baseBlock}"
-      }
-    }`
-    writeFile(`${paths.itemModels}${block}.json`, modelItem)
-  }
+	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+		writeWinterDropItem(altNamespace, "item", block, baseBlock)
+	}
+	else {
+		const modelItem = `{
+	  "parent": "minecraft:item/generated",
+	  "textures": {
+		"layer0": "${altNamespace}:block/${baseBlock}"
+	  }
+	}`
+		writeFile(`${paths.itemModels}${block}.json`, modelItem)
+	}
 
 }
 
@@ -1083,11 +1086,16 @@ function writeInventoryModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	let modelItem = `{
-        "parent": "${namespace}:block/${block}_inventory"
-      }`
+	if ((majorVersion > 21) || ((majorVersion == 21) && (minorVersion >= 4))) {
+		writeWinterDropItem(namespace, "block", block, `${block}_inventory`)
+	}
+	else {
+		let modelItem = `{
+	  "parent": "${namespace}:block/${block}_inventory"
+	}`
+		writeFile(`${paths.itemModels}${block}.json`, modelItem);
+	}
 
-	writeFile(`${paths.itemModels}${block}.json`, modelItem);
 }
 
 function writePlanks(block, dye, namespace, baseBlock) {
@@ -1110,18 +1118,18 @@ function writeWool(block, dye, namespace) {
 
 function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	blockState = `{
-    "variants": {
-      "": {
-        "model": "${namespace}:block/${block}_north_west_mirrored"
-      }
-    }
-  }`
+	"variants": {
+		"": {
+			"model": "${namespace}:block/${block}_north_west_mirrored"
+			}
+		}
+  	}`
 	writeBlockstate(block, blockState, namespace)
 	writeMirroredBricksBlockModels(block, namespace, block)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
 	writeRecipes(block, special, baseBlock, namespace)
-  writeStonecutterRecipes(block, baseBlock, 1)
+	writeStonecutterRecipes(block, baseBlock, 1)
 }
 
 function writeDye(item, dye, namespace) {
@@ -1164,11 +1172,11 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		texture = baseBlock
 	}
 	let blockState = `{
-    "variants": {
-      "": {
-        "model": "${namespace}:block/${block}"
-      }
-    }
+	"variants": {
+	  "": {
+		"model": "${namespace}:block/${block}"
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writePlankBlockModels(block, namespace, texture, undefined, render_type)
@@ -1178,9 +1186,9 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 
 	writeRecipes(block, blockType, baseBlock, namespace)
 
-  if (shouldGenerateStonecutterRecipes === true) {
-    writeStonecutterRecipes(block, baseBlock, 1)
-  }
+	if (shouldGenerateStonecutterRecipes === true) {
+		writeStonecutterRecipes(block, baseBlock, 1)
+	}
 }
 
 function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
@@ -1198,110 +1206,110 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 	}
 
 	let blockState = `{
-    "variants": {
-      "face=ceiling,facing=east,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "x": 180,
-        "y": 270
-      },
-      "face=ceiling,facing=east,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 180,
-        "y": 270
-      },
-      "face=ceiling,facing=north,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "x": 180,
-        "y": 180
-      },
-      "face=ceiling,facing=north,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 180,
-        "y": 180
-      },
-      "face=ceiling,facing=south,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "x": 180
-      },
-      "face=ceiling,facing=south,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 180
-      },
-      "face=ceiling,facing=west,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "x": 180,
-        "y": 90
-      },
-      "face=ceiling,facing=west,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 180,
-        "y": 90
-      },
-      "face=floor,facing=east,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "y": 90
-      },
-      "face=floor,facing=east,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "y": 90
-      },
-      "face=floor,facing=north,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright"
-      },
-      "face=floor,facing=north,powered=true": {
-        "model": "${namespace}:block/${block}"
-      },
-      "face=floor,facing=south,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "y": 180
-      },
-      "face=floor,facing=south,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "y": 180
-      },
-      "face=floor,facing=west,powered=false": {
-        "model": "${namespace}:block/${uprightBlock}_upright",
-        "y": 270
-      },
-      "face=floor,facing=west,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "y": 270
-      },
-      "face=wall,facing=east,powered=false": {
-        "model": "${namespace}:block/${block}_wall"
-      },
-      "face=wall,facing=east,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 90,
-        "y": 90
-      },
-      "face=wall,facing=north,powered=false": {
-        "model": "${namespace}:block/${block}_wall",
-        "y": 270
-      },
-      "face=wall,facing=north,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 90
-      },
-      "face=wall,facing=south,powered=false": {
-        "model": "${namespace}:block/${block}_wall",
-        "y": 90
-      },
-      "face=wall,facing=south,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 90,
-        "y": 180
-      },
-      "face=wall,facing=west,powered=false": {
-        "model": "${namespace}:block/${block}_wall",
-        "y": 180
-      },
-      "face=wall,facing=west,powered=true": {
-        "model": "${namespace}:block/${block}",
-        "x": 90,
-        "y": 270
-      }
-    }
+	"variants": {
+	  "face=ceiling,facing=east,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"x": 180,
+		"y": 270
+	  },
+	  "face=ceiling,facing=east,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 180,
+		"y": 270
+	  },
+	  "face=ceiling,facing=north,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"x": 180,
+		"y": 180
+	  },
+	  "face=ceiling,facing=north,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 180,
+		"y": 180
+	  },
+	  "face=ceiling,facing=south,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"x": 180
+	  },
+	  "face=ceiling,facing=south,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 180
+	  },
+	  "face=ceiling,facing=west,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"x": 180,
+		"y": 90
+	  },
+	  "face=ceiling,facing=west,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 180,
+		"y": 90
+	  },
+	  "face=floor,facing=east,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"y": 90
+	  },
+	  "face=floor,facing=east,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"y": 90
+	  },
+	  "face=floor,facing=north,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright"
+	  },
+	  "face=floor,facing=north,powered=true": {
+		"model": "${namespace}:block/${block}"
+	  },
+	  "face=floor,facing=south,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"y": 180
+	  },
+	  "face=floor,facing=south,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"y": 180
+	  },
+	  "face=floor,facing=west,powered=false": {
+		"model": "${namespace}:block/${uprightBlock}_upright",
+		"y": 270
+	  },
+	  "face=floor,facing=west,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"y": 270
+	  },
+	  "face=wall,facing=east,powered=false": {
+		"model": "${namespace}:block/${block}_wall"
+	  },
+	  "face=wall,facing=east,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 90,
+		"y": 90
+	  },
+	  "face=wall,facing=north,powered=false": {
+		"model": "${namespace}:block/${block}_wall",
+		"y": 270
+	  },
+	  "face=wall,facing=north,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 90
+	  },
+	  "face=wall,facing=south,powered=false": {
+		"model": "${namespace}:block/${block}_wall",
+		"y": 90
+	  },
+	  "face=wall,facing=south,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 90,
+		"y": 180
+	  },
+	  "face=wall,facing=west,powered=false": {
+		"model": "${namespace}:block/${block}_wall",
+		"y": 180
+	  },
+	  "face=wall,facing=west,powered=true": {
+		"model": "${namespace}:block/${block}",
+		"x": 90,
+		"y": 270
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writeLeverBlockModels(block, namespace, baseBlock, altNamespace)
@@ -1312,57 +1320,57 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 
 function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	let blockState = `{
-    "variants": {
-      "face=ceiling,facing=east": {
-        "model": "${namespace}:block/${block}_upright",
-        "x": 180,
-        "y": 270
-      },
-      "face=ceiling,facing=north": {
-        "model": "${namespace}:block/${block}_upright",
-        "x": 180,
-        "y": 180
-      },
-      "face=ceiling,facing=south": {
-        "model": "${namespace}:block/${block}_upright",
-        "x": 180
-      },
-      "face=ceiling,facing=west": {
-        "model": "${namespace}:block/${block}_upright",
-        "x": 180,
-        "y": 90
-      },
-      "face=floor,facing=east": {
-        "model": "${namespace}:block/${block}_upright",
-        "y": 90
-      },
-      "face=floor,facing=north": {
-        "model": "${namespace}:block/${block}_upright"
-      },
-      "face=floor,facing=south": {
-        "model": "${namespace}:block/${block}_upright",
-        "y": 180
-      },
-      "face=floor,facing=west": {
-        "model": "${namespace}:block/${block}_upright",
-        "y": 270
-      },
-      "face=wall,facing=east": {
-        "model": "${namespace}:block/${block}_wall"
-      },
-      "face=wall,facing=north": {
-        "model": "${namespace}:block/${block}_wall",
-        "y": 270
-      },  
-      "face=wall,facing=south": {
-        "model": "${namespace}:block/${block}_wall",
-        "y": 90
-      },
-      "face=wall,facing=west": {
-        "model": "${namespace}:block/${block}_wall",
-        "y": 180
-      }
-    }
+	"variants": {
+	  "face=ceiling,facing=east": {
+		"model": "${namespace}:block/${block}_upright",
+		"x": 180,
+		"y": 270
+	  },
+	  "face=ceiling,facing=north": {
+		"model": "${namespace}:block/${block}_upright",
+		"x": 180,
+		"y": 180
+	  },
+	  "face=ceiling,facing=south": {
+		"model": "${namespace}:block/${block}_upright",
+		"x": 180
+	  },
+	  "face=ceiling,facing=west": {
+		"model": "${namespace}:block/${block}_upright",
+		"x": 180,
+		"y": 90
+	  },
+	  "face=floor,facing=east": {
+		"model": "${namespace}:block/${block}_upright",
+		"y": 90
+	  },
+	  "face=floor,facing=north": {
+		"model": "${namespace}:block/${block}_upright"
+	  },
+	  "face=floor,facing=south": {
+		"model": "${namespace}:block/${block}_upright",
+		"y": 180
+	  },
+	  "face=floor,facing=west": {
+		"model": "${namespace}:block/${block}_upright",
+		"y": 270
+	  },
+	  "face=wall,facing=east": {
+		"model": "${namespace}:block/${block}_wall"
+	  },
+	  "face=wall,facing=north": {
+		"model": "${namespace}:block/${block}_wall",
+		"y": 270
+	  },  
+	  "face=wall,facing=south": {
+		"model": "${namespace}:block/${block}_wall",
+		"y": 90
+	  },
+	  "face=wall,facing=west": {
+		"model": "${namespace}:block/${block}_wall",
+		"y": 180
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writeTorchBlockModels(block, namespace, block, altNamespace)
@@ -1376,11 +1384,11 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 		altNamespace = namespace
 	}
 	let blockState = `{
-    "variants": {
-      "": {
-        "model": "${namespace}:block/${block}"
-      }
-    }
+	"variants": {
+	  "": {
+		"model": "${namespace}:block/${block}"
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
@@ -1393,23 +1401,23 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 		altNamespace = namespace
 	}
 	blockState = `{
-    "variants": {
-      "facing=east": {
-        "model": "${namespace}:block/${block}",
-        "y": 90
-      },
-      "facing=north": {
-        "model": "${namespace}:block/${block}"
-      },
-      "facing=south": {
-        "model": "${namespace}:block/${block}",
-        "y": 180
-      },
-      "facing=west": {
-        "model": "${namespace}:block/${block}",
-        "y": 270
-      }
-    }
+	"variants": {
+	  "facing=east": {
+		"model": "${namespace}:block/${block}",
+		"y": 90
+	  },
+	  "facing=north": {
+		"model": "${namespace}:block/${block}"
+	  },
+	  "facing=south": {
+		"model": "${namespace}:block/${block}",
+		"y": 180
+	  },
+	  "facing=west": {
+		"model": "${namespace}:block/${block}",
+		"y": 270
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writePlankBlockModels(block, namespace, baseBlock, "pyrite:block/template_ladder")
@@ -1424,11 +1432,11 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 	}
 	block += "_chest"
 	blockState = `{
-    "variants": {
-      "": {
-        "model": "${namespace}:block/${block}"
-      }
-    }
+	"variants": {
+	  "": {
+		"model": "${namespace}:block/${block}"
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writePlankBlockModels(block, namespace, baseBlock)
@@ -1439,11 +1447,11 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 
 function writeFlower(block, namespace) {
 	let blockState = `{
-    "variants": {
-      "": {
-        "model": "${namespace}:block/${block}"
-      }
-    }
+	"variants": {
+	  "": {
+		"model": "${namespace}:block/${block}"
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writeFlowerBlockModels(block, namespace)
@@ -1456,20 +1464,20 @@ function writeFlower(block, namespace) {
 
 function writeChiseledBlock(block, dye, namespace, special, baseBlock) {
 	blockState = `{
-    "variants": {
-      "axis=x": {
-        "model": "${namespace}:block/${block}_horizontal",
-        "x": 90,
-        "y": 90
-      },
-      "axis=y": {
-        "model": "${namespace}:block/${block}"
-      },
-      "axis=z": {
-        "model": "${namespace}:block/${block}_horizontal",
-        "x": 90
-      }
-    }
+	"variants": {
+	  "axis=x": {
+		"model": "${namespace}:block/${block}_horizontal",
+		"x": 90,
+		"y": 90
+	  },
+	  "axis=y": {
+		"model": "${namespace}:block/${block}"
+	  },
+	  "axis=z": {
+		"model": "${namespace}:block/${block}_horizontal",
+		"x": 90
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writeCubeColumnBlockModels(block, namespace, baseBlock)
@@ -1504,203 +1512,203 @@ function writeBarBlock(block, namespace, baseBlock) {
 
 function generatePaneBlockState(block, namespace, baseBlock) {
 	return `{
-    "multipart": [
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_post"
-        }
-      },
-      {
-        "when": {
-          "north": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side"
-        }
-      },
-      {
-        "when": {
-          "east": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "y": 90
-        }
-      },
-      {
-        "when": {
-          "south": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side_alt"
-        }
-      },
-      {
-        "when": {
-          "west": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side_alt",
-          "y": 90
-        }
-      },
-      {
-        "when": {
-          "north": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_noside"
-        }
-      },
-      {
-        "when": {
-          "east": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_noside_alt"
-        }
-      },
-      {
-        "when": {
-          "south": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_noside_alt",
-          "y": 90
-        }
-      },
-      {
-        "when": {
-          "west": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_noside",
-          "y": 270
-        }
-      }
-    ]
+	"multipart": [
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_post"
+		}
+	  },
+	  {
+		"when": {
+		  "north": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side"
+		}
+	  },
+	  {
+		"when": {
+		  "east": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "y": 90
+		}
+	  },
+	  {
+		"when": {
+		  "south": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_alt"
+		}
+	  },
+	  {
+		"when": {
+		  "west": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_alt",
+		  "y": 90
+		}
+	  },
+	  {
+		"when": {
+		  "north": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_noside"
+		}
+	  },
+	  {
+		"when": {
+		  "east": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_noside_alt"
+		}
+	  },
+	  {
+		"when": {
+		  "south": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_noside_alt",
+		  "y": 90
+		}
+	  },
+	  {
+		"when": {
+		  "west": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_noside",
+		  "y": 270
+		}
+	  }
+	]
   }`
 }
 
 function generateBarBlockState(block, namespace, baseBlock) {
 	return `{
-    "multipart": [
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_post_ends"
-        }
-      },
-      {
-        "when": {
-          "north": "false",
-          "west": "false",
-          "south": "false",
-          "east": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_post"
-        }
-      },
-      {
-        "when": {
-          "north": "true",
-          "west": "false",
-          "south": "false",
-          "east": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_cap"
-        }
-      },
-      {
-        "when": {
-          "north": "false",
-          "west": "false",
-          "south": "false",
-          "east": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_cap",
-          "y": 90
-        }
-      },
-      {
-        "when": {
-          "north": "false",
-          "west": "false",
-          "south": "true",
-          "east": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_cap_alt"
-        }
-      },
-      {
-        "when": {
-          "north": "false",
-          "west": "true",
-          "south": "false",
-          "east": "false"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_cap_alt",
-          "y": 90
-        }
-      },
-      {
-        "when": {
-          "north": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side"
-        }
-      },
-      {
-        "when": {
-          "east": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "y": 90
-        }
-      },
-      {
-        "when": {
-          "south": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side_alt"
-        }
-      },
-      {
-        "when": {
-          "west": "true"
-        },
-        "apply": {
-          "model": "${namespace}:block/${block}_side_alt",
-          "y": 90
-        }
-      }
-    ]
+	"multipart": [
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_post_ends"
+		}
+	  },
+	  {
+		"when": {
+		  "north": "false",
+		  "west": "false",
+		  "south": "false",
+		  "east": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_post"
+		}
+	  },
+	  {
+		"when": {
+		  "north": "true",
+		  "west": "false",
+		  "south": "false",
+		  "east": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_cap"
+		}
+	  },
+	  {
+		"when": {
+		  "north": "false",
+		  "west": "false",
+		  "south": "false",
+		  "east": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_cap",
+		  "y": 90
+		}
+	  },
+	  {
+		"when": {
+		  "north": "false",
+		  "west": "false",
+		  "south": "true",
+		  "east": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_cap_alt"
+		}
+	  },
+	  {
+		"when": {
+		  "north": "false",
+		  "west": "true",
+		  "south": "false",
+		  "east": "false"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_cap_alt",
+		  "y": 90
+		}
+	  },
+	  {
+		"when": {
+		  "north": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side"
+		}
+	  },
+	  {
+		"when": {
+		  "east": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "y": 90
+		}
+	  },
+	  {
+		"when": {
+		  "south": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_alt"
+		}
+	  },
+	  {
+		"when": {
+		  "west": "true"
+		},
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_alt",
+		  "y": 90
+		}
+	  }
+	]
   }`
 }
 
 function writeLogs(block, namespace, special) {
 	blockState = `{
-    "variants": {
-      "axis=x": {
-        "model": "${namespace}:block/${block}_horizontal",
-        "x": 90,
-        "y": 90
-      },
-      "axis=y": {
-        "model": "${namespace}:block/${block}"
-      },
-      "axis=z": {
-        "model": "${namespace}:block/${block}_horizontal",
-        "x": 90
-      }
-    }
+	"variants": {
+	  "axis=x": {
+		"model": "${namespace}:block/${block}_horizontal",
+		"x": 90,
+		"y": 90
+	  },
+	  "axis=y": {
+		"model": "${namespace}:block/${block}"
+	  },
+	  "axis=z": {
+		"model": "${namespace}:block/${block}_horizontal",
+		"x": 90
+	  }
+	}
   }`
 	writeBlockstate(block, blockState, namespace)
 	writeLogBlockModels(block, namespace)
@@ -1720,94 +1728,94 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	}
 
 	wallBlockState = `{
-    "multipart": [
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_post"
-        },
-        "when": {
-          "up": "true"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true
-        },
-        "when": {
-          "north": "low"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true,
-          "y": 90
-        },
-        "when": {
-          "east": "low"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true,
-          "y": 180
-        },
-        "when": {
-          "south": "low"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true,
-          "y": 270
-        },
-        "when": {
-          "west": "low"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side_tall",
-          "uvlock": true
-        },
-        "when": {
-          "north": "tall"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side_tall",
-          "uvlock": true,
-          "y": 90
-        },
-        "when": {
-          "east": "tall"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side_tall",
-          "uvlock": true,
-          "y": 180
-        },
-        "when": {
-          "south": "tall"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side_tall",
-          "uvlock": true,
-          "y": 270
-        },
-        "when": {
-          "west": "tall"
-        }
-      }
-    ]
+	"multipart": [
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_post"
+		},
+		"when": {
+		  "up": "true"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true
+		},
+		"when": {
+		  "north": "low"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true,
+		  "y": 90
+		},
+		"when": {
+		  "east": "low"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true,
+		  "y": 180
+		},
+		"when": {
+		  "south": "low"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true,
+		  "y": 270
+		},
+		"when": {
+		  "west": "low"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_tall",
+		  "uvlock": true
+		},
+		"when": {
+		  "north": "tall"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_tall",
+		  "uvlock": true,
+		  "y": 90
+		},
+		"when": {
+		  "east": "tall"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_tall",
+		  "uvlock": true,
+		  "y": 180
+		},
+		"when": {
+		  "south": "tall"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side_tall",
+		  "uvlock": true,
+		  "y": 270
+		},
+		"when": {
+		  "west": "tall"
+		}
+	  }
+	]
   }`
 	writeBlockstate(block, wallBlockState, namespace)
 	writeWallBlockModels(block, altNamespace, baseBlock)
@@ -1820,214 +1828,214 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 
 function generateStairBlockstate(block, namespace) {
 	return `{
-        "variants": {
-          "facing=east,half=bottom,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=east,half=bottom,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner"
-          },
-          "facing=east,half=bottom,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=east,half=bottom,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer"
-          },
-          "facing=east,half=bottom,shape=straight": {
-            "model": "${namespace}:block/${block}"
-          },
-          "facing=east,half=top,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "uvlock": true
-          },
-          "facing=east,half=top,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=east,half=top,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "uvlock": true
-          },
-          "facing=east,half=top,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=east,half=top,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "x": 180,
-            "uvlock": true
-          },
-          "facing=north,half=bottom,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=north,half=bottom,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=north,half=bottom,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=north,half=bottom,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=north,half=bottom,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=north,half=top,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=north,half=top,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "uvlock": true
-          },
-          "facing=north,half=top,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=north,half=top,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "uvlock": true
-          },
-          "facing=north,half=top,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "x": 180,
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=south,half=bottom,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner"
-          },
-          "facing=south,half=bottom,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=south,half=bottom,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer"
-          },
-          "facing=south,half=bottom,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=south,half=bottom,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=south,half=top,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=south,half=top,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=south,half=top,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=south,half=top,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=south,half=top,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "x": 180,
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=west,half=bottom,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=west,half=bottom,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=west,half=bottom,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "y": 90,
-            "uvlock": true
-          },
-          "facing=west,half=bottom,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=west,half=bottom,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=west,half=top,shape=inner_left": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=west,half=top,shape=inner_right": {
-            "model": "${namespace}:block/${block}_inner",
-            "x": 180,
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=west,half=top,shape=outer_left": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "y": 180,
-            "uvlock": true
-          },
-          "facing=west,half=top,shape=outer_right": {
-            "model": "${namespace}:block/${block}_outer",
-            "x": 180,
-            "y": 270,
-            "uvlock": true
-          },
-          "facing=west,half=top,shape=straight": {
-            "model": "${namespace}:block/${block}",
-            "x": 180,
-            "y": 180,
-            "uvlock": true
-          }
-        }
-      }`
+		"variants": {
+		  "facing=east,half=bottom,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=east,half=bottom,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner"
+		  },
+		  "facing=east,half=bottom,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=east,half=bottom,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer"
+		  },
+		  "facing=east,half=bottom,shape=straight": {
+			"model": "${namespace}:block/${block}"
+		  },
+		  "facing=east,half=top,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"uvlock": true
+		  },
+		  "facing=east,half=top,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=east,half=top,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"uvlock": true
+		  },
+		  "facing=east,half=top,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=east,half=top,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"x": 180,
+			"uvlock": true
+		  },
+		  "facing=north,half=bottom,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=north,half=bottom,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=north,half=bottom,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=north,half=bottom,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=north,half=bottom,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=north,half=top,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=north,half=top,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"uvlock": true
+		  },
+		  "facing=north,half=top,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=north,half=top,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"uvlock": true
+		  },
+		  "facing=north,half=top,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"x": 180,
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=south,half=bottom,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner"
+		  },
+		  "facing=south,half=bottom,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=south,half=bottom,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer"
+		  },
+		  "facing=south,half=bottom,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=south,half=bottom,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=south,half=top,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=south,half=top,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=south,half=top,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=south,half=top,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=south,half=top,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"x": 180,
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=west,half=bottom,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=west,half=bottom,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=west,half=bottom,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"y": 90,
+			"uvlock": true
+		  },
+		  "facing=west,half=bottom,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=west,half=bottom,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=west,half=top,shape=inner_left": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=west,half=top,shape=inner_right": {
+			"model": "${namespace}:block/${block}_inner",
+			"x": 180,
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=west,half=top,shape=outer_left": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"y": 180,
+			"uvlock": true
+		  },
+		  "facing=west,half=top,shape=outer_right": {
+			"model": "${namespace}:block/${block}_outer",
+			"x": 180,
+			"y": 270,
+			"uvlock": true
+		  },
+		  "facing=west,half=top,shape=straight": {
+			"model": "${namespace}:block/${block}",
+			"x": 180,
+			"y": 180,
+			"uvlock": true
+		  }
+		}
+	  }`
 }
 
 // DEPRECATED - STAIR GENERATOR
@@ -2041,9 +2049,9 @@ function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateSt
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
 	writeRecipes(block, "stairs", baseBlock, namespace)
-  if (shouldGenerateStonecutterRecipes === true) {
-    writeStonecutterRecipes(block, baseBlock, 1)
-  }
+	if (shouldGenerateStonecutterRecipes === true) {
+		writeStonecutterRecipes(block, baseBlock, 1)
+	}
 }
 
 // V2 - STAIR GENERATOR
@@ -2060,7 +2068,7 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 		textureNamespace = globalNamespace;
 		texturePath = texture;
 	}
-	
+
 	let stairBlockState = generateStairBlockstate(block, globalNamespace)
 	writeBlockstate(block, stairBlockState, globalNamespace)
 	writeStairBlockModels(block, textureNamespace, texture)
@@ -2068,9 +2076,9 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	createTags(block, globalNamespace)
 	writeRecipes(block, "stairs", baseBlock, globalNamespace)
 
-  if (shouldGenerateStonecutterRecipes === true) {
-    writeStonecutterRecipes(block, baseBlock, 1)
-  }
+	if (shouldGenerateStonecutterRecipes === true) {
+		writeStonecutterRecipes(block, baseBlock, 1)
+	}
 }
 
 function writeBrickSlab(block, namespace, baseBlock) {
@@ -2105,8 +2113,8 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	writeRecipes(block, "slabs", baseBlock, namespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
-    writeStonecutterRecipes(block, baseBlock, 2)
-  }
+		writeStonecutterRecipes(block, baseBlock, 2)
+	}
 
 
 
@@ -2126,7 +2134,7 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 		textureNamespace = globalNamespace;
 		texturePath = texture;
 	}
-	
+
 	let slabBlockState = generateSlabBlockState(block, globalNamespace, baseBlock)
 	writeBlockstate(block, slabBlockState, globalNamespace)
 	writeSlabBlockModels(block, textureNamespace, texture)
@@ -2135,8 +2143,8 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	writeRecipes(block, "slabs", baseBlock, globalNamespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
-    writeStonecutterRecipes(block, baseBlock, 2)
-  }
+		writeStonecutterRecipes(block, baseBlock, 2)
+	}
 
 
 
@@ -2147,15 +2155,15 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 		altNamespace = namespace
 	}
 	plateBlockState = `{
-        "variants": {
-          "powered=false": {
-            "model": "${namespace}:block/${block}"
-          },
-          "powered=true": {
-            "model": "${namespace}:block/${block}_down"
-          }
-        }
-      }`
+		"variants": {
+		  "powered=false": {
+			"model": "${namespace}:block/${block}"
+		  },
+		  "powered=true": {
+			"model": "${namespace}:block/${block}_down"
+		  }
+		}
+	  }`
 	writeBlockstate(block, plateBlockState)
 	writePlateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)
@@ -2169,9 +2177,9 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-  if (type == undefined) {
-    type = "buttons"
-  }
+	if (type == undefined) {
+		type = "buttons"
+	}
 	let buttonBlockState = generateButtonBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, buttonBlockState)
 	writeButtonBlockModels(block, altNamespace, baseBlock)
@@ -2229,11 +2237,11 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 
 function generateCarpetBlockState(block, namespace, baseBlock) {
 	return `{
-    "variants": {
-      "": {
-        "model": "${namespace}:block/${block}"
-      }
-    }
+	"variants": {
+	  "": {
+		"model": "${namespace}:block/${block}"
+	  }
+	}
   }`
 }
 
@@ -2257,7 +2265,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 }
 
 function writeCarpetV2(block, baseBlock, texture) {
-		
+
 	writeBlockstate(block, generateCarpetBlockState(block, namespace, baseBlock), globalNamespace)
 	writeCarpetBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
@@ -2330,7 +2338,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 			if (value.charAt(0) == "#") {
 				value = value.slice(1)
 				itemOrTag = "tag"
-				
+
 			}
 			else {
 				itemOrTag = "item"
@@ -2355,7 +2363,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 }
 
 function createTags(block) {
-	tags += `    "pyrite:${block}",\n`
+	tags += `	"pyrite:${block}",\n`
 
 }
 
@@ -2363,10 +2371,10 @@ function writeTags(file) {
 	tags = tags.slice(0, -2)
 
 	tags = `{
-    "replace": false,
-    "values": [
+	"replace": false,
+	"values": [
 ${tags}
-    ]
+	]
   }`
 
 	writeFile(`${paths.mctags}${file}`, tags);
@@ -2377,24 +2385,24 @@ function writeLootTables(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	let lootTable = `    {
-    "type": "minecraft:block",
-    "pools": [
-      {
-        "rolls": 1,
-        "entries": [
-          {
-            "type": "minecraft:item",
-            "name": "${namespace}:${block}"
-          }
-        ],
-        "conditions": [
-          {
-            "condition": "minecraft:survives_explosion"
-          }
-        ]
-      }
-    ]
+	let lootTable = `	{
+	"type": "minecraft:block",
+	"pools": [
+	  {
+		"rolls": 1,
+		"entries": [
+		  {
+			"type": "minecraft:item",
+			"name": "${namespace}:${block}"
+		  }
+		],
+		"conditions": [
+		  {
+			"condition": "minecraft:survives_explosion"
+		  }
+		]
+	  }
+	]
   }
 
 `
@@ -2406,34 +2414,34 @@ function writeDoorLootTables(block, namespace) {
 	if (namespace === undefined) {
 		namespace = globalNamespace
 	}
-	let lootTable = `    {
-    "type": "minecraft:block",
-    "pools": [
-      {
-        "bonus_rolls": 0.0,
-        "conditions": [
-          {
-            "condition": "minecraft:survives_explosion"
-          }
-        ],
-        "entries": [
-          {
-            "type": "minecraft:item",
-            "conditions": [
-              {
-                "block": "${namespace}:${block}",
-                "condition": "minecraft:block_state_property",
-                "properties": {
-                  "half": "lower"
-                }
-              }
-            ],
-            "name": "${namespace}:${block}"
-          }
-        ],
-        "rolls": 1.0
-      }
-    ]
+	let lootTable = `	{
+	"type": "minecraft:block",
+	"pools": [
+	  {
+		"bonus_rolls": 0.0,
+		"conditions": [
+		  {
+			"condition": "minecraft:survives_explosion"
+		  }
+		],
+		"entries": [
+		  {
+			"type": "minecraft:item",
+			"conditions": [
+			  {
+				"block": "${namespace}:${block}",
+				"condition": "minecraft:block_state_property",
+				"properties": {
+				  "half": "lower"
+				}
+			  }
+			],
+			"name": "${namespace}:${block}"
+		  }
+		],
+		"rolls": 1.0
+	  }
+	]
 }
 
 `
@@ -2444,9 +2452,9 @@ function createDyeRecipe(namespace, block, altNamespace, altBlock, other, itemOr
 	if (baseNamespace === undefined) {
 		baseNamespace = altNamespace
 	}
-  return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(altNamespace, other)}, id(globalNamespace, block), 8, ["CCC", "CDC", "CCC"])
+	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(altNamespace, other) }, id(globalNamespace, block), 8, ["CCC", "CDC", "CCC"])
 
-  
+
 }
 
 function generateRecipes(block, type, other, namespace, altNamespace) {
@@ -2465,7 +2473,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		else {
 			other = other.replace("stained", "dye")
 			altNamespace = getDyeNamespace(other)
-			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, other)}, id(globalNamespace, block), 8, ["CCC", "CDC", "CCC"])
+			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, other) }, id(globalNamespace, block), 8, ["CCC", "CDC", "CCC"])
 		}
 	}
 	else if (type === "ladder") {
@@ -2474,7 +2482,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if (type === "terracotta") {
 		other = `${other}_dye`
 		altNamespace = getDyeNamespace(other)
-    //FIX
+		//FIX
 		recipe = createDyeRecipe(namespace, block, altNamespace, id("minecraft", "terracotta"), other, "item")
 	}
 	if (type === "terracotta_bricks") {
@@ -2510,7 +2518,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if (type.includes("cut_")) {
 		let baseBlock = type.split("_")[1]
 		baseBlock = baseBlock + "_block"
-		recipe = generateShapedRecipe({ "#": id(vanillaNamespace, baseBlock)}, `pyrite:${type}`, 4, ["##", "##"])
+		recipe = generateShapedRecipe({ "#": id(vanillaNamespace, baseBlock) }, `pyrite:${type}`, 4, ["##", "##"])
 	}
 	else if (type === "framed_glass") {
 		recipe = generateShapedRecipe({ "#": `minecraft:glass`, "X": `minecraft:iron_nugget` }, `pyrite:${type}`, 4, [
@@ -2527,7 +2535,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if (type === "glass_pane") {
 		const dye = `${other}_dye`
 		altNamespace = getDyeNamespace(dye)
-		recipe = generateShapedRecipe({ "C": id(namespace, block.replace("_pane", ""))}, id(namespace, block), 16, ["CCC", "CCC"])
+		recipe = generateShapedRecipe({ "C": id(namespace, block.replace("_pane", "")) }, id(namespace, block), 16, ["CCC", "CCC"])
 	}
 	else if (type === "lamp") {
 		if (block === "glowstone_lamp") {
@@ -2547,15 +2555,15 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 
 		if (block === "charred_nether_bricks") {
 			recipe = `{
-        "type": "minecraft:smelting",
-        "category": "blocks",
-        "cookingtime": 200,
-        "experience": 0.1,
-        "ingredient": {
-          "item": "minecraft:nether_bricks"
-        },
-        "result": "pyrite:charred_nether_bricks"
-      }`
+		"type": "minecraft:smelting",
+		"category": "blocks",
+		"cookingtime": 200,
+		"experience": 0.1,
+		"ingredient": {
+		  "item": "minecraft:nether_bricks"
+		},
+		"result": "pyrite:charred_nether_bricks"
+	  }`
 		}
 		else if (block === "blue_nether_bricks") {
 			recipe = generateShapedRecipe({ "N": `minecraft:nether_brick` }, { "W": `minecraft:warped_fungus` }, `pyrite:${block}`, 1, [
@@ -2570,7 +2578,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		}
 	}
 	else if (type === "resource_bricks") {
-		recipe = generateShapedRecipe({ "D": other}, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": other }, id(namespace, block), 4, [
 			"DD",
 			"DD"
 		])
@@ -2618,7 +2626,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "plates") {
-    other = other.replace("_top", "")
+		other = other.replace("_top", "")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, ["CC"])
 	}
 	else if (type === "door") {
@@ -2665,7 +2673,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		if (!other.includes(":")) {
 			other = id(other)
 		}
-    if (!baseWall.includes(":")) {
+		if (!baseWall.includes(":")) {
 			baseWall = id(altNamespace, baseWall)
 		}
 		recipe = generateShapedRecipe({ "C": other, "S": baseWall }, id(namespace, block), 6, [
@@ -2674,7 +2682,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "buttons") {
-    other = other.replace("_top", "")
+		other = other.replace("_top", "")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, [
 			"C"
 		])
@@ -2688,40 +2696,40 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 }
 
 function writeRecipes(block, type, other, namespace, altNamespace) {
-  let recipe = generateRecipes(block, type, other, namespace, altNamespace)
+	let recipe = generateRecipes(block, type, other, namespace, altNamespace)
 	if ((recipe !== "")) {
 		writeFile(`${paths.recipes}${block}.json`, recipe)
 	}
 }
 
 function writeStonecutterRecipes(block, ingredient, quantity, addon) {
-  let path;
+	let path;
 	if (addon === undefined) {
 		addon = ""
 	}
 	else {
 		addon = addon + "_"
 	}
-  if (!block.includes(":")) {
-    path = block
-    block = id(block)
-  }
-  else {
-    path = block.split(":")[1]
-  }
-  if (!ingredient.includes(":")) {
-    ingredient = id(ingredient)
-  }
+	if (!block.includes(":")) {
+		path = block
+		block = id(block)
+	}
+	else {
+		path = block.split(":")[1]
+	}
+	if (!ingredient.includes(":")) {
+		ingredient = id(ingredient)
+	}
 	let recipe = `{
-    "type": "minecraft:stonecutting",
-    "ingredient": {
-      "item": "${ingredient}"
-    },
-    "result": {
-      "id": "${block}",
-      "count": ${quantity}
-    } 
-    
+	"type": "minecraft:stonecutting",
+	"ingredient": {
+	  "item": "${ingredient}"
+	},
+	"result": {
+	  "id": "${block}",
+	  "count": ${quantity}
+	} 
+	
   }`
 	writeFile(`${paths.recipes}${addon}${path}_stonecutting.json`, recipe)
 
@@ -2731,343 +2739,343 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 
 function generateSlabBlockState(block, namespace, baseBlock) {
 	return `{
-    "variants": {
-      "type=bottom": {
-        "model": "${namespace}:block/${block}"
-      },
-      "type=double": {
-        "model": "${namespace}:block/${baseBlock}"
-      },
-      "type=top": {
-        "model": "${namespace}:block/${block}_top"
-      }
-    }
+	"variants": {
+	  "type=bottom": {
+		"model": "${namespace}:block/${block}"
+	  },
+	  "type=double": {
+		"model": "${namespace}:block/${baseBlock}"
+	  },
+	  "type=top": {
+		"model": "${namespace}:block/${block}_top"
+	  }
+	}
   }`
 }
 
 function generateDoorBlockState(block, namespace, baseBlock) {
 	return `{
-    "variants": {
-      "facing=east,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom_left"
-      },
-      "facing=east,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_left_open",
-        "y": 90
-      },
-      "facing=east,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_right"
-      },
-      "facing=east,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom_right_open",
-        "y": 270
-      },
-      "facing=east,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top_left"
-      },
-      "facing=east,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_left_open",
-        "y": 90
-      },
-      "facing=east,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_right"
-      },
-      "facing=east,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top_right_open",
-        "y": 270
-      },
-      "facing=north,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom_left",
-        "y": 270
-      },
-      "facing=north,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_left_open"
-      },
-      "facing=north,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_right",
-        "y": 270
-      },
-      "facing=north,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom_right_open",
-        "y": 180
-      },
-      "facing=north,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top_left",
-        "y": 270
-      },
-      "facing=north,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_left_open"
-      },
-      "facing=north,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_right",
-        "y": 270
-      },
-      "facing=north,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top_right_open",
-        "y": 180
-      },
-      "facing=south,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom_left",
-        "y": 90
-      },
-      "facing=south,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_left_open",
-        "y": 180
-      },
-      "facing=south,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_right",
-        "y": 90
-      },
-      "facing=south,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom_right_open"
-      },
-      "facing=south,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top_left",
-        "y": 90
-      },
-      "facing=south,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_left_open",
-        "y": 180
-      },
-      "facing=south,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_right",
-        "y": 90
-      },
-      "facing=south,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top_right_open"
-      },
-      "facing=west,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom_left",
-        "y": 180
-      },
-      "facing=west,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_left_open",
-        "y": 270
-      },
-      "facing=west,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_right",
-        "y": 180
-      },
-      "facing=west,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom_right_open",
-        "y": 90
-      },
-      "facing=west,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top_left",
-        "y": 180
-      },
-      "facing=west,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_left_open",
-        "y": 270
-      },
-      "facing=west,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_right",
-        "y": 180
-      },
-      "facing=west,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top_right_open",
-        "y": 90
-      }
-    }
+	"variants": {
+	  "facing=east,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom_left"
+	  },
+	  "facing=east,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_left_open",
+		"y": 90
+	  },
+	  "facing=east,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_right"
+	  },
+	  "facing=east,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom_right_open",
+		"y": 270
+	  },
+	  "facing=east,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top_left"
+	  },
+	  "facing=east,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_left_open",
+		"y": 90
+	  },
+	  "facing=east,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_right"
+	  },
+	  "facing=east,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top_right_open",
+		"y": 270
+	  },
+	  "facing=north,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom_left",
+		"y": 270
+	  },
+	  "facing=north,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_left_open"
+	  },
+	  "facing=north,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_right",
+		"y": 270
+	  },
+	  "facing=north,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom_right_open",
+		"y": 180
+	  },
+	  "facing=north,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top_left",
+		"y": 270
+	  },
+	  "facing=north,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_left_open"
+	  },
+	  "facing=north,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_right",
+		"y": 270
+	  },
+	  "facing=north,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top_right_open",
+		"y": 180
+	  },
+	  "facing=south,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom_left",
+		"y": 90
+	  },
+	  "facing=south,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_left_open",
+		"y": 180
+	  },
+	  "facing=south,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_right",
+		"y": 90
+	  },
+	  "facing=south,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom_right_open"
+	  },
+	  "facing=south,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top_left",
+		"y": 90
+	  },
+	  "facing=south,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_left_open",
+		"y": 180
+	  },
+	  "facing=south,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_right",
+		"y": 90
+	  },
+	  "facing=south,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top_right_open"
+	  },
+	  "facing=west,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom_left",
+		"y": 180
+	  },
+	  "facing=west,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_left_open",
+		"y": 270
+	  },
+	  "facing=west,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_right",
+		"y": 180
+	  },
+	  "facing=west,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom_right_open",
+		"y": 90
+	  },
+	  "facing=west,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top_left",
+		"y": 180
+	  },
+	  "facing=west,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_left_open",
+		"y": 270
+	  },
+	  "facing=west,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_right",
+		"y": 180
+	  },
+	  "facing=west,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top_right_open",
+		"y": 90
+	  }
+	}
   }`
 }
 
 function generateOldDoorBlockState(block, namespace, baseBlock) {
 	return `{
-    "variants": {
-      "facing=east,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom"
-      },
-      "facing=east,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_hinge",
-        "y": 90
-      },
-      "facing=east,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_hinge"
-      },
-      "facing=east,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 270
-      },
-      "facing=east,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top"
-      },
-      "facing=east,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_hinge",
-        "y": 90
-      },
-      "facing=east,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_hinge"
-      },
-      "facing=east,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 270
-      },
-      "facing=north,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 270
-      },
-      "facing=north,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_hinge"
-      },
-      "facing=north,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_hinge",
-        "y": 270
-      },
-      "facing=north,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 180
-      },
-      "facing=north,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 270
-      },
-      "facing=north,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_hinge"
-      },
-      "facing=north,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_hinge",
-        "y": 270
-      },
-      "facing=north,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 180
-      },
-      "facing=south,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 90
-      },
-      "facing=south,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_hinge",
-        "y": 180
-      },
-      "facing=south,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_hinge",
-        "y": 90
-      },
-      "facing=south,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom"
-      },
-      "facing=south,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 90
-      },
-      "facing=south,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_hinge",
-        "y": 180
-      },
-      "facing=south,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_hinge",
-        "y": 90
-      },
-      "facing=south,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top"
-      },
-      "facing=west,half=lower,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 180
-      },
-      "facing=west,half=lower,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_bottom_hinge",
-        "y": 270
-      },
-      "facing=west,half=lower,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_bottom_hinge",
-        "y": 180
-      },
-      "facing=west,half=lower,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 90
-      },
-      "facing=west,half=upper,hinge=left,open=false": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 180
-      },
-      "facing=west,half=upper,hinge=left,open=true": {
-        "model": "${namespace}:block/${block}_top_hinge",
-        "y": 270
-      },
-      "facing=west,half=upper,hinge=right,open=false": {
-        "model": "${namespace}:block/${block}_top_hinge",
-        "y": 180
-      },
-      "facing=west,half=upper,hinge=right,open=true": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 90
-      }
-    }
+	"variants": {
+	  "facing=east,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom"
+	  },
+	  "facing=east,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_hinge",
+		"y": 90
+	  },
+	  "facing=east,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_hinge"
+	  },
+	  "facing=east,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 270
+	  },
+	  "facing=east,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top"
+	  },
+	  "facing=east,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_hinge",
+		"y": 90
+	  },
+	  "facing=east,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_hinge"
+	  },
+	  "facing=east,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 270
+	  },
+	  "facing=north,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 270
+	  },
+	  "facing=north,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_hinge"
+	  },
+	  "facing=north,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_hinge",
+		"y": 270
+	  },
+	  "facing=north,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 180
+	  },
+	  "facing=north,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 270
+	  },
+	  "facing=north,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_hinge"
+	  },
+	  "facing=north,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_hinge",
+		"y": 270
+	  },
+	  "facing=north,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 180
+	  },
+	  "facing=south,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 90
+	  },
+	  "facing=south,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_hinge",
+		"y": 180
+	  },
+	  "facing=south,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_hinge",
+		"y": 90
+	  },
+	  "facing=south,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom"
+	  },
+	  "facing=south,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 90
+	  },
+	  "facing=south,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_hinge",
+		"y": 180
+	  },
+	  "facing=south,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_hinge",
+		"y": 90
+	  },
+	  "facing=south,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top"
+	  },
+	  "facing=west,half=lower,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 180
+	  },
+	  "facing=west,half=lower,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_bottom_hinge",
+		"y": 270
+	  },
+	  "facing=west,half=lower,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_bottom_hinge",
+		"y": 180
+	  },
+	  "facing=west,half=lower,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 90
+	  },
+	  "facing=west,half=upper,hinge=left,open=false": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 180
+	  },
+	  "facing=west,half=upper,hinge=left,open=true": {
+		"model": "${namespace}:block/${block}_top_hinge",
+		"y": 270
+	  },
+	  "facing=west,half=upper,hinge=right,open=false": {
+		"model": "${namespace}:block/${block}_top_hinge",
+		"y": 180
+	  },
+	  "facing=west,half=upper,hinge=right,open=true": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 90
+	  }
+	}
   }`
 }
 
 function generateTrapdoorBlockState(block, namespace, baseBlock) {
 	return `{
-    "variants": {
-      "facing=east,half=bottom,open=false": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 90
-      },
-      "facing=east,half=bottom,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "y": 90
-      },
-      "facing=east,half=top,open=false": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 90
-      },
-      "facing=east,half=top,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "x": 180,
-        "y": 270
-      },
-      "facing=north,half=bottom,open=false": {
-        "model": "${namespace}:block/${block}_bottom"
-      },
-      "facing=north,half=bottom,open=true": {
-        "model": "${namespace}:block/${block}_open"
-      },
-      "facing=north,half=top,open=false": {
-        "model": "${namespace}:block/${block}_top"
-      },
-      "facing=north,half=top,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "x": 180,
-        "y": 180
-      },
-      "facing=south,half=bottom,open=false": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 180
-      },
-      "facing=south,half=bottom,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "y": 180
-      },
-      "facing=south,half=top,open=false": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 180
-      },
-      "facing=south,half=top,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "x": 180,
-        "y": 0
-      },
-      "facing=west,half=bottom,open=false": {
-        "model": "${namespace}:block/${block}_bottom",
-        "y": 270
-      },
-      "facing=west,half=bottom,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "y": 270
-      },
-      "facing=west,half=top,open=false": {
-        "model": "${namespace}:block/${block}_top",
-        "y": 270
-      },
-      "facing=west,half=top,open=true": {
-        "model": "${namespace}:block/${block}_open",
-        "x": 180,
-        "y": 90
-      }
-    }
+	"variants": {
+	  "facing=east,half=bottom,open=false": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 90
+	  },
+	  "facing=east,half=bottom,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"y": 90
+	  },
+	  "facing=east,half=top,open=false": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 90
+	  },
+	  "facing=east,half=top,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"x": 180,
+		"y": 270
+	  },
+	  "facing=north,half=bottom,open=false": {
+		"model": "${namespace}:block/${block}_bottom"
+	  },
+	  "facing=north,half=bottom,open=true": {
+		"model": "${namespace}:block/${block}_open"
+	  },
+	  "facing=north,half=top,open=false": {
+		"model": "${namespace}:block/${block}_top"
+	  },
+	  "facing=north,half=top,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"x": 180,
+		"y": 180
+	  },
+	  "facing=south,half=bottom,open=false": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 180
+	  },
+	  "facing=south,half=bottom,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"y": 180
+	  },
+	  "facing=south,half=top,open=false": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 180
+	  },
+	  "facing=south,half=top,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"x": 180,
+		"y": 0
+	  },
+	  "facing=west,half=bottom,open=false": {
+		"model": "${namespace}:block/${block}_bottom",
+		"y": 270
+	  },
+	  "facing=west,half=bottom,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"y": 270
+	  },
+	  "facing=west,half=top,open=false": {
+		"model": "${namespace}:block/${block}_top",
+		"y": 270
+	  },
+	  "facing=west,half=top,open=true": {
+		"model": "${namespace}:block/${block}_open",
+		"x": 180,
+		"y": 90
+	  }
+	}
   }`
 }
 
@@ -3082,47 +3090,47 @@ function generateBlockModel(block, namespace, texture, model, render_type) {
 	else {
 		render_type = `,${render_type}`
 	}
-  // Extract namespace and block from texture, if present.
+	// Extract namespace and block from texture, if present.
 	if (texture.includes(":")) {
 		namespace = texture.split(":")[0]
 		block = texture.split(":")[1]
 	}
-  // Override for Grass Turf for colour provider tinting.
-  if (texture.includes("minecraft:grass_block_top")) {   
-    return readFile(`./overrides/models/grass_turf.json`)
-  }
+	// Override for Grass Turf for colour provider tinting.
+	if (texture.includes("minecraft:grass_block_top")) {
+		return readFile(`./overrides/models/grass_turf.json`)
+	}
 
 	return `{
-    "parent": "${model}",
-    "textures": {
-      "all": "${namespace}:block/${block}"
-    }${render_type}
+	"parent": "${model}",
+	"textures": {
+	  "all": "${namespace}:block/${block}"
+	}${render_type}
   }`
 
 }
 
 function generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace) {
 	return `{
-    "parent": "minecraft:block/cube",
-    "textures": {
-      "particle": "${namespace}:block/${block}_front",
-      "north": "${namespace}:block/${block}_front",
-      "south": "${namespace}:block/${block}_side",
-      "east": "${namespace}:block/${block}_side",
-      "west": "${namespace}:block/${block}_front",
-      "up": "${namespace}:block/${block}_top",
-      "down": "${altNamespace}:block/${baseBlock}"
-    }
+	"parent": "minecraft:block/cube",
+	"textures": {
+	  "particle": "${namespace}:block/${block}_front",
+	  "north": "${namespace}:block/${block}_front",
+	  "south": "${namespace}:block/${block}_side",
+	  "east": "${namespace}:block/${block}_side",
+	  "west": "${namespace}:block/${block}_front",
+	  "up": "${namespace}:block/${block}_top",
+	  "down": "${altNamespace}:block/${baseBlock}"
+	}
   }`
 }
 
 function generateCubeColumnBlockModel(block, namespace, baseBlock, model) {
 	return `{
-    "parent": "minecraft:block/${model}",
-    "textures": {
-      "end": "${namespace}:block/${block}_top",
-      "side": "${namespace}:block/${block}"
-    }
+	"parent": "minecraft:block/${model}",
+	"textures": {
+	  "end": "${namespace}:block/${block}_top",
+	  "side": "${namespace}:block/${block}"
+	}
   }`
 }
 
@@ -3136,41 +3144,41 @@ function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addo
 			let wallName = baseBlock + "_wall"
 			if (altNamespace !== vanillaNamespace) {
 				return `{
-          "parent": "${altNamespace}:block/${baseBlock}_wall",
-          "render_type": "cutout"
-      }`
+		  "parent": "${altNamespace}:block/${baseBlock}_wall",
+		  "render_type": "cutout"
+	  }`
 			}
 			else {
 				const torchBlock = baseBlock.replace("torch", "wall_torch")
 				return `{
-          "parent": "${altNamespace}:block/${torchBlock}",
-          "render_type": "cutout"
-      }`
+		  "parent": "${altNamespace}:block/${torchBlock}",
+		  "render_type": "cutout"
+	  }`
 			}
 
 		}
 		else if (addon === "_upright") {
 			return `{
-        "parent": "${altNamespace}:block/${baseBlock}",
-        "render_type": "cutout"
-    }`
+		"parent": "${altNamespace}:block/${baseBlock}",
+		"render_type": "cutout"
+	}`
 		}
 		else {
 			return `{
-        "parent": "pyrite:block/template_torch_lever${addon}",
-        "textures": {
-          "texture": "${altNamespace}:block/${baseBlock}"
-        },
-        "render_type": "cutout"
-      }`
+		"parent": "pyrite:block/template_torch_lever${addon}",
+		"textures": {
+		  "texture": "${altNamespace}:block/${baseBlock}"
+		},
+		"render_type": "cutout"
+	  }`
 		}
 	}
 	return `{
-    "parent": "pyrite:block/template_torch_lever${addon}",
-    "textures": {
-      "texture": "${altNamespace}:block/${baseBlock}"
-    },
-    "render_type": "cutout"
+	"parent": "pyrite:block/template_torch_lever${addon}",
+	"textures": {
+	  "texture": "${altNamespace}:block/${baseBlock}"
+	},
+	"render_type": "cutout"
   }`
 
 
@@ -3180,11 +3188,11 @@ function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addo
 function generateTorchBlockModel(block, namespace, baseBlock, altNamespace, addon) {
 
 	return `{
-    "parent": "minecraft:block/${addon}",
-    "textures": {
-      "torch": "${altNamespace}:block/${baseBlock}"
-    },
-    "render_type": "cutout"
+	"parent": "minecraft:block/${addon}",
+	"textures": {
+	  "torch": "${altNamespace}:block/${baseBlock}"
+	},
+	"render_type": "cutout"
   }`
 
 
@@ -3192,10 +3200,10 @@ function generateTorchBlockModel(block, namespace, baseBlock, altNamespace, addo
 
 function generateFlowerBlockModel(block, namespace) {
 	return `{
-    "parent": "minecraft:block/cross",
-    "textures": {
-      "cross": "${namespace}:block/${block}"
-    }
+	"parent": "minecraft:block/cross",
+	"textures": {
+	  "cross": "${namespace}:block/${block}"
+	}
   }`
 }
 
@@ -3203,298 +3211,298 @@ function generateFlowerBlockModel(block, namespace) {
 
 function generateLogModel(block, namespace, baseBlock, model) {
 	return `{
-    "parent": "minecraft:block/${model}",
-    "textures": {
-      "end": "${namespace}:block/${block}_top",
-      "side": "minecraft:block/mushroom_stem"
-    }
+	"parent": "minecraft:block/${model}",
+	"textures": {
+	  "end": "${namespace}:block/${block}_top",
+	  "side": "minecraft:block/mushroom_stem"
+	}
   }`
 }
 
 function generateFenceBlockState(block, namespace, baseBlock) {
 
 	return `{
-    "multipart": [
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_post"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true
-        },
-        "when": {
-          "north": "true"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true,
-          "y": 90
-        },
-        "when": {
-          "east": "true"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true,
-          "y": 180
-        },
-        "when": {
-          "south": "true"
-        }
-      },
-      {
-        "apply": {
-          "model": "${namespace}:block/${block}_side",
-          "uvlock": true,
-          "y": 270
-        },
-        "when": {
-          "west": "true"
-        }
-      }
-    ]
+	"multipart": [
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_post"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true
+		},
+		"when": {
+		  "north": "true"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true,
+		  "y": 90
+		},
+		"when": {
+		  "east": "true"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true,
+		  "y": 180
+		},
+		"when": {
+		  "south": "true"
+		}
+	  },
+	  {
+		"apply": {
+		  "model": "${namespace}:block/${block}_side",
+		  "uvlock": true,
+		  "y": 270
+		},
+		"when": {
+		  "west": "true"
+		}
+	  }
+	]
   }`
 }
 function generateButtonBlockState(block, namespace, baseBlock) {
 	return `{
   "variants": {
-    "face=ceiling,facing=east,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "x": 180,
-      "y": 270
-    },
-    "face=ceiling,facing=east,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "x": 180,
-      "y": 270
-    },
-    "face=ceiling,facing=north,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "x": 180,
-      "y": 180
-    },
-    "face=ceiling,facing=north,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "x": 180,
-      "y": 180
-    },
-    "face=ceiling,facing=south,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "x": 180
-    },
-    "face=ceiling,facing=south,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "x": 180
-    },
-    "face=ceiling,facing=west,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "x": 180,
-      "y": 90
-    },
-    "face=ceiling,facing=west,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "x": 180,
-      "y": 90
-    },
-    "face=floor,facing=east,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "y": 90
-    },
-    "face=floor,facing=east,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "y": 90
-    },
-    "face=floor,facing=north,powered=false": {
-      "model": "${namespace}:block/${block}"
-    },
-    "face=floor,facing=north,powered=true": {
-      "model": "${namespace}:block/${block}_pressed"
-    },
-    "face=floor,facing=south,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "y": 180
-    },
-    "face=floor,facing=south,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "y": 180
-    },
-    "face=floor,facing=west,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "y": 270
-    },
-    "face=floor,facing=west,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "y": 270
-    },
-    "face=wall,facing=east,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "x": 90,
-      "y": 90
-    },
-    "face=wall,facing=east,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "uvlock": true,
-      "x": 90,
-      "y": 90
-    },
-    "face=wall,facing=north,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "x": 90
-    },
-    "face=wall,facing=north,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "uvlock": true,
-      "x": 90
-    },
-    "face=wall,facing=south,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "x": 90,
-      "y": 180
-    },
-    "face=wall,facing=south,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "uvlock": true,
-      "x": 90,
-      "y": 180
-    },
-    "face=wall,facing=west,powered=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "x": 90,
-      "y": 270
-    },
-    "face=wall,facing=west,powered=true": {
-      "model": "${namespace}:block/${block}_pressed",
-      "uvlock": true,
-      "x": 90,
-      "y": 270
-    }
+	"face=ceiling,facing=east,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "x": 180,
+	  "y": 270
+	},
+	"face=ceiling,facing=east,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "x": 180,
+	  "y": 270
+	},
+	"face=ceiling,facing=north,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "x": 180,
+	  "y": 180
+	},
+	"face=ceiling,facing=north,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "x": 180,
+	  "y": 180
+	},
+	"face=ceiling,facing=south,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "x": 180
+	},
+	"face=ceiling,facing=south,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "x": 180
+	},
+	"face=ceiling,facing=west,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "x": 180,
+	  "y": 90
+	},
+	"face=ceiling,facing=west,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "x": 180,
+	  "y": 90
+	},
+	"face=floor,facing=east,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "y": 90
+	},
+	"face=floor,facing=east,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "y": 90
+	},
+	"face=floor,facing=north,powered=false": {
+	  "model": "${namespace}:block/${block}"
+	},
+	"face=floor,facing=north,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed"
+	},
+	"face=floor,facing=south,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "y": 180
+	},
+	"face=floor,facing=south,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "y": 180
+	},
+	"face=floor,facing=west,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "y": 270
+	},
+	"face=floor,facing=west,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "y": 270
+	},
+	"face=wall,facing=east,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "x": 90,
+	  "y": 90
+	},
+	"face=wall,facing=east,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "uvlock": true,
+	  "x": 90,
+	  "y": 90
+	},
+	"face=wall,facing=north,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "x": 90
+	},
+	"face=wall,facing=north,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "uvlock": true,
+	  "x": 90
+	},
+	"face=wall,facing=south,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "x": 90,
+	  "y": 180
+	},
+	"face=wall,facing=south,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "uvlock": true,
+	  "x": 90,
+	  "y": 180
+	},
+	"face=wall,facing=west,powered=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "x": 90,
+	  "y": 270
+	},
+	"face=wall,facing=west,powered=true": {
+	  "model": "${namespace}:block/${block}_pressed",
+	  "uvlock": true,
+	  "x": 90,
+	  "y": 270
+	}
   }
 }`}
 
 function generateFenceGateBlockState(block, namespace) {
 	return `{
-    "variants": {
-    "facing=east,in_wall=false,open=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east,in_wall=false,open=true": {
-      "model": "${namespace}:block/${block}_open",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east,in_wall=true,open=false": {
-      "model": "${namespace}:block/${block}_wall",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=east,in_wall=true,open=true": {
-      "model": "${namespace}:block/${block}_wall_open",
-      "uvlock": true,
-      "y": 270
-    },
-    "facing=north,in_wall=false,open=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north,in_wall=false,open=true": {
-      "model": "${namespace}:block/${block}_open",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north,in_wall=true,open=false": {
-      "model": "${namespace}:block/${block}_wall",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=north,in_wall=true,open=true": {
-      "model": "${namespace}:block/${block}_wall_open",
-      "uvlock": true,
-      "y": 180
-    },
-    "facing=south,in_wall=false,open=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true
-    },
-    "facing=south,in_wall=false,open=true": {
-      "model": "${namespace}:block/${block}_open",
-      "uvlock": true
-    },
-    "facing=south,in_wall=true,open=false": {
-      "model": "${namespace}:block/${block}_wall",
-      "uvlock": true
-    },
-    "facing=south,in_wall=true,open=true": {
-      "model": "${namespace}:block/${block}_wall_open",
-      "uvlock": true
-    },
-    "facing=west,in_wall=false,open=false": {
-      "model": "${namespace}:block/${block}",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west,in_wall=false,open=true": {
-      "model": "${namespace}:block/${block}_open",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west,in_wall=true,open=false": {
-      "model": "${namespace}:block/${block}_wall",
-      "uvlock": true,
-      "y": 90
-    },
-    "facing=west,in_wall=true,open=true": {
-      "model": "${namespace}:block/${block}_wall_open",
-      "uvlock": true,
-      "y": 90
-    }
+	"variants": {
+	"facing=east,in_wall=false,open=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "y": 270
+	},
+	"facing=east,in_wall=false,open=true": {
+	  "model": "${namespace}:block/${block}_open",
+	  "uvlock": true,
+	  "y": 270
+	},
+	"facing=east,in_wall=true,open=false": {
+	  "model": "${namespace}:block/${block}_wall",
+	  "uvlock": true,
+	  "y": 270
+	},
+	"facing=east,in_wall=true,open=true": {
+	  "model": "${namespace}:block/${block}_wall_open",
+	  "uvlock": true,
+	  "y": 270
+	},
+	"facing=north,in_wall=false,open=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "y": 180
+	},
+	"facing=north,in_wall=false,open=true": {
+	  "model": "${namespace}:block/${block}_open",
+	  "uvlock": true,
+	  "y": 180
+	},
+	"facing=north,in_wall=true,open=false": {
+	  "model": "${namespace}:block/${block}_wall",
+	  "uvlock": true,
+	  "y": 180
+	},
+	"facing=north,in_wall=true,open=true": {
+	  "model": "${namespace}:block/${block}_wall_open",
+	  "uvlock": true,
+	  "y": 180
+	},
+	"facing=south,in_wall=false,open=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true
+	},
+	"facing=south,in_wall=false,open=true": {
+	  "model": "${namespace}:block/${block}_open",
+	  "uvlock": true
+	},
+	"facing=south,in_wall=true,open=false": {
+	  "model": "${namespace}:block/${block}_wall",
+	  "uvlock": true
+	},
+	"facing=south,in_wall=true,open=true": {
+	  "model": "${namespace}:block/${block}_wall_open",
+	  "uvlock": true
+	},
+	"facing=west,in_wall=false,open=false": {
+	  "model": "${namespace}:block/${block}",
+	  "uvlock": true,
+	  "y": 90
+	},
+	"facing=west,in_wall=false,open=true": {
+	  "model": "${namespace}:block/${block}_open",
+	  "uvlock": true,
+	  "y": 90
+	},
+	"facing=west,in_wall=true,open=false": {
+	  "model": "${namespace}:block/${block}_wall",
+	  "uvlock": true,
+	  "y": 90
+	},
+	"facing=west,in_wall=true,open=true": {
+	  "model": "${namespace}:block/${block}_wall_open",
+	  "uvlock": true,
+	  "y": 90
+	}
 }}`}
 
 function generateTrapdoorBlockModels(block, namespace, baseBlock, modelID) {
 	return `{
-    "parent": "minecraft:block/${modelID}",
-    "textures": {
-      "texture": "${namespace}:block/${block}"
-    },
-    "render_type": "cutout"
+	"parent": "minecraft:block/${modelID}",
+	"textures": {
+	  "texture": "${namespace}:block/${block}"
+	},
+	"render_type": "cutout"
   }`
 
 }
 
 function generateDoorBlockModels(block, namespace, baseBlock, modelID) {
 	return `{
-    "parent": "minecraft:block/${modelID}",
-    "textures": {
-      "bottom": "${namespace}:block/${block}_bottom",
-      "top": "${namespace}:block/${block}_top"
-    },
-    "render_type": "cutout"
+	"parent": "minecraft:block/${modelID}",
+	"textures": {
+	  "bottom": "${namespace}:block/${block}_bottom",
+	  "top": "${namespace}:block/${block}_top"
+	},
+	"render_type": "cutout"
   }`
 }
 
 function getDyeNamespace(dye) {
-  if (dye.includes(":")) {
-    return dye.split(":")[0]
-  }
-  if (dye.includes("terracotta")) {
-    dye = dye.replace("terracotta", "dye")
-  }
-  if (!dye.includes("_dye")) {
-    dye = dye + "_dye"
-  }
+	if (dye.includes(":")) {
+		return dye.split(":")[0]
+	}
+	if (dye.includes("terracotta")) {
+		dye = dye.replace("terracotta", "dye")
+	}
+	if (!dye.includes("_dye")) {
+		dye = dye + "_dye"
+	}
 
 	if ((dye === "glow_dye") || (dye === "dragon_dye") || (dye === "star_dye") || (dye === "honey_dye") || (dye === "rose_dye") || (dye === "nostalgia_dye") || (dye === "poisonous_dye")) {
 		return globalNamespace
@@ -3512,13 +3520,13 @@ function getAltNamespace(namespace, altNamespace) {
 }
 
 function id(namespace, path) {
-  if (path === undefined) {
-    return id(globalNamespace, namespace)
-  }
-  // If path somehow includes an identifier already, use the path instead.
-  if (path.includes(":")) {
-    return path
-  }
-  // If not, create a new identified path.
-  return namespace + ":" + path
+	if (path === undefined) {
+		return id(globalNamespace, namespace)
+	}
+	// If path somehow includes an identifier already, use the path instead.
+	if (path.includes(":")) {
+		return path
+	}
+	// If not, create a new identified path.
+	return namespace + ":" + path
 }
