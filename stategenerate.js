@@ -166,7 +166,7 @@ if (majorVersion <= 21) {
 }
 
 let blockIDs = []
-let blockTranslations = JSON.parse(fs.readFileSync("en_us.json"))
+let blockTranslations = JSON.parse(fs.readFileSync("./overrides/lang/en_us.json"))
 
 class Block {  // Create a class
 	constructor(blockID, namespace, baseNamespace, blockType, baseBlock, material) {
