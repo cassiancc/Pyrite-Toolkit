@@ -497,19 +497,19 @@ function generateResources() {
 		writeWalls(`cut_${block}_wall`, globalNamespace, `${altNamespace}:cut_${block}`)
 		writeWallGates(`cut_${block}_wall_gate`, globalNamespace, `${altNamespace}:cut_${block}`, globalNamespace)
 
-		let smoothNamespace = globalNamespace
 		if (block === "quartz") {
-			smoothNamespace = vanillaNamespace
-      baseBlock = "minecraft:quartz_block_bottom"
+      writeWalls(`smooth_${block}_wall`, globalNamespace, `minecraft:quartz_block_bottom`)
+      writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `minecraft:quartz_block_bottom`, globalNamespace)
 		}
 		else {
 			writeBlock(`smooth_${block}`, globalNamespace, "smooth_resource", baseBlock)
 			writeSlabs(`smooth_${block}_slab`, globalNamespace, `smooth_${block}`, undefined, true)
 			writeStairs(`smooth_${block}_stairs`, globalNamespace, `smooth_${block}`, undefined, true)
+      writeWalls(`smooth_${block}_wall`, globalNamespace, `smooth_${block}`)
+      writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `smooth_${block}`, globalNamespace)
 		}
 
-		writeWalls(`smooth_${block}_wall`, globalNamespace, `${smoothNamespace}:smooth_${block}`)
-		writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `${smoothNamespace}:smooth_${block}`, globalNamespace)
+
 
 		writeBlock(`${block}_bricks`, globalNamespace, "cut_" + baseBlock, "resource_bricks")
 		writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
