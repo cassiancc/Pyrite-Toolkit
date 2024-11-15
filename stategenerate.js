@@ -925,7 +925,7 @@ function writeTrapdoorBlockModels(block, namespace, baseBlock) {
 function writeCarpetBlockModels(block, namespace, baseBlock) {
 	let carpetModel = `{"parent": "minecraft:block/carpet","textures": {"wool": "${namespace}:block/${baseBlock}"}}`
 	if (block === "grass_carpet") {
-		carpetModel = `{"parent":"minecraft:block/carpet","textures":{"wool":"minecraft:block/grass_block_top"},"elements":[{"from":[0,0,0],"to":[16,1,16],"faces":{"down":{"uv":[0,0,16,16],"texture":"#wool","cullface":"down","tintindex":0},"up":{"uv":[0,0,16,16],"texture":"#wool","cullface":"up","tintindex":0},"north":{"uv":[0,0,16,16],"texture":"#wool","cullface":"north","tintindex":0},"south":{"uv":[0,0,16,16],"texture":"#wool","cullface":"south","tintindex":0},"west":{"uv":[0,0,16,16],"texture":"#wool","cullface":"west","tintindex":0},"east":{"uv":[0,0,16,16],"texture":"#wool","cullface":"east","tintindex":0}}}]}`
+		carpetModel = readFile(`./overrides/models/grass_carpet.json`)
 	}
 
 	writeFile(`${paths.models}${block}.json`, carpetModel);
@@ -1580,7 +1580,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 
 	}
 	if (baseBlock.includes("wool")) {
-		tagBoth(block, "wool_carpets")
+		tagBoth(block, "minecraft:wool_carpets")
 	}
 	generateBlockLangObject(block)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
