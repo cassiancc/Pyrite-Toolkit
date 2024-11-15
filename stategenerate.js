@@ -636,16 +636,21 @@ function tagContent(arg, tag, folder) {
 
 function tagBlock(block, tag) {
 	tagContent(block, tag, "block")
-
 }
 
 function tagItem(item, tag, folder) {
 	tagContent(item, tag, "item")
 }
 
+function checkAndAddStainedTag(block, baseBlock) {
+	if (block.includes("stained")) {
+		const colour = baseBlock.split("_stained")[0]
+		tagBlock(block, `c:dyed/${colour}`)
+	}
+}
+
 function writeLang() {
 	writeFile(`${paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
-
 }
 
 function writeFile(path, data) {
@@ -1247,7 +1252,30 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	writeLootTables(block, namespace)
 	generateBlockLangObject(block)
 	writeRecipes(block, blockType, baseBlock, namespace)
-
+	if (blockType == "planks") {
+		tagBlock(block, "planks")
+		checkAndAddStainedTag(block, baseBlock)
+	}
+	else if (blockType == "wool") {
+		tagBlock(block, "wool")
+		checkAndAddStainedTag(block, baseBlock)
+	}
+	else if (blockType == "terracotta") {
+		tagBlock(block, "terracotta")
+		checkAndAddStainedTag(block, baseBlock)
+	}
+	else if ((blockType == "lamps") || (blockType == "lamp")) {
+		tagBlock(block, "lamps")
+		checkAndAddStainedTag(block, baseBlock)
+	}
+	else if (blockType.includes("bricks")) {
+		tagBlock(block, "bricks")
+		checkAndAddStainedTag(block, baseBlock)
+	}
+	else if (blockType == "stained_framed_glass") {
+		tagBlock(block, "stained_framed_glass")
+		checkAndAddStainedTag(block, baseBlock)
+	}
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
 	}
@@ -1459,13 +1487,6 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	tagBlock(block, "crafting_tables")
 	checkAndAddStainedTag(block, baseBlock)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
-}
-
-function checkAndAddStainedTag(block, baseBlock) {
-	if (block.includes("stained")) {
-		const colour = baseBlock.split("_stained")[0]
-		tagBlock(block, `c:dyed/${colour}`)
-	}
 }
 
 function writeLadders(block, namespace, baseBlock, altNamespace) {
