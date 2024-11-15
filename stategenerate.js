@@ -70,14 +70,14 @@ const vanillaWalls = [
 ];
 
 const trickyTrialsWalls = [
-	"polished_tuff_wall",
-	"tuff_brick_wall",
-	"tuff_wall"
+	"polished_tuff",
+	"tuff_brick",
+	"tuff"
 
 ];
 
 const winterDropWalls = [
-	"resin_brick_wall"
+	"resin_brick"
 ];
 
 const winterDropWoods = [
@@ -478,8 +478,15 @@ function generateResources() {
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
 	generateBrickSet("blue_nether_bricks", "blue_nether_bricks")
 
+	// 1.20 and below walls
 	writeWallGatesFromArray(vanillaWalls)
-	writeWallGatesFromArray(trickyTrialsWalls, vanillaNamespace)
+
+	// 1.21 - Tricky Trials Tuff walls
+	if (majorVersion >= 21) {
+		writeWallGatesFromArray(trickyTrialsWalls)
+	}
+
+	// 1.21.4 - Winter Drop Resin walls
 	if (majorVersion > 22 || (mcVersion == "1.21.4")) {
 		writeWallGatesFromArray(winterDropWalls)
 	}
@@ -523,10 +530,13 @@ function generateResources() {
 			writeWalls(`smooth_${block}_wall`, globalNamespace, `smooth_${block}`)
 			writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `smooth_${block}`, globalNamespace)
 			writeBlock(block + "_bricks", globalNamespace, "resource_bricks", id(altNamespace, cutBlockID), undefined, globalNamespace, undefined, true)
+			writeChiseledBlock(`${block}_pillar`, baseBlock, globalNamespace, "resource_pillar")
 		}
 
-		writeChiseledBlock(`${block}_pillar`, baseBlock, globalNamespace, "resource_pillar")
-		writeBarBlock(block, globalNamespace, baseBlock)
+		// Iron Bars already exist
+		if (!block.includes("iron")) {
+			writeBarBlock(block, globalNamespace, baseBlock)
+		}
 		// Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
 		if (block.includes("copper")) {
 			if (majorVersion < 21) {
@@ -537,8 +547,10 @@ function generateResources() {
 		}
 		else {
 			writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
-			writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
-			writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
+			if (!block.includes("iron")) {
+				writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
+				writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
+			}
 		}
 
 		writeBlock(`nostalgia_${block}_block`, globalNamespace, "nostalgia", baseBlock)
@@ -555,18 +567,6 @@ function generateResources() {
 
 	})
 
-	trickyTrialsWalls.forEach(function (wall) {
-		let blockTemplate = wall
-		let baseBlock = blockTemplate
-		baseBlock = `${baseBlock.replace("brick", "bricks")}`
-		baseBlock = `${baseBlock.replace("tile", "tiles")}`
-		writeWallGates(blockTemplate, globalNamespace, baseBlock, vanillaNamespace)
-		writeStonecutterRecipes(blockTemplate, vanillaNamespace + baseBlock, 1)
-
-	})
-
-
-
 	writeFenceGates("nether_brick", globalNamespace, "nether_bricks", vanillaNamespace)
 	writeFlower("rose", globalNamespace)
 	writeFlower("blue_rose", globalNamespace)
@@ -580,7 +580,7 @@ function generateResources() {
 
 	// writeStonecutterRecipes(`${block}_button`, "block", baseBlock, globalNamespace, vanillaNamespace)
 
-	writeFenceGates("nether_brick_fence_gate", globalNamespace, "nether_bricks", vanillaNamespace)
+	writeFenceGates("nether_brick_fence_gate", globalNamespace, id(vanillaNamespace, "nether_bricks"), vanillaNamespace)
 	writeFlower("rose", globalNamespace)
 	writeFlower("blue_rose", globalNamespace)
 	writeFlower("orange_rose", globalNamespace)
@@ -708,14 +708,16 @@ function generateLang(block, type, namespace) {
 
 function generateLangObject(block, type, namespace) {
 	if (type === undefined) {
-		type = "block"
+		type = "block";
 	}
-	let langBlock = block
-	langBlock = langBlock.replaceAll("_", " ")
+	let langBlock = block;
+	langBlock = langBlock.replaceAll("_", " ");
 	langBlock = langBlock.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(); });
-	const key = `${type}.${namespace}.${block}`
-	const value = `${langBlock}`
-	blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`))
+	const key = `${type}.${namespace}.${block}`;
+	const value = langBlock;
+	if (!blockTranslations.hasOwnProperty(key)) {
+		blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`));
+	}
 }
 
 function printLang(block, type) {
@@ -914,6 +916,10 @@ function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNam
 }
 
 function writeFenceGateBlockModels(block, namespace, baseBlock) {
+	if (baseBlock.includes(":")) {
+		namespace = baseBlock.split(":")[0]
+		baseBlock = baseBlock.split(":")[1]
+	}
 	writeFile(`${paths.models}${block}.json`, generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate", vanillaNamespace))
 	writeFile(`${paths.models}${block}_open.json`, generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_open", vanillaNamespace))
 	writeFile(`${paths.models}${block}_wall.json`, generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_wall", vanillaNamespace))
@@ -2471,13 +2477,11 @@ function writeDoorLootTables(block, namespace) {
 	writeFile(`${paths.loot}${block}.json`, lootTable);
 }
 
-function createDyeRecipe(namespace, block, altNamespace, altBlock, other, itemOrTag, baseNamespace) {
+function createDyeRecipe(namespace, block, altNamespace, altBlock, other, baseNamespace) {
 	if (baseNamespace === undefined) {
 		baseNamespace = altNamespace
 	}
 	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(altNamespace, other) }, id(globalNamespace, block), 8, ["CCC", "CDC", "CCC"])
-
-
 }
 
 function generateRecipes(block, type, other, namespace, altNamespace) {
@@ -2488,6 +2492,14 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		altNamespace = globalNamespace
 	}
 	let recipe = ""
+
+	// Fix Quartz texture IDs being used as part of the recipe
+	if (other != undefined) {
+		if (other.includes("quartz")) {
+			other = other.replace("_bottom", "")
+			other = other.replace("_top", "")
+		}
+	}
 
 	if (type === "planks") {
 		if ((other === "red_mushroom") || (other === "brown_mushroom")) {
@@ -2506,7 +2518,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		other = `${other}_dye`
 		altNamespace = getDyeNamespace(other)
 		//FIX
-		recipe = createDyeRecipe(namespace, block, altNamespace, id("minecraft", "terracotta"), other, "item")
+		recipe = createDyeRecipe(namespace, block, altNamespace, id(vanillaNamespace, "terracotta"), other)
 	}
 	if (type === "terracotta_bricks") {
 		altNamespace = getDyeNamespace(other)
@@ -2533,7 +2545,21 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		recipe = generateShapedRecipe({ "C": `minecraft:smooth_stone` }, `pyrite:smooth_stone_bricks`, 4, ["CC", "CC"])
 	}
 	else if (type === "mossy_cobblestone_bricks") {
-		recipe = ``
+		recipe = `{
+			"type": "minecraft:crafting_shapeless",
+			"ingredients": [
+				{
+				"item": "pyrite:cobblestone_bricks"
+				},
+				{
+				"item": "minecraft:vine"
+				}
+			],
+			"result": {
+				"item": "pyrite:mossy_cobblestone_bricks",
+				"id": "pyrite:mossy_cobblestone_bricks"
+			}
+			}`
 	}
 	else if (type === "glowing_obsidian") {
 		recipe = generateShapedRecipe({ "X": `minecraft:crying_obsidian`, "#": `minecraft:magma_block` }, `pyrite:glowing_obsidian`, 4, ["X#", "#X"])
@@ -2553,7 +2579,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	else if ((type === "dyed_framed_glass") || (type === "stained_framed_glass")) {
 		const dye = `${other}_dye`
 		altNamespace = getDyeNamespace(dye)
-		recipe = createDyeRecipe(namespace, block, altNamespace, "framed_glass", dye, "item", namespace)
+		recipe = createDyeRecipe(namespace, block, altNamespace, "framed_glass", dye, namespace)
 	}
 	else if (type === "glass_pane") {
 		const dye = `${other}_dye`
@@ -2570,7 +2596,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		} else {
 			other = `${other}_dye`
 			altNamespace = getDyeNamespace(other)
-			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", other, "item", namespace)
+			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", other, namespace)
 		}
 
 	}
@@ -2649,7 +2675,6 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "plates") {
-		other = other.replace("_top", "")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, ["CC"])
 	}
 	else if (type === "door") {
@@ -2672,18 +2697,16 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if (type === "carpet") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 3, [
-			"CC"
-		])
+		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 3, ["CC"])
 	}
 	else if (type === "fences") {
-		recipe = generateShapedRecipe({ "C": `${namespace}:${other}`, "S": `minecraft:stick` }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, other), "S": `minecraft:stick` }, id(namespace, block), 1, [
 			"CSC",
 			"CSC"
 		])
 	}
 	else if (type === "fence_gates") {
-		recipe = generateShapedRecipe({ "C": `${namespace}:${other}`, "S": `minecraft:stick` }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(namespace, other), "S": `minecraft:stick` }, id(namespace, block), 1, [
 			"SCS",
 			"SCS"
 		])
@@ -2699,13 +2722,19 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		if (!baseWall.includes(":")) {
 			baseWall = id(altNamespace, baseWall)
 		}
+		// Override for Cut Copper Walls not existing.
+		if (baseWall.includes("copper")) {
+			baseWall = baseWall.replace("minecraft", globalNamespace)
+		}
+		baseWall = baseWall.replace("weathered_cut", "cut_weathered")
+		baseWall = baseWall.replace("oxidized_cut", "cut_oxidized")
+		baseWall = baseWall.replace("exposed_cut", "cut_exposed")
 		recipe = generateShapedRecipe({ "C": other, "S": baseWall }, id(namespace, block), 6, [
 			"SCS",
 			"SCS"
 		])
 	}
 	else if (type === "buttons") {
-		other = other.replace("_top", "")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, [
 			"C"
 		])
@@ -2742,6 +2771,10 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 	}
 	if (!ingredient.includes(":")) {
 		ingredient = id(ingredient)
+	}
+	if (ingredient.includes("quartz")) {
+		ingredient = ingredient.replace("_bottom", "")
+		ingredient = ingredient.replace("_top", "")
 	}
 	let recipe = `{
 	"type": "minecraft:stonecutting",
