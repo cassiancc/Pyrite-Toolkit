@@ -199,10 +199,10 @@ class Block {  // Create a class
 			writeBlock(this.blockID, this.namespace, special, this.baseBlock, undefined, undefined, undefined, stonelike)
 		}
 		else if (blockType === "slab") {
-			writeSlabs(this.blockID, this.namespace, this.baseBlock, this.baseNamespace, stonelike)
+			writeSlabsV2(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
 		}
 		else if (blockType === "stairs") {
-			writeStairs(this.blockID, this.namespace, this.baseBlock, this.baseNamespace, stonelike)
+			writeStairsV2(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
 		}
 		else if (blockType === "wall") {
 			writeWalls(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
@@ -256,7 +256,6 @@ class Block {  // Create a class
 			writePlates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
 		else {
-			// console.log(blockType)
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
 
@@ -422,59 +421,54 @@ function generateResources() {
 	// Framed Glass Panes
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
+	// Nostalgia Turf Set
 	writeBlock("nostalgia_grass_turf", globalNamespace, "nostalgia_grass_turf", "nostalgia_grass", undefined, globalNamespace, "pyrite:nostalgia_grass_block_top")
 	writeSlabsV2("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeStairsV2("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeCarpet("nostalgia_grass_carpet", globalNamespace, "nostalgia_grass_block_top", namespace)
 
-
-
+	// Podzol Turf Set
 	writeBlock("podzol_turf", globalNamespace, "podzol_turf", "podzol", undefined, vanillaNamespace, "minecraft:podzol_top")
 	writeSlabsV2("podzol_slab", "podzol_turf", "minecraft:podzol_top")
 	writeStairsV2("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
 	writeCarpet("podzol_carpet", globalNamespace, "podzol_top", vanillaNamespace)
 
-
-
+	// Grass Turf Set
 	writeBlock("grass_turf", globalNamespace, "grass_turf", "grass_turf", undefined, vanillaNamespace, "minecraft:grass_block_top")
 	writeSlabsV2("grass_slab", "grass_turf", "minecraft:grass_block_top")
 	writeStairsV2("grass_stairs", "grass_turf", "minecraft:grass_block_top")
 	writeCarpet("grass_carpet", globalNamespace, "minecraft:grass_block_top", vanillaNamespace)
 
-
+	// Mycelium Turf Set
 	writeBlock("mycelium_turf", globalNamespace, "mycelium_turf", "mycelium", undefined, vanillaNamespace, "minecraft:mycelium_top")
 	writeSlabsV2("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
 	writeStairsV2("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
 	writeCarpet("mycelium_carpet", globalNamespace, "mycelium_top", vanillaNamespace)
 
-
+	// Path Turf Set
 	writeBlock("path_turf", globalNamespace, "path_turf", "mycelium", undefined, vanillaNamespace, "minecraft:dirt_path_top")
 	writeSlabsV2("path_slab", "path_turf", "minecraft:dirt_path_top")
 	writeStairsV2("path_stairs", "path_turf", "minecraft:dirt_path_top")
 	writeCarpet("path_carpet", globalNamespace, "dirt_path_top", vanillaNamespace)
 
-
-
-
-
+	// Pyrite Dyes, Wool, Carpet, Terracotta
 	modDyes.forEach(function (dye) {
 		writeDye(dye, dye, globalNamespace)
 		writeWool(dye, dye, globalNamespace)
-
 		writeCarpet(dye + "_carpet", globalNamespace, dye + "_wool")
 		writeTerracotta(dye, dye, globalNamespace)
-
-
 	})
 
+	// Lamps
 	writeLamps("glowstone_lamp", "glowstone")
 	writeLamps("lit_redstone_lamp", "lit_redstone", "minecraft:redstone_lamp_on")
 
+	// April Fools Blocks
 	writeBlock("glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
 	writeBlock("nostalgia_glowing_obsidian", globalNamespace, "glowing_obsidian", "glowing_obsidian")
 	writeBlock("locked_chest", globalNamespace, "locked_chest", "locked_chest")
 
-
+	// Nether Brick Sets
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
 	generateBrickSet("blue_nether_bricks", "blue_nether_bricks")
 
@@ -508,9 +502,10 @@ function generateResources() {
 		else {
 			baseBlock = baseTexture;
 			altNamespace = globalNamespace
-			writeBlock(cutBlockID, globalNamespace, "cut_iron", cutBlockID)
+			writeBlock(cutBlockID, globalNamespace, cutBlockID, id(vanillaNamespace, baseBlock), undefined, undefined, cutBlockID, true)
+			// writeBlock(cutBlockID, globalNamespace, cutBlockID, cutBlockID, undefined, undefined, undefined, true)
 			writeSlabs(`${cutBlockID}_slab`, globalNamespace, cutBlockID, undefined, true)
-			writeStairs(`${cutBlockID}_stairs`, globalNamespace, cutBlockID)
+			writeStairs(`${cutBlockID}_stairs`, globalNamespace, cutBlockID, undefined, true)
 		}
 
 		writeWalls(`cut_${block}_wall`, globalNamespace, id(altNamespace, cutBlockID))
@@ -524,7 +519,7 @@ function generateResources() {
 			writeWallGates(`smooth_${block}_wall_gate`, globalNamespace, `minecraft:quartz_block_bottom`, globalNamespace)
 		}
 		else {
-			writeBlock(`smooth_${block}`, globalNamespace, "smooth_resource", baseBlock)
+			writeBlock(`smooth_${block}`, globalNamespace, "smooth_resource", baseBlock, undefined, undefined, undefined, true)
 			writeSlabs(`smooth_${block}_slab`, globalNamespace, `smooth_${block}`, undefined, true)
 			writeStairs(`smooth_${block}_stairs`, globalNamespace, `smooth_${block}`, undefined, true)
 			writeWalls(`smooth_${block}_wall`, globalNamespace, `smooth_${block}`)
@@ -719,6 +714,10 @@ function generateLangObject(block, type, namespace) {
 	if (!blockTranslations.hasOwnProperty(key)) {
 		blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`));
 	}
+}
+
+function generateBlockLangObject(block) {
+	generateLangObject(block, "block", globalNamespace)
 }
 
 function printLang(block, type) {
@@ -1169,7 +1168,7 @@ function writeDoors(block, namespace, baseBlock) {
 	writeDoorBlockModels(block, namespace)
 	writeUniqueItemModel(block, namespace)
 	createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "door", baseBlock)
 }
 
@@ -1179,7 +1178,7 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	writeTrapdoorBlockModels(block, namespace, baseBlock)
 	writeTrapdoorItemModel(block, namespace)
 	writeLootTables(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "trapdoor", baseBlock)
 
 }
@@ -1205,7 +1204,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
 	writeLootTables(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, blockType, baseBlock, namespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -1415,7 +1414,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, blockState, namespace)
 	writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
 }
 
@@ -1480,13 +1479,13 @@ function writeFlower(block, namespace) {
 	writeFlowerBlockModels(block, namespace)
 	writeUniqueBlockItemModel(block, namespace)
 	// createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeLootTables(block, namespace)
 	// writeRecipes(block, special, dye)
 
 }
 
-function writeChiseledBlock(block, dye, namespace, special, baseBlock) {
+function writeChiseledBlock(block, baseBlock, namespace, special) {
 	blockState = `{
 	"variants": {
 	  "axis=x": {
@@ -1507,9 +1506,10 @@ function writeChiseledBlock(block, dye, namespace, special, baseBlock) {
 	writeCubeColumnBlockModels(block, namespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeLootTables(block, namespace)
-	writeRecipes(block, special, dye)
+	writeRecipes(block, special, baseBlock)
+	writeStonecutterRecipes(block, baseBlock, 1)
 
 }
 
@@ -1521,7 +1521,7 @@ function writePaneBlock(block, namespace, baseBlock) {
 	createTags(block, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "glass_pane", baseBlock)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 }
 
 function writeBarBlock(block, namespace, baseBlock) {
@@ -1531,9 +1531,9 @@ function writeBarBlock(block, namespace, baseBlock) {
 	writePaneBlockModels(block, namespace, block)
 	writeUniqueBlockItemModel(block, namespace)
 	createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeLootTables(block, namespace)
-	// writeRecipes(block, "bars", baseBlock)
+	writeRecipes(block, "bars", baseBlock)
 
 }
 
@@ -1848,7 +1848,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	writeWallBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
 	createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "wall", baseBlock, altNamespace)
 	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
 
@@ -2076,7 +2076,7 @@ function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateSt
 	writeStairBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "stairs", baseBlock, namespace)
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
@@ -2103,32 +2103,13 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	writeStairBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, globalNamespace)
 	createTags(block, globalNamespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "stairs", baseBlock, globalNamespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
 	}
 }
-
-function writeBrickSlab(block, namespace, baseBlock) {
-	writeSlabs(block, namespace, baseBlock)
-
-}
-
-function writeBrickStairs(block, namespace, baseBlock) {
-	writeStairs(block, namespace, baseBlock)
-
-}
-
-
-function writeBrickWall(block, namespace, baseBlock) {
-	writeWalls(block, namespace, baseBlock)
-
-
-
-}
-
 
 // DEPRECATED - SLAB GENERATOR
 function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateStonecutterRecipes) {
@@ -2140,7 +2121,7 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	writeSlabBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	createTags(block, namespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "slabs", baseBlock, namespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -2171,7 +2152,7 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	writeSlabBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, globalNamespace)
 	createTags(block, globalNamespace)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "slabs", baseBlock, globalNamespace)
 
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -2200,7 +2181,7 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	writePlateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)
 	createTags(block, namespace, baseBlock)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "plates", baseBlock)
 
 }
@@ -2218,7 +2199,7 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	writeButtonBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
 	createTags(block)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, type, baseBlock, namespace, altNamespace)
 
 
@@ -2247,7 +2228,7 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	writeFenceGateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
 	createTags(block, namespace, baseBlock)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
 
 
@@ -2264,7 +2245,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	let fenceGateBlockState = generateFenceGateBlockState(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, globalNamespace, baseBlock)
 	writeWallGateBlockModels(block, altNamespace, baseBlock)
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeBlockItemModel(block, globalNamespace, baseBlock)
 	createTags(block, namespace, baseBlock)
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
@@ -2295,7 +2276,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 		baseBlock = baseBlock.split("_top")[0]
 
 	}
-	generateLangObject(block, "block", globalNamespace)
+	generateBlockLangObject(block)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 
 
