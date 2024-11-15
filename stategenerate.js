@@ -546,7 +546,9 @@ function generateResources() {
 			}
 		}
 		else {
-			writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
+			if (!block.includes("quartz")) {
+				writeChiseledBlock(`chiseled_${block}_block`, baseBlock, globalNamespace, "chiseled_resource")
+			}
 			if (!block.includes("iron")) {
 				writeDoors(`${block}_door`, globalNamespace, id(vanillaNamespace, baseBlock))
 				writeTrapdoors(`${block}_trapdoor`, globalNamespace, id(vanillaNamespace, baseBlock))
@@ -2711,6 +2713,11 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		// Override for Cut Copper Walls not existing.
 		if (baseWall.includes("copper")) {
 			baseWall = baseWall.replace("minecraft", globalNamespace)
+		}
+		// Override for it picking up Smooth Quartz Block Walls instead of Smooth Quartz Walls
+		else if (baseWall.includes("quartz")) {
+			other = "minecraft:smooth_quartz"
+			baseWall = baseWall = "pyrite:smooth_quartz_wall"
 		}
 		baseWall = baseWall.replace("weathered_cut", "cut_weathered")
 		baseWall = baseWall.replace("oxidized_cut", "cut_oxidized")
