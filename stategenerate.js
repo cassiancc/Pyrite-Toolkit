@@ -737,6 +737,15 @@ function writePaneBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}_noside_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside_alt"))
 }
 
+function writeBarBlockModels(block, namespace, baseBlock) {
+	writeFile(`${paths.models}${block}_cap.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`,"bars": `${namespace}:block/${block}`,"edge": `${namespace}:block/${block}`},"elements": [{"from": [ 8, 0, 8 ],"to": [ 8, 16, 9 ],"faces": {"west": { "uv": [ 8, 0, 7, 16 ], "texture": "#bars" },"east": { "uv": [ 7, 0, 8, 16 ], "texture": "#bars" }}},{   "from": [ 7, 0, 9 ],"to": [ 9, 16, 9 ],"faces": {"north": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" },"south": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" }}}]})
+	writeFile(`${paths.models}${block}_post.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{   "from": [ 8, 0, 7 ],"to": [ 8, 16, 9 ],"faces": {"west": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },"east": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }}},{   "from": [ 7, 0, 8 ],"to": [ 9, 16, 8 ],"faces": {"north": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },"south": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }}}]})
+	writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
+	writeFile(`${paths.models}${block}_cap_alt.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`,"bars": `${namespace}:block/${block}`,"edge": `${namespace}:block/${block}`,},"elements": [{"from":[8,0,7],"to":[8,16,8],"faces":{"west":{"uv":[8,0,9,16],"texture":"#bars"},"east":{"uv":[9,0,8,16],"texture":"#bars"}}},{"from":[7,0,7],"to":[9,16,7],"faces":{"north":{"uv":[7,0,9,16],"texture":"#bars"},"south":{"uv":[9,0,7,16],"texture":"#bars"}}}]})
+	writeFile(`${paths.models}${block}_side_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
+	writeFile(`${paths.models}${block}_post_ends.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`,"edge": `${namespace}:block/${block}`},"elements": [{   "from": [ 7, 0.001, 7 ],"to": [ 9, 0.001, 9 ],"faces": {"down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },"up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }}},{   "from": [ 7, 15.999, 7 ],"to": [ 9, 15.999, 9 ],"faces": {"down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },"up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }}}]})
+}
+
 function generatePaneBlockModels(block, namespace, baseBlock, model) {
 	let edge;
 	if (block.includes("bars")) {
@@ -1287,7 +1296,7 @@ function writeBarBlock(block, namespace, baseBlock) {
 	baseBlock = block
 	block = block + "_bars"
 	writeBlockstate(block, generateBarBlockState(block, namespace, baseBlock), namespace)
-	writePaneBlockModels(block, namespace, block)
+	writeBarBlockModels(block, namespace, block)
 	writeUniqueBlockItemModel(block, namespace)
 	tagBoth(block, "metal_bars")
 	generateBlockLangObject(block)
