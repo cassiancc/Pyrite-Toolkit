@@ -2545,21 +2545,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		recipe = generateShapedRecipe({ "C": `minecraft:smooth_stone` }, `pyrite:smooth_stone_bricks`, 4, ["CC", "CC"])
 	}
 	else if (type === "mossy_cobblestone_bricks") {
-		recipe = `{
-			"type": "minecraft:crafting_shapeless",
-			"ingredients": [
-				{
-				"item": "pyrite:cobblestone_bricks"
-				},
-				{
-				"item": "minecraft:vine"
-				}
-			],
-			"result": {
-				"item": "pyrite:mossy_cobblestone_bricks",
-				"id": "pyrite:mossy_cobblestone_bricks"
-			}
-			}`
+		recipe = generateShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:vine"], id(namespace, block), 1)
 	}
 	else if (type === "glowing_obsidian") {
 		recipe = generateShapedRecipe({ "X": `minecraft:crying_obsidian`, "#": `minecraft:magma_block` }, `pyrite:glowing_obsidian`, 4, ["X#", "#X"])
