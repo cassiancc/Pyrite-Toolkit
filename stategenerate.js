@@ -597,12 +597,30 @@ function tagContent(arg, tag, folder) {
 	if (!arg.includes(":")) {
 		arg = id(globalNamespace, arg)
 	}
+	let namespace;
+	if (tag.includes(":")) {
+		namespace = tag.split(":")[0];
+		tag = tag.split(":")[1];
+	}
+	else {
+		namespace = globalNamespace;
+	}
+	
 	// Create path to tag file.
-	const path = paths.tags+folder+"/"+tag+".json"
+	let dir = `${paths.base}/data/${namespace}/tags/${folder}/`
+	if (tag.includes("/")) {
+		dir += tag.split("/")[0];
+		tag = tag.split("/")[1];
+	}
+	let path = `${dir}/${tag}.json`
+	// Ensure tag folder exists
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir, {recursive: true})
+	}
 	// Ensure tag file exists
 	if (!fs.existsSync(path)) {
 		// If not, create an empty tag.
-		writeFile(path, {"replace": false,"values": []})
+		fs.writeFileSync(path, JSON.stringify({"replace": false,"values": []}), function (err) { if (err) throw err; })
 	}
 	// Read the tag file.
 	const currentTag = readFileAsJson(path)
@@ -610,9 +628,9 @@ function tagContent(arg, tag, folder) {
 	if (!currentTag.values.includes(arg)) {
 		// If not, add it to the tag.
 		currentTag.values.push(arg)
+		// Write new tag file to disk.
+		fs.writeFileSync(path, JSON.stringify(currentTag))
 	}
-	// Write new tag file to disk.
-	writeFile(path, currentTag)
 
 }
 
@@ -1438,7 +1456,16 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace)
 	generateBlockLangObject(block)
+	tagBlock(block, "crafting_tables")
+	checkAndAddStainedTag(block, baseBlock)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
+}
+
+function checkAndAddStainedTag(block, baseBlock) {
+	if (block.includes("stained")) {
+		const colour = baseBlock.split("_stained")[0]
+		tagBlock(block, `c:dyed/${colour}`)
+	}
 }
 
 function writeLadders(block, namespace, baseBlock, altNamespace) {
