@@ -50,7 +50,7 @@ const winterDropWoods = ["pale_oak"];
 const vanillaMetals = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 
 //Base path
-paths = {
+let paths = {
 	//new
 	origin: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/`,
 	cavesp2: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.18)/src/main/resources/`,
@@ -256,17 +256,6 @@ function generateResources() {
 		new Block(brickBase + "_wall", modID, undefined, "wall", bricksBase, type)
 		new Block(brickBase + "_wall_gate", modID, undefined, "wall_gate", bricksBase, type)
 
-	}
-
-	function generateTurfSet(template, type, baseNamespace, texture) {
-		let turfBase = template;
-		if (type === undefined) {
-			type = "turf"
-		}
-
-		new Block(turfBase + "_turf", modID, baseNamespace, type, texture, type)
-		new Block(turfBase + "_slab", modID, baseNamespace, "slab", texture, type)
-		new Block(turfBase + "_stairs", modID, baseNamespace, "stairs", texture, type)
 	}
 
 	function writeWallGatesFromArray(array, namespace) {
@@ -485,14 +474,14 @@ function generateResources() {
 
 	})
 
-	writeFlower("rose", modID)
-	writeFlower("blue_rose", modID)
-	writeFlower("orange_rose", modID)
-	writeFlower("white_rose", modID)
-	writeFlower("pink_rose", modID)
-	writeFlower("paeonia", modID)
-	writeFlower("pink_daisy", modID)
-	writeFlower("buttercup", modID)
+	writeFlower("rose")
+	writeFlower("blue_rose")
+	writeFlower("orange_rose")
+	writeFlower("white_rose")
+	writeFlower("pink_rose")
+	writeFlower("paeonia")
+	writeFlower("pink_daisy")
+	writeFlower("buttercup")
 
 	writeFenceGates("nether_brick_fence_gate", modID, id(mc, "nether_bricks"), mc)
 
@@ -505,41 +494,31 @@ function generateResources() {
 	tagBlock("#pyrite:carpet", "minecraft:sword_efficient")
 
 	// Add Pyrite tags to tool tags
-	tagBlock("#pyrite:bricks", "minecraft:needs_wood_tool")
-	tagBlock("#pyrite:wall_gates", "minecraft:needs_wood_tool")
-	tagBlock("#pyrite:iron", "minecraft:needs_stone_tool")
-	tagBlock("#pyrite:lapis", "minecraft:needs_stone_tool")
-	tagBlock("#pyrite:emerald", "minecraft:needs_iron_tool")
-	tagBlock("#pyrite:diamond", "minecraft:needs_iron_tool")
-	tagBlock("#pyrite:gold", "minecraft:needs_iron_tool")
-	tagBlock("#pyrite:obsidian", "minecraft:needs_diamond_tool")
-	tagBlock("#pyrite:netherite", "minecraft:needs_diamond_tool")
+	tagBlocks(["#pyrite:wall_gates", "#pyrite:bricks"], "minecraft:needs_wood_tool")
+	tagBlocks(["#pyrite:iron", "#pyrite:lapis"], "minecraft:needs_stone_tool")
+	tagBlocks(["#pyrite:gold", "#pyrite:diamond", "#pyrite:emerald"], "minecraft:needs_iron_tool")
+	tagBlocks(["#pyrite:obsidian", "#pyrite:netherite"], "minecraft:needs_diamond_tool")
+
+	tagBlocks(["pyrite:locked_chest","#pyrite:trapdoors","#pyrite:mushroom_stem","#pyrite:crafting_tables"], "minecraft:mineable/axe")
+	tagBlocks(["pyrite:carpet"], "minecraft:mineable/hoe")
+	tagBlocks(readFileAsJson("./overrides/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
+	tagBlocks(["pyrite:nostalgia_gravel","#pyrite:turf_blocks"], "minecraft:mineable/shovel")
+
 
 	// Add Pyrite tags to beacon bases
-	tagBlock("#pyrite:emerald", "minecraft:beacon_base_blocks")
-	tagBlock("#pyrite:diamond", "minecraft:beacon_base_blocks")
-	tagBlock("#pyrite:gold", "minecraft:beacon_base_blocks")
-	tagBlock("#pyrite:iron", "minecraft:beacon_base_blocks")
-	tagBlock("#pyrite:netherite", "minecraft:beacon_base_blocks")
-
+	tagBlocks(["#pyrite:emerald", "#pyrite:diamond", "#pyrite:gold", "#pyrite:iron", "#pyrite:netherite"], "minecraft:beacon_base_blocks")
 
 	// Generate translations for Pyrite item tags.
-	generateLangObject("wall_gates", "tag.item", modID)
-	generateLangObject("lamps", "tag.item", modID)
-	generateLangObject("bricks", "tag.item", modID)
-	generateLangObject("dyed_bricks", "tag.item", modID)
-	generateLangObject("stained_framed_glass", "tag.item", modID)
-	generateLangObject("fences", "tag.item", modID)
-	generateLangObject("wool", "tag.item", modID)
-	generateLangObject("metal_bars", "tag.item", modID)
-	generateLangObject("planks", "tag.item", modID)
-	generateLangObject("dyed/honey", "tag.item", "c")
-	generateLangObject("dyed/glow", "tag.item", "c")
-	generateLangObject("dyed/nostalgia", "tag.item", "c")
-	generateLangObject("dyed/poisonous", "tag.item", "c")
-	generateLangObject("dyed/rose", "tag.item", "c")
-	generateLangObject("dyed/star", "tag.item", "c")
-	generateLangObject("dyed/dragon", "tag.item", "c")
+	const newModTags = ["wall_gates", "lamps", "bricks", "dyed_bricks", 
+		"stained_framed_glass", "fences", "wool", "metal_bars", "planks"]
+	newModTags.forEach(function(tag) {
+		generateLangObject(tag, "tag.item", modID)
+	})
+	const newConventionTags = ["dyed/honey", "dyed/glow", "dyed/nostalgia", 
+		"dyed/poisonous", "dyed/rose", "dyed/star", "dyed/dragon"]
+	newConventionTags.forEach(function(tag) {
+		generateLangObject(tag, "tag.item", "c")
+	})
 
 
 	// Write final language file.
@@ -601,13 +580,30 @@ function tagBlock(block, tag, optional) {
 	tagContent(block, tag, "block", optional)
 }
 
+function tagBlocks(blocks, tag, optional) {
+	blocks.forEach(function(block) {
+		tagBlock(block, tag, optional)
+	})
+}
+
 function tagItem(item, tag, optional) {
 	tagContent(item, tag, "item", optional)
+}
+
+function tagItems(items, tag, optional) {
+	items.forEach(function(block) {
+		tagItem(item, tag, optional)
+	})
 }
 
 function tagBoth(arg, tag, optional) {
 	tagBlock(arg, tag, optional)
 	tagItem(arg, tag, optional)
+}
+
+function tagBothFromArray(array, tag, optional) {
+	tagBlocks(array, tag, optional)
+	tagItems(array, tag, optional)
 }
 
 function checkAndAddStainedTag(block, baseBlock) {
@@ -616,7 +612,6 @@ function checkAndAddStainedTag(block, baseBlock) {
 	if (block.includes("stained")) {
 		const colour = baseBlock.split("_stained")[0]
 		if (dyes.includes(colour)) {
-			console.log(block)
 			tagBoth(block, `c:dyed/${colour}`)
 		}
 	}
@@ -1325,14 +1320,14 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 	writeRecipes(block, "chest", baseBlock, namespace, altNamespace)
 }
 
-function writeFlower(block, namespace) {
-	let blockState = `{"variants":{"":{"model":"${namespace}:block/${block}"}}}`
-	writeBlockstate(block, blockState, namespace)
-	writeFlowerBlockModels(block, namespace)
-	writeUniqueBlockItemModel(block, namespace)
+function writeFlower(block) {
+	let blockState = `{"variants":{"":{"model":"${modID}:block/${block}"}}}`
+	writeBlockstate(block, blockState, modID)
+	writeFlowerBlockModels(block, modID)
+	writeUniqueBlockItemModel(block, modID)
 	tagBoth(block, "minecraft:small_flowers")
 	generateBlockLangObject(block)
-	writeLootTables(block, namespace)
+	writeLootTables(block, modID)
 	// writeRecipes(block, special, dye)
 
 }
