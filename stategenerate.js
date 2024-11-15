@@ -297,18 +297,18 @@ function generateResources() {
 	function generateWoodSet(template) {
 		const stainedPlankBase = template + "_planks"
 
-		let button = new Block(template + "_button", globalNamespace, globalNamespace, "button", stainedPlankBase, "wood")
-		let stairs = new Block(template + "_stairs", globalNamespace, globalNamespace, "stairs", stainedPlankBase, "wood")
-		let slabs = new Block(template + "_slab", globalNamespace, globalNamespace, "slab", stainedPlankBase, "wood")
-		let pressure_plate = new Block(template + "_pressure_plate", globalNamespace, undefined, "pressure_plate", stainedPlankBase, "wood")
-		let fence = new Block(template + "_fence", globalNamespace, globalNamespace, "fence", stainedPlankBase, "wood")
-		let fence_gate = new Block(template + "_fence_gate", globalNamespace, globalNamespace, "fence_gate", stainedPlankBase, "wood")
-		let planks = new Block(template + "_planks", globalNamespace, globalNamespace, "planks", template, "wood")
-		let crafting_table = new Block(template + "_crafting_table", globalNamespace, undefined, "crafting_table", stainedPlankBase, "wood")
-		let ladder = new Block(template + "_ladder", globalNamespace, globalNamespace, "ladder", stainedPlankBase, "wood")
+		new Block(template + "_button", globalNamespace, globalNamespace, "button", stainedPlankBase, "wood")
+		new Block(template + "_stairs", globalNamespace, globalNamespace, "stairs", stainedPlankBase, "wood")
+		new Block(template + "_slab", globalNamespace, globalNamespace, "slab", stainedPlankBase, "wood")
+		new Block(template + "_pressure_plate", globalNamespace, undefined, "pressure_plate", stainedPlankBase, "wood")
+		new Block(template + "_fence", globalNamespace, globalNamespace, "fence", stainedPlankBase, "wood")
+		new Block(template + "_fence_gate", globalNamespace, globalNamespace, "fence_gate", stainedPlankBase, "wood")
+		new Block(template + "_planks", globalNamespace, globalNamespace, "planks", template, "wood")
+		new Block(template + "_crafting_table", globalNamespace, undefined, "crafting_table", stainedPlankBase, "wood")
+		new Block(template + "_ladder", globalNamespace, globalNamespace, "ladder", stainedPlankBase, "wood")
 		// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
-		let door = new Block(template + "_door", globalNamespace, globalNamespace, "door", stainedPlankBase, "wood")
-		let trapdoor = new Block(template + "_trapdoor", globalNamespace, globalNamespace, "trapdoor", stainedPlankBase, "wood")
+		new Block(template + "_door", globalNamespace, globalNamespace, "door", stainedPlankBase, "wood")
+		new Block(template + "_trapdoor", globalNamespace, globalNamespace, "trapdoor", stainedPlankBase, "wood")
 	}
 
 	function generateBrickSet(template, type, baseBlock) {
@@ -414,39 +414,38 @@ function generateResources() {
 	writeBlock("nostalgia_gravel", globalNamespace, "nostalgia_gravel", "nostalgia_gravel")
 	writeBlock("nostalgia_grass_block", globalNamespace, "nostalgia_grass_block", "nostalgia_grass_block")
 
-	// writeBlock("framed_glass", globalNamespace, "framed_glass", "framed_glass", "framed_glass")
-	writePaneBlock("framed_glass_pane", globalNamespace, "framed_glass")
 	//Framed Glass
 	new Block("framed_glass", globalNamespace, undefined, "framed_glass", "framed_glass", "framed_glass")
 	// Framed Glass Panes
+	writePaneBlock("framed_glass_pane", globalNamespace, "framed_glass")
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
 	// Nostalgia Turf Set
-	writeBlock("nostalgia_grass_turf", globalNamespace, "nostalgia_grass_turf", "nostalgia_grass", undefined, globalNamespace, "pyrite:nostalgia_grass_block_top")
+	writeBlock("nostalgia_grass_turf", globalNamespace, "nostalgia_grass_turf", id(globalNamespace, "nostalgia_grass_block"), undefined, globalNamespace, "pyrite:nostalgia_grass_block_top")
 	writeSlabsV2("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeStairsV2("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeCarpet("nostalgia_grass_carpet", globalNamespace, "nostalgia_grass_block_top", namespace)
 
 	// Podzol Turf Set
-	writeBlock("podzol_turf", globalNamespace, "podzol_turf", "podzol", undefined, vanillaNamespace, "minecraft:podzol_top")
+	writeBlock("podzol_turf", globalNamespace, "podzol_turf", id(vanillaNamespace, "podzol"), undefined, vanillaNamespace, "minecraft:podzol_top")
 	writeSlabsV2("podzol_slab", "podzol_turf", "minecraft:podzol_top")
 	writeStairsV2("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
 	writeCarpet("podzol_carpet", globalNamespace, "podzol_top", vanillaNamespace)
 
 	// Grass Turf Set
-	writeBlock("grass_turf", globalNamespace, "grass_turf", "grass_turf", undefined, vanillaNamespace, "minecraft:grass_block_top")
+	writeBlock("grass_turf", globalNamespace, "grass_turf", id(vanillaNamespace,"grass_block"), undefined, vanillaNamespace, "minecraft:grass_block_top")
 	writeSlabsV2("grass_slab", "grass_turf", "minecraft:grass_block_top")
 	writeStairsV2("grass_stairs", "grass_turf", "minecraft:grass_block_top")
 	writeCarpet("grass_carpet", globalNamespace, "minecraft:grass_block_top", vanillaNamespace)
 
 	// Mycelium Turf Set
-	writeBlock("mycelium_turf", globalNamespace, "mycelium_turf", "mycelium", undefined, vanillaNamespace, "minecraft:mycelium_top")
+	writeBlock("mycelium_turf", globalNamespace, "mycelium_turf", id(vanillaNamespace,"mycelium"), undefined, vanillaNamespace, "minecraft:mycelium_top")
 	writeSlabsV2("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
 	writeStairsV2("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
 	writeCarpet("mycelium_carpet", globalNamespace, "mycelium_top", vanillaNamespace)
 
 	// Path Turf Set
-	writeBlock("path_turf", globalNamespace, "path_turf", "mycelium", undefined, vanillaNamespace, "minecraft:dirt_path_top")
+	writeBlock("path_turf", globalNamespace, "path_turf", id(vanillaNamespace,"dirt_path"), undefined, vanillaNamespace, "minecraft:dirt_path_top")
 	writeSlabsV2("path_slab", "path_turf", "minecraft:dirt_path_top")
 	writeStairsV2("path_stairs", "path_turf", "minecraft:dirt_path_top")
 	writeCarpet("path_carpet", globalNamespace, "dirt_path_top", vanillaNamespace)
@@ -593,6 +592,38 @@ function generateResources() {
 
 generateResources()
 
+function tagContent(arg, tag, folder) {
+	// Ensure all IDs are properly namespaced strings
+	if (!arg.includes(":")) {
+		arg = id(globalNamespace, arg)
+	}
+	// Create path to tag file.
+	const path = paths.tags+folder+"/"+tag+".json"
+	// Ensure tag file exists
+	if (!fs.existsSync(path)) {
+		// If not, create an empty tag.
+		writeFile(path, {"replace": false,"values": []})
+	}
+	// Read the tag file.
+	const currentTag = readFileAsJson(path)
+	// Check if the namespaced string is already in the tag.
+	if (!currentTag.values.includes(arg)) {
+		// If not, add it to the tag.
+		currentTag.values.push(arg)
+	}
+	// Write new tag file to disk.
+	writeFile(path, currentTag)
+
+}
+
+function tagBlock(block, tag) {
+	tagContent(block, tag, "block")
+
+}
+
+function tagItem(item, tag, folder) {
+	tagContent(item, tag, "item")
+}
 
 function writeLang() {
 	writeFile(`${paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
@@ -619,6 +650,10 @@ function writeFile(path, data) {
 
 function readFile(path) {
 	return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
+}
+
+function readFileAsJson(path) {
+	return JSON.parse(readFile(path))
 }
 
 function writeBlockstate(block, blockState, namespace) {
@@ -720,16 +755,6 @@ function generateBlockLangObject(block) {
 	generateLangObject(block, "block", globalNamespace)
 }
 
-function printLang(block, type) {
-	console.log(generateLang(block, type))
-
-}
-
-function printBlock(block) {
-	console.log(`"${namespace}:${block}",`)
-
-}
-
 function generateWallBlockModel(block, namespace, baseBlock, parent) {
 	return `{
 	  "parent": "minecraft:block/${parent}",
@@ -753,8 +778,6 @@ function writeWallBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}_side.json`, sideModel)
 	writeFile(`${paths.models}${block}_inventory.json`, invModel)
 	writeFile(`${paths.models}${block}_side_tall.json`, tallModel)
-
-
 }
 
 
@@ -2543,6 +2566,9 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		let baseBlock = type.split("_")[1]
 		baseBlock = baseBlock + "_block"
 		recipe = generateShapedRecipe({ "#": id(vanillaNamespace, baseBlock) }, id(globalNamespace, type), 4, ["##", "##"])
+	}
+	else if (type.includes("_turf")) {
+		recipe = generateShapedRecipe({ "#": id(vanillaNamespace, other) }, id(globalNamespace, type), 4, ["##", "##"])
 	}
 	else if (type === "framed_glass") {
 		recipe = generateShapedRecipe({ "#": `minecraft:glass`, "X": `minecraft:iron_nugget` }, id(globalNamespace, type), 4, [
