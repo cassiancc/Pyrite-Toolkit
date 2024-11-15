@@ -502,6 +502,18 @@ function generateResources() {
 	tagBoth("#pyrite:wool", "minecraft:wool", true)
 	tagBoth("#pyrite:crafting_tables", "c:player_workstations/crafting_tables", true)
 
+	generateLangObject("wall_gates", "tag.item", modID)
+	generateLangObject("lamps", "tag.item", modID)
+	generateLangObject("bricks", "tag.item", modID)
+	generateLangObject("dyed_bricks", "tag.item", modID)
+	generateLangObject("stained_framed_glass", "tag.item", modID)
+	generateLangObject("fences", "tag.item", modID)
+	generateLangObject("wool", "tag.item", modID)
+	generateLangObject("metal_bars", "tag.item", modID)
+	generateLangObject("planks", "tag.item", modID)
+
+
+
 	// Write final language file.
 	writeLang()
 }
@@ -1135,7 +1147,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if (blockType == "terracotta") {
-		tagBoth(block, "terracotta")
+		tagBoth(block, "minecraft:terracotta")
 		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if ((blockType == "lamps") || (blockType == "lamp")) {
@@ -1408,7 +1420,7 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	generateBlockLangObject(block)
 
 	// Tag slabs
-	tagBoth(block, "slabs")
+	tagBlock(block, "slabs")
 	if (baseBlock.includes("smooth_")) {
 		tagBlock(block, baseBlock.split("smooth_")[1])
 	}
