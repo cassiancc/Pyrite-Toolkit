@@ -185,7 +185,6 @@ class Block {  // Create a class
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
 
-
 		//Generate block loot table
 		if (blockType === "door") {
 			writeDoorLootTables(this.blockID, this.namespace)
@@ -196,22 +195,15 @@ class Block {  // Create a class
 
 		}
 
-		//Generate recipes
-		// writeRecipes(this.blockID, this.blockType, this.baseBlock, this.namespace, this.baseNamespace)
-
-
-
 	}
 	generateFullID() {
 		console.log(`${this.namespace}:${this.blockID}`)
 	}
 	addTranslation() {
-		return generateLangObject(this.blockID, "block", this.namespace)
+		return generateLang(this.blockID, "block", this.namespace)
 	}
 }
 
-
-let tags = "";
 function generateResources() {
 
 	new Block("torch_lever", modID, mc, "torch_lever", "torch", "torch")
@@ -500,7 +492,7 @@ function generateResources() {
 	tagBlocks(["#pyrite:obsidian", "#pyrite:netherite"], "minecraft:needs_diamond_tool")
 
 	tagBlocks(["pyrite:locked_chest","#pyrite:mushroom_stem","#pyrite:crafting_tables"], "minecraft:mineable/axe")
-	tagBlocks(["pyrite:carpet"], "minecraft:mineable/hoe")
+	tagBlocks(["#pyrite:carpet"], "minecraft:mineable/hoe")
 	tagBlocks(readFileAsJson("./overrides/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
 	tagBlocks(["pyrite:nostalgia_gravel","#pyrite:turf_blocks"], "minecraft:mineable/shovel")
 
@@ -510,14 +502,14 @@ function generateResources() {
 
 	// Generate translations for Pyrite item tags.
 	const newModTags = ["wall_gates", "lamps", "bricks", "dyed_bricks", 
-		"stained_framed_glass", "fences", "wool", "metal_bars", "planks"]
+		"stained_framed_glass", "fences", "wool", "metal_bars", "planks", "brick_stairs", "metal_trapdoors", "brick_walls"]
 	newModTags.forEach(function(tag) {
-		generateLangObject(tag, "tag.item", modID)
+		generateLang(tag, "tag.item", modID)
 	})
 	const newConventionTags = ["dyed/honey", "dyed/glow", "dyed/nostalgia", 
 		"dyed/poisonous", "dyed/rose", "dyed/star", "dyed/dragon"]
 	newConventionTags.forEach(function(tag) {
-		generateLangObject(tag, "tag.item", "c")
+		generateLang(tag, "tag.item", "c")
 	})
 
 
@@ -698,20 +690,13 @@ function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
 	writeFile(`${paths.models}${block}.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace))
 	writeFile(`${paths.models}${block}_on.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "on"))
 	writeFile(`${paths.models}${block}_wall.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "wall"))
-
-
 }
 
 function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
 	altNamespace = getAltNamespace(namespace, altNamespace)
 	writeFile(`${paths.models}${baseBlock}_upright.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch"))
 	writeFile(`${paths.models}${block}_wall.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch_wall"))
-
-
 }
-
-
-
 
 function writeCubeColumnBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}.json`, generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column"))
@@ -724,8 +709,6 @@ function writeFlowerBlockModels(block, namespace) {
 
 }
 
-
-
 function writeLogBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}.json`, generateMushroomStemModel(block, namespace, baseBlock, "cube_column"))
 	writeFile(`${paths.models}${block}_horizontal.json`, generateMushroomStemModel(block, namespace, baseBlock, "cube_column_horizontal"))
@@ -733,17 +716,6 @@ function writeLogBlockModels(block, namespace, baseBlock) {
 }
 
 function generateLang(block, type, namespace) {
-	if (type === undefined) {
-		type = "block"
-	}
-	let langBlock = block
-	langBlock = langBlock.replaceAll("_", " ")
-	langBlock = langBlock.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(); });
-	return `"${type}.${namespace}.${block}": "${langBlock}",`
-
-}
-
-function generateLangObject(block, type, namespace) {
 	if (type === undefined) {
 		type = "block";
 	}
@@ -758,8 +730,8 @@ function generateLangObject(block, type, namespace) {
 	}
 }
 
-function generateBlockLangObject(block) {
-	generateLangObject(block, "block", modID)
+function generateBlockLang(block) {
+	generateLang(block, "block", modID)
 }
 
 function generateWallBlockModel(block, namespace, baseBlock, parent) {
@@ -1042,12 +1014,7 @@ function writeUniqueItemModel(block, namespace) {
 		writeWinterDropItem(namespace, "item", block, block)
 	}
 	else {
-		let modelItem = `{
-	  "parent": "minecraft:item/generated",
-	  "textures": {
-		"layer0": "${namespace}:item/${block}"
-	  }
-	}`
+		let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${namespace}:item/${block}"}}`
 		writeFile(`${paths.itemModels}${block}.json`, modelItem);
 	}
 }
@@ -1066,12 +1033,7 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 		writeWinterDropItem(altNamespace, "item", block, baseBlock)
 	}
 	else {
-		const modelItem = `{
-	  "parent": "minecraft:item/generated",
-	  "textures": {
-		"layer0": "${altNamespace}:block/${baseBlock}"
-	  }
-	}`
+		const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${altNamespace}:block/${baseBlock}"}}`
 		writeFile(`${paths.itemModels}${block}.json`, modelItem)
 	}
 
@@ -1115,13 +1077,7 @@ function writeWool(block, dye, namespace) {
 }
 
 function writeTerracottaBricks(block, namespace, special, baseBlock) {
-	blockState = `{
-	"variants": {
-		"": {
-			"model": "${namespace}:block/${block}_north_west_mirrored"
-			}
-		}
-  	}`
+	blockState = `{"variants": {"": {"model": "${namespace}:block/${block}_north_west_mirrored"}}}`
 	writeBlockstate(block, blockState, namespace)
 	writeMirroredBricksBlockModels(block, namespace, block)
 	writeBlockItemModel(block, namespace)
@@ -1137,7 +1093,7 @@ function writeDye(item) {
 }
 
 function writeItem(item) {
-	generateLangObject(item, "item", modID)
+	generateLang(item, "item", modID)
 	tagItem(item, "c:dyes")
 	writeUniqueItemModel(item, modID)
 }
@@ -1151,7 +1107,7 @@ function writeDoors(block, namespace, baseBlock) {
 		tagBoth(block, "minecraft:wooden_doors")
 	}
 	tagBoth(block, "minecraft:doors")
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeRecipes(block, "door", baseBlock)
 }
 
@@ -1161,7 +1117,7 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	writeTrapdoorBlockModels(block, namespace, baseBlock)
 	writeTrapdoorItemModel(block, namespace)
 	writeLootTables(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	if (block.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_trapdoors")
 	}
@@ -1192,7 +1148,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	writePlankBlockModels(block, namespace, texture, undefined, render_type)
 	writeBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 
 	// Tag various blocks based off block type.
 	if (blockType == "planks") {
@@ -1224,6 +1180,9 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if (blockType.includes("turf") || blockType.includes("grass_block")) {
+		if (blockType.includes("turf")) {
+			tagBlock(block, "turf_blocks")
+		}
 		tagBoth(block, "minecraft:dirt", true)
 	}
 	else if (blockType.includes("gravel")) {
@@ -1295,7 +1254,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, blockState, namespace)
 	writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	tagBoth(block, "crafting_tables")
 	checkAndAddStainedTag(block, baseBlock)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
@@ -1333,7 +1292,7 @@ function writeFlower(block) {
 	writeFlowerBlockModels(block, modID)
 	writeUniqueBlockItemModel(block, modID)
 	tagBoth(block, "minecraft:small_flowers")
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeLootTables(block, modID)
 	// writeRecipes(block, special, dye)
 
@@ -1344,7 +1303,7 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 	writeBlockstate(block, blockState, namespace)
 	writeCubeColumnBlockModels(block, namespace, baseBlock)
 	writeBlockItemModel(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeLootTables(block, namespace)
 	writeRecipes(block, special, baseBlock)
 	writeStonecutterRecipes(block, baseBlock, 1)
@@ -1360,7 +1319,7 @@ function writePaneBlock(block, namespace, baseBlock) {
 	tagBoth(block, "c:glass_panes")
 	checkAndAddDyedTag(block, baseBlock)
 	writeRecipes(block, "glass_pane", baseBlock)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 }
 
 function writeBarBlock(block, namespace, baseBlock) {
@@ -1370,7 +1329,7 @@ function writeBarBlock(block, namespace, baseBlock) {
 	writeBarBlockModels(block, namespace, block)
 	writeUniqueBlockItemModel(block, namespace)
 	tagBoth(block, "metal_bars")
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "bars", baseBlock)
 }
@@ -1404,7 +1363,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, wallBlockState, namespace)
 	writeWallBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeRecipes(block, "wall", baseBlock, altNamespace)
 	tagBoth(block, "minecraft:walls")
 	if (baseBlock.includes("bricks")) {
@@ -1428,7 +1387,7 @@ function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateSt
 	writeBlockstate(block, stairBlockState, namespace)
 	writeStairBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	tagBoth(block, "minecraft:stairs")
 	writeRecipes(block, "stairs", baseBlock, namespace)
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -1455,7 +1414,7 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	writeBlockstate(block, stairBlockState, modID)
 	writeStairBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	tagBoth(block, "minecraft:stairs")
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_stairs")
@@ -1483,7 +1442,7 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	// Write models
 	writeSlabBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 
 	// Tag slabs
 	tagBlock(block, "minecraft:slabs")
@@ -1523,7 +1482,7 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	writeBlockstate(block, slabBlockState, modID)
 	writeSlabBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 
 	// Tag slabs
 	tagBlock(block, "minecraft:slabs")
@@ -1566,7 +1525,7 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, plateBlockState)
 	writePlateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_pressure_plates", true)
 		checkAndAddStainedTag(block, baseBlock)
@@ -1590,12 +1549,12 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	writeBlockstate(block, buttonBlockState)
 	writeButtonBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_buttons", true)
 	}
 	else {
-		tagBoth(block, "minecraft:buttons", true)
+		tagBoth(block, "metal_buttons", true)
 	}
 	writeRecipes(block, type, baseBlock, namespace, altNamespace)
 
@@ -1624,9 +1583,9 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, fenceGateBlockState, namespace, baseBlock)
 	writeFenceGateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
-		tagBoth(block, "minecraft:wooden_fence_gates", true)
+		tagBlock(block, "minecraft:wooden_fence_gates", true)
 	}
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
 }
@@ -1641,7 +1600,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	let fenceGateBlockState = generateFenceGateBlockState(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, modID, baseBlock)
 	writeWallGateBlockModels(block, altNamespace, baseBlock)
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeBlockItemModel(block, modID, baseBlock)
 	tagBoth(block, "wall_gates", true)
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
@@ -1672,7 +1631,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	else {
 		tagBlock(block, "carpet")
 	}
-	generateBlockLangObject(block)
+	generateBlockLang(block)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 }
 
