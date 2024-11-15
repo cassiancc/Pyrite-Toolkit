@@ -585,6 +585,8 @@ function generateResources() {
 	writeFlower("pink_daisy", globalNamespace)
 	writeFlower("buttercup", globalNamespace)
 
+	tagBlock("#pyrite:dyed_bricks", "c:bricks/normal")
+
 	writeLang()
 }
 
@@ -638,14 +640,19 @@ function tagBlock(block, tag) {
 	tagContent(block, tag, "block")
 }
 
-function tagItem(item, tag, folder) {
+function tagItem(item, tag) {
 	tagContent(item, tag, "item")
+}
+
+function tagBoth(arg, tag) {
+	tagBlock(arg, tag)
+	tagItem(arg, tag)
 }
 
 function checkAndAddStainedTag(block, baseBlock) {
 	if (block.includes("stained")) {
 		const colour = baseBlock.split("_stained")[0]
-		tagBlock(block, `c:dyed/${colour}`)
+		tagBoth(block, `c:dyed/${colour}`)
 	}
 }
 
@@ -1269,6 +1276,12 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if (blockType.includes("bricks")) {
+		if (blockType == "bricks") {
+			tagBlock(block, "dyed_bricks")
+		}
+		else if (blockType.includes("nether")) {
+			tagBoth(block, "c:bricks/nether")
+		}
 		tagBlock(block, "bricks")
 		checkAndAddStainedTag(block, baseBlock)
 	}
@@ -2347,6 +2360,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 		baseBlock = baseBlock.split("_top")[0]
 
 	}
+	// tagBlock(block, "carpet")
 	generateBlockLangObject(block)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 
