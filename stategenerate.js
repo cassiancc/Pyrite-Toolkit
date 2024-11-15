@@ -9,40 +9,13 @@ const mcVersion = "1.21.1";
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
-const vanillaDyes = [
-	"white",
-	"orange",
-	"magenta",
-	"light_blue",
-	"yellow",
-	"lime",
-	"pink",
-	"gray",
-	"light_gray",
-	"cyan",
-	"purple",
-	"blue",
-	"brown",
-	"green",
-	"red",
-	"black"
-]
+const vanillaDyes = [ "white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
 
-const modDyes = [
-	"glow",
-	"dragon",
-	"star",
-	"honey",
-	"nostalgia",
-	"rose",
-	"poisonous",
-]
+const modDyes = [ "glow", "dragon", "star", "honey", "nostalgia", "rose", "poisonous", ]
 
 const dyes = vanillaDyes.concat(modDyes)
 
-const vanillaWood = [
-	"spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped"
-]
+const vanillaWood = [ "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped" ]
 
 const vanillaWalls = [
 	"cobblestone",
@@ -67,41 +40,14 @@ const vanillaWalls = [
 	"polished_blackstone",
 	"polished_blackstone_brick",
 	"end_stone_brick",
-
 ];
 
-const trickyTrialsWalls = [
-	"polished_tuff",
-	"tuff_brick",
-	"tuff"
+const trickyTrialsWalls = [ "polished_tuff", "tuff_brick", "tuff" ];
 
-];
+const winterDropWalls = [ "resin_brick" ];
+const winterDropWoods = [ "pale_oak" ];
 
-const winterDropWalls = [
-	"resin_brick"
-];
-
-const winterDropWoods = [
-	"pale_oak"
-];
-
-const cut = [
-	"iron",
-	"gold",
-	"emerald",
-	"diamond",
-	"netherite",
-	"quartz",
-	"amethyst",
-	"lapis",
-	"redstone",
-	"copper",
-	"exposed_copper",
-	"weathered_copper",
-	"oxidized_copper"
-]
-
-namespace = modID
+const vanillaMetals = [ "iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper" ]
 
 //Base path
 paths = {
@@ -113,25 +59,12 @@ paths = {
 	trailstales5: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20.5)/src/main/resources/`,
 	infinite: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/`,
 
-
-
-
-
-	//legacy
-	base: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/`,
-	infiniteModels: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/assets/pyrite/models/block/`,
-	infiniteBlockstates: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/assets/pyrite/blockstates/`,
-
 }
-
-
 
 //Assets and legacy path
 paths = Object.assign(paths, {
 	//Legacy
 	base: paths.trailstales,
-	infiniteModels: `${paths.infinite}assets/pyrite/models/block/`,
-	infiniteBlockstates: `${paths.infinite}assets/pyrite/blockstates/`,
 	//Assets
 	assets: `${paths.trailstales}/assets/pyrite/`,
 	data: `${paths.trailstales}/data/pyrite/`,
@@ -141,15 +74,6 @@ paths = Object.assign(paths, {
 paths = Object.assign(paths, { blockstates: `${paths.assets}/blockstates/`, models: `${paths.assets}/models/block/`, itemModels: `${paths.assets}/models/item/` })
 //Namespace data and Minecraft data folders
 paths = Object.assign(paths, { data: `${paths.base}/data/pyrite/`, mcdata: `${paths.base}/data/minecraft/` })
-//Tags
-paths = Object.assign(paths, {
-	blockstates: `${paths.assets}/blockstates/`,
-	models: `${paths.assets}/models/block/`,
-	itemModels: `${paths.assets}/models/item/`,
-	tags: `${paths.data}/tags/`,
-	mctags: `${paths.mcdata}/tags/`,
-
-})
 
 if (majorVersion >= 20) {
 	paths = Object.assign(paths, {
@@ -166,7 +90,7 @@ if (majorVersion <= 21) {
 }
 
 let blockIDs = []
-let blockTranslations = JSON.parse(fs.readFileSync("./overrides/lang/en_us.json"))
+let blockTranslations = readFileAsJson("./overrides/lang/en_us.json")
 
 class Block {  // Create a class
 	constructor(blockID, namespace, baseNamespace, blockType, baseBlock, material) {
@@ -293,8 +217,6 @@ function generateResources() {
 	new Block("redstone_torch_lever", modID, mc, "torch_lever", "redstone_torch", "torch")
 	new Block("soul_torch_lever", modID, mc, "torch_lever", "soul_torch", "torch")
 
-
-
 	function generateWoodSet(template) {
 		const stainedPlankBase = template + "_planks"
 
@@ -378,11 +300,11 @@ function generateResources() {
 		generateBrickSet(dye + "_terracotta_bricks", "terracotta_bricks", `${getDyeNamespace(dye)}:${dye}_terracotta`)
 
 		// Lamps
-		lamp = new Block(dye + "_lamp", modID, undefined, "lamp", dye, "lamp")
+		new Block(dye + "_lamp", modID, undefined, "lamp", dye, "lamp")
 		//Torches
-		torch = new Block(dye + "_torch", modID, undefined, "torch", dye, "torch")
+		new Block(dye + "_torch", modID, undefined, "torch", dye, "torch")
 		//Torch Levers
-		torch_lever = new Block(dye + "_torch_lever", modID, modID, "torch_lever", dye, "torch")
+		new Block(dye + "_torch_lever", modID, modID, "torch_lever", dye, "torch")
 		//Framed Glass
 		new Block(dye + "_framed_glass", modID, undefined, "stained_framed_glass", dye, "stained_framed_glass")
 		//Framed Glass Panes
@@ -424,7 +346,7 @@ function generateResources() {
 	writeBlock("nostalgia_grass_turf", modID, "nostalgia_grass_turf", id(modID, "nostalgia_grass_block"), undefined, modID, "pyrite:nostalgia_grass_block_top")
 	writeSlabsV2("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeStairsV2("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
-	writeCarpet("nostalgia_grass_carpet", modID, "nostalgia_grass_block_top", namespace)
+	writeCarpet("nostalgia_grass_carpet", modID, "nostalgia_grass_block_top", modID)
 
 	// Podzol Turf Set
 	writeBlock("podzol_turf", modID, "podzol_turf", id(mc, "podzol"), undefined, mc, "minecraft:podzol_top")
@@ -484,7 +406,7 @@ function generateResources() {
 		writeWallGatesFromArray(winterDropWalls)
 	}
 
-	cut.forEach(function (block) {
+	vanillaMetals.forEach(function (block) {
 		let baseBlock = block
 		let altNamespace;
 		let cutBlockID = `cut_${block}`
@@ -587,10 +509,7 @@ function generateResources() {
 
 	tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
 	tagBoth("#pyrite:wooden_pressure_plates", "minecraft:wooden_pressure_plates", true)
-	tagBoth("#pyrite:wooden_buttons", "minecraft:wooden_buttons", true)
 	tagBoth("#pyrite:wool", "minecraft:wool", true)
-	tagBoth("#pyrite:wooden_buttons", "minecraft:buttons", true)
-	tagBoth("#pyrite:metal_buttons", "minecraft:buttons", true)
 	tagBoth("#pyrite:crafting_tables", "c:crafting_tables", true)
 
 
@@ -1018,12 +937,6 @@ function writeDoorBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}_top_right_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top_right_open"))
 	writeFile(`${paths.models}${block}_bottom_left_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_left_open"))
 	writeFile(`${paths.models}${block}_bottom_right_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_right_open"))
-
-	//INFINITE MODELS
-	// writeFile(`${paths.infiniteModels}${block}_top.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top"))
-	// writeFile(`${paths.infiniteModels}${block}_top_hinge.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top_rh"))
-	// writeFile(`${paths.infiniteModels}${block}_bottom.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom"))
-	// writeFile(`${paths.infiniteModels}${block}_bottom_hinge.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_rh"))
 }
 
 
@@ -1638,9 +1551,6 @@ function writeFences(block, namespace, baseBlock) {
 	writeInventoryModel(block)
 	tagBoth(block, "fences")
 	writeRecipes(block, "fences", baseBlock, namespace)
-
-
-
 }
 
 function writeFenceGates(block, namespace, baseBlock, altNamespace) {
@@ -1656,9 +1566,6 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	writeBlockItemModel(block, namespace, baseBlock)
 	generateBlockLangObject(block)
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
-
-
-
 }
 
 function writeWallGates(block, namespace, baseBlock, altNamespace) {
@@ -1679,13 +1586,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 }
 
 function generateCarpetBlockState(block, namespace, baseBlock) {
-	return `{
-	"variants": {
-	  "": {
-		"model": "${namespace}:block/${block}"
-	  }
-	}
-  }`
+	return `{"variants": {"": {"model": "${namespace}:block/${block}"}}}`
 }
 
 function writeCarpet(block, namespace, baseBlock, altNamespace) {
@@ -1707,12 +1608,9 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	}
 	generateBlockLangObject(block)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
-
-
 }
 
 function writeCarpetV2(block, baseBlock, texture) {
-
 	writeBlockstate(block, generateCarpetBlockState(block, namespace, baseBlock), modID)
 	writeCarpetBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
@@ -1721,10 +1619,7 @@ function writeCarpetV2(block, baseBlock, texture) {
 
 	}
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
-
-
 }
-
 
 function enableNewRecipes() {
 	if (((majorVersion === 21) && (minorVersion !== 1)) || (majorVersion > 21)) {
