@@ -635,7 +635,7 @@ function tagContent(arg, tag, folder, optional) {
 	// Read the tag file.
 	const currentTag = readFileAsJson(path)
 	// Check if the namespaced string is already in the tag.
-	if (!currentTag.values.includes(arg) || currentTag.values.includes({"id": arg, "optional": false}) || currentTag.values.includes({"id": arg, "optional": true})) {
+	if (!currentTag.values.includes(arg) && !(currentTag.values.some(e => e.id === arg))) {
 		// If not, add it to the tag.
 		if (optional === true) {
 			currentTag.values.push({"id": arg, "optional": true})
@@ -1050,20 +1050,12 @@ function writeBlockItemModel(block, namespace) {
 	}
 	const blockPath = getPath(block)
 	if (versionAbove("1.21.4")) {
-		writeWinterDropItem(namespace, "block", block)
-		const modelItem =
-		{
-			"parent": "minecraft:item/generated",
-			"textures": {
-				"layer0": `${namespace}:block/${block}`
-			}
-		}
+		writeWinterDropItem(namespace, "block", blockPath)
+		const modelItem = { "parent": "minecraft:item/generated","textures": { "layer0": `${namespace}:block/${blockPath}` }}
 		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 	else {
-		const modelItem = `{
-	  "parent": "${namespace}:block/${block}"
-	}`
+		const modelItem = `{"parent": "${namespace}:block/${blockPath}"}`
 		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 
@@ -1460,6 +1452,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 }
 
 function generateStairBlockstate(block, namespace) {
+	block = getPath(block)
 	return `{"variants":{"facing=east,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner","y":270,"uvlock":true},"facing=east,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner"},"facing=east,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer","y":270,"uvlock":true},"facing=east,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer"},"facing=east,half=bottom,shape=straight":{"model":"${namespace}:block/${block}"},"facing=east,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"uvlock":true},"facing=east,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"y":90,"uvlock":true},"facing=east,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"uvlock":true},"facing=east,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"y":90,"uvlock":true},"facing=east,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"uvlock":true},"facing=north,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner","y":180,"uvlock":true},"facing=north,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner","y":270,"uvlock":true},"facing=north,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer","y":180,"uvlock":true},"facing=north,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer","y":270,"uvlock":true},"facing=north,half=bottom,shape=straight":{"model":"${namespace}:block/${block}","y":270,"uvlock":true},"facing=north,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"y":270,"uvlock":true},"facing=north,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"uvlock":true},"facing=north,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"y":270,"uvlock":true},"facing=north,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"uvlock":true},"facing=north,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"y":270,"uvlock":true},"facing=south,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner"},"facing=south,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner","y":90,"uvlock":true},"facing=south,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer"},"facing=south,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer","y":90,"uvlock":true},"facing=south,half=bottom,shape=straight":{"model":"${namespace}:block/${block}","y":90,"uvlock":true},"facing=south,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"y":90,"uvlock":true},"facing=south,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"y":180,"uvlock":true},"facing=south,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"y":90,"uvlock":true},"facing=south,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"y":180,"uvlock":true},"facing=south,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"y":90,"uvlock":true},"facing=west,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner","y":90,"uvlock":true},"facing=west,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner","y":180,"uvlock":true},"facing=west,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer","y":90,"uvlock":true},"facing=west,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer","y":180,"uvlock":true},"facing=west,half=bottom,shape=straight":{"model":"${namespace}:block/${block}","y":180,"uvlock":true},"facing=west,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"y":180,"uvlock":true},"facing=west,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"y":270,"uvlock":true},"facing=west,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"y":180,"uvlock":true},"facing=west,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"y":270,"uvlock":true},"facing=west,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"y":180,"uvlock":true}}}`
 }
 
@@ -2149,6 +2142,8 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 }
 
 function generateSlabBlockState(block, namespace, baseBlock) {
+	block = getPath(block)
+	baseBlock = getPath(baseBlock)
 	return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${namespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
 }
 
