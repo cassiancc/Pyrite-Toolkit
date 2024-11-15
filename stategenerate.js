@@ -9,13 +9,13 @@ const mcVersion = "1.21.1";
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
-const vanillaDyes = [ "white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
+const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
 
-const modDyes = [ "glow", "dragon", "star", "honey", "nostalgia", "rose", "poisonous", ]
+const modDyes = ["glow", "dragon", "star", "honey", "nostalgia", "rose", "poisonous",]
 
 const dyes = vanillaDyes.concat(modDyes)
 
-const vanillaWood = [ "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped" ]
+const vanillaWood = ["spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped"]
 
 const vanillaWalls = [
 	"cobblestone",
@@ -42,12 +42,12 @@ const vanillaWalls = [
 	"end_stone_brick",
 ];
 
-const trickyTrialsWalls = [ "polished_tuff", "tuff_brick", "tuff" ];
+const trickyTrialsWalls = ["polished_tuff", "tuff_brick", "tuff"];
 
-const winterDropWalls = [ "resin_brick" ];
-const winterDropWoods = [ "pale_oak" ];
+const winterDropWalls = ["resin_brick"];
+const winterDropWoods = ["pale_oak"];
 
-const vanillaMetals = [ "iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper" ]
+const vanillaMetals = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 
 //Base path
 paths = {
@@ -355,19 +355,19 @@ function generateResources() {
 	writeCarpet("podzol_carpet", modID, "podzol_top", mc)
 
 	// Grass Turf Set
-	writeBlock("grass_turf", modID, "grass_turf", id(mc,"grass_block"), undefined, mc, "minecraft:grass_block_top")
+	writeBlock("grass_turf", modID, "grass_turf", id(mc, "grass_block"), undefined, mc, "minecraft:grass_block_top")
 	writeSlabsV2("grass_slab", "grass_turf", "minecraft:grass_block_top")
 	writeStairsV2("grass_stairs", "grass_turf", "minecraft:grass_block_top")
 	writeCarpet("grass_carpet", modID, "minecraft:grass_block_top", mc)
 
 	// Mycelium Turf Set
-	writeBlock("mycelium_turf", modID, "mycelium_turf", id(mc,"mycelium"), undefined, mc, "minecraft:mycelium_top")
+	writeBlock("mycelium_turf", modID, "mycelium_turf", id(mc, "mycelium"), undefined, mc, "minecraft:mycelium_top")
 	writeSlabsV2("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
 	writeStairsV2("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
 	writeCarpet("mycelium_carpet", modID, "mycelium_top", mc)
 
 	// Path Turf Set
-	writeBlock("path_turf", modID, "path_turf", id(mc,"dirt_path"), undefined, mc, "minecraft:dirt_path_top")
+	writeBlock("path_turf", modID, "path_turf", id(mc, "dirt_path"), undefined, mc, "minecraft:dirt_path_top")
 	writeSlabsV2("path_slab", "path_turf", "minecraft:dirt_path_top")
 	writeStairsV2("path_stairs", "path_turf", "minecraft:dirt_path_top")
 	writeCarpet("path_carpet", modID, "dirt_path_top", mc)
@@ -494,26 +494,15 @@ function generateResources() {
 	writeFlower("pink_daisy", modID)
 	writeFlower("buttercup", modID)
 
-
-	// writeStonecutterRecipes(`${block}_button`, "block", baseBlock, globalNamespace, vanillaNamespace)
-
 	writeFenceGates("nether_brick_fence_gate", modID, id(mc, "nether_bricks"), mc)
-	writeFlower("rose", modID)
-	writeFlower("blue_rose", modID)
-	writeFlower("orange_rose", modID)
-	writeFlower("white_rose", modID)
-	writeFlower("pink_rose", modID)
-	writeFlower("paeonia", modID)
-	writeFlower("pink_daisy", modID)
-	writeFlower("buttercup", modID)
 
+	// Add Pyrite tags to MC/convention tags.
 	tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
 	tagBoth("#pyrite:wooden_pressure_plates", "minecraft:wooden_pressure_plates", true)
 	tagBoth("#pyrite:wool", "minecraft:wool", true)
 	tagBoth("#pyrite:crafting_tables", "c:crafting_tables", true)
 
-
-
+	// Write final language file.
 	writeLang()
 }
 
@@ -534,7 +523,7 @@ function tagContent(arg, tag, folder, optional) {
 	else {
 		namespace = modID;
 	}
-	
+
 	// Create path to tag file.
 	let dir = `${paths.base}/data/${namespace}/tags/${folder}/`
 	if (tag.includes("/")) {
@@ -544,12 +533,12 @@ function tagContent(arg, tag, folder, optional) {
 	let path = `${dir}/${tag}.json`
 	// Ensure tag folder exists
 	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir, {recursive: true})
+		fs.mkdirSync(dir, { recursive: true })
 	}
 	// Ensure tag file exists
 	if (!fs.existsSync(path)) {
 		// If not, create an empty tag.
-		fs.writeFileSync(path, JSON.stringify({"replace": false,"values": []}), function (err) { if (err) throw err; })
+		fs.writeFileSync(path, JSON.stringify({ "replace": false, "values": [] }), function (err) { if (err) throw err; })
 	}
 	// Read the tag file.
 	const currentTag = readFileAsJson(path)
@@ -557,7 +546,7 @@ function tagContent(arg, tag, folder, optional) {
 	if (!currentTag.values.includes(arg) && !(currentTag.values.some(e => e.id === arg))) {
 		// If not, add it to the tag.
 		if (optional === true) {
-			currentTag.values.push({"id": arg, "optional": true})
+			currentTag.values.push({ "id": arg, "optional": true })
 		}
 		else {
 			currentTag.values.push(arg)
@@ -832,21 +821,9 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 
 function generateSlabBlockModel(block, namespace, baseBlock, model) {
 	if (baseBlock === "grass_block_top") {
-		if (model === "slab") {
-			return readFile("./overrides/models/grass_slab.json")
-		}
-		else if (model === "slab_top") {
-			return readFile("./overrides/models/grass_slab_top.json")
-		}
+		return readFile(`./overrides/models/grass_${model}.json`)
 	}
-	return `{
-		"parent": "minecraft:block/${model}",
-		"textures": {
-		"bottom": "${namespace}:block/${baseBlock}",
-		"top": "${namespace}:block/${baseBlock}",
-		"side": "${namespace}:block/${baseBlock}"
-		}
-	}`
+	return `{"parent": "minecraft:block/${model}","textures": {"bottom": "${namespace}:block/${baseBlock}","top": "${namespace}:block/${baseBlock}","side": "${namespace}:block/${baseBlock}"}}`
 
 }
 
@@ -883,12 +860,7 @@ function writePlateBlockModels(block, namespace, baseBlock) {
 }
 
 function generateFenceBlockModels(block, baseBlock, namespace, model) {
-	return `{
-  "parent": "minecraft:block/${model}",
-  "textures": {
-	"texture": "${namespace}:block/${baseBlock}"
-  }
-}`
+	return `{"parent": "minecraft:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
 }
 
 function writeFenceBlockModels(block, baseBlock, namespace) {
@@ -898,12 +870,7 @@ function writeFenceBlockModels(block, baseBlock, namespace) {
 }
 
 function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNamespace) {
-	return `{
-	"parent": "${altNamespace}:block/${model}",
-	"textures": {
-	  "texture": "${namespace}:block/${baseBlock}"
-	}
-  }`
+	return `{"parent": "${altNamespace}:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
 }
 
 function writeFenceGateBlockModels(block, namespace, baseBlock) {
@@ -964,7 +931,7 @@ function writeBlockItemModel(block, namespace) {
 	const blockPath = getPath(block)
 	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "block", blockPath)
-		const modelItem = { "parent": "minecraft:item/generated","textures": { "layer0": `${namespace}:block/${blockPath}` }}
+		const modelItem = { "parent": "minecraft:item/generated", "textures": { "layer0": `${namespace}:block/${blockPath}` } }
 		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 	else {
@@ -1180,7 +1147,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		tagBoth(block, "stained_framed_glass")
 		checkAndAddStainedTag(block, baseBlock)
 	}
-	else if (blockType.includes("turf") || blockType.includes("grass_block") ) {
+	else if (blockType.includes("turf") || blockType.includes("grass_block")) {
 		tagBoth(block, "minecraft:dirt", true)
 	}
 	else if (blockType.includes("gravel")) {
@@ -1888,7 +1855,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		if (block.includes("copper")) {
 			localID = mc;
 		}
-		else {localID = modID}
+		else { localID = modID }
 		other = other.replace("weathered_cut", "cut_weathered")
 		other = other.replace("oxidized_cut", "cut_oxidized")
 		other = other.replace("exposed_cut", "cut_exposed")
@@ -2008,12 +1975,7 @@ function writeRecipes(block, type, other, namespace, altNamespace) {
 
 function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 	let path;
-	if (addon === undefined) {
-		addon = ""
-	}
-	else {
-		addon = addon + "_"
-	}
+	if (addon === undefined) { addon = "" } else { addon = addon + "_" }
 	if (!block.includes(":")) {
 		path = block
 		block = id(block)
@@ -2024,14 +1986,15 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 	if (!ingredient.includes(":")) {
 		ingredient = id(ingredient)
 	}
+
+	// Overrides for Quartz and COpper
 	if (ingredient.includes("quartz")) {
 		ingredient = ingredient.replace("_bottom", "")
 		ingredient = ingredient.replace("_top", "")
 	}
-	if (ingredient == "minecraft:copper") {
-		ingredient = "minecraft:copper_block"
-	}
-	let recipe = `{"type": "minecraft:stonecutting","ingredient": {"item": "${ingredient}"},"result": {"id": "${block}","count": ${quantity}}}`
+	else if (ingredient == "minecraft:copper") { ingredient = "minecraft:copper_block" }
+
+	const recipe = `{"type": "minecraft:stonecutting","ingredient": {"item": "${ingredient}"},"result": {"id": "${block}","count": ${quantity}}}`
 	writeFile(`${paths.recipes}${addon}${path}_stonecutting.json`, recipe)
 
 }
@@ -2138,7 +2101,8 @@ function generateButtonBlockState(block, namespace, baseBlock) {
 }
 
 function generateFenceGateBlockState(block, namespace) {
-	return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`}
+	return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`
+}
 
 function generateTrapdoorBlockModels(block, namespace, baseBlock, modelID) {
 	return `{"parent":"minecraft:block/${modelID}","textures":{"texture":"${namespace}:block/${block}"},"render_type":"cutout"}`
