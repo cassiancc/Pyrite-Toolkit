@@ -500,7 +500,7 @@ function generateResources() {
 	tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
 	tagBoth("#pyrite:wooden_pressure_plates", "minecraft:wooden_pressure_plates", true)
 	tagBoth("#pyrite:wool", "minecraft:wool", true)
-	tagBoth("#pyrite:crafting_tables", "c:crafting_tables", true)
+	tagBoth("#pyrite:crafting_tables", "c:player_workstations/crafting_tables", true)
 
 	// Write final language file.
 	writeLang()
