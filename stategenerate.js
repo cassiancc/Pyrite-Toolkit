@@ -164,6 +164,7 @@ class Block {  // Create a class
 		}
 		else if (blockType === "mushroom_stem") {
 			writeLogs(this.blockID, this.namespace, this.baseBlock)
+			tagBoth(this.blockID, "mushroom_stem")
 		}
 		else if (blockType === "cobblestone_bricks") {
 			writeTerracottaBricks(this.blockID, this.namespace, "cobblestone_bricks", this.baseBlock)
@@ -487,7 +488,6 @@ function generateResources() {
 
 	// Add Pyrite tags to MC/convention tags.
 	tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
-	tagBoth("#pyrite:wooden_pressure_plates", "minecraft:wooden_pressure_plates", true)
 	tagBoth("#pyrite:crafting_tables", "c:player_workstations/crafting_tables", true)
 	tagBlock("#pyrite:obsidian", "minecraft:dragon_immune")
 	tagBlock("#pyrite:ladders", "minecraft:climbable")
@@ -499,7 +499,7 @@ function generateResources() {
 	tagBlocks(["#pyrite:gold", "#pyrite:diamond", "#pyrite:emerald"], "minecraft:needs_iron_tool")
 	tagBlocks(["#pyrite:obsidian", "#pyrite:netherite"], "minecraft:needs_diamond_tool")
 
-	tagBlocks(["pyrite:locked_chest","#pyrite:trapdoors","#pyrite:mushroom_stem","#pyrite:crafting_tables"], "minecraft:mineable/axe")
+	tagBlocks(["pyrite:locked_chest","#pyrite:mushroom_stem","#pyrite:crafting_tables"], "minecraft:mineable/axe")
 	tagBlocks(["pyrite:carpet"], "minecraft:mineable/hoe")
 	tagBlocks(readFileAsJson("./overrides/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
 	tagBlocks(["pyrite:nostalgia_gravel","#pyrite:turf_blocks"], "minecraft:mineable/shovel")
@@ -1162,6 +1162,12 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	writeTrapdoorItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	generateBlockLangObject(block)
+	if (block.includes("planks")) {
+		tagBoth(block, "minecraft:wooden_trapdoors")
+	}
+	else {
+		tagBoth(block, "metal_trapdoors")
+	}
 	writeRecipes(block, "trapdoor", baseBlock)
 
 }
@@ -1304,6 +1310,7 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	writePlankBlockModels(block, namespace, baseBlock, "pyrite:block/template_ladder")
 	writeUniqueBlockItemModel(block, namespace, namespace)
 	writeLootTables(block, namespace)
+	tagBlock(block, "ladders")
 	writeRecipes(block, "ladder", baseBlock, namespace, altNamespace)
 }
 
@@ -1400,6 +1407,9 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	generateBlockLangObject(block)
 	writeRecipes(block, "wall", baseBlock, altNamespace)
 	tagBoth(block, "minecraft:walls")
+	if (baseBlock.includes("bricks")) {
+		tagBoth(block, "brick_walls")
+	}
 	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
 
 }
@@ -1450,6 +1460,9 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_stairs")
 		checkAndAddStainedTag(block, baseBlock)
+	}
+	else if (baseBlock.includes("bricks")) {
+		tagBoth(block, "brick_stairs")
 	}
 	writeRecipes(block, "stairs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -1655,6 +1668,9 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	}
 	if (baseBlock.includes("wool")) {
 		tagBoth(block, "minecraft:wool_carpets")
+	}
+	else {
+		tagBlock(block, "carpet")
 	}
 	generateBlockLangObject(block)
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
