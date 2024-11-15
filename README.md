@@ -2,7 +2,7 @@
 The Pyrite Toolkit is a selection of Node.JS scripts that are used to datagen code for Pyrite.
 
 ## stategenerate
-The main `stategenerate.js` script is the primary script used for Pyrite. It generates blockstates, models, language entries, and loot tables for all blocks and items in Pyrite. It is designed to output these files in a format compatible with 1.20-1.21. Future refinements will focus on adding functionality for tag generation.
+The main `stategenerate.js` script is the primary script used for Pyrite. It generates blockstates, models, language entries, and loot tables for all blocks and items in Pyrite. It is designed to output these files in a format compatible with 1.20.1-1.21.4. Future refinements will focus on adding functionality for tag generation.
 
 ## publish
 
