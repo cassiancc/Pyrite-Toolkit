@@ -374,8 +374,8 @@ function generateResources() {
 
 	// Pyrite Dyes, Wool, Carpet, Terracotta
 	modDyes.forEach(function (dye) {
-		writeDye(dye, dye, modID)
-		writeWool(dye, dye, modID)
+		writeDye(dye)
+		writeWool(dye + "_wool", dye, modID)
 		writeCarpet(dye + "_carpet", modID, dye + "_wool")
 		writeTerracotta(dye, dye, modID)
 	})
@@ -499,9 +499,31 @@ function generateResources() {
 	// Add Pyrite tags to MC/convention tags.
 	tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
 	tagBoth("#pyrite:wooden_pressure_plates", "minecraft:wooden_pressure_plates", true)
-	tagBoth("#pyrite:wool", "minecraft:wool", true)
 	tagBoth("#pyrite:crafting_tables", "c:player_workstations/crafting_tables", true)
+	tagBlock("#pyrite:obsidian", "minecraft:dragon_immune")
+	tagBlock("#pyrite:ladders", "minecraft:climbable")
+	tagBlock("#pyrite:carpet", "minecraft:sword_efficient")
 
+	// Add Pyrite tags to tool tags
+	tagBlock("#pyrite:bricks", "minecraft:needs_wood_tool")
+	tagBlock("#pyrite:wall_gates", "minecraft:needs_wood_tool")
+	tagBlock("#pyrite:iron", "minecraft:needs_stone_tool")
+	tagBlock("#pyrite:lapis", "minecraft:needs_stone_tool")
+	tagBlock("#pyrite:emerald", "minecraft:needs_iron_tool")
+	tagBlock("#pyrite:diamond", "minecraft:needs_iron_tool")
+	tagBlock("#pyrite:gold", "minecraft:needs_iron_tool")
+	tagBlock("#pyrite:obsidian", "minecraft:needs_diamond_tool")
+	tagBlock("#pyrite:netherite", "minecraft:needs_diamond_tool")
+
+	// Add Pyrite tags to beacon bases
+	tagBlock("#pyrite:emerald", "minecraft:beacon_base_blocks")
+	tagBlock("#pyrite:diamond", "minecraft:beacon_base_blocks")
+	tagBlock("#pyrite:gold", "minecraft:beacon_base_blocks")
+	tagBlock("#pyrite:iron", "minecraft:beacon_base_blocks")
+	tagBlock("#pyrite:netherite", "minecraft:beacon_base_blocks")
+
+
+	// Generate translations for Pyrite item tags.
 	generateLangObject("wall_gates", "tag.item", modID)
 	generateLangObject("lamps", "tag.item", modID)
 	generateLangObject("bricks", "tag.item", modID)
@@ -511,7 +533,13 @@ function generateResources() {
 	generateLangObject("wool", "tag.item", modID)
 	generateLangObject("metal_bars", "tag.item", modID)
 	generateLangObject("planks", "tag.item", modID)
-
+	generateLangObject("dyed/honey", "tag.item", "c")
+	generateLangObject("dyed/glow", "tag.item", "c")
+	generateLangObject("dyed/nostalgia", "tag.item", "c")
+	generateLangObject("dyed/poisonous", "tag.item", "c")
+	generateLangObject("dyed/rose", "tag.item", "c")
+	generateLangObject("dyed/star", "tag.item", "c")
+	generateLangObject("dyed/dragon", "tag.item", "c")
 
 
 	// Write final language file.
@@ -583,8 +611,31 @@ function tagBoth(arg, tag, optional) {
 }
 
 function checkAndAddStainedTag(block, baseBlock) {
+	block = getPath(block)
+	baseBlock = getPath(block)
 	if (block.includes("stained")) {
 		const colour = baseBlock.split("_stained")[0]
+		if (dyes.includes(colour)) {
+			console.log(block)
+			tagBoth(block, `c:dyed/${colour}`)
+		}
+	}
+}
+
+function checkAndAddDyedTag(block, baseBlock) {
+	block = getPath(block)
+	baseBlock = getPath(block)
+	let colour;
+	if (baseBlock.includes("light_blue")) {
+		colour = "light_blue"
+	}
+	if (baseBlock.includes("light_gray")) {
+		colour = "light_gray"
+	}
+	else {
+		colour = baseBlock.split("_")[0]
+	}
+	if (dyes.includes(colour)) {
 		tagBoth(block, `c:dyed/${colour}`)
 	}
 }
@@ -703,8 +754,9 @@ function generateLangObject(block, type, namespace) {
 	}
 	let langBlock = block;
 	langBlock = langBlock.replaceAll("_", " ");
+	langBlock = langBlock.replaceAll("/", " ");
 	langBlock = langBlock.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(); });
-	const key = `${type}.${namespace}.${block}`;
+	const key = `${type}.${namespace}.${block.replace("/", ".")}`;
 	const value = langBlock;
 	if (!blockTranslations.hasOwnProperty(key)) {
 		blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`));
@@ -750,12 +802,12 @@ function writePaneBlockModels(block, namespace, baseBlock) {
 }
 
 function writeBarBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}_cap.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`,"bars": `${namespace}:block/${block}`,"edge": `${namespace}:block/${block}`},"elements": [{"from": [ 8, 0, 8 ],"to": [ 8, 16, 9 ],"faces": {"west": { "uv": [ 8, 0, 7, 16 ], "texture": "#bars" },"east": { "uv": [ 7, 0, 8, 16 ], "texture": "#bars" }}},{   "from": [ 7, 0, 9 ],"to": [ 9, 16, 9 ],"faces": {"north": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" },"south": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" }}}]})
-	writeFile(`${paths.models}${block}_post.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{   "from": [ 8, 0, 7 ],"to": [ 8, 16, 9 ],"faces": {"west": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },"east": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }}},{   "from": [ 7, 0, 8 ],"to": [ 9, 16, 8 ],"faces": {"north": { "uv": [ 7, 0, 9, 16 ], "texture": "#bars" },"south": { "uv": [ 9, 0, 7, 16 ], "texture": "#bars" }}}]})
+	writeFile(`${paths.models}${block}_cap.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 8], "to": [8, 16, 9], "faces": { "west": { "uv": [8, 0, 7, 16], "texture": "#bars" }, "east": { "uv": [7, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 9], "to": [9, 16, 9], "faces": { "north": { "uv": [9, 0, 7, 16], "texture": "#bars" }, "south": { "uv": [7, 0, 9, 16], "texture": "#bars" } } }] })
+	writeFile(`${paths.models}${block}_post.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 9], "faces": { "west": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }, { "from": [7, 0, 8], "to": [9, 16, 8], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] })
 	writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
-	writeFile(`${paths.models}${block}_cap_alt.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`,"bars": `${namespace}:block/${block}`,"edge": `${namespace}:block/${block}`,},"elements": [{"from":[8,0,7],"to":[8,16,8],"faces":{"west":{"uv":[8,0,9,16],"texture":"#bars"},"east":{"uv":[9,0,8,16],"texture":"#bars"}}},{"from":[7,0,7],"to":[9,16,7],"faces":{"north":{"uv":[7,0,9,16],"texture":"#bars"},"south":{"uv":[9,0,7,16],"texture":"#bars"}}}]})
+	writeFile(`${paths.models}${block}_cap_alt.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}`, }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 8], "faces": { "west": { "uv": [8, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 7], "to": [9, 16, 7], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] })
 	writeFile(`${paths.models}${block}_side_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
-	writeFile(`${paths.models}${block}_post_ends.json`, {"ambientocclusion": false,"textures": {"particle": `${namespace}:block/${block}`,"edge": `${namespace}:block/${block}`},"elements": [{   "from": [ 7, 0.001, 7 ],"to": [ 9, 0.001, 9 ],"faces": {"down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },"up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }}},{   "from": [ 7, 15.999, 7 ],"to": [ 9, 15.999, 9 ],"faces": {"down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },"up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }}}]})
+	writeFile(`${paths.models}${block}_post_ends.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [7, 0.001, 7], "to": [9, 0.001, 9], "faces": { "down": { "uv": [7, 7, 9, 9], "texture": "#edge" }, "up": { "uv": [7, 7, 9, 9], "texture": "#edge" } } }, { "from": [7, 15.999, 7], "to": [9, 15.999, 9], "faces": { "down": { "uv": [7, 7, 9, 9], "texture": "#edge" }, "up": { "uv": [7, 7, 9, 9], "texture": "#edge" } } }] })
 }
 
 function generatePaneBlockModels(block, namespace, baseBlock, model) {
@@ -1053,15 +1105,17 @@ function writePlanks(block, dye, namespace, baseBlock) {
 }
 function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
+	tagBoth(block, `c:dyed/${dye}`)
 	writeBlock(block, namespace, "terracotta", dye)
 }
 
-function writeLamps(block, dye, texture) {
-	writeBlock(block, modID, "lamps", dye, undefined, undefined, texture, false)
+function writeLamps(block, type, texture) {
+	writeBlock(block, modID, "lamps", type, undefined, undefined, texture, false)
 }
 
 function writeWool(block, dye, namespace) {
-	block = block + "_wool"
+	// block = block + "_wool"
+	tagBoth(block, `c:dyed/${dye}`)
 	writeBlock(block, namespace, "wool", dye)
 }
 
@@ -1080,15 +1134,17 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	writeStonecutterRecipes(block, baseBlock, 1)
 }
 
-function writeDye(item, dye, namespace) {
+function writeDye(item) {
 	item = item + "_dye"
-	writeItem(item, namespace, "dye")
+	writeItem(item, modID)
+	writeShapelessRecipe(getDyeIngredient(item), id(item), 1)
 
 }
 
-function writeItem(item, namespace) {
+function writeItem(item) {
 	generateLangObject(item, "item", modID)
-	writeUniqueItemModel(item, namespace)
+	tagItem(item, "c:dyes")
+	writeUniqueItemModel(item, modID)
 }
 
 function writeDoors(block, namespace, baseBlock) {
@@ -1143,16 +1199,14 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if (blockType == "wool") {
-		tagBoth(block, "wool")
-		checkAndAddStainedTag(block, baseBlock)
+		tagBoth(block, "minecraft:wool")
 	}
 	else if (blockType == "terracotta") {
 		tagBoth(block, "minecraft:terracotta")
-		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if ((blockType == "lamps") || (blockType == "lamp")) {
 		tagBoth(block, "lamps")
-		checkAndAddStainedTag(block, baseBlock)
+		checkAndAddDyedTag(block, baseBlock)
 	}
 	else if (blockType.includes("bricks")) {
 		if (blockType == "bricks") {
@@ -1162,7 +1216,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 			tagBoth(block, "c:bricks/nether", true)
 		}
 		tagBoth(block, "bricks")
-		checkAndAddStainedTag(block, baseBlock)
+		checkAndAddDyedTag(block, baseBlock)
 	}
 	else if (blockType == "stained_framed_glass") {
 		tagBoth(block, "stained_framed_glass")
@@ -1173,6 +1227,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	}
 	else if (blockType.includes("gravel")) {
 		tagBlock(block, "minecraft:bamboo_plantable_on", true)
+		tagBlock(block, "minecraft:enderman_holdable", true)
 	}
 	else if (blockType.includes("netherrack")) {
 		tagBlock(block, "minecraft:infiburn_end", true)
@@ -1227,6 +1282,7 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	writeTorchBlockModels(block, namespace, block, altNamespace)
 	writeUniqueBlockItemModel(block, namespace, namespace, block)
 	writeLootTables(block, namespace)
+	tagBoth(block, `c:dyed/${baseBlock}`)
 	writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
 }
 
@@ -1298,8 +1354,9 @@ function writePaneBlock(block, namespace, baseBlock) {
 	writeBlockstate(block, generatePaneBlockState(block, namespace, baseBlock), namespace)
 	writePaneBlockModels(block, namespace, baseBlock)
 	writeUniqueBlockItemModel(block, namespace, namespace, baseBlock)
-	tagBoth(block, "c:glass_panes")
 	writeLootTables(block, namespace)
+	tagBoth(block, "c:glass_panes")
+	checkAndAddDyedTag(block, baseBlock)
 	writeRecipes(block, "glass_pane", baseBlock)
 	generateBlockLangObject(block)
 }
@@ -1397,6 +1454,7 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	tagBoth(block, "minecraft:stairs")
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_stairs")
+		checkAndAddStainedTag(block, baseBlock)
 	}
 	writeRecipes(block, "stairs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
@@ -1420,7 +1478,7 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	generateBlockLangObject(block)
 
 	// Tag slabs
-	tagBlock(block, "slabs")
+	tagBlock(block, "minecraft:slabs")
 	if (baseBlock.includes("smooth_")) {
 		tagBlock(block, baseBlock.split("smooth_")[1])
 	}
@@ -1460,12 +1518,14 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	generateBlockLangObject(block)
 
 	// Tag slabs
-	tagBoth(block, "slabs")
+	tagBlock(block, "minecraft:slabs")
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_slabs")
+		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if (baseBlock.includes("bricks")) {
 		tagBlock(block, "brick_slabs")
+		checkAndAddDyedTag(block, baseBlock)
 	}
 	else {
 		tagBlock(block, "turf_slabs")
@@ -1501,6 +1561,7 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	generateBlockLangObject(block)
 	if (baseBlock.includes("planks")) {
 		tagBoth(block, "minecraft:wooden_pressure_plates", true)
+		checkAndAddStainedTag(block, baseBlock)
 	}
 	else {
 		tagBlock(block, "minecraft:pressure_plates", true)
@@ -1538,6 +1599,9 @@ function writeFences(block, namespace, baseBlock) {
 	writeFenceBlockModels(block, baseBlock, namespace)
 	writeInventoryModel(block)
 	tagBoth(block, "fences")
+	if (baseBlock.includes("planks")) {
+		tagBoth(block, "minecraft:wooden_fences", true)
+	}
 	writeRecipes(block, "fences", baseBlock, namespace)
 }
 
@@ -1553,6 +1617,9 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	writeFenceGateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
 	generateBlockLangObject(block)
+	if (baseBlock.includes("planks")) {
+		tagBoth(block, "minecraft:wooden_fence_gates", true)
+	}
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
 }
 
@@ -1716,7 +1783,7 @@ function createDyeRecipe(namespace, block, altNamespace, altBlock, other, baseNa
 	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(altNamespace, other) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
 }
 
-function generateRecipes(block, type, other, namespace, altNamespace) {
+function generateRecipes(block, type, base, namespace, altNamespace) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
@@ -1726,49 +1793,49 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 	let recipe = ""
 
 	// Fix Quartz texture IDs being used as part of the recipe
-	if (other != undefined) {
-		if (other.includes("quartz")) {
-			other = other.replace("_bottom", "")
-			other = other.replace("_top", "")
+	if (base != undefined) {
+		if (base.includes("quartz")) {
+			base = base.replace("_bottom", "")
+			base = base.replace("_top", "")
 		}
 	}
 
 	if (type === "planks") {
-		if ((other === "red_mushroom") || (other === "brown_mushroom")) {
-			recipe = generateShapelessRecipe(`pyrite:${other}_stem`, id(namespace, block), 4)
+		if ((base === "red_mushroom") || (base === "brown_mushroom")) {
+			recipe = generateShapelessRecipe(`pyrite:${base}_stem`, id(namespace, block), 4)
 		}
 		else {
-			other = other.replace("stained", "dye")
-			altNamespace = getDyeNamespace(other)
-			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, other) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
+			base = base.replace("stained", "dye")
+			altNamespace = getDyeNamespace(base)
+			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, base) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
 		}
 	}
 	else if (type === "ladder") {
-		recipe = generateShapedRecipe({ "C": `minecraft:stick`, "D": id(altNamespace, other) }, id(namespace, block), 3, ["C C", "CDC", "C C"])
+		recipe = generateShapedRecipe({ "C": `minecraft:stick`, "D": id(altNamespace, base) }, id(namespace, block), 3, ["C C", "CDC", "C C"])
 	}
 	else if (type === "terracotta") {
-		other = `${other}_dye`
-		altNamespace = getDyeNamespace(other)
+		base = `${base}_dye`
+		altNamespace = getDyeNamespace(base)
 		//FIX
-		recipe = createDyeRecipe(namespace, block, altNamespace, id(mc, "terracotta"), other)
+		recipe = createDyeRecipe(namespace, block, altNamespace, id(mc, "terracotta"), base)
 	}
 	if (type === "terracotta_bricks") {
-		altNamespace = getDyeNamespace(other)
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 3, ["CC", "CC"])
+		altNamespace = getDyeNamespace(base)
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC", "CC"])
 	}
 	else if (type === "torch") {
-		other = `${other}_dye`
-		altNamespace = getDyeNamespace(other)
-		let ingredients = [id(altNamespace, other), id(mc, "torch")]
+		base = `${base}_dye`
+		altNamespace = getDyeNamespace(base)
+		let ingredients = [id(altNamespace, base), id(mc, "torch")]
 		let result = id(namespace, block)
 
 		recipe = generateShapelessRecipe(ingredients, result, 1)
 	}
 	else if (type === "wool") {
-		recipe = generateShapelessRecipe([id(modID, `${other}_dye`), "minecraft:white_wool"], id(namespace, block), 1)
+		recipe = generateShapelessRecipe([id(modID, `${base}_dye`), "minecraft:white_wool"], id(namespace, block), 1)
 	}
 	else if (type === "torch_lever") {
-		recipe = generateShapelessRecipe([id(altNamespace, other), "minecraft:lever"], id(namespace, block), 1)
+		recipe = generateShapelessRecipe([id(altNamespace, base), "minecraft:lever"], id(namespace, block), 1)
 	}
 	else if (type === "cobblestone_bricks") {
 		recipe = generateShapedRecipe({ "C": `minecraft:cobblestone` }, id(modID, `cobblestone_bricks`), 4, ["CC", "CC"])
@@ -1788,7 +1855,7 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		recipe = generateShapedRecipe({ "#": id(mc, baseBlock) }, id(modID, type), 4, ["##", "##"])
 	}
 	else if (type.includes("_turf")) {
-		recipe = generateShapedRecipe({ "#": id(mc, other) }, id(modID, type), 4, ["##", "##"])
+		recipe = generateShapedRecipe({ "#": id(mc, base) }, id(modID, type), 4, ["##", "##"])
 	}
 	else if (type === "framed_glass") {
 		recipe = generateShapedRecipe({ "#": `minecraft:glass`, "X": `minecraft:iron_nugget` }, id(modID, type), 4, [
@@ -1798,12 +1865,12 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		])
 	}
 	else if ((type === "dyed_framed_glass") || (type === "stained_framed_glass")) {
-		const dye = `${other}_dye`
+		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
 		recipe = createDyeRecipe(namespace, block, altNamespace, "framed_glass", dye, namespace)
 	}
 	else if (type === "glass_pane") {
-		const dye = `${other}_dye`
+		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
 		recipe = generateShapedRecipe({ "C": id(namespace, block.replace("_pane", "")) }, id(namespace, block), 16, ["CCC", "CCC"])
 	}
@@ -1815,9 +1882,9 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 				"X#X"
 			])
 		} else {
-			other = `${other}_dye`
-			altNamespace = getDyeNamespace(other)
-			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", other, namespace)
+			base = `${base}_dye`
+			altNamespace = getDyeNamespace(base)
+			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", base, namespace)
 		}
 
 	}
@@ -1842,31 +1909,31 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 			])
 		}
 		else {
-			other = `${other}_dye`
-			altNamespace = getDyeNamespace(other)
-			recipe = generateShapedRecipe({ "C": id(altNamespace, other), "D": `minecraft:bricks` }, `pyrite:${block}`, 4, ["CCC", "CDC", "CCC"])
+			base = `${base}_dye`
+			altNamespace = getDyeNamespace(base)
+			recipe = generateShapedRecipe({ "C": id(altNamespace, base), "D": `minecraft:bricks` }, `pyrite:${block}`, 4, ["CCC", "CDC", "CCC"])
 		}
 	}
 	else if (type === "resource_bricks") {
-		recipe = generateShapedRecipe({ "D": other }, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": base }, id(namespace, block), 4, [
 			"DD",
 			"DD"
 		])
 	}
 	else if (type === "nostalgia") {
-		if (other == "copper") {
-			other += "_block"
+		if (base == "copper") {
+			base += "_block"
 		}
-		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, other)], id(modID, block), 1)
+		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, base)], id(modID, block), 1)
 	}
 	else if (type === "chiseled_resource") {
-		recipe = generateShapedRecipe({ "D": id(mc, other) }, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 4, [
 			"D",
 			"D"
 		])
 	}
 	else if (type === "chiseled_pillar") {
-		recipe = generateShapedRecipe({ "D": id(mc, other) }, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 4, [
 			"D",
 			"D"
 		])
@@ -1875,81 +1942,82 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		let localID;
 		if (block.includes("copper")) {
 			localID = mc;
+			base = base.replace("cut_weathered", "weathered_cut")
+			base = base.replace("cut_oxidized", "oxidized_cut")
+			base = base.replace("cut_exposed", "exposed_cut")
 		}
+
 		else { localID = modID }
-		other = other.replace("weathered_cut", "cut_weathered")
-		other = other.replace("oxidized_cut", "cut_oxidized")
-		other = other.replace("exposed_cut", "cut_exposed")
-		recipe = generateShapedRecipe({ "D": id(localID, `cut_${other}`) }, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": id(localID, `cut_${base}`) }, id(namespace, block), 4, [
 			"DDD",
 			"DDD"
 		])
 	}
 	else if (type === "stairs") {
-		recipe = generateShapedRecipe({ "C": id(modID, other) }, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "C": id(modID, base) }, id(namespace, block), 4, [
 			"C  ",
 			"CC ",
 			"CCC"
 		])
 	}
 	else if (type === "wall") {
-		if (!other.includes(":")) {
-			other = id(other)
+		if (!base.includes(":")) {
+			base = id(base)
 		}
-		recipe = generateShapedRecipe({ "C": `${other}` }, id(namespace, block), 6, [
+		recipe = generateShapedRecipe({ "C": `${base}` }, id(namespace, block), 6, [
 			"CCC",
 			"CCC"
 		])
 	}
 	else if (type === "slabs") {
-		recipe = generateShapedRecipe({ "C": id(modID, other) }, id(namespace, block), 6, [
+		recipe = generateShapedRecipe({ "C": id(modID, base) }, id(namespace, block), 6, [
 			"CCC"
 		])
 	}
 	else if (type === "plates") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, ["CC"])
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["CC"])
 	}
 	else if (type === "door") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
 			"CC",
 			"CC",
 			"CC"
 		])
 	}
 	else if (type === "crafting_table") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
 			"CC",
 			"CC"
 		])
 	}
 	else if (type === "trapdoor") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 2, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 2, [
 			"CCC",
 			"CCC"
 		])
 	}
 	else if (type === "carpet") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 3, ["CC"])
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC"])
 	}
 	else if (type === "fences") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other), "S": id(mc, "stick") }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "stick") }, id(namespace, block), 1, [
 			"CSC",
 			"CSC"
 		])
 	}
 	else if (type === "fence_gates") {
-		recipe = generateShapedRecipe({ "C": id(namespace, other), "S": `minecraft:stick` }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(namespace, base), "S": `minecraft:stick` }, id(namespace, block), 1, [
 			"SCS",
 			"SCS"
 		])
 	}
 	else if (type === "wall_gates") {
-		let baseWall = other
+		let baseWall = base
 		baseWall = `${baseWall.replace("bricks", "brick")}`
 		baseWall = `${baseWall.replace("tiles", "tile")}`
 		baseWall = baseWall + "_wall"
-		if (!other.includes(":")) {
-			other = id(other)
+		if (!base.includes(":")) {
+			base = id(base)
 		}
 		if (!baseWall.includes(":")) {
 			baseWall = id(altNamespace, baseWall)
@@ -1960,24 +2028,24 @@ function generateRecipes(block, type, other, namespace, altNamespace) {
 		}
 		// Override for it picking up Smooth Quartz Block Walls instead of Smooth Quartz Walls
 		else if (baseWall.includes("quartz")) {
-			other = "minecraft:smooth_quartz"
+			base = "minecraft:smooth_quartz"
 			baseWall = baseWall = "pyrite:smooth_quartz_wall"
 		}
 		baseWall = baseWall.replace("weathered_cut", "cut_weathered")
 		baseWall = baseWall.replace("oxidized_cut", "cut_oxidized")
 		baseWall = baseWall.replace("exposed_cut", "cut_exposed")
-		recipe = generateShapedRecipe({ "C": other, "S": baseWall }, id(namespace, block), 6, [
+		recipe = generateShapedRecipe({ "C": base, "S": baseWall }, id(namespace, block), 6, [
 			"SCS",
 			"SCS"
 		])
 	}
 	else if (type === "buttons") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, other) }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
 			"C"
 		])
 	}
 	else if (type === "metal_buttons") {
-		recipe = generateShapelessRecipe([id(altNamespace, other), `#${mc}:buttons`], id(namespace, block), 1)
+		recipe = generateShapelessRecipe([id(altNamespace, base), `#${mc}:buttons`], id(namespace, block), 1)
 	}
 
 	return recipe
@@ -1991,6 +2059,26 @@ function writeRecipes(block, type, other, namespace, altNamespace) {
 			block = block.split(":")[1]
 		}
 		writeFile(`${paths.recipes}${block}.json`, recipe)
+	}
+}
+
+function writeShapedRecipe(ingredients, result, quantity, shape, pattern) {
+	let recipe = generateShapedRecipe(ingredients, result, quantity, shape, pattern)
+	if ((recipe !== "")) {
+		if (result.includes(":")) {
+			result = result.split(":")[1]
+		}
+		writeFile(`${paths.recipes}${result}.json`, recipe)
+	}
+}
+
+function writeShapelessRecipe(ingredients, result, quantity) {
+	let recipe = generateShapelessRecipe(ingredients, result, quantity)
+	if ((recipe !== "")) {
+		if (result.includes(":")) {
+			result = result.split(":")[1]
+		}
+		writeFile(`${paths.recipes}${result}.json`, recipe)
 	}
 }
 
@@ -2149,6 +2237,25 @@ function getDyeNamespace(dye) {
 	}
 	else {
 		return mc
+	}
+}
+
+function getDyeIngredient(dye) {
+	switch (dye) {
+		case "glow_dye":
+			return "minecraft:glow_ink_sac"
+		case "dragon_dye":
+			return "minecraft:dragon_breath"
+		case "star_dye":
+			return "minecraft:nether_star"
+		case "honey_dye":
+			return "minecraft:honeycomb"
+		case "rose_dye":
+			return ["minecraft:red_dye", "minecraft:pink_dye"]
+		case "nostalgia_dye":
+			return "minecraft:apple"
+		case "poisonous_dye":
+			return "minecraft:poisonous_potato"
 	}
 }
 
