@@ -1,5 +1,6 @@
 const { create } = require('domain');
 const fs = require('fs');
+const path = require('path');
 const { basename } = require('path');
 
 const modID = "pyrite";
@@ -699,11 +700,8 @@ function readFileAsJson(path) {
 }
 
 function writeBlockstate(block, blockState, namespace) {
+	block = getPath(block)
 	writeFile(`${paths.blockstates}${block}.json`, blockState)
-}
-
-function writeOldBlockstate(block, blockState, namespace) {
-	writeFile(`${paths.infiniteBlockstates}${block}.json`, blockState)
 }
 
 function writePlankBlockModels(block, namespace, texture, model, render_type) {
@@ -873,9 +871,10 @@ function generateStairBlockModel(block, namespace, baseBlock, model) {
 
 function writeStairBlockModels(block, namespace, baseBlock) {
 	if (baseBlock.includes(":")) {
-		namespace = baseBlock.split(":")[0]
-		baseBlock = baseBlock.split(":")[1]
+		namespace = getNamespace(baseBlock)
+		baseBlock = getPath(baseBlock)
 	}
+	block = getPath(block)
 	writeFile(`${paths.models}${block}.json`, generateStairBlockModel(block, namespace, baseBlock, "stairs"));
 	writeFile(`${paths.models}${block}_inner.json`, generateStairBlockModel(block, namespace, baseBlock, "inner_stairs"));
 	writeFile(`${paths.models}${block}_outer.json`, generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
@@ -886,8 +885,8 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 		namespace = modID
 	}
 	if (baseBlock.includes(":")) {
-		namespace = baseBlock.split(":")[0]
-		baseBlock = baseBlock.split(":")[1]
+		namespace = getNamespace(baseBlock)
+		baseBlock = getPath(baseBlock)
 	}
 	buttonModel = `{
 		"parent": "minecraft:block/button",
@@ -937,6 +936,7 @@ function writeSlabBlockModels(block, namespace, baseBlock) {
 		namespace = baseBlock.split(":")[0]
 		baseBlock = baseBlock.split(":")[1]
 	}
+	block = getPath(block)
 	writeFile(`${paths.models}${block}.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab"));
 	writeFile(`${paths.models}${block}_top.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
 }
@@ -1048,6 +1048,7 @@ function writeBlockItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
+	const blockPath = getPath(block)
 	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "block", block)
 		const modelItem =
@@ -1057,13 +1058,13 @@ function writeBlockItemModel(block, namespace) {
 				"layer0": `${namespace}:block/${block}`
 			}
 		}
-		writeFile(`${paths.itemModels}${block}.json`, modelItem);
+		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 	else {
 		const modelItem = `{
 	  "parent": "${namespace}:block/${block}"
 	}`
-		writeFile(`${paths.itemModels}${block}.json`, modelItem);
+		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 
 }
@@ -1200,7 +1201,6 @@ function writeItem(item, namespace) {
 function writeDoors(block, namespace, baseBlock) {
 	doorBlockState = generateDoorBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, doorBlockState, namespace)
-	writeOldBlockstate(block, generateOldDoorBlockState(block, namespace, baseBlock), namespace)
 	writeDoorBlockModels(block, namespace)
 	writeUniqueItemModel(block, namespace)
 	if (baseBlock.includes("planks")) {
@@ -2294,6 +2294,24 @@ function id(namespace, path) {
 	}
 	// If not, create a new identified path.
 	return namespace + ":" + path
+}
+
+function getPath(namespacedString) {
+	if (namespacedString.includes(":")) {
+		return namespacedString.split(":")[1]
+	}
+	else {
+		return namespacedString;
+	}
+}
+
+function getNamespace(namespacedString) {
+	if (namespacedString.includes(":")) {
+		return namespacedString.split(":")[0]
+	}
+	else {
+		return namespacedString;
+	}
 }
 
 function versionAbove(version) {
