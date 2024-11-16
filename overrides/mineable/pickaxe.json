@@ -23,7 +23,9 @@
     "pyrite:charred_nether_bricks",
     "pyrite:nostalgia_netherrack",
     "pyrite:nostalgia_cobblestone",
-    "pyrite:nostalgia_mossy_cobblestone"
+    "pyrite:nostalgia_mossy_cobblestone",
+    "#pyrite:stained_framed_glass",
+    "#pyrite:metal_bars"
 
 
   ]

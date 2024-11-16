@@ -496,9 +496,11 @@ function generateResources() {
 	tagBlocks(readFileAsJson("./overrides/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
 	tagBlocks(readFileAsJson("./overrides/mineable/shovel.json"), "minecraft:mineable/shovel")
 
-
 	// Add Pyrite tags to beacon bases
 	tagBlocks(["#pyrite:emerald", "#pyrite:diamond", "#pyrite:gold", "#pyrite:iron", "#pyrite:netherite"], "minecraft:beacon_base_blocks")
+
+	// Add Pyrite tags to Pyrite tags
+	tagBlock("#pyrite:terracotta_bricks", "bricks")
 
 	// Generate translations for Pyrite item tags.
 	const newModTags = ["wall_gates", "lamps", "bricks", "dyed_bricks", 
@@ -646,6 +648,12 @@ function writeFile(path, data) {
 	}
 	if (demoMode === false) {
 		fs.writeFile(path, data, function (err) { if (err) throw err; })
+	}
+}
+
+function writeFileSafe(path, data) {
+	if (!fs.existsSync(path)) {
+		writeFile(path, data)
 	}
 }
 
@@ -1158,7 +1166,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 
 	// Tag various blocks based off block type.
 	if (blockType == "planks") {
-		tagBoth(block, "planks")
+		tagBoth(block, "minecraft:planks")
 		checkAndAddStainedTag(block, baseBlock)
 	}
 	else if (blockType == "wool") {
@@ -1315,6 +1323,7 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
+	tagBlock(block, getPath(baseBlock).split("_block")[0])
 	writeRecipes(block, special, baseBlock)
 	writeStonecutterRecipes(block, baseBlock, 1)
 
@@ -1746,21 +1755,17 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 	recipe.result = JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
 
 	return recipe
-
 }
 
 function writeLootTables(block, namespace) {
 	block = getPath(block)
 	const filePath = `${paths.loot}${block}.json`
-	if (!fs.existsSync(filePath)) {
-		if (namespace === undefined) {
-			namespace = modID
-		}
-		let lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${block}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
-		writeFile(filePath, lootTable);
+	if (namespace === undefined) {
+		namespace = modID
 	}
+	let lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${block}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
+	writeFileSafe(filePath, lootTable);
 }
-
 
 function writeDoorLootTables(block, namespace) {
 	if (namespace === undefined) {
