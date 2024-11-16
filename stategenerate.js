@@ -2,6 +2,7 @@ const { create } = require('domain');
 const fs = require('fs');
 const path = require('path');
 const { basename } = require('path');
+const translater = require('./translater');
 
 const modID = "pyrite";
 const mc = "minecraft";
@@ -91,6 +92,7 @@ if (majorVersion <= 21) {
 
 let blockIDs = []
 let blockTranslations = readFileAsJson("./overrides/lang/en_us.json")
+let catTranslations = readFileAsJson("./overrides/lang/lol_us.json")
 
 class Block {  // Create a class
 	constructor(blockID, namespace, baseNamespace, blockType, baseBlock, material) {
@@ -639,6 +641,8 @@ function checkAndAddDyedTag(block, baseBlock) {
 
 function writeLang() {
 	writeFile(`${paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
+	writeFile(`${paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
+
 }
 
 function writeFile(path, data) {
@@ -735,6 +739,7 @@ function generateLang(block, type, namespace) {
 	if (type === undefined) {
 		type = "block";
 	}
+	block = getPath(block)
 	let langBlock = block;
 	langBlock = langBlock.replaceAll("_", " ");
 	langBlock = langBlock.replaceAll("/", " ");
@@ -744,6 +749,10 @@ function generateLang(block, type, namespace) {
 	if (!blockTranslations.hasOwnProperty(key)) {
 		blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`));
 	}
+	if (!catTranslations.hasOwnProperty(key)) {
+		catTranslations = Object.assign(catTranslations, JSON.parse(`{"${key}": "${translater.catify(value)}"}`));
+	}
+
 }
 
 function generateBlockLang(block) {
