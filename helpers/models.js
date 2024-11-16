@@ -48,17 +48,25 @@ module.exports = {
         "render_type": "translucent"
       }`
     },
+
+    generateSlabBlockModel: function generateSlabBlockModel(block, namespace, baseBlock, model) {
+        if (baseBlock === "grass_block_top") {
+            return helpers.readFile(`./overrides/models/grass_${model}.json`)
+        }
+        return `{"parent": "minecraft:block/${model}","textures": {"bottom": "${namespace}:block/${baseBlock}","top": "${namespace}:block/${baseBlock}","side": "${namespace}:block/${baseBlock}"}}`
+    
+    },
     
     generateStairBlockModel: function generateStairBlockModel(block, namespace, baseBlock, model) {
         if (baseBlock === "grass_block_top") {
             if (model === "stairs") {
-                return readFile("./overrides/models/grass_stairs.json")
+                return helpers.readFile("./overrides/models/grass_stairs.json")
             }
             else if (model === "inner_stairs") {
-                return readFile("./overrides/models/grass_stairs_inner.json")
+                return helpers.readFile("./overrides/models/grass_stairs_inner.json")
             }
             else if (model === "outer_stairs") {
-                return readFile("./overrides/models/grass_stairs_outer.json")
+                return helpers.readFile("./overrides/models/grass_stairs_outer.json")
             }
         }
         return `{
@@ -124,6 +132,10 @@ module.exports = {
 
     generateFenceGateBlockModels: function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNamespace) {
         return `{"parent": "${altNamespace}:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
+    },
+
+    generateFenceBlockModels: function generateFenceBlockModels(block, baseBlock, namespace, model) {
+        return `{"parent": "minecraft:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
     },
 
     generateOrientableBlockModel: function generateOrientableBlockModel(block) {
