@@ -1082,6 +1082,12 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	writeMirroredBricksBlockModels(block, namespace, block)
 	writeBlockItemModel(block, namespace)
 	writeRecipes(block, special, baseBlock, namespace)
+	if (block.includes("terracotta")) {
+		tagBlock(block, "terracotta_bricks")
+	}
+	else {
+		tagBlock(block, "bricks")
+	}
 	writeStonecutterRecipes(block, baseBlock, 1)
 }
 
