@@ -69,7 +69,7 @@ const trickyTrialsWalls = ["polished_tuff", "tuff_brick", "tuff"];
 const winterDropWalls = ["resin_brick"];
 const winterDropWoods = ["pale_oak"];
 
-const vanillaMetals = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
+const vanillaResources = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 
 //Base path
 let paths = {
@@ -216,6 +216,9 @@ class Block {  // Create a class
 		}
 		else if (blockType == "nostalgia_grass_block") {
 			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
+		}
+		else if (blockType.includes("bricks")) {
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true)
 		}
 		else {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
@@ -424,7 +427,7 @@ function generateResources() {
 		writeWallGatesFromArray(winterDropWalls)
 	}
 
-	vanillaMetals.forEach(function (block) {
+	vanillaResources.forEach(function (block) {
 		let baseBlock = block
 		let altNamespace;
 		let cutBlockID = `cut_${block}`
@@ -523,7 +526,7 @@ function generateResources() {
 
 	// Add Pyrite tags to tool tags
 	tagHelper.tagBlocks(["#pyrite:wall_gates", "#pyrite:bricks"], "minecraft:needs_wood_tool")
-	tagHelper.tagBlocks(["#pyrite:iron", "#pyrite:lapis"], "minecraft:needs_stone_tool")
+	tagHelper.tagBlocks(["#pyrite:iron", "#pyrite:lapis", "#pyrite:copper", "#pyrite:exposed_copper", "#pyrite:weathered_copper", "#pyrite:oxidized_copper"], "minecraft:needs_stone_tool")
 	tagHelper.tagBlocks(["#pyrite:gold", "#pyrite:diamond", "#pyrite:emerald"], "minecraft:needs_iron_tool")
 	tagHelper.tagBlocks(["#pyrite:obsidian", "#pyrite:netherite"], "minecraft:needs_diamond_tool")
 
