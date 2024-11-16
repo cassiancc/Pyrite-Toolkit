@@ -262,7 +262,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
 		}
 		else { localID = modID }
-		recipe = generateShapedRecipe({ "D": id(localID, cutBlockID) }, id(namespace, block), 4, [
+		recipe = generateShapedRecipe({ "D": id(localID, cutBlockID) }, id(namespace, block), 32, [
 			"DDD",
 			"DDD"
 		])
@@ -278,15 +278,10 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		if (!base.includes(":")) {
 			base = id(base)
 		}
-		recipe = generateShapedRecipe({ "C": `${base}` }, id(namespace, block), 6, [
-			"CCC",
-			"CCC"
-		])
+		recipe = generateShapedRecipe({ "C": `${base}` }, id(namespace, block), 6, ["CCC","CCC"])
 	}
 	else if (type === "slabs") {
-		recipe = generateShapedRecipe({ "C": id(modID, base) }, id(namespace, block), 6, [
-			"CCC"
-		])
+		recipe = generateShapedRecipe({ "C": id(modID, base) }, id(namespace, block), 6, ["CCC"])
 	}
 	else if (type === "plates") {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["CC"])
@@ -297,10 +292,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC","CC","CC"])
 	}
 	else if (type === "crafting_table") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
-			"CC",
-			"CC"
-		])
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["CC","CC"])
 	}
 	else if (type === "trapdoor") {
 		base.replace("gold_block", "gold_ingot")
@@ -351,9 +343,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else if (type === "buttons") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
-			"C"
-		])
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["C"])
 	}
 	else if (type === "metal_buttons") {
 		recipe = generateShapelessRecipe([id(altNamespace, base), `#${mc}:buttons`], id(namespace, block), 1)
