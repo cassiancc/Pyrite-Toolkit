@@ -1,3 +1,4 @@
+const helpers = require('./helpers');
 const modeler = require('./models');
 
 module.exports = {
@@ -123,6 +124,19 @@ module.exports = {
 
     generateFenceGateBlockModels: function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNamespace) {
         return `{"parent": "${altNamespace}:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
+    },
+
+    generateOrientableBlockModel: function generateOrientableBlockModel(block) {
+        const namespace = helpers.getNamespace(block)
+        const path = helpers.getPath(block)
+        return {
+            "parent": "minecraft:block/orientable",
+            "textures": {
+              "top": `${namespace}:block/${path}_top`,
+              "front": `${namespace}:block/${path}`,
+              "side": `${namespace}:block/${path}_side`
+            }
+          }
     }
 
    

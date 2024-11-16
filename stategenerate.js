@@ -8,6 +8,8 @@ const helpers = require('./helpers/helpers');
 const stateHelper = require('./helpers/blockstates');
 const recipeHelper = require('./helpers/recipes');
 const recipeWriter = require('./writers/recipes');
+const modelHelper = require('./helpers/models');
+const modelWriter = require('./writers/models');
 
 
 // Shorthand for helper functions
@@ -207,6 +209,9 @@ class Block {  // Create a class
 		else if (blockType == "stained_framed_glass") {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "translucent")
 		}
+		else if (blockType == "locked_chest") {
+			writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
+		}
 		else {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
@@ -397,7 +402,7 @@ function generateResources() {
 	// April Fools Blocks
 	writeBlock("glowing_obsidian", modID, "glowing_obsidian", "glowing_obsidian")
 	writeBlock("nostalgia_glowing_obsidian", modID, "glowing_obsidian", "glowing_obsidian")
-	writeBlock("locked_chest", modID, "locked_chest", "locked_chest")
+	new Block("locked_chest", modID, undefined, "locked_chest", "locked_chest", "wood")
 
 	// Nether Brick Sets
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
@@ -1247,6 +1252,17 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 	tagHelper.tagBlock(block, getPath(baseBlock).split("_block")[0])
 	writeRecipes(block, special, baseBlock)
 	writeStonecutterRecipes(block, baseBlock, 1)
+
+}
+
+function writeOrientableBlock(block, namespace, blockType, baseBlock) {
+	blockState = stateHelper.generateOrientableBlockState(id(modID, block))
+	writeBlockstate(block, blockState, namespace)
+	modelWriter.writeProvidedBlockModel(block, modelHelper.generateOrientableBlockModel(id(modID, block)))
+	writeBlockItemModel(block, namespace)
+	generateBlockLang(block)
+	writeLootTables(block, namespace)
+	writeRecipes(block, blockType, baseBlock)
 
 }
 

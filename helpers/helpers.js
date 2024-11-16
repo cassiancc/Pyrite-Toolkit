@@ -8,6 +8,9 @@ const minorVersion = parseInt(mcVersion.split(".")[2]);
 
 const recipePath = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/data/pyrite/recipes`
 
+const modelPath = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/assets/pyrite/models/block/`
+
+
 
 function readFile(path) {
     return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
@@ -81,6 +84,9 @@ module.exports = {
     },
 
     recipePath: recipePath,
+
+    modelPath: modelPath,
+
     
     readFile: readFile,
 

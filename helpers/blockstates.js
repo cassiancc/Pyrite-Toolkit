@@ -1,3 +1,5 @@
+const helpers = require('./helpers');
+
 module.exports = {
     generateDoorBlockState: function generateDoorBlockState(block, namespace, baseBlock) {
         return `{
@@ -136,4 +138,36 @@ module.exports = {
     generateFenceGateBlockState: function generateFenceGateBlockState(block, namespace) {
         return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`
     },
+
+    generateOrientableBlockState: function generateOrientableBlockState(block) {
+        const namespace = helpers.getNamespace(block)
+        const path = helpers.getPath(block)
+        return {
+            "variants": {
+              "facing=east": [
+                {
+                  "model": `${namespace}:block/${path}`,
+                  "y": 90
+                }
+              ],
+              "facing=north": [
+                {
+                    "model": `${namespace}:block/${path}`
+                }
+              ],
+              "facing=south": [
+                {
+                    "model": `${namespace}:block/${path}`,
+                    "y": 180
+                }
+              ],
+              "facing=west": [
+                {
+                    "model": `${namespace}:block/${path}`,
+                    "y": 270
+                }
+              ]
+            }
+          }
+    }
 }
