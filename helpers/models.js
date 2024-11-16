@@ -1,4 +1,4 @@
-const modeler = require('./modeler');
+const modeler = require('./models');
 
 module.exports = {
     generateBlockModel: function generateBlockModel(block, namespace, texture, model, render_type, texture_type) {
