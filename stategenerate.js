@@ -12,7 +12,7 @@ const modelHelper = require('./helpers/models');
 const modelWriter = require('./writers/models');
 
 
-// Shorthand for helper functions
+// Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
 const id = helpers.id
 const getPath = helpers.getPath
 const getNamespace = helpers.getNamespace;
@@ -24,6 +24,7 @@ const writeFileSafe = helpers.writeFileSafe
 const generateRecipes = recipeHelper.generateRecipes
 const writeRecipes = recipeWriter.writeRecipes
 const writeStonecutterRecipes = recipeWriter.writeStonecutterRecipes
+const generateBlockModel = modelHelper.generateBlockModel
 
 
 const modID = helpers.modID;
@@ -558,16 +559,12 @@ function generateResources() {
 	writeLang()
 }
 
-
-
 generateResources()
 
 function writeLang() {
 	writeFile(`${paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
 	writeFile(`${paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
 	writeFile(`${paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
-
-
 }
 
 function writeBlockstate(block, blockState, namespace) {
@@ -583,26 +580,22 @@ function writePlankBlockModels(block, namespace, texture, model, render_type) {
 function writeMirroredBricksBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}.json`, generateBlockModel(block, namespace, baseBlock))
 	writeFile(`${paths.models}${block}_north_west_mirrored.json`, generateBlockModel(block, namespace, baseBlock, "minecraft:block/cube_north_west_mirrored_all"))
-
 }
 
 function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
-	blockModel = generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
-	writeFile(`${paths.models}${block}.json`, blockModel, function (err) {
-		if (err) throw err;
-
-	});
+	blockModel = modelHelper.generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
+	writeFile(`${paths.models}${block}.json`, blockModel)
 }
 
 function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
+	const generate = modelHelper.generateLeverBlockModel
 	if (altNamespace == mc) {
-		writeFile(`${paths.models}${block}_upright.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "upright"))
-
+		writeFile(`${paths.models}${block}_upright.json`, generate(block, namespace, baseBlock, altNamespace, "upright"))
 	}
 	altNamespace = getAltNamespace(namespace, altNamespace)
-	writeFile(`${paths.models}${block}.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace))
-	writeFile(`${paths.models}${block}_on.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "on"))
-	writeFile(`${paths.models}${block}_wall.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "wall"))
+	writeFile(`${paths.models}${block}.json`, generate(block, namespace, baseBlock, altNamespace))
+	writeFile(`${paths.models}${block}_on.json`, generate(block, namespace, baseBlock, altNamespace, "on"))
+	writeFile(`${paths.models}${block}_wall.json`, generate(block, namespace, baseBlock, altNamespace, "wall"))
 }
 
 function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
@@ -612,20 +605,17 @@ function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
 }
 
 function writeCubeColumnBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}.json`, generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column"))
-	writeFile(`${paths.models}${block}_horizontal.json`, generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column_horizontal"))
-
+	writeFile(`${paths.models}${block}.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column"))
+	writeFile(`${paths.models}${block}_horizontal.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column_horizontal"))
 }
 
 function writeFlowerBlockModels(block, namespace) {
-	writeFile(`${paths.models}${block}.json`, generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
-
+	writeFile(`${paths.models}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
 }
 
 function writeLogBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}.json`, generateMushroomStemModel(block, namespace, baseBlock, "cube_column"))
-	writeFile(`${paths.models}${block}_horizontal.json`, generateMushroomStemModel(block, namespace, baseBlock, "cube_column_horizontal"))
-
+	writeFile(`${paths.models}${block}.json`, modelHelper.generateMushroomStemModel(block, namespace, baseBlock, "cube_column"))
+	writeFile(`${paths.models}${block}_horizontal.json`, modelHelper.generateMushroomStemModel(block, namespace, baseBlock, "cube_column_horizontal"))
 }
 
 function generateLang(block, type, namespace) {
@@ -674,21 +664,20 @@ function writeWallBlockModels(block, namespace, baseBlock) {
 
 
 function writePaneBlockModels(block, namespace, baseBlock) {
-	const generatePaneBlockModels = modelHelper.generatePaneBlockModels
-	writeFile(`${paths.models}${block}_post.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_post"))
-	writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
-	writeFile(`${paths.models}${block}_noside.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside"))
-	writeFile(`${paths.models}${block}_side_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
-	writeFile(`${paths.models}${block}_noside_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_noside_alt"))
+	const generate = modelHelper.generatePaneBlockModels
+	writeFile(`${paths.models}${block}_post.json`, generate(block, namespace, baseBlock, "template_glass_pane_post"))
+	writeFile(`${paths.models}${block}_side.json`, generate(block, namespace, baseBlock, "template_glass_pane_side"))
+	writeFile(`${paths.models}${block}_noside.json`, generate(block, namespace, baseBlock, "template_glass_pane_noside"))
+	writeFile(`${paths.models}${block}_side_alt.json`, generate(block, namespace, baseBlock, "template_glass_pane_side_alt"))
+	writeFile(`${paths.models}${block}_noside_alt.json`, generate(block, namespace, baseBlock, "template_glass_pane_noside_alt"))
 }
 
 function writeBarBlockModels(block, namespace, baseBlock) {
-	const generatePaneBlockModels = modelHelper.generatePaneBlockModels
 	writeFile(`${paths.models}${block}_cap.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 8], "to": [8, 16, 9], "faces": { "west": { "uv": [8, 0, 7, 16], "texture": "#bars" }, "east": { "uv": [7, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 9], "to": [9, 16, 9], "faces": { "north": { "uv": [9, 0, 7, 16], "texture": "#bars" }, "south": { "uv": [7, 0, 9, 16], "texture": "#bars" } } }] })
 	writeFile(`${paths.models}${block}_post.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 9], "faces": { "west": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }, { "from": [7, 0, 8], "to": [9, 16, 8], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] })
-	writeFile(`${paths.models}${block}_side.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
+	writeFile(`${paths.models}${block}_side.json`, modelHelper.generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
 	writeFile(`${paths.models}${block}_cap_alt.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}`, }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 8], "faces": { "west": { "uv": [8, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 7], "to": [9, 16, 7], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] })
-	writeFile(`${paths.models}${block}_side_alt.json`, generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
+	writeFile(`${paths.models}${block}_side_alt.json`, modelHelper.generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
 	writeFile(`${paths.models}${block}_post_ends.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [7, 0.001, 7], "to": [9, 0.001, 9], "faces": { "down": { "uv": [7, 7, 9, 9], "texture": "#edge" }, "up": { "uv": [7, 7, 9, 9], "texture": "#edge" } } }, { "from": [7, 15.999, 7], "to": [9, 15.999, 9], "faces": { "down": { "uv": [7, 7, 9, 9], "texture": "#edge" }, "up": { "uv": [7, 7, 9, 9], "texture": "#edge" } } }] })
 }
 
@@ -698,24 +687,22 @@ function writeStairBlockModels(block, namespace, baseBlock) {
 		baseBlock = getPath(baseBlock)
 	}
 	block = getPath(block)
-	const generateStairBlockModel = modelHelper.generateStairBlockModel
-	writeFile(`${paths.models}${block}.json`, generateStairBlockModel(block, namespace, baseBlock, "stairs"));
-	writeFile(`${paths.models}${block}_inner.json`, generateStairBlockModel(block, namespace, baseBlock, "inner_stairs"));
-	writeFile(`${paths.models}${block}_outer.json`, generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
+	writeFile(`${paths.models}${block}.json`, modelHelper.generateStairBlockModel(block, namespace, baseBlock, "stairs"));
+	writeFile(`${paths.models}${block}_inner.json`, modelHelper.generateStairBlockModel(block, namespace, baseBlock, "inner_stairs"));
+	writeFile(`${paths.models}${block}_outer.json`, modelHelper.generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
 }
 
 function writeButtonBlockModels(block, namespace, baseBlock) {
 	if (namespace == undefined) {
 		namespace = modID
 	}
-	if (baseBlock.includes(":")) {
-		namespace = getNamespace(baseBlock)
-		baseBlock = getPath(baseBlock)
+	if (!baseBlock.includes(":")) {
+		baseBlock = id(modID, baseBlock)
 	}
 	
-	const buttonModel = generateBlockModel(block, namespace, id(mc, baseBlock), "button", undefined, "texture")
-	const buttonModelInventory = generateBlockModel(block, namespace, id(mc, baseBlock), "button_inventory", undefined, "texture")
-	const buttonModelPressed = generateBlockModel(block, namespace, id(mc, baseBlock), "button_pressed", undefined, "texture")
+	const buttonModel = generateBlockModel(block, namespace, baseBlock, "button", undefined, "texture")
+	const buttonModelInventory = generateBlockModel(block, namespace, baseBlock, "button_inventory", undefined, "texture")
+	const buttonModelPressed = generateBlockModel(block, namespace, baseBlock, "button_pressed", undefined, "texture")
 	
 	writeFile(`${paths.models}${block}.json`, buttonModel)
 	writeFile(`${paths.models}${block}_inventory.json`, buttonModelInventory);
@@ -738,18 +725,8 @@ function writePlateBlockModels(block, namespace, baseBlock) {
 		namespace = baseBlock.split(":")[0]
 		baseBlock = baseBlock.split(":")[1]
 	}
-	plateModel = `{
-		"parent": "minecraft:block/pressure_plate_up",
-		"textures": {
-		  "texture": "${namespace}:block/${baseBlock}"
-		}
-	  }`
-	plateModelDown = `{
-		"parent": "minecraft:block/pressure_plate_down",
-		"textures": {
-		  "texture": "${namespace}:block/${baseBlock}"
-		}
-	  }`
+	const plateModel = modelHelper.generateBlockModel(block, namespace, id(namespace, baseBlock), "pressure_plate_up", undefined, "texture")
+	const plateModelDown = modelHelper.generateBlockModel(block, namespace, id(namespace, baseBlock), "pressure_plate_down", undefined, "texture")
 
 	writeFile(`${paths.models}${block}.json`, plateModel);
 	writeFile(`${paths.models}${block}_down.json`, plateModelDown);
@@ -794,7 +771,6 @@ function writeDoorBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}_bottom_right_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_right_open"))
 }
 
-
 function writeTrapdoorBlockModels(block, namespace, baseBlock) {
 	writeFile(`${paths.models}${block}_top.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_top", "cutout", "texture"));
 	writeFile(`${paths.models}${block}_bottom.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_bottom", "cutout", "texture"));
@@ -802,15 +778,13 @@ function writeTrapdoorBlockModels(block, namespace, baseBlock) {
 }
 
 function writeCarpetBlockModels(block, namespace, baseBlock) {
-	let carpetModel = `{"parent": "minecraft:block/carpet","textures": {"wool": "${namespace}:block/${baseBlock}"}}`
+	let carpetModel = modelHelper.generateBlockModel(block, namespace, id(namespace, baseBlock), "carpet", undefined, "wool")
 	if (block === "grass_carpet") {
 		carpetModel = readFile(`./overrides/models/grass_carpet.json`)
 	}
 
 	writeFile(`${paths.models}${block}.json`, carpetModel);
 }
-
-
 
 function writeBlockItemModel(block, namespace) {
 	if (namespace === undefined) {
@@ -826,7 +800,6 @@ function writeBlockItemModel(block, namespace) {
 		const modelItem = `{"parent": "${namespace}:block/${blockPath}"}`
 		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
-
 }
 
 function writeWinterDropItem(namespace, folder, path, model) {
@@ -884,7 +857,6 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 		const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${altNamespace}:block/${baseBlock}"}}`
 		writeFile(`${paths.itemModels}${block}.json`, modelItem)
 	}
-
 }
 
 
@@ -966,7 +938,7 @@ function writeDoors(block, namespace, baseBlock) {
 }
 
 function writeTrapdoors(block, namespace, baseBlock) {
-	let doorBlockState = generateTrapdoorBlockState(block, namespace, baseBlock)
+	let doorBlockState = stateHelper.generateTrapdoorBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, doorBlockState, namespace)
 	writeTrapdoorBlockModels(block, namespace, baseBlock)
 	writeTrapdoorItemModel(block, namespace)
@@ -1184,7 +1156,7 @@ function writeOrientableBlock(block, namespace, blockType, baseBlock) {
 
 function writePaneBlock(block, namespace, baseBlock) {
 	baseBlock = block.replace("_pane", "")
-	writeBlockstate(block, generatePaneBlockState(block, namespace, baseBlock), namespace)
+	writeBlockstate(block, stateHelper.generatePaneBlockState(block, namespace, baseBlock), namespace)
 	writePaneBlockModels(block, namespace, baseBlock)
 	writeUniqueBlockItemModel(block, namespace, namespace, baseBlock)
 	writeLootTables(block, namespace)
@@ -1197,21 +1169,13 @@ function writePaneBlock(block, namespace, baseBlock) {
 function writeBarBlock(block, namespace, baseBlock) {
 	baseBlock = block
 	block = block + "_bars"
-	writeBlockstate(block, generateBarBlockState(block, namespace, baseBlock), namespace)
+	writeBlockstate(block, stateHelper.generateBarBlockState(block, namespace, baseBlock), namespace)
 	writeBarBlockModels(block, namespace, block)
 	writeUniqueBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "metal_bars")
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "bars", baseBlock)
-}
-
-function generatePaneBlockState(block, namespace, baseBlock) {
-	return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}},{"when":{"north":"false"},"apply":{"model":"${namespace}:block/${block}_noside"}},{"when":{"east":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt"}},{"when":{"south":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt","y":90}},{"when":{"west":"false"},"apply":{"model":"${namespace}:block/${block}_noside","y":270}}]}`
-}
-
-function generateBarBlockState(block, namespace, baseBlock) {
-	return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post_ends"}},{"when":{"north":"false","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap"}},{"when":{"north":"false","west":"false","south":"false","east":"true"},"apply":{"model":"${namespace}:block/${block}_cap","y":90}},{"when":{"north":"false","west":"false","south":"true","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt"}},{"when":{"north":"false","west":"true","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt","y":90}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}}]}`
 }
 
 function writeLogs(block, namespace, special) {
@@ -1416,7 +1380,7 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	if (type == undefined) {
 		type = "buttons"
 	}
-	let buttonBlockState = generateButtonBlockState(block, namespace, baseBlock)
+	let buttonBlockState = stateHelper.generateButtonBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, buttonBlockState)
 	writeButtonBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
@@ -1433,7 +1397,7 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 
 }
 function writeFences(block, namespace, baseBlock) {
-	fenceBlockState = generateFenceBlockState(block, namespace, baseBlock)
+	fenceBlockState = stateHelper.generateFenceBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, fenceBlockState)
 	writeFenceBlockModels(block, baseBlock, namespace)
 	writeInventoryModel(block)
@@ -1452,7 +1416,7 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	fenceGateBlockState = generateFenceGateBlockState(block, namespace)
+	fenceGateBlockState = stateHelper.generateFenceGateBlockState(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, namespace, baseBlock)
 	writeFenceGateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
@@ -1471,7 +1435,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	let fenceGateBlockState = generateFenceGateBlockState(block, namespace)
+	let fenceGateBlockState = stateHelper.generateFenceGateBlockState(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, modID, baseBlock)
 	writeWallGateBlockModels(block, altNamespace, baseBlock)
 	generateBlockLang(block)
@@ -1482,10 +1446,6 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 
 }
 
-function generateCarpetBlockState(block, namespace, baseBlock) {
-	return `{"variants": {"": {"model": "${namespace}:block/${block}"}}}`
-}
-
 function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
@@ -1493,7 +1453,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
-	writeBlockstate(block, generateCarpetBlockState(block, namespace, baseBlock), modID)
+	writeBlockstate(block, stateHelper.generateCarpetBlockState(block, namespace, baseBlock), modID)
 	writeCarpetBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	if (baseBlock.search("_top") !== -1) {
@@ -1512,7 +1472,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 }
 
 function writeCarpetV2(block, baseBlock, texture) {
-	writeBlockstate(block, generateCarpetBlockState(block, namespace, baseBlock), modID)
+	writeBlockstate(block, stateHelper.generateCarpetBlockState(block, namespace, baseBlock), modID)
 	writeCarpetBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	if (baseBlock.search("_top") !== -1) {
@@ -1544,94 +1504,6 @@ function generateSlabBlockState(block, namespace, baseBlock) {
 	block = getPath(block)
 	baseBlock = getPath(baseBlock)
 	return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${namespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
-}
-
-function generateOldDoorBlockState(block, namespace, baseBlock) {
-	return `{"variants":{"facing=east,half=lower,hinge=left,open=false":{"model":"${namespace}:block/${block}_bottom"},"facing=east,half=lower,hinge=left,open=true":{"model":"${namespace}:block/${block}_bottom_hinge","y":90},"facing=east,half=lower,hinge=right,open=false":{"model":"${namespace}:block/${block}_bottom_hinge"},"facing=east,half=lower,hinge=right,open=true":{"model":"${namespace}:block/${block}_bottom","y":270},"facing=east,half=upper,hinge=left,open=false":{"model":"${namespace}:block/${block}_top"},"facing=east,half=upper,hinge=left,open=true":{"model":"${namespace}:block/${block}_top_hinge","y":90},"facing=east,half=upper,hinge=right,open=false":{"model":"${namespace}:block/${block}_top_hinge"},"facing=east,half=upper,hinge=right,open=true":{"model":"${namespace}:block/${block}_top","y":270},"facing=north,half=lower,hinge=left,open=false":{"model":"${namespace}:block/${block}_bottom","y":270},"facing=north,half=lower,hinge=left,open=true":{"model":"${namespace}:block/${block}_bottom_hinge"},"facing=north,half=lower,hinge=right,open=false":{"model":"${namespace}:block/${block}_bottom_hinge","y":270},"facing=north,half=lower,hinge=right,open=true":{"model":"${namespace}:block/${block}_bottom","y":180},"facing=north,half=upper,hinge=left,open=false":{"model":"${namespace}:block/${block}_top","y":270},"facing=north,half=upper,hinge=left,open=true":{"model":"${namespace}:block/${block}_top_hinge"},"facing=north,half=upper,hinge=right,open=false":{"model":"${namespace}:block/${block}_top_hinge","y":270},"facing=north,half=upper,hinge=right,open=true":{"model":"${namespace}:block/${block}_top","y":180},"facing=south,half=lower,hinge=left,open=false":{"model":"${namespace}:block/${block}_bottom","y":90},"facing=south,half=lower,hinge=left,open=true":{"model":"${namespace}:block/${block}_bottom_hinge","y":180},"facing=south,half=lower,hinge=right,open=false":{"model":"${namespace}:block/${block}_bottom_hinge","y":90},"facing=south,half=lower,hinge=right,open=true":{"model":"${namespace}:block/${block}_bottom"},"facing=south,half=upper,hinge=left,open=false":{"model":"${namespace}:block/${block}_top","y":90},"facing=south,half=upper,hinge=left,open=true":{"model":"${namespace}:block/${block}_top_hinge","y":180},"facing=south,half=upper,hinge=right,open=false":{"model":"${namespace}:block/${block}_top_hinge","y":90},"facing=south,half=upper,hinge=right,open=true":{"model":"${namespace}:block/${block}_top"},"facing=west,half=lower,hinge=left,open=false":{"model":"${namespace}:block/${block}_bottom","y":180},"facing=west,half=lower,hinge=left,open=true":{"model":"${namespace}:block/${block}_bottom_hinge","y":270},"facing=west,half=lower,hinge=right,open=false":{"model":"${namespace}:block/${block}_bottom_hinge","y":180},"facing=west,half=lower,hinge=right,open=true":{"model":"${namespace}:block/${block}_bottom","y":90},"facing=west,half=upper,hinge=left,open=false":{"model":"${namespace}:block/${block}_top","y":180},"facing=west,half=upper,hinge=left,open=true":{"model":"${namespace}:block/${block}_top_hinge","y":270},"facing=west,half=upper,hinge=right,open=false":{"model":"${namespace}:block/${block}_top_hinge","y":180},"facing=west,half=upper,hinge=right,open=true":{"model":"${namespace}:block/${block}_top","y":90}}}`
-}
-
-function generateTrapdoorBlockState(block, namespace, baseBlock) {
-	return `{"variants":{"facing=east,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":90},"facing=east,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":90},"facing=east,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":90},"facing=east,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":270},"facing=north,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom"},"facing=north,half=bottom,open=true":{"model":"${namespace}:block/${block}_open"},"facing=north,half=top,open=false":{"model":"${namespace}:block/${block}_top"},"facing=north,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":180},"facing=south,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":180},"facing=south,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":180},"facing=south,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":180},"facing=south,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":0},"facing=west,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":270},"facing=west,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":270},"facing=west,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":270},"facing=west,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":90}}}`
-}
-
-function generateBlockModel(block, namespace, texture, model, render_type, texture_type) {
-	if (model === undefined) {
-		model = "minecraft:block/cube_all"
-	}
-	if (!model.includes("block/")) {
-		model = "minecraft:block/" + model
-	}
-	if (render_type === undefined) {
-		render_type = ""
-	}
-	else {
-		render_type = `,"render_type": "${render_type}"`
-	}
-	if (texture_type === undefined) {
-		texture_type = "all"
-	}
-	// Extract namespace and block from texture, if present.
-	if (texture.includes(":")) {
-		namespace = texture.split(":")[0]
-		block = texture.split(":")[1]
-	}
-	// Override for Grass Turf for colour provider tinting.
-	if (texture.includes("minecraft:grass_block_top")) {
-		return readFile(`./overrides/models/grass_turf.json`)
-	}
-
-	return `{"parent": "${model}","textures": {"${texture_type}": "${namespace}:block/${block}"}${render_type}}`
-
-}
-
-function generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace) {
-	return `{"parent": "minecraft:block/cube","textures": {"particle": "${namespace}:block/${block}_front","north": "${namespace}:block/${block}_front","south": "${namespace}:block/${block}_side","east": "${namespace}:block/${block}_side","west": "${namespace}:block/${block}_front","up": "${namespace}:block/${block}_top","down": "${altNamespace}:block/${baseBlock}"}}`
-}
-
-function generateCubeColumnBlockModel(block, namespace, baseBlock, model) {
-	return `{"parent":"minecraft:block/${model}","textures":{"end":"${namespace}:block/${block}_top","side":"${namespace}:block/${block}"}}`
-}
-
-function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addon) {
-	if (addon === undefined) {
-		addon = ""
-	}
-	else {
-		addon = `_${addon}`
-		if (addon === "_wall") {
-			let wallName = baseBlock + "_wall"
-			if (altNamespace !== mc) {
-				return `{"parent": "${altNamespace}:block/${baseBlock}_wall","render_type": "cutout"}`
-			}
-			else {
-				const torchBlock = baseBlock.replace("torch", "wall_torch")
-				return `{"parent": "${altNamespace}:block/${torchBlock}","render_type": "cutout"}`
-			}
-		}
-		else if (addon === "_upright") {
-			return `{"parent": "${altNamespace}:block/${baseBlock}","render_type": "cutout"}`
-		}
-		else {
-			return `{"parent": "pyrite:block/template_torch_lever${addon}","textures": {"texture": "${altNamespace}:block/${baseBlock}"},"render_type": "cutout"}`
-		}
-	}
-	return `{"parent": "pyrite:block/template_torch_lever${addon}","textures": {"texture": "${altNamespace}:block/${baseBlock}"},"render_type": "cutout"}`
-}
-
-function generateMushroomStemModel(block, namespace, baseBlock, model) {
-	return `{"parent": "minecraft:block/${model}","textures": {"end": "${namespace}:block/${block}_top","side": "minecraft:block/mushroom_stem"}}`
-}
-
-function generateFenceBlockState(block, namespace, baseBlock) {
-	return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true},"when":{"north":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":90},"when":{"east":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":180},"when":{"south":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":270},"when":{"west":"true"}}]}`
-}
-
-function generateButtonBlockState(block, namespace, baseBlock) {
-	return `{"variants":{"face=ceiling,facing=east,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":270},"face=ceiling,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":270},"face=ceiling,facing=north,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":180},"face=ceiling,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":180},"face=ceiling,facing=south,powered=false":{"model":"${namespace}:block/${block}","x":180},"face=ceiling,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180},"face=ceiling,facing=west,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":90},"face=ceiling,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":90},"face=floor,facing=east,powered=false":{"model":"${namespace}:block/${block}","y":90},"face=floor,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","y":90},"face=floor,facing=north,powered=false":{"model":"${namespace}:block/${block}"},"face=floor,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed"},"face=floor,facing=south,powered=false":{"model":"${namespace}:block/${block}","y":180},"face=floor,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","y":180},"face=floor,facing=west,powered=false":{"model":"${namespace}:block/${block}","y":270},"face=floor,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","y":270},"face=wall,facing=east,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":90},"face=wall,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":90},"face=wall,facing=north,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90},"face=wall,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90},"face=wall,facing=south,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":180},"face=wall,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":180},"face=wall,facing=west,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":270},"face=wall,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":270}}}`
-}
-
-function generateFenceGateBlockState(block, namespace) {
-	return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`
 }
 
 function getDyeIngredient(dye) {

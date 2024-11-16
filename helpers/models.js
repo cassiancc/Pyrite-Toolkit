@@ -25,7 +25,7 @@ module.exports = {
         }
         // Override for Grass Turf for colour provider tinting.
         if (texture.includes("minecraft:grass_block_top")) {
-            return readFile(`./overrides/models/grass_turf.json`)
+            return helpers.readFile(`./overrides/models/grass_turf.json`)
         }
     
         return `{"parent": "${model}","textures": {"${texture_type}": "${namespace}:block/${block}"}${render_type}}`
@@ -104,7 +104,7 @@ module.exports = {
             addon = `_${addon}`
             if (addon === "_wall") {
                 let wallName = baseBlock + "_wall"
-                if (altNamespace !== mc) {
+                if (altNamespace !== helpers.mc) {
                     return `{"parent": "${altNamespace}:block/${baseBlock}_wall","render_type": "cutout"}`
                 }
                 else {
