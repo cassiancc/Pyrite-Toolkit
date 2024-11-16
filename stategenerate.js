@@ -113,6 +113,7 @@ if (majorVersion <= 21) {
 let blockIDs = []
 let blockTranslations = readFileAsJson("./overrides/lang/en_us.json")
 let catTranslations = readFileAsJson("./overrides/lang/lol_us.json")
+let upsideDownTranslations = langHelper.flipTranslationFile("./overrides/lang/en_us.json")
 
 class Block {  // Create a class
 	constructor(blockID, namespace, baseNamespace, blockType, baseBlock, material) {
@@ -562,6 +563,8 @@ generateResources()
 function writeLang() {
 	writeFile(`${paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
 	writeFile(`${paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
+	writeFile(`${paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
+
 
 }
 
@@ -663,6 +666,9 @@ function generateLang(block, type, namespace) {
 	}
 	if (!catTranslations.hasOwnProperty(key)) {
 		catTranslations = Object.assign(catTranslations, JSON.parse(`{"${key}": "${langHelper.catify(value)}"}`));
+	}
+	if (!upsideDownTranslations.hasOwnProperty(key)) {
+		upsideDownTranslations = Object.assign(upsideDownTranslations, JSON.parse(`{"${key}": "${langHelper.upsideDownify(value)}"}`));
 	}
 
 }

@@ -1,3 +1,87 @@
+const { readFileAsJson } = require("../helpers/helpers");
+
+function flipTranslationFile(path) {
+    let upsideDownTranslations = {};
+    const file = readFileAsJson(path)
+    for (const [key, value] of Object.entries(file)) {
+        if (!upsideDownTranslations.hasOwnProperty(key)) {
+            upsideDownTranslations = Object.assign(upsideDownTranslations, JSON.parse(`{"${key}": "${upsideDownify(value)}"}`));
+        }
+      }
+    return upsideDownTranslations
+}
+
+function upsideDownify(value) {
+	value = value.replace("A", "Ɐ")
+	value = value.replace("B", "ᗺ")
+	value = value.replace("C", "Ɔ")
+	value = value.replace("D", "ᗡ")
+	value = value.replace("E", "Ǝ")
+	value = value.replace("F", "Ⅎ")
+	value = value.replace("G", "⅁")
+	value = value.replace("H", "H")
+	// value = value.replace("I", "I")
+	value = value.replace("J", "Ր")
+	value = value.replace("K", "Ʞ")
+	value = value.replace("L", "Ꞁ")
+	value = value.replace("M", "W")
+	// value = value.replace("N", "N")
+	// value = value.replace("O", "O")
+	value = value.replace("P", "Ԁ")
+	value = value.replace("Q", "Ꝺ")
+	value = value.replace("R", "ᴚ")
+	value = value.replace("S", "S")
+	value = value.replace("T", "⟘")
+	value = value.replace("U", "∩")
+	value = value.replace("V", "Ʌ")
+	value = value.replace("W", "M")
+	// value = value.replace("X", "X")
+	value = value.replace("Y", "⅄")
+	// value = value.replace("Z", "Z")
+	value = value.replace("a", "ɐ")
+	value = value.replace("b", "q")
+	value = value.replace("c", "ɔ")
+	value = value.replace("d", "p")
+	value = value.replace("e", "ǝ")
+	value = value.replace("f", "ɟ")
+	value = value.replace("g", "ᵷ")
+	value = value.replace("h", "ɥ")
+	value = value.replace("i", "ᴉ")
+	value = value.replace("j", "ɾ")
+	value = value.replace("k", "ʞ")
+	value = value.replace("l", "ן")
+	value = value.replace("m", "ɯ")
+	value = value.replace("n", "u")
+	// value = value.replace("o", "o")
+	value = value.replace("p", "d")
+	value = value.replace("q", "b")
+	value = value.replace("r", "ɹ")
+	// value = value.replace("s", "s")
+	value = value.replace("t", "ʇ")
+	value = value.replace("u", "n")
+	value = value.replace("v", "ʌ")
+	value = value.replace("w", "ʍ")
+	// value.replace("x", "x")
+	value = value.replace("y", "ʎ")
+	// value = value.replace("z", "z")
+	value = value.replace("1", "⥝")
+	value = value.replace("2", "↊")
+	value = value.replace("3", "↋")
+	value = value.replace("4", "ߤ")
+	// value = value.replace("5", "")
+	value = value.replace("6", "9")
+	value = value.replace("7", "𝘓")
+	// value = value.replace("8", "8")
+	value = value.replace("9", "6")
+
+	value = value.replace(".", "˙")
+	let newValue = "";
+	value.split("").forEach(char => {
+		newValue = char + newValue
+	});
+	return newValue
+}
+
 module.exports = {
 	catify: function catify(value) {
 		value = value.replace("Quartz", "Kwartz")
@@ -97,5 +181,9 @@ module.exports = {
 		return value;
 	
 	
-	}
+	},
+
+	upsideDownify: upsideDownify,
+
+	flipTranslationFile: flipTranslationFile
 }
