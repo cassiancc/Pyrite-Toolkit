@@ -1744,6 +1744,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 }
 
 function writeLootTables(block, namespace) {
+	block = getPath(block)
 	const filePath = `${paths.loot}${block}.json`
 	if (!fs.existsSync(filePath)) {
 		if (namespace === undefined) {
