@@ -206,6 +206,8 @@ class Block {  // Create a class
 
 function generateResources() {
 
+	populateTemplates()
+
 	new Block("torch_lever", modID, mc, "torch_lever", "torch", "torch")
 	new Block("redstone_torch_lever", modID, mc, "torch_lever", "redstone_torch", "torch")
 	new Block("soul_torch_lever", modID, mc, "torch_lever", "soul_torch", "torch")
@@ -713,7 +715,7 @@ function writeCubeColumnBlockModels(block, namespace, baseBlock) {
 }
 
 function writeFlowerBlockModels(block, namespace) {
-	writeFile(`${paths.models}${block}.json`, generateFlowerBlockModel(block, namespace))
+	writeFile(`${paths.models}${block}.json`, generateBasicBlockModels(block, namespace, "cross", "cross"))
 
 }
 
@@ -956,9 +958,9 @@ function writeDoorBlockModels(block, namespace, baseBlock) {
 
 
 function writeTrapdoorBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}_top.json`, generateTrapdoorBlockModels(block, namespace, baseBlock, "template_orientable_trapdoor_top"));
-	writeFile(`${paths.models}${block}_bottom.json`, generateTrapdoorBlockModels(block, namespace, baseBlock, "template_orientable_trapdoor_bottom"));
-	writeFile(`${paths.models}${block}_open.json`, generateTrapdoorBlockModels(block, namespace, baseBlock, "template_orientable_trapdoor_open"));
+	writeFile(`${paths.models}${block}_top.json`, generateBasicBlockModels(block, namespace, "template_orientable_trapdoor_top", "cutout"));
+	writeFile(`${paths.models}${block}_bottom.json`, generateBasicBlockModels(block, namespace, "template_orientable_trapdoor_bottom", "cutout"));
+	writeFile(`${paths.models}${block}_open.json`, generateBasicBlockModels(block, namespace, "template_orientable_trapdoor_open", "cutout"));
 }
 
 function writeCarpetBlockModels(block, namespace, baseBlock) {
@@ -2212,8 +2214,17 @@ function generateFenceGateBlockState(block, namespace) {
 	return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`
 }
 
-function generateTrapdoorBlockModels(block, namespace, baseBlock, modelID) {
-	return `{"parent":"minecraft:block/${modelID}","textures":{"texture":"${namespace}:block/${block}"},"render_type":"cutout"}`
+function generateBasicBlockModels(block, namespace, modelID, render_type, texture_type) {
+	if (render_type === undefined) {
+		render_type = ""
+	}
+	if (texture_type === undefined) {
+		texture_type = "texture"
+	}
+	else {
+		render_type = `"render_type": "${render_type}"`
+	}
+	return `{"parent":"minecraft:block/${modelID}","textures":{"${texture_type}":"${namespace}:block/${block}"},${render_type}}`
 }
 
 function generateDoorBlockModels(block, namespace, baseBlock, modelID) {
@@ -2306,4 +2317,12 @@ function versionAbove(version) {
 		return false;
 	}
 
+}
+
+function populateTemplates() {
+	const templatePath = "./overrides/models/templates/"
+	const templates = fs.readdirSync(templatePath)
+	templates.forEach(function(template) {
+		writeFileSafe(`${paths.models}${template}`, readFile(templatePath + template))
+	})
 }
