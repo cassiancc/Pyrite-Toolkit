@@ -56,7 +56,15 @@ module.exports = {
 		value = value.replace("Ladder", "Ladr")
 		value = value.replace("Pane", "Payn")
 		value = value.replace("Star", "Asterisk")
-	
+		value = value.replace("Glass", "Glazz")
+		value = value.replace("Bars", "Jeil Bahz")
+		value = value.replace("Iron", "Irony")
+		value = value.replace("Door", "Dor")
+		value = value.replace("Gold", "Shiny")
+		value = value.replace("Crimson", "Crimzn")
+		value = value.replace("Warped", "Warpt")
+
+
 	
 		if (Math.floor(Math.random() * 2) == 0) {
 			value = value.replace("Stained", "Staned")
