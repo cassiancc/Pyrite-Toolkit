@@ -217,7 +217,7 @@ class Block {  // Create a class
 		else if (blockType == "nostalgia_grass_block") {
 			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
-		else if (blockType.includes("bricks")) {
+		else if (blockType.includes("smooth_stone_bricks")) {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true)
 		}
 		else {
@@ -670,12 +670,13 @@ function writePaneBlockModels(block, namespace, baseBlock) {
 }
 
 function writeBarBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}_cap.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 8], "to": [8, 16, 9], "faces": { "west": { "uv": [8, 0, 7, 16], "texture": "#bars" }, "east": { "uv": [7, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 9], "to": [9, 16, 9], "faces": { "north": { "uv": [9, 0, 7, 16], "texture": "#bars" }, "south": { "uv": [7, 0, 9, 16], "texture": "#bars" } } }] })
-	writeFile(`${paths.models}${block}_post.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 9], "faces": { "west": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }, { "from": [7, 0, 8], "to": [9, 16, 8], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] })
-	writeFile(`${paths.models}${block}_side.json`, modelHelper.generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side"))
-	writeFile(`${paths.models}${block}_cap_alt.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}`, }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 8], "faces": { "west": { "uv": [8, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 7], "to": [9, 16, 7], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] })
-	writeFile(`${paths.models}${block}_side_alt.json`, modelHelper.generatePaneBlockModels(block, namespace, baseBlock, "template_glass_pane_side_alt"))
-	writeFile(`${paths.models}${block}_post_ends.json`, { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [7, 0.001, 7], "to": [9, 0.001, 9], "faces": { "down": { "uv": [7, 7, 9, 9], "texture": "#edge" }, "up": { "uv": [7, 7, 9, 9], "texture": "#edge" } } }, { "from": [7, 15.999, 7], "to": [9, 15.999, 9], "faces": { "down": { "uv": [7, 7, 9, 9], "texture": "#edge" }, "up": { "uv": [7, 7, 9, 9], "texture": "#edge" } } }] })
+	const generate = modelHelper.generateBarBlockModel
+	writeFile(`${paths.models}${block}_cap.json`, generate(block, namespace, "cap"))
+	writeFile(`${paths.models}${block}_post.json`, generate(block, namespace, "post"))
+	writeFile(`${paths.models}${block}_side.json`, generate(block, namespace, "side"))
+	writeFile(`${paths.models}${block}_cap_alt.json`, generate(block, namespace, "cap_alt"))
+	writeFile(`${paths.models}${block}_side_alt.json`, generate(block, namespace, "side_alt"))
+	writeFile(`${paths.models}${block}_post_ends.json`, generate(block, namespace, "post_ends"))
 }
 
 function writeStairBlockModels(block, namespace, baseBlock) {
