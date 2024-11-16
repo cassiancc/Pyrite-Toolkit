@@ -181,6 +181,12 @@ class Block {  // Create a class
 		else if (blockType === "pressure_plate") {
 			writePlates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
+		else if (blockType == "framed_glass") {
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "cutout")
+		}
+		else if (blockType == "stained_framed_glass") {
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "translucent")
+		}
 		else {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
