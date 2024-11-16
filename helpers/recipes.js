@@ -292,11 +292,9 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["CC"])
 	}
 	else if (type === "door") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
-			"CC",
-			"CC",
-			"CC"
-		])
+		base.replace("gold_block", "gold_ingot")
+		base.replace("netherite_block", "netherite_ingot")
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC","CC","CC"])
 	}
 	else if (type === "crafting_table") {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, [
@@ -305,10 +303,9 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else if (type === "trapdoor") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 2, [
-			"CCC",
-			"CCC"
-		])
+		base.replace("gold_block", "gold_ingot")
+		base.replace("netherite_block", "netherite_ingot")
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 2, ["CCC","CCC"])
 	}
 	else if (type === "carpet") {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC"])

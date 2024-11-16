@@ -928,6 +928,9 @@ function writeDoors(block, namespace, baseBlock) {
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_doors")
 	}
+	else {
+		tagHelper.tagBlock(block, baseBlock.split(":")[1].split("_block")[0])
+	}
 	tagHelper.tagBoth(block, "minecraft:doors")
 	generateBlockLang(block)
 	writeRecipes(block, "door", baseBlock)
