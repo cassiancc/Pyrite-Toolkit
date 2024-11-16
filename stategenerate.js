@@ -11,7 +11,6 @@ const recipeWriter = require('./writers/recipes');
 const modelHelper = require('./helpers/models');
 const modelWriter = require('./writers/models');
 
-
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
 const id = helpers.id
 const getPath = helpers.getPath
@@ -25,7 +24,6 @@ const generateRecipes = recipeHelper.generateRecipes
 const writeRecipes = recipeWriter.writeRecipes
 const writeStonecutterRecipes = recipeWriter.writeStonecutterRecipes
 const generateBlockModel = modelHelper.generateBlockModel
-
 
 const modID = helpers.modID;
 const mc = helpers.mc;
@@ -346,11 +344,9 @@ function generateResources() {
 	generateWoodSet(brownShroom)
 	brown_stem = new Block(brownShroom + "_stem", modID, undefined, "mushroom_stem", redShroom + "_planks", "wood")
 
-
 	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone")
 	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
 	generateBrickSet("smooth_stone_bricks", "smooth_stone_bricks", "minecraft:smooth_stone")
-
 
 	writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
 	writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
@@ -467,7 +463,7 @@ function generateResources() {
 			writeStairs(`${smooth}_stairs`, modID, `smooth_${block}`, undefined, true)
 			writeWalls(`${smooth}_wall`, modID, `smooth_${block}`)
 			writeWallGates(`${smooth}_wall_gate`, modID, `${smooth}`, modID)
-			writeBlock(block + "_bricks", modID, "resource_bricks", id(altNamespace, cutBlockID), undefined, modID, undefined, true)
+			writeBlock(block + "_bricks", modID, "resource_bricks", id(altNamespace, cutBlockID), undefined, modID, block + "_bricks", true)
 			writeChiseledBlock(`${block}_pillar`, id(mc, baseBlock), modID, "resource_pillar")
 		}
 
@@ -638,7 +634,6 @@ function generateLang(block, type, namespace) {
 	if (!upsideDownTranslations.hasOwnProperty(key)) {
 		upsideDownTranslations = Object.assign(upsideDownTranslations, JSON.parse(`{"${key}": "${langHelper.upsideDownify(value)}"}`));
 	}
-
 }
 
 function generateBlockLang(block) {
@@ -650,18 +645,17 @@ function writeWallBlockModels(block, namespace, baseBlock) {
 		namespace = baseBlock.split(":")[0]
 		baseBlock = baseBlock.split(":")[1]
 	}
-	const generateWallBlockModel = modelHelper.generateWallBlockModel
-	postModel = generateWallBlockModel(block, namespace, baseBlock, "template_wall_post")
-	sideModel = generateWallBlockModel(block, namespace, baseBlock, "template_wall_side")
-	invModel = generateWallBlockModel(block, namespace, baseBlock, "wall_inventory")
-	tallModel = generateWallBlockModel(block, namespace, baseBlock, "template_wall_side_tall")
+	const generate = modelHelper.generateWallBlockModel
+	postModel = generate(block, namespace, baseBlock, "template_wall_post")
+	sideModel = generate(block, namespace, baseBlock, "template_wall_side")
+	invModel = generate(block, namespace, baseBlock, "wall_inventory")
+	tallModel = generate(block, namespace, baseBlock, "template_wall_side_tall")
 
 	writeFile(`${paths.models}${block}_post.json`, postModel)
 	writeFile(`${paths.models}${block}_side.json`, sideModel)
 	writeFile(`${paths.models}${block}_inventory.json`, invModel)
 	writeFile(`${paths.models}${block}_side_tall.json`, tallModel)
 }
-
 
 function writePaneBlockModels(block, namespace, baseBlock) {
 	const generate = modelHelper.generatePaneBlockModels
@@ -699,10 +693,12 @@ function writeButtonBlockModels(block, namespace, baseBlock) {
 	if (!baseBlock.includes(":")) {
 		baseBlock = id(modID, baseBlock)
 	}
+
+	const generate = modelHelper.generateBlockModel
 	
-	const buttonModel = generateBlockModel(block, namespace, baseBlock, "button", undefined, "texture")
-	const buttonModelInventory = generateBlockModel(block, namespace, baseBlock, "button_inventory", undefined, "texture")
-	const buttonModelPressed = generateBlockModel(block, namespace, baseBlock, "button_pressed", undefined, "texture")
+	const buttonModel = generate(block, namespace, baseBlock, "button", undefined, "texture")
+	const buttonModelInventory = generate(block, namespace, baseBlock, "button_inventory", undefined, "texture")
+	const buttonModelPressed = generate(block, namespace, baseBlock, "button_pressed", undefined, "texture")
 	
 	writeFile(`${paths.models}${block}.json`, buttonModel)
 	writeFile(`${paths.models}${block}_inventory.json`, buttonModelInventory);
@@ -760,25 +756,27 @@ function writeWallGateBlockModels(block, namespace, baseBlock) {
 }
 
 function writeDoorBlockModels(block, namespace, baseBlock) {
-	const generateDoorBlockModels = modelHelper.generateDoorBlockModels
-	writeFile(`${paths.models}${block}_top_left.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top_left"))
-	writeFile(`${paths.models}${block}_top_right.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top_right"))
-	writeFile(`${paths.models}${block}_bottom_left.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_left"))
-	writeFile(`${paths.models}${block}_bottom_right.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_right"))
-	writeFile(`${paths.models}${block}_top_left_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top_left_open"))
-	writeFile(`${paths.models}${block}_top_right_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_top_right_open"))
-	writeFile(`${paths.models}${block}_bottom_left_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_left_open"))
-	writeFile(`${paths.models}${block}_bottom_right_open.json`, generateDoorBlockModels(block, namespace, baseBlock, "door_bottom_right_open"))
+	const generate = modelHelper.generateDoorBlockModels
+	writeFile(`${paths.models}${block}_top_left.json`, generate(block, namespace, baseBlock, "door_top_left"))
+	writeFile(`${paths.models}${block}_top_right.json`, generate(block, namespace, baseBlock, "door_top_right"))
+	writeFile(`${paths.models}${block}_bottom_left.json`, generate(block, namespace, baseBlock, "door_bottom_left"))
+	writeFile(`${paths.models}${block}_bottom_right.json`, generate(block, namespace, baseBlock, "door_bottom_right"))
+	writeFile(`${paths.models}${block}_top_left_open.json`, generate(block, namespace, baseBlock, "door_top_left_open"))
+	writeFile(`${paths.models}${block}_top_right_open.json`, generate(block, namespace, baseBlock, "door_top_right_open"))
+	writeFile(`${paths.models}${block}_bottom_left_open.json`, generate(block, namespace, baseBlock, "door_bottom_left_open"))
+	writeFile(`${paths.models}${block}_bottom_right_open.json`, generate(block, namespace, baseBlock, "door_bottom_right_open"))
 }
 
 function writeTrapdoorBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}_top.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_top", "cutout", "texture"));
-	writeFile(`${paths.models}${block}_bottom.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_bottom", "cutout", "texture"));
-	writeFile(`${paths.models}${block}_open.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_open", "cutout", "texture"));
+	const generate = modelHelper.generateBlockModel
+	writeFile(`${paths.models}${block}_top.json`, generate(block, namespace, block, "template_orientable_trapdoor_top", "cutout", "texture"));
+	writeFile(`${paths.models}${block}_bottom.json`, generate(block, namespace, block, "template_orientable_trapdoor_bottom", "cutout", "texture"));
+	writeFile(`${paths.models}${block}_open.json`, generate(block, namespace, block, "template_orientable_trapdoor_open", "cutout", "texture"));
 }
 
 function writeCarpetBlockModels(block, namespace, baseBlock) {
-	let carpetModel = modelHelper.generateBlockModel(block, namespace, id(namespace, baseBlock), "carpet", undefined, "wool")
+	const generate = modelHelper.generateBlockModel
+	let carpetModel = generate(block, namespace, id(namespace, baseBlock), "carpet", undefined, "wool")
 	if (block === "grass_carpet") {
 		carpetModel = readFile(`./overrides/models/grass_carpet.json`)
 	}
@@ -826,7 +824,6 @@ function writeTrapdoorItemModel(block, namespace) {
 	writeFile(`${paths.itemModels}${block}.json`, modelItem);
 }
 
-
 function writeUniqueItemModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = modID
@@ -859,7 +856,6 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	}
 }
 
-
 function writeInventoryModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = modID
@@ -868,12 +864,9 @@ function writeInventoryModel(block, namespace) {
 		writeWinterDropItem(namespace, "block", block, `${block}_inventory`)
 	}
 	else {
-		let modelItem = `{
-	  "parent": "${namespace}:block/${block}_inventory"
-	}`
+		const modelItem = `{"parent": "${namespace}:block/${block}_inventory"}`
 		writeFile(`${paths.itemModels}${block}.json`, modelItem);
 	}
-
 }
 
 function writePlanks(block, dye, namespace, baseBlock) {
@@ -915,7 +908,6 @@ function writeDye(item) {
 	item = item + "_dye"
 	writeItem(item, modID)
 	recipeWriter.writeShapelessRecipe(getDyeIngredient(item), id(item), 1)
-
 }
 
 function writeItem(item) {
@@ -951,9 +943,7 @@ function writeTrapdoors(block, namespace, baseBlock) {
 		tagHelper.tagBoth(block, "metal_trapdoors")
 	}
 	writeRecipes(block, "trapdoor", baseBlock)
-
 }
-
 
 function writeBlock(block, namespace, blockType, baseBlock, render_type, altNamespace, texture, shouldGenerateStonecutterRecipes) {
 	if (altNamespace === undefined) {
@@ -983,6 +973,11 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	else if ((blockType == "lamps") || (blockType == "lamp")) {
 		tagHelper.tagBoth(block, "lamps")
 		tagHelper.checkAndAddDyedTag(block, baseBlock)
+	}
+	else if (blockType.includes("resource_bricks")) {
+		tagHelper.tagBlock(block, baseBlock.split(":")[1].split("cut_")[1])
+		// tagHelper.tagBlock(block, block.split("smooth_")[1])
+		// tagHelper.tagBlock(block, "smooth_blocks")
 	}
 	else if (blockType.includes("bricks")) {
 		if (blockType == "bricks") {
