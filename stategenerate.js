@@ -704,8 +704,8 @@ function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
 
 function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
 	altNamespace = getAltNamespace(namespace, altNamespace)
-	writeFile(`${paths.models}${baseBlock}_upright.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch"))
-	writeFile(`${paths.models}${block}_wall.json`, generateTorchBlockModel(block, namespace, baseBlock, altNamespace, "template_torch_wall"))
+	writeFile(`${paths.models}${baseBlock}_upright.json`, generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch", "cutout", "torch"))
+	writeFile(`${paths.models}${block}_wall.json`, generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch_wall", "cutout", "torch"))
 }
 
 function writeCubeColumnBlockModels(block, namespace, baseBlock) {
@@ -715,7 +715,7 @@ function writeCubeColumnBlockModels(block, namespace, baseBlock) {
 }
 
 function writeFlowerBlockModels(block, namespace) {
-	writeFile(`${paths.models}${block}.json`, generateBasicBlockModels(block, namespace, "cross", "cross"))
+	writeFile(`${paths.models}${block}.json`, generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
 
 }
 
@@ -958,9 +958,9 @@ function writeDoorBlockModels(block, namespace, baseBlock) {
 
 
 function writeTrapdoorBlockModels(block, namespace, baseBlock) {
-	writeFile(`${paths.models}${block}_top.json`, generateBasicBlockModels(block, namespace, "template_orientable_trapdoor_top", "cutout"));
-	writeFile(`${paths.models}${block}_bottom.json`, generateBasicBlockModels(block, namespace, "template_orientable_trapdoor_bottom", "cutout"));
-	writeFile(`${paths.models}${block}_open.json`, generateBasicBlockModels(block, namespace, "template_orientable_trapdoor_open", "cutout"));
+	writeFile(`${paths.models}${block}_top.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_top", "cutout", "texture"));
+	writeFile(`${paths.models}${block}_bottom.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_bottom", "cutout", "texture"));
+	writeFile(`${paths.models}${block}_open.json`, generateBlockModel(block, namespace, block, "template_orientable_trapdoor_open", "cutout", "texture"));
 }
 
 function writeCarpetBlockModels(block, namespace, baseBlock) {
@@ -2127,15 +2127,21 @@ function generateTrapdoorBlockState(block, namespace, baseBlock) {
 	return `{"variants":{"facing=east,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":90},"facing=east,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":90},"facing=east,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":90},"facing=east,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":270},"facing=north,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom"},"facing=north,half=bottom,open=true":{"model":"${namespace}:block/${block}_open"},"facing=north,half=top,open=false":{"model":"${namespace}:block/${block}_top"},"facing=north,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":180},"facing=south,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":180},"facing=south,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":180},"facing=south,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":180},"facing=south,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":0},"facing=west,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":270},"facing=west,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":270},"facing=west,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":270},"facing=west,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":90}}}`
 }
 
-function generateBlockModel(block, namespace, texture, model, render_type) {
+function generateBlockModel(block, namespace, texture, model, render_type, texture_type) {
 	if (model === undefined) {
 		model = "minecraft:block/cube_all"
+	}
+	if (!model.includes("block/")) {
+		model = "minecraft:block/" + model
 	}
 	if (render_type === undefined) {
 		render_type = ""
 	}
 	else {
-		render_type = `,${render_type}`
+		render_type = `,"render_type": "${render_type}"`
+	}
+	if (texture_type === undefined) {
+		texture_type = "all"
 	}
 	// Extract namespace and block from texture, if present.
 	if (texture.includes(":")) {
@@ -2147,7 +2153,7 @@ function generateBlockModel(block, namespace, texture, model, render_type) {
 		return readFile(`./overrides/models/grass_turf.json`)
 	}
 
-	return `{"parent": "${model}","textures": {"all": "${namespace}:block/${block}"}${render_type}}`
+	return `{"parent": "${model}","textures": {"${texture_type}": "${namespace}:block/${block}"}${render_type}}`
 
 }
 
@@ -2185,19 +2191,6 @@ function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addo
 	return `{"parent": "pyrite:block/template_torch_lever${addon}","textures": {"texture": "${altNamespace}:block/${baseBlock}"},"render_type": "cutout"}`
 }
 
-function generateTorchBlockModel(block, namespace, baseBlock, altNamespace, addon) {
-	return `{"parent": "minecraft:block/${addon}","textures": {"torch": "${altNamespace}:block/${baseBlock}"},"render_type": "cutout"}`
-}
-
-function generateFlowerBlockModel(block, namespace) {
-	return `{
-	"parent": "minecraft:block/cross",
-	"textures": {
-	  "cross": "${namespace}:block/${block}"
-	}
-  }`
-}
-
 function generateMushroomStemModel(block, namespace, baseBlock, model) {
 	return `{"parent": "minecraft:block/${model}","textures": {"end": "${namespace}:block/${block}_top","side": "minecraft:block/mushroom_stem"}}`
 }
@@ -2212,19 +2205,6 @@ function generateButtonBlockState(block, namespace, baseBlock) {
 
 function generateFenceGateBlockState(block, namespace) {
 	return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`
-}
-
-function generateBasicBlockModels(block, namespace, modelID, render_type, texture_type) {
-	if (render_type === undefined) {
-		render_type = ""
-	}
-	if (texture_type === undefined) {
-		texture_type = "texture"
-	}
-	else {
-		render_type = `"render_type": "${render_type}"`
-	}
-	return `{"parent":"minecraft:block/${modelID}","textures":{"${texture_type}":"${namespace}:block/${block}"},${render_type}}`
 }
 
 function generateDoorBlockModels(block, namespace, baseBlock, modelID) {
