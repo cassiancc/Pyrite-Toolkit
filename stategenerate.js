@@ -212,6 +212,9 @@ class Block {  // Create a class
 		else if (blockType == "locked_chest") {
 			writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
+		else if (blockType == "nostalgia_grass_block") {
+			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
+		}
 		else {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
@@ -349,7 +352,7 @@ function generateResources() {
 	writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
 	writeBlock("nostalgia_netherrack", modID, "nostalgia_netherrack", "nostalgia_netherrack")
 	writeBlock("nostalgia_gravel", modID, "nostalgia_gravel", "nostalgia_gravel")
-	writeBlock("nostalgia_grass_block", modID, "nostalgia_grass_block", "nostalgia_grass_block")
+	new Block("nostalgia_grass_block", modID, undefined, "nostalgia_grass_block", "nostalgia_grass_block", "grass")
 
 	//Framed Glass
 	new Block("framed_glass", modID, undefined, "framed_glass", "framed_glass", "framed_glass")
@@ -1077,14 +1080,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	if (texture == undefined) {
 		texture = baseBlock
 	}
-	let blockState = `{
-	"variants": {
-	  "": {
-		"model": "${namespace}:block/${block}"
-	  }
-	}
-  }`
-	writeBlockstate(block, blockState, namespace)
+	writeBlockstate(block, stateHelper.generateBasicBlockstate(block, namespace), namespace)
 	writePlankBlockModels(block, namespace, texture, undefined, render_type)
 	writeBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
@@ -1252,6 +1248,15 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 	tagHelper.tagBlock(block, getPath(baseBlock).split("_block")[0])
 	writeRecipes(block, special, baseBlock)
 	writeStonecutterRecipes(block, baseBlock, 1)
+
+}
+
+function writeUprightColumnBlock(block, namespace, blockType, baseBlock) {
+	writeBlockstate(block, stateHelper.generateBasicBlockstate(block, namespace), namespace)
+	writeCubeColumnBlockModels(block, namespace, baseBlock)
+	writeBlockItemModel(block, namespace)
+	generateBlockLang(block)
+	writeRecipes(block, blockType, baseBlock)
 
 }
 

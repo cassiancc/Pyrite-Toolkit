@@ -169,5 +169,14 @@ module.exports = {
               ]
             }
           }
+    },
+    generateBasicBlockstate: function generateBasicBlockstate(block, namespace) {
+       return {
+                "variants": {
+                    "": {
+                        "model": `${namespace}:block/${block}`
+                    }
+                }
+            }
     }
 }
