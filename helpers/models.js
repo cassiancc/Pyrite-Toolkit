@@ -89,7 +89,18 @@ module.exports = {
     },
 
     generateCraftingTableBlockModel: function generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace) {
-        return `{"parent": "minecraft:block/cube","textures": {"particle": "${namespace}:block/${block}_front","north": "${namespace}:block/${block}_front","south": "${namespace}:block/${block}_side","east": "${namespace}:block/${block}_side","west": "${namespace}:block/${block}_front","up": "${namespace}:block/${block}_top","down": "${altNamespace}:block/${baseBlock}"}}`
+        return `{
+            "parent": "minecraft:block/cube",
+            "textures": {
+                "particle": "${namespace}:block/${block}_front",
+                "north": "${namespace}:block/${block}_front",
+                "south": "${namespace}:block/${block}_side",
+                "east": "${namespace}:block/${block}_side",
+                "west": "${namespace}:block/${block}_front",
+                "up": "${namespace}:block/${block}_top",
+                "down": "${altNamespace}:block/${baseBlock}"
+            }
+        }`
     },
     
     generateCubeColumnBlockModel: function generateCubeColumnBlockModel(block, namespace, baseBlock, model) {

@@ -1195,7 +1195,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 		altNamespace = namespace
 	}
 
-	wallBlockState = `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"},"when":{"up":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true},"when":{"north":"low"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":90},"when":{"east":"low"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":180},"when":{"south":"low"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":270},"when":{"west":"low"}},{"apply":{"model":"${namespace}:block/${block}_side_tall","uvlock":true},"when":{"north":"tall"}},{"apply":{"model":"${namespace}:block/${block}_side_tall","uvlock":true,"y":90},"when":{"east":"tall"}},{"apply":{"model":"${namespace}:block/${block}_side_tall","uvlock":true,"y":180},"when":{"south":"tall"}},{"apply":{"model":"${namespace}:block/${block}_side_tall","uvlock":true,"y":270},"when":{"west":"tall"}}]}`
+	wallBlockState = stateHelper.generateWallBlockstate(block, namespace)
 	writeBlockstate(block, wallBlockState, namespace)
 	writeWallBlockModels(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
@@ -1209,17 +1209,12 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 
 }
 
-function generateStairBlockstate(block, namespace) {
-	block = getPath(block)
-	return `{"variants":{"facing=east,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner","y":270,"uvlock":true},"facing=east,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner"},"facing=east,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer","y":270,"uvlock":true},"facing=east,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer"},"facing=east,half=bottom,shape=straight":{"model":"${namespace}:block/${block}"},"facing=east,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"uvlock":true},"facing=east,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"y":90,"uvlock":true},"facing=east,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"uvlock":true},"facing=east,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"y":90,"uvlock":true},"facing=east,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"uvlock":true},"facing=north,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner","y":180,"uvlock":true},"facing=north,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner","y":270,"uvlock":true},"facing=north,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer","y":180,"uvlock":true},"facing=north,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer","y":270,"uvlock":true},"facing=north,half=bottom,shape=straight":{"model":"${namespace}:block/${block}","y":270,"uvlock":true},"facing=north,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"y":270,"uvlock":true},"facing=north,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"uvlock":true},"facing=north,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"y":270,"uvlock":true},"facing=north,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"uvlock":true},"facing=north,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"y":270,"uvlock":true},"facing=south,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner"},"facing=south,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner","y":90,"uvlock":true},"facing=south,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer"},"facing=south,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer","y":90,"uvlock":true},"facing=south,half=bottom,shape=straight":{"model":"${namespace}:block/${block}","y":90,"uvlock":true},"facing=south,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"y":90,"uvlock":true},"facing=south,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"y":180,"uvlock":true},"facing=south,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"y":90,"uvlock":true},"facing=south,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"y":180,"uvlock":true},"facing=south,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"y":90,"uvlock":true},"facing=west,half=bottom,shape=inner_left":{"model":"${namespace}:block/${block}_inner","y":90,"uvlock":true},"facing=west,half=bottom,shape=inner_right":{"model":"${namespace}:block/${block}_inner","y":180,"uvlock":true},"facing=west,half=bottom,shape=outer_left":{"model":"${namespace}:block/${block}_outer","y":90,"uvlock":true},"facing=west,half=bottom,shape=outer_right":{"model":"${namespace}:block/${block}_outer","y":180,"uvlock":true},"facing=west,half=bottom,shape=straight":{"model":"${namespace}:block/${block}","y":180,"uvlock":true},"facing=west,half=top,shape=inner_left":{"model":"${namespace}:block/${block}_inner","x":180,"y":180,"uvlock":true},"facing=west,half=top,shape=inner_right":{"model":"${namespace}:block/${block}_inner","x":180,"y":270,"uvlock":true},"facing=west,half=top,shape=outer_left":{"model":"${namespace}:block/${block}_outer","x":180,"y":180,"uvlock":true},"facing=west,half=top,shape=outer_right":{"model":"${namespace}:block/${block}_outer","x":180,"y":270,"uvlock":true},"facing=west,half=top,shape=straight":{"model":"${namespace}:block/${block}","x":180,"y":180,"uvlock":true}}}`
-}
-
 // DEPRECATED - STAIR GENERATOR
 function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateStonecutterRecipes) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	let stairBlockState = generateStairBlockstate(block, namespace)
+	const stairBlockState = stateHelper.generateStairBlockstate(block, namespace)
 	writeBlockstate(block, stairBlockState, namespace)
 	writeStairBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
@@ -1246,7 +1241,7 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 		texturePath = texture;
 	}
 
-	let stairBlockState = generateStairBlockstate(block, modID)
+	const stairBlockState = stateHelper.generateStairBlockstate(block, modID)
 	writeBlockstate(block, stairBlockState, modID)
 	writeStairBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
@@ -1275,7 +1270,7 @@ function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateSto
 	}
 
 	// Write blockstate
-	let slabBlockState = generateSlabBlockState(block, namespace, baseBlock)
+	const slabBlockState = stateHelper.generateSlabBlockState(block, namespace, baseBlock)
 	writeBlockstate(block, slabBlockState, namespace)
 
 	// Write models
@@ -1314,7 +1309,7 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 		texturePath = texture;
 	}
 
-	let slabBlockState = generateSlabBlockState(block, modID, baseBlock)
+	const slabBlockState = stateHelper.generateSlabBlockState(block, modID, baseBlock)
 	writeBlockstate(block, slabBlockState, modID)
 	writeSlabBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
@@ -1498,12 +1493,6 @@ function writeDoorLootTables(block, namespace) {
 	}
 	let lootTable = `{"type": "minecraft:block","pools": [{"bonus_rolls": 0.0,"conditions": [{"condition": "minecraft:survives_explosion"}],"entries": [{"type": "minecraft:item","conditions": [{"block": "${namespace}:${block}","condition": "minecraft:block_state_property","properties": {"half": "lower"}}],"name": "${namespace}:${block}"}],"rolls": 1.0}]}`
 	writeFile(`${paths.loot}${block}.json`, lootTable);
-}
-
-function generateSlabBlockState(block, namespace, baseBlock) {
-	block = getPath(block)
-	baseBlock = getPath(baseBlock)
-	return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${namespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
 }
 
 function getDyeIngredient(dye) {

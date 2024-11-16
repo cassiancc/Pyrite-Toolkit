@@ -6,6 +6,317 @@ module.exports = {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post_ends"}},{"when":{"north":"false","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap"}},{"when":{"north":"false","west":"false","south":"false","east":"true"},"apply":{"model":"${namespace}:block/${block}_cap","y":90}},{"when":{"north":"false","west":"false","south":"true","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt"}},{"when":{"north":"false","west":"true","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt","y":90}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}}]}`
     },
 
+    generateWallBlockstate: function generateWallBlockstate(block, namespace) {
+        return `{
+            "multipart": [
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_post"
+                    },
+                    "when": {
+                        "up": "true"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side",
+                        "uvlock": true
+                    },
+                    "when": {
+                        "north": "low"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side",
+                        "uvlock": true,
+                        "y": 90
+                    },
+                    "when": {
+                        "east": "low"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side",
+                        "uvlock": true,
+                        "y": 180
+                    },
+                    "when": {
+                        "south": "low"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side",
+                        "uvlock": true,
+                        "y": 270
+                    },
+                    "when": {
+                        "west": "low"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side_tall",
+                        "uvlock": true
+                    },
+                    "when": {
+                        "north": "tall"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side_tall",
+                        "uvlock": true,
+                        "y": 90
+                    },
+                    "when": {
+                        "east": "tall"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side_tall",
+                        "uvlock": true,
+                        "y": 180
+                    },
+                    "when": {
+                        "south": "tall"
+                    }
+                },
+                {
+                    "apply": {
+                        "model": "${namespace}:block/${block}_side_tall",
+                        "uvlock": true,
+                        "y": 270
+                    },
+                    "when": {
+                        "west": "tall"
+                    }
+                }
+            ]
+        }`
+    },
+
+    generateSlabBlockState: function generateSlabBlockState(block, namespace, baseBlock) {
+        block = helpers.getPath(block)
+        baseBlock = helpers.getPath(baseBlock)
+        return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${namespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
+    },
+
+    generateStairBlockstate: function generateStairBlockstate(block, namespace) {
+        block = helpers.getPath(block)
+        return `{
+            "variants": {
+                "facing=east,half=bottom,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=east,half=bottom,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner"
+                },
+                "facing=east,half=bottom,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=east,half=bottom,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer"
+                },
+                "facing=east,half=bottom,shape=straight": {
+                    "model": "${namespace}:block/${block}"
+                },
+                "facing=east,half=top,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "uvlock": true
+                },
+                "facing=east,half=top,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=east,half=top,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "uvlock": true
+                },
+                "facing=east,half=top,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=east,half=top,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "x": 180,
+                    "uvlock": true
+                },
+                "facing=north,half=bottom,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=north,half=bottom,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=north,half=bottom,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=north,half=bottom,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=north,half=bottom,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=north,half=top,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=north,half=top,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "uvlock": true
+                },
+                "facing=north,half=top,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=north,half=top,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "uvlock": true
+                },
+                "facing=north,half=top,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "x": 180,
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=south,half=bottom,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner"
+                },
+                "facing=south,half=bottom,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=south,half=bottom,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer"
+                },
+                "facing=south,half=bottom,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=south,half=bottom,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=south,half=top,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=south,half=top,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=south,half=top,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=south,half=top,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=south,half=top,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "x": 180,
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=west,half=bottom,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=west,half=bottom,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=west,half=bottom,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "y": 90,
+                    "uvlock": true
+                },
+                "facing=west,half=bottom,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=west,half=bottom,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=west,half=top,shape=inner_left": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=west,half=top,shape=inner_right": {
+                    "model": "${namespace}:block/${block}_inner",
+                    "x": 180,
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=west,half=top,shape=outer_left": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "y": 180,
+                    "uvlock": true
+                },
+                "facing=west,half=top,shape=outer_right": {
+                    "model": "${namespace}:block/${block}_outer",
+                    "x": 180,
+                    "y": 270,
+                    "uvlock": true
+                },
+                "facing=west,half=top,shape=straight": {
+                    "model": "${namespace}:block/${block}",
+                    "x": 180,
+                    "y": 180,
+                    "uvlock": true
+                }
+            }
+        }`
+    },
 
     generatePaneBlockState: function generatePaneBlockState(block, namespace, baseBlock) {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}},{"when":{"north":"false"},"apply":{"model":"${namespace}:block/${block}_noside"}},{"when":{"east":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt"}},{"when":{"south":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt","y":90}},{"when":{"west":"false"},"apply":{"model":"${namespace}:block/${block}_noside","y":270}}]}`
@@ -146,7 +457,86 @@ module.exports = {
     },
     
     generateFenceGateBlockState: function generateFenceGateBlockState(block, namespace) {
-        return `{"variants":{"facing=east,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":270},"facing=east,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":270},"facing=east,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":270},"facing=east,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":270},"facing=north,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":180},"facing=north,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":180},"facing=north,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":180},"facing=north,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":180},"facing=south,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true},"facing=south,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true},"facing=south,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true},"facing=south,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true},"facing=west,in_wall=false,open=false":{"model":"${namespace}:block/${block}","uvlock":true,"y":90},"facing=west,in_wall=false,open=true":{"model":"${namespace}:block/${block}_open","uvlock":true,"y":90},"facing=west,in_wall=true,open=false":{"model":"${namespace}:block/${block}_wall","uvlock":true,"y":90},"facing=west,in_wall=true,open=true":{"model":"${namespace}:block/${block}_wall_open","uvlock":true,"y":90}}}`
+        return `{
+            "variants": {
+                "facing=east,in_wall=false,open=false": {
+                    "model": "${namespace}:block/${block}",
+                    "uvlock": true,
+                    "y": 270
+                },
+                "facing=east,in_wall=false,open=true": {
+                    "model": "${namespace}:block/${block}_open",
+                    "uvlock": true,
+                    "y": 270
+                },
+                "facing=east,in_wall=true,open=false": {
+                    "model": "${namespace}:block/${block}_wall",
+                    "uvlock": true,
+                    "y": 270
+                },
+                "facing=east,in_wall=true,open=true": {
+                    "model": "${namespace}:block/${block}_wall_open",
+                    "uvlock": true,
+                    "y": 270
+                },
+                "facing=north,in_wall=false,open=false": {
+                    "model": "${namespace}:block/${block}",
+                    "uvlock": true,
+                    "y": 180
+                },
+                "facing=north,in_wall=false,open=true": {
+                    "model": "${namespace}:block/${block}_open",
+                    "uvlock": true,
+                    "y": 180
+                },
+                "facing=north,in_wall=true,open=false": {
+                    "model": "${namespace}:block/${block}_wall",
+                    "uvlock": true,
+                    "y": 180
+                },
+                "facing=north,in_wall=true,open=true": {
+                    "model": "${namespace}:block/${block}_wall_open",
+                    "uvlock": true,
+                    "y": 180
+                },
+                "facing=south,in_wall=false,open=false": {
+                    "model": "${namespace}:block/${block}",
+                    "uvlock": true
+                },
+                "facing=south,in_wall=false,open=true": {
+                    "model": "${namespace}:block/${block}_open",
+                    "uvlock": true
+                },
+                "facing=south,in_wall=true,open=false": {
+                    "model": "${namespace}:block/${block}_wall",
+                    "uvlock": true
+                },
+                "facing=south,in_wall=true,open=true": {
+                    "model": "${namespace}:block/${block}_wall_open",
+                    "uvlock": true
+                },
+                "facing=west,in_wall=false,open=false": {
+                    "model": "${namespace}:block/${block}",
+                    "uvlock": true,
+                    "y": 90
+                },
+                "facing=west,in_wall=false,open=true": {
+                    "model": "${namespace}:block/${block}_open",
+                    "uvlock": true,
+                    "y": 90
+                },
+                "facing=west,in_wall=true,open=false": {
+                    "model": "${namespace}:block/${block}_wall",
+                    "uvlock": true,
+                    "y": 90
+                },
+                "facing=west,in_wall=true,open=true": {
+                    "model": "${namespace}:block/${block}_wall_open",
+                    "uvlock": true,
+                    "y": 90
+                }
+            }
+        }`
     },
 
     generateOrientableBlockState: function generateOrientableBlockState(block) {
