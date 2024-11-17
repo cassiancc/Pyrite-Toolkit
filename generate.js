@@ -1137,8 +1137,9 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	generateBlockLang(block)
 	writeLootTables(block)
 
+	// Tag Fence Gates
+	tagHelper.tagBoth(block, "minecraft:fence_gates", true)
 	if (baseBlock.includes("planks")) {
-		tagHelper.tagBoth(block, "minecraft:wooden_fence_gates", true)
 		tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
 	}
 	else {
@@ -1163,6 +1164,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	writeBlockItemModel(block, modID, baseBlock)
 	tagHelper.tagBoth(block, "wall_gates", true)
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
+	writeStonecutterRecipes(block, baseBlock, 1)
 
 }
 

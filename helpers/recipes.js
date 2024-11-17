@@ -165,7 +165,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			recipe = generateShapedRecipe({ "X": `minecraft:crying_obsidian`, "#": `minecraft:magma_block` }, `pyrite:glowing_obsidian`, 4, ["X#", "#X"])
 		}
 		else {
-			recipe = generateShapedRecipe({ "X": `pyrite:glowing_obsidian`, "#": `pyrite:nostalgia_dye` }, `pyrite:nostalgia_glowing_obsidian`, 1, ["X#", "#X"])
+			recipe = generateShapelessRecipe([ `pyrite:glowing_obsidian`, `pyrite:nostalgia_dye` ], `pyrite:nostalgia_glowing_obsidian`, 1)
 		}
 	}
 	else if (type.includes("cut_")) {
