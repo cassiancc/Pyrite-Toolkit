@@ -1,7 +1,4 @@
-const { create } = require('domain');
 const fs = require('fs');
-const path = require('path');
-const { basename } = require('path');
 const langHelper = require('./helpers/language');
 const tagHelper = require('./helpers/tags');
 const helpers = require('./helpers/helpers');
@@ -15,7 +12,6 @@ const modelWriter = require('./writers/models');
 const id = helpers.id
 const getPath = helpers.getPath
 const getNamespace = helpers.getNamespace;
-const getDyeNamespace = helpers.getDyeNamespace;
 const readFile = helpers.readFile
 const readFileAsJson = helpers.readFileAsJson
 const writeFile = helpers.writeFile
@@ -69,45 +65,8 @@ const winterDropWoods = ["pale_oak"];
 
 const vanillaResources = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 
-//Base path
-let paths = {
-	//new
-	origin: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/`,
-	cavesp2: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.18)/src/main/resources/`,
-	wild: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.19)/src/main/resources/`,
-	trailstales: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources`,
-	trailstales5: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.20.5)/src/main/resources/`,
-	infinite: `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (20w14infinite)/src/main/resources/`,
-
-}
-
-//Assets and legacy path
-paths = Object.assign(paths, {
-	//Legacy
-	base: paths.trailstales,
-	//Assets
-	assets: `${paths.trailstales}/assets/pyrite/`,
-	data: `${paths.trailstales}/data/pyrite/`,
-	mcdata: `${paths.trailstales}/data/minecraft/`
-})
-//Blockstates and models
-paths = Object.assign(paths, { blockstates: `${paths.assets}/blockstates/`, models: `${paths.assets}/models/block/`, itemModels: `${paths.assets}/models/item/` })
-//Namespace data and Minecraft data folders
-paths = Object.assign(paths, { data: `${paths.base}/data/pyrite/`, mcdata: `${paths.base}/data/minecraft/` })
-
-if (majorVersion >= 20) {
-	paths = Object.assign(paths, {
-		loot: `${paths.data}loot_tables/blocks/`,
-		recipes: `${paths.data}/recipes/`
-	})
-}
-
-if (majorVersion <= 21) {
-	paths = Object.assign(paths, {
-		loot: `${paths.data}loot_table/blocks/`,
-		recipes: `${paths.data}/recipe/`
-	})
-}
+// Paths to various files.
+const paths = helpers.paths
 
 let blockIDs = []
 let blockTranslations = readFileAsJson("./overrides/lang/en_us.json")
@@ -133,12 +92,9 @@ class Block {  // Create a class
 		//Add to global list of block translations.
 		this.addTranslation()
 
-		let stonelike;
+		let stonelike = false;
 		if ((material === "stone") || (material.includes("brick"))) {
 			stonelike = true;
-		}
-		else {
-			stonelike = false;
 		}
 
 		//Generate block state
@@ -318,7 +274,7 @@ function generateResources() {
 		let stainedBlockTemplate = dye + "_stained"
 		generateWoodSet(stainedBlockTemplate)
 		generateBrickSet(dye)
-		generateBrickSet(dye + "_terracotta_bricks", "terracotta_bricks", `${getDyeNamespace(dye)}:${dye}_terracotta`)
+		generateBrickSet(dye + "_terracotta_bricks", "terracotta_bricks", `${helpers.getDyeNamespace(dye)}:${dye}_terracotta`)
 
 		// Lamps
 		new Block(dye + "_lamp", modID, undefined, "lamp", dye, "lamp")
@@ -560,9 +516,9 @@ function generateResources() {
 generateResources()
 
 function writeLang() {
-	writeFile(`${paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
-	writeFile(`${paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
-	writeFile(`${paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
+	writeFile(`${helpers.paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
+	writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
+	writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
 }
 
 function writeBlockstate(block, blockState, namespace) {

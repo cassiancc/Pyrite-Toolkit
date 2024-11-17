@@ -6,11 +6,32 @@ const mcVersion = "1.21.1";
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
-const recipePath = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/data/pyrite/recipe/`
 
-const modelPath = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/assets/pyrite/models/block/`
+const basePath = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/`
 
+const s = getTrialPlural()
 
+function getTrialPlural() {
+    if (majorVersion < 21) {
+        return "s"
+    }
+    else {
+        return ""
+    }
+}
+
+const paths = {
+    base: `${basePath}`,
+    assets: `${basePath}assets/pyrite/`,
+    data: `${basePath}data/pyrite/`,
+    recipes: `${basePath}data/pyrite/recipe${s}/`,
+    models: `${basePath}assets/pyrite/models/block${s}/`,
+    itemModels: `${basePath}assets/pyrite/models/item${s}/`,
+    blockstates: `${basePath}assets/pyrite/blockstates/`,
+    items: `${basePath}assets/pyrite/items/`,
+    loot: `${basePath}data/pyrite/loot_table${s}/blocks/`,
+
+}
 
 function readFile(path) {
     return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
@@ -30,7 +51,12 @@ function writeFile(path, data) {
 
 	}
 	if (demoMode === false) {
-		fs.writeFile(path, data, function (err) { if (err) throw err; })
+        if (!path.includes("undefined")) {
+            fs.writeFile(path, data, function (err) { if (err) throw err; })
+        }
+        else {
+            console.log("Preventing write of " + path)
+        }
 	}
 }
 
@@ -79,19 +105,14 @@ module.exports = {
         return namespace + ":" + path
     },
 
-    basePath: function getBasePath() {
-        return `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources`
-    },
-
-    recipePath: recipePath,
-
-    modelPath: modelPath,
+    basePath: basePath,
+    recipePath: paths.recipes,
+    modelPath: paths.models,
+    paths: paths,
 
     
     readFile: readFile,
-
     writeFile, writeFile,
-
     writeFileSafe, writeFileSafe,
 
     readFileAsJson: function readFileAsJson(path) {
