@@ -137,7 +137,7 @@ module.exports = {
         return `{"parent": "minecraft:block/${model}","textures": {"end": "${namespace}:block/${block}_top","side": "minecraft:block/mushroom_stem"}}`
     },
     
-    generateDoorBlockModels: function generateDoorBlockModels(block, namespace, baseBlock, modelID) {
+    generateDoorBlockModels: function generateDoorBlockModels(block, namespace, modelID) {
         return `{"parent":"minecraft:block/${modelID}","textures":{"bottom":"${namespace}:block/${block}_bottom","top":"${namespace}:block/${block}_top"},"render_type":"cutout"}`
     },
 

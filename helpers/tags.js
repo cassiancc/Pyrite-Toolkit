@@ -98,6 +98,15 @@ function checkAndAddBeaconTag(block, baseBlock) {
 	}
 }
 
+function checkAndAddResourceTag(block, baseBlock) {
+	if (baseBlock.includes("smooth_")) {
+		tagBlock(block, baseBlock.split("smooth_")[1])
+	}
+	else if (baseBlock.includes("cut_")) {
+		tagBlock(block, baseBlock.split("cut_")[1])
+	}
+}
+
 function checkAndAddDyedTag(block, baseBlock) {
 	block = getPath(block)
 	baseBlock = getPath(block)
@@ -135,5 +144,7 @@ module.exports = {
     
     checkAndAddDyedTag: checkAndAddDyedTag,
 
-	checkAndAddBeaconTag: checkAndAddBeaconTag
+	checkAndAddBeaconTag: checkAndAddBeaconTag,
+
+	checkAndAddResourceTag: checkAndAddResourceTag
 }

@@ -387,7 +387,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else {
-		console.log(block, type)
+		// console.log(block, type)
 	}
 
 	return recipe
