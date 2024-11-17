@@ -694,9 +694,9 @@ function writeWool(block, dye, namespace) {
 }
 
 function writeTerracottaBricks(block, namespace, special, baseBlock) {
-	const blockState = stateHelper.generateBasicBlockstate(`${block}_north_west_mirrored`, namespace)
+	const blockState = stateHelper.gen(`${block}_north_west_mirrored`, namespace)
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writeMirroredBricksBlockModels(block, namespace, block)
+	modelWriter.writeMirroredBricks(block, namespace, block)
 	writeBlockItemModel(block, namespace)
 	writeRecipes(block, special, baseBlock, namespace)
 	if (block.includes("terracotta")) {
@@ -721,9 +721,9 @@ function writeItem(item) {
 }
 
 function writeDoors(block, baseBlock) {
-	const doorBlockState = stateHelper.generateDoorBlockState(block, modID, baseBlock)
+	const doorBlockState = stateHelper.genDoors(block, modID, baseBlock)
 	writeBlockstate(block, doorBlockState, modID)
-	modelWriter.writeDoorBlockModels(block)
+	modelWriter.writeDoors(block)
 	writeUniqueItemModel(block)
 	generateBlockLang(block)
 
@@ -739,13 +739,13 @@ function writeDoors(block, baseBlock) {
 }
 
 function writeTrapdoors(block, namespace, baseBlock) {
-	let doorBlockState = stateHelper.generateTrapdoorBlockState(block, namespace, baseBlock)
+	let doorBlockState = stateHelper.genTrapdoors(block, namespace, baseBlock)
 	writeBlockstate(block, doorBlockState, namespace)
-	modelWriter.writeTrapdoorBlockModels(block, namespace, baseBlock)
+	modelWriter.writeTrapdoors(block, namespace, baseBlock)
 	writeTrapdoorItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	generateBlockLang(block)
-	if (block.includes("planks")) {
+	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_trapdoors")
 	}
 	else {
@@ -762,8 +762,8 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	if (texture == undefined) {
 		texture = baseBlock
 	}
-	writeBlockstate(block, stateHelper.generateBasicBlockstate(block, namespace), namespace)
-	modelWriter.writePlankBlockModels(block, namespace, texture, undefined, render_type)
+	writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
+	modelWriter.writePlanks(block, namespace, texture, undefined, render_type)
 	writeBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	generateBlockLang(block)
@@ -868,7 +868,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	const blockState = `{"variants":{"face=ceiling,facing=east":{"model":"${namespace}:block/${block}_upright","x":180,"y":270},"face=ceiling,facing=north":{"model":"${namespace}:block/${block}_upright","x":180,"y":180},"face=ceiling,facing=south":{"model":"${namespace}:block/${block}_upright","x":180},"face=ceiling,facing=west":{"model":"${namespace}:block/${block}_upright","x":180,"y":90},"face=floor,facing=east":{"model":"${namespace}:block/${block}_upright","y":90},"face=floor,facing=north":{"model":"${namespace}:block/${block}_upright"},"face=floor,facing=south":{"model":"${namespace}:block/${block}_upright","y":180},"face=floor,facing=west":{"model":"${namespace}:block/${block}_upright","y":270},"face=wall,facing=east":{"model":"${namespace}:block/${block}_wall"},"face=wall,facing=north":{"model":"${namespace}:block/${block}_wall","y":270},"face=wall,facing=south":{"model":"${namespace}:block/${block}_wall","y":90},"face=wall,facing=west":{"model":"${namespace}:block/${block}_wall","y":180}}}`
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writeTorchBlockModels(block, namespace, block, altNamespace)
+	modelWriter.writeTorches(block, namespace, block, altNamespace)
 	writeUniqueBlockItemModel(block, namespace, namespace, block)
 	writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, `c:dyed/${baseBlock}`)
@@ -880,9 +880,9 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	const blockState = stateHelper.generateBasicBlockstate(block, namespace)
+	const blockState = stateHelper.gen(block, namespace)
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace)
+	modelWriter.writeCraftingTables(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	tagHelper.tagBoth(block, "crafting_tables")
@@ -896,7 +896,7 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	}
 	const blockState = `{"variants":{"facing=east":{"model":"${namespace}:block/${block}","y":90},"facing=north":{"model":"${namespace}:block/${block}"},"facing=south":{"model":"${namespace}:block/${block}","y":180},"facing=west":{"model":"${namespace}:block/${block}","y":270}}}`
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writePlankBlockModels(block, namespace, baseBlock, "pyrite:block/template_ladder")
+	modelWriter.writePlanks(block, namespace, baseBlock, "pyrite:block/template_ladder")
 	writeUniqueBlockItemModel(block, namespace, namespace)
 	writeLootTables(block, namespace)
 	tagHelper.tagBlock(block, "ladders")
@@ -909,18 +909,18 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 		altNamespace = namespace
 	}
 	block += "_chest"
-	const blockState = stateHelper.generateBasicBlockstate(block, namespace)
+	const blockState = stateHelper.gen(block, namespace)
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writePlankBlockModels(block, namespace, baseBlock)
+	modelWriter.writePlanks(block, namespace, baseBlock)
 	writeUniqueBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "chest", baseBlock, namespace, altNamespace)
 }
 
 function writeFlower(block) {
-	const blockState =  stateHelper.generateBasicBlockstate(block, modID)
+	const blockState =  stateHelper.gen(block, modID)
 	writeBlockstate(block, blockState, modID)
-	modelWriter.writeFlowerBlockModels(block, modID)
+	modelWriter.writeFlowers(block, modID)
 	writeUniqueBlockItemModel(block, modID)
 	tagHelper.tagBoth(block, "minecraft:small_flowers")
 	generateBlockLang(block)
@@ -931,7 +931,7 @@ function writeFlower(block) {
 function writeChiseledBlock(block, baseBlock, namespace, special) {
 	blockState = `{"variants":{"axis=x":{"model":"${namespace}:block/${block}_horizontal","x":90,"y":90},"axis=y":{"model":"${namespace}:block/${block}"},"axis=z":{"model":"${namespace}:block/${block}_horizontal","x":90}}}`
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writeCubeColumnBlockModels(block, namespace, baseBlock)
+	modelWriter.writeColumns(block, namespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
@@ -943,17 +943,16 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 }
 
 function writeUprightColumnBlock(block, namespace, blockType, baseBlock) {
-	writeBlockstate(block, stateHelper.generateBasicBlockstate(block, namespace), namespace)
-	modelWriter.writeCubeColumnBlockModels(block, namespace, baseBlock)
+	writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
+	modelWriter.writeColumns(block, namespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	writeRecipes(block, blockType, baseBlock)
 }
 
 function writeOrientableBlock(block, namespace, blockType, baseBlock) {
-	blockState = stateHelper.generateOrientableBlockState(id(modID, block))
-	writeBlockstate(block, blockState, namespace)
-	modelWriter.writeProvidedBlockModel(block, modelHelper.generateOrientableBlockModel(id(modID, block)))
+	writeBlockstate(block, stateHelper.genOrientable(id(modID, block)), namespace)
+	modelWriter.writeProvided(block, modelHelper.genOrientable(id(modID, block)))
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
@@ -962,8 +961,8 @@ function writeOrientableBlock(block, namespace, blockType, baseBlock) {
 
 function writePaneBlock(block, namespace, baseBlock) {
 	baseBlock = block.replace("_pane", "")
-	writeBlockstate(block, stateHelper.generatePaneBlockState(block, namespace, baseBlock), namespace)
-	modelWriter.writePaneBlockModels(block, namespace, baseBlock)
+	writeBlockstate(block, stateHelper.genPanes(block, namespace, baseBlock), namespace)
+	modelWriter.writePanes(block, namespace, baseBlock)
 	writeUniqueBlockItemModel(block, namespace, namespace, baseBlock)
 	writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, "c:glass_panes")
@@ -975,8 +974,8 @@ function writePaneBlock(block, namespace, baseBlock) {
 function writeBarBlock(block, namespace, baseBlock) {
 	baseBlock = block
 	block = block + "_bars"
-	writeBlockstate(block, stateHelper.generateBarBlockState(block, namespace, baseBlock), namespace)
-	modelWriter.writeBarBlockModels(block, namespace, block)
+	writeBlockstate(block, stateHelper.genBars(block, namespace, baseBlock), namespace)
+	modelWriter.writeBars(block, namespace, block)
 	writeUniqueBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "metal_bars")
 	generateBlockLang(block)
@@ -987,7 +986,7 @@ function writeBarBlock(block, namespace, baseBlock) {
 function writeLogs(block, namespace, special) {
 	blockState = `{"variants":{"axis=x":{"model":"${namespace}:block/${block}_horizontal","x":90,"y":90},"axis=y":{"model":"${namespace}:block/${block}"},"axis=z":{"model":"${namespace}:block/${block}_horizontal","x":90}}}`
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writeLogBlockModels(block, namespace)
+	modelWriter.writeLogs(block, namespace)
 	writeBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "minecraft:logs")
 	writeRecipes(block, special)
@@ -1001,9 +1000,9 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 		altNamespace = namespace
 	}
 
-	wallBlockState = stateHelper.generateWallBlockstate(block, namespace)
+	wallBlockState = stateHelper.genWalls(block, namespace)
 	writeBlockstate(block, wallBlockState, namespace)
-	modelWriter.writeWallBlockModels(block, altNamespace, baseBlock)
+	modelWriter.writeWalls(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
 	generateBlockLang(block)
 	writeRecipes(block, "wall", baseBlock, altNamespace)
@@ -1029,9 +1028,9 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 		texturePath = texture;
 	}
 
-	const stairBlockState = stateHelper.generateStairBlockstate(block, modID)
+	const stairBlockState = stateHelper.genStairs(block, modID)
 	writeBlockstate(block, stairBlockState, modID)
-	modelWriter.writeStairBlockModels(block, textureNamespace, texture)
+	modelWriter.writeStairs(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
 	generateBlockLang(block)
 	writeLootTables(block)
@@ -1074,9 +1073,9 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 		texturePath = texture;
 	}
 
-	const slabBlockState = stateHelper.generateSlabBlockState(block, modID, baseBlock)
+	const slabBlockState = stateHelper.genSlabs(block, modID, baseBlock)
 	writeBlockstate(block, slabBlockState, modID)
-	modelWriter.writeSlabBlockModels(block, textureNamespace, texture)
+	modelWriter.writeSlabs(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
 	generateBlockLang(block)
 	writeLootTables(block)
@@ -1109,9 +1108,9 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	const plateBlockState = stateHelper.generatePlateBlockstate(block, namespace)
+	const plateBlockState = stateHelper.genPressurePlates(block, namespace)
 	writeBlockstate(block, plateBlockState)
-	modelWriter.writePlateBlockModels(block, altNamespace, baseBlock)
+	modelWriter.writePressurePlates(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)
 	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
@@ -1132,9 +1131,9 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	if (type == undefined) {
 		type = "buttons"
 	}
-	let buttonBlockState = stateHelper.generateButtonBlockState(block, namespace, baseBlock)
+	let buttonBlockState = stateHelper.genButtons(block, namespace, baseBlock)
 	writeBlockstate(block, buttonBlockState)
-	modelWriter.writeButtonBlockModels(block, altNamespace, baseBlock)
+	modelWriter.writeButtons(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
 	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
@@ -1148,9 +1147,9 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 }
 
 function writeFences(block, namespace, baseBlock) {
-	fenceBlockState = stateHelper.generateFenceBlockState(block, namespace, baseBlock)
+	fenceBlockState = stateHelper.genFences(block, namespace, baseBlock)
 	writeBlockstate(block, fenceBlockState)
-	modelWriter.writeFenceBlockModels(block, baseBlock, namespace)
+	modelWriter.writeFences(block, baseBlock, namespace)
 	writeInventoryModel(block)
 	tagHelper.tagBoth(block, "fences")
 	if (baseBlock.includes("planks")) {
@@ -1167,13 +1166,17 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	fenceGateBlockState = stateHelper.generateFenceGateBlockState(block, namespace)
+	fenceGateBlockState = stateHelper.genFenceGates(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, namespace, baseBlock)
-	modelWriter.writeFenceGateBlockModels(block, altNamespace, baseBlock)
+	modelWriter.writeFenceGates(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
 	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBlock(block, "minecraft:wooden_fence_gates", true)
+		tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
+	}
+	else {
+		tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
 	}
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
 	writeLootTables(block)
@@ -1186,9 +1189,9 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	let fenceGateBlockState = stateHelper.generateFenceGateBlockState(block, namespace)
+	let fenceGateBlockState = stateHelper.genFenceGates(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, modID, baseBlock)
-	modelWriter.writeWallGateBlockModels(block, altNamespace, baseBlock)
+	modelWriter.writeWallGates(block, altNamespace, baseBlock)
 	generateBlockLang(block)
 	writeBlockItemModel(block, modID, baseBlock)
 	tagHelper.tagBoth(block, "wall_gates", true)
@@ -1204,8 +1207,8 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
-	writeBlockstate(block, stateHelper.generateCarpetBlockState(block, namespace, baseBlock), modID)
-	modelWriter.writeCarpetBlockModels(block, altNamespace, baseBlock)
+	writeBlockstate(block, stateHelper.genCarpet(block, namespace, baseBlock), modID)
+	modelWriter.writeCarpets(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
 	if (baseBlock.search("_top") !== -1) {
 		baseBlock = baseBlock.split("_top")[0]

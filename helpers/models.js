@@ -107,7 +107,7 @@ module.exports = {
         return `{"parent":"minecraft:block/${model}","textures":{"end":"${namespace}:block/${block}_top","side":"${namespace}:block/${block}"}}`
     },
     
-    generateLeverBlockModel: function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addon) {
+    genLevers: function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addon) {
         if (addon === undefined) {
             addon = ""
         }
@@ -149,7 +149,7 @@ module.exports = {
         return `{"parent": "minecraft:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
     },
 
-    generateOrientableBlockModel: function generateOrientableBlockModel(block) {
+    genOrientable: function generateOrientableBlockModel(block) {
         const namespace = helpers.getNamespace(block)
         const path = helpers.getPath(block)
         return {

@@ -2,11 +2,11 @@ const helpers = require('./helpers');
 
 module.exports = {
 
-    generateBarBlockState: function generateBarBlockState(block, namespace, baseBlock) {
+    genBars: function generateBarBlockState(block, namespace, baseBlock) {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post_ends"}},{"when":{"north":"false","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap"}},{"when":{"north":"false","west":"false","south":"false","east":"true"},"apply":{"model":"${namespace}:block/${block}_cap","y":90}},{"when":{"north":"false","west":"false","south":"true","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt"}},{"when":{"north":"false","west":"true","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt","y":90}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}}]}`
     },
 
-    generateWallBlockstate: function generateWallBlockstate(block, namespace) {
+    genWalls: function generateWallBlockstate(block, namespace) {
         return `{
             "multipart": [
                 {
@@ -99,13 +99,13 @@ module.exports = {
         }`
     },
 
-    generateSlabBlockState: function generateSlabBlockState(block, namespace, baseBlock) {
+    genSlabs: function generateSlabBlockState(block, namespace, baseBlock) {
         block = helpers.getPath(block)
         baseBlock = helpers.getPath(baseBlock)
         return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${namespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
     },
 
-    generateStairBlockstate: function generateStairBlockstate(block, namespace) {
+    genStairs: function generateStairBlockstate(block, namespace) {
         block = helpers.getPath(block)
         return `{
             "variants": {
@@ -318,11 +318,11 @@ module.exports = {
         }`
     },
 
-    generatePaneBlockState: function generatePaneBlockState(block, namespace, baseBlock) {
+    genPanes: function generatePaneBlockState(block, namespace, baseBlock) {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}},{"when":{"north":"false"},"apply":{"model":"${namespace}:block/${block}_noside"}},{"when":{"east":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt"}},{"when":{"south":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt","y":90}},{"when":{"west":"false"},"apply":{"model":"${namespace}:block/${block}_noside","y":270}}]}`
     },
 
-    generatePlateBlockstate: function generatePlateBlockstate(block, namespace) {
+    genPressurePlates: function generatePlateBlockstate(block, namespace) {
         return `{
 		"variants": {
 		  "powered=false": {
@@ -335,7 +335,7 @@ module.exports = {
 	  }`
     },
 
-    generateDoorBlockState: function generateDoorBlockState(block, namespace, baseBlock) {
+    genDoors: function generateDoorBlockState(block, namespace, baseBlock) {
         return `{
                 "variants": {
                     "facing=east,half=lower,hinge=left,open=false": {
@@ -461,15 +461,15 @@ module.exports = {
                 }
             }`
     },
-    generateFenceBlockState: function generateFenceBlockState(block, namespace, baseBlock) {
+    genFences: function generateFenceBlockState(block, namespace, baseBlock) {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true},"when":{"north":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":90},"when":{"east":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":180},"when":{"south":"true"}},{"apply":{"model":"${namespace}:block/${block}_side","uvlock":true,"y":270},"when":{"west":"true"}}]}`
     },
     
-    generateButtonBlockState: function generateButtonBlockState(block, namespace, baseBlock) {
+    genButtons: function generateButtonBlockState(block, namespace, baseBlock) {
         return `{"variants":{"face=ceiling,facing=east,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":270},"face=ceiling,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":270},"face=ceiling,facing=north,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":180},"face=ceiling,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":180},"face=ceiling,facing=south,powered=false":{"model":"${namespace}:block/${block}","x":180},"face=ceiling,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180},"face=ceiling,facing=west,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":90},"face=ceiling,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":90},"face=floor,facing=east,powered=false":{"model":"${namespace}:block/${block}","y":90},"face=floor,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","y":90},"face=floor,facing=north,powered=false":{"model":"${namespace}:block/${block}"},"face=floor,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed"},"face=floor,facing=south,powered=false":{"model":"${namespace}:block/${block}","y":180},"face=floor,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","y":180},"face=floor,facing=west,powered=false":{"model":"${namespace}:block/${block}","y":270},"face=floor,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","y":270},"face=wall,facing=east,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":90},"face=wall,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":90},"face=wall,facing=north,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90},"face=wall,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90},"face=wall,facing=south,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":180},"face=wall,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":180},"face=wall,facing=west,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":270},"face=wall,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":270}}}`
     },
     
-    generateFenceGateBlockState: function generateFenceGateBlockState(block, namespace) {
+    genFenceGates: function generateFenceGateBlockState(block, namespace) {
         return `{
             "variants": {
                 "facing=east,in_wall=false,open=false": {
@@ -552,7 +552,7 @@ module.exports = {
         }`
     },
 
-    generateOrientableBlockState: function generateOrientableBlockState(block) {
+    genOrientable: function generateOrientableBlockState(block) {
         const namespace = helpers.getNamespace(block)
         const path = helpers.getPath(block)
         return {
@@ -583,7 +583,7 @@ module.exports = {
             }
           }
     },
-    generateBasicBlockstate: function generateBasicBlockstate(block, namespace) {
+    gen: function generateBasicBlockstate(block, namespace) {
        return {
                 "variants": {
                     "": {
@@ -592,11 +592,11 @@ module.exports = {
                 }
             }
     },
-    generateCarpetBlockState: function generateCarpetBlockState(block, namespace, baseBlock) {
+    genCarpet: function generateCarpetBlockState(block, namespace, baseBlock) {
         return `{"variants": {"": {"model": "${namespace}:block/${block}"}}}`
     },
 
-    generateTrapdoorBlockState: function generateTrapdoorBlockState(block, namespace, baseBlock) {
+    genTrapdoors: function generateTrapdoorBlockState(block, namespace, baseBlock) {
 	    return `{"variants":{"facing=east,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":90},"facing=east,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":90},"facing=east,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":90},"facing=east,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":270},"facing=north,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom"},"facing=north,half=bottom,open=true":{"model":"${namespace}:block/${block}_open"},"facing=north,half=top,open=false":{"model":"${namespace}:block/${block}_top"},"facing=north,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":180},"facing=south,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":180},"facing=south,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":180},"facing=south,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":180},"facing=south,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":0},"facing=west,half=bottom,open=false":{"model":"${namespace}:block/${block}_bottom","y":270},"facing=west,half=bottom,open=true":{"model":"${namespace}:block/${block}_open","y":270},"facing=west,half=top,open=false":{"model":"${namespace}:block/${block}_top","y":270},"facing=west,half=top,open=true":{"model":"${namespace}:block/${block}_open","x":180,"y":90}}}`
     }
 }

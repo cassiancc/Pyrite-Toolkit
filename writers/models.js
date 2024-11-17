@@ -12,18 +12,18 @@ const readFile = helpers.readFile
 
 
 module.exports = {
-    writePlankBlockModels: function writePlankBlockModels(block, namespace, texture, model, render_type) {
+    writePlanks: function writePlankBlockModels(block, namespace, texture, model, render_type) {
         let blockModel = modelHelper.generateBlockModel(block, namespace, texture, model, render_type)
         writeFile(`${helpers.modelPath}${block}.json`, blockModel)
     },
     
-    writeMirroredBricksBlockModels: function writeMirroredBricksBlockModels(block, namespace, baseBlock) {
+    writeMirroredBricks: function writeMirroredBricksBlockModels(block, namespace, baseBlock) {
         writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, baseBlock))
         writeFile(`${helpers.modelPath}${block}_north_west_mirrored.json`, modelHelper.generateBlockModel(block, namespace, baseBlock, "minecraft:block/cube_north_west_mirrored_all"))
     
     },
     
-    writeCraftingTableBlockModels: function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
+    writeCraftingTables: function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
         blockModel = generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
         writeFile(`${helpers.modelPath}${block}.json`, blockModel, function (err) {
             if (err) throw err;
@@ -31,7 +31,7 @@ module.exports = {
         });
     },
 
-    writeDoorBlockModels: function writeDoorBlockModels(block) {
+    writeDoors: function writeDoorBlockModels(block) {
         const generate = modelHelper.generateDoorBlockModels
         writeFile(`${helpers.modelPath}${block}_top_left.json`, generate(block, modID, "door_top_left"))
         writeFile(`${helpers.modelPath}${block}_top_right.json`, generate(block, modID, "door_top_right"))
@@ -45,43 +45,43 @@ module.exports = {
     
     writeLevers: function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
         if (altNamespace == mc) {
-            writeFile(`${helpers.modelPath}${block}_upright.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "upright"))
+            writeFile(`${helpers.modelPath}${block}_upright.json`, modelHelper.genLevers(block, namespace, baseBlock, altNamespace, "upright"))
     
         }
         altNamespace = getAltNamespace(namespace, altNamespace)
-        writeFile(`${helpers.modelPath}${block}.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace))
-        writeFile(`${helpers.modelPath}${block}_on.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "on"))
-        writeFile(`${helpers.modelPath}${block}_wall.json`, generateLeverBlockModel(block, namespace, baseBlock, altNamespace, "wall"))
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.genLevers(block, namespace, baseBlock, altNamespace))
+        writeFile(`${helpers.modelPath}${block}_on.json`, modelHelper.genLevers(block, namespace, baseBlock, altNamespace, "on"))
+        writeFile(`${helpers.modelPath}${block}_wall.json`, modelHelper.genLevers(block, namespace, baseBlock, altNamespace, "wall"))
     },
     
-    writeTorchBlockModels: function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
+    writeTorches: function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
         altNamespace = getAltNamespace(namespace, altNamespace)
         writeFile(`${helpers.modelPath}${baseBlock}_upright.json`, modelHelper.generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch", "cutout", "torch"))
         writeFile(`${helpers.modelPath}${block}_wall.json`, modelHelper.generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch_wall", "cutout", "torch"))
     },
     
-    writeCubeColumnBlockModels: function writeCubeColumnBlockModels(block, namespace, baseBlock) {
+    writeColumns: function writeCubeColumnBlockModels(block, namespace, baseBlock) {
         writeFile(`${helpers.modelPath}${block}.json`, generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column"))
         writeFile(`${helpers.modelPath}${block}_horizontal.json`, generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column_horizontal"))
     
     },
     
-    writeFlowerBlockModels: function writeFlowerBlockModels(block, namespace) {
+    writeFlowers: function writeFlowerBlockModels(block, namespace) {
         writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
     
     },
 
-    writeProvidedBlockModel: function writeProvidedBlockModel(block, model) {
+    writeProvided: function writeProvidedBlockModel(block, model) {
         writeFile(`${helpers.modelPath}${block}.json`, model)
     },
     
-    writeLogBlockModels: function writeLogBlockModels(block, namespace, baseBlock) {
+    writeLogs: function writeLogBlockModels(block, namespace, baseBlock) {
         writeFile(`${helpers.modelPath}${block}.json`, generateMushroomStemModel(block, namespace, baseBlock, "cube_column"))
         writeFile(`${helpers.modelPath}${block}_horizontal.json`, generateMushroomStemModel(block, namespace, baseBlock, "cube_column_horizontal"))
     
     },
 
-    writeWallBlockModels: function writeWallBlockModels(block, namespace, baseBlock) {
+    writeWalls: function writeWallBlockModels(block, namespace, baseBlock) {
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
@@ -98,7 +98,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_side_tall.json`, tallModel)
     },
 
-    writePaneBlockModels: function writePaneBlockModels(block, namespace, baseBlock) {
+    writePanes: function writePaneBlockModels(block, namespace, baseBlock) {
         const generate = modelHelper.generatePaneBlockModels
         writeFile(`${helpers.modelPath}${block}_post.json`, generate(block, namespace, baseBlock, "template_glass_pane_post"))
         writeFile(`${helpers.modelPath}${block}_side.json`, generate(block, namespace, baseBlock, "template_glass_pane_side"))
@@ -107,7 +107,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_noside_alt.json`, generate(block, namespace, baseBlock, "template_glass_pane_noside_alt"))
     },
     
-    writeBarBlockModels: function writeBarBlockModels(block, namespace, baseBlock) {
+    writeBars: function writeBarBlockModels(block, namespace, baseBlock) {
         const generate = modelHelper.generateBarBlockModel
         writeFile(`${helpers.modelPath}${block}_cap.json`, generate(block, namespace, "cap"))
         writeFile(`${helpers.modelPath}${block}_post.json`, generate(block, namespace, "post"))
@@ -117,7 +117,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_post_ends.json`, generate(block, namespace, "post_ends"))
     },
     
-    writeStairBlockModels: function writeStairBlockModels(block, namespace, baseBlock) {
+    writeStairs: function writeStairBlockModels(block, namespace, baseBlock) {
         if (baseBlock.includes(":")) {
             namespace = getNamespace(baseBlock)
             baseBlock = getPath(baseBlock)
@@ -128,7 +128,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_outer.json`, modelHelper.generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
     },
     
-    writeButtonBlockModels: function writeButtonBlockModels(block, namespace, baseBlock) {
+    writeButtons: function writeButtonBlockModels(block, namespace, baseBlock) {
         if (namespace == undefined) {
             namespace = modID
         }
@@ -147,7 +147,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_pressed.json`, buttonModelPressed);
     },
     
-    writeSlabBlockModels: function writeSlabBlockModels(block, namespace, baseBlock) {
+    writeSlabs: function writeSlabBlockModels(block, namespace, baseBlock) {
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
@@ -158,7 +158,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_top.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
     },
     
-    writePlateBlockModels: function writePlateBlockModels(block, namespace, baseBlock) {
+    writePressurePlates: function writePlateBlockModels(block, namespace, baseBlock) {
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
@@ -170,13 +170,13 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_down.json`, plateModelDown);
     },
     
-    writeFenceBlockModels: function writeFenceBlockModels(block, baseBlock, namespace) {
+    writeFences: function writeFenceBlockModels(block, baseBlock, namespace) {
         writeFile(`${helpers.modelPath}${block}_post.json`, modelHelper.generateFenceBlockModels(block, baseBlock, namespace, "fence_post"));
         writeFile(`${helpers.modelPath}${block}_side.json`, modelHelper.generateFenceBlockModels(block, baseBlock, namespace, "fence_side"));
         writeFile(`${helpers.modelPath}${block}_inventory.json`, modelHelper.generateFenceBlockModels(block, baseBlock, namespace, "fence_inventory"));
     },
 
-    writeFenceGateBlockModels: function writeFenceGateBlockModels(block, namespace, baseBlock) {
+    writeFenceGates: function writeFenceGateBlockModels(block, namespace, baseBlock) {
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
@@ -187,7 +187,7 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_wall_open", mc))
     },
     
-    writeWallGateBlockModels: function writeWallGateBlockModels(block, namespace, baseBlock) {
+    writeWallGates: function writeWallGateBlockModels(block, namespace, baseBlock) {
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
@@ -198,14 +198,14 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_wall_gate_wall_open", modID))
     },
     
-    writeTrapdoorBlockModels: function writeTrapdoorBlockModels(block, namespace) {
+    writeTrapdoors: function writeTrapdoorBlockModels(block, namespace) {
         const generate = modelHelper.generateBlockModel
         writeFile(`${helpers.modelPath}${block}_top.json`, generate(block, namespace, block, "template_orientable_trapdoor_top", "cutout", "texture"));
         writeFile(`${helpers.modelPath}${block}_bottom.json`, generate(block, namespace, block, "template_orientable_trapdoor_bottom", "cutout", "texture"));
         writeFile(`${helpers.modelPath}${block}_open.json`, generate(block, namespace, block, "template_orientable_trapdoor_open", "cutout", "texture"));
     },
     
-    writeCarpetBlockModels: function writeCarpetBlockModels(block, namespace, baseBlock) {
+    writeCarpets: function writeCarpetBlockModels(block, namespace, baseBlock) {
         const generate = modelHelper.generateBlockModel
         let carpetModel = generate(block, namespace, id(namespace, baseBlock), "carpet", undefined, "wool")
         if (block === "grass_carpet") {
@@ -215,13 +215,13 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}.json`, carpetModel);
     },
 
-    writeCraftingTableBlockModels: function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
+    writeCraftingTables: function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
         blockModel = modelHelper.generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
         writeFile(`${helpers.modelPath}${block}.json`, blockModel)
     },
     
     writeLevers: function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
-        const generate = modelHelper.generateLeverBlockModel
+        const generate = modelHelper.genLevers
         if (altNamespace == mc) {
             writeFile(`${helpers.modelPath}${block}_upright.json`, generate(block, namespace, baseBlock, altNamespace, "upright"))
         }
@@ -231,22 +231,22 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_wall.json`, generate(block, namespace, baseBlock, altNamespace, "wall"))
     },
     
-    writeTorchBlockModels: function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
+    writeTorches: function writeTorchBlockModels(block, namespace, baseBlock, altNamespace) {
         altNamespace = getAltNamespace(namespace, altNamespace)
         writeFile(`${helpers.modelPath}${baseBlock}_upright.json`, generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch", "cutout", "torch"))
         writeFile(`${helpers.modelPath}${block}_wall.json`, generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch_wall", "cutout", "torch"))
     },
     
-    writeCubeColumnBlockModels: function writeCubeColumnBlockModels(block, namespace, baseBlock) {
+    writeColumns: function writeCubeColumnBlockModels(block, namespace, baseBlock) {
         writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column"))
         writeFile(`${helpers.modelPath}${block}_horizontal.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column_horizontal"))
     },
     
-    writeFlowerBlockModels: function writeFlowerBlockModels(block, namespace) {
+    writeFlowers: function writeFlowerBlockModels(block, namespace) {
         writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
     },
     
-    writeLogBlockModels: function writeLogBlockModels(block, namespace, baseBlock) {
+    writeLogs: function writeLogBlockModels(block, namespace, baseBlock) {
         writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateMushroomStemModel(block, namespace, baseBlock, "cube_column"))
         writeFile(`${helpers.modelPath}${block}_horizontal.json`, modelHelper.generateMushroomStemModel(block, namespace, baseBlock, "cube_column_horizontal"))
     }
