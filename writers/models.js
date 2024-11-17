@@ -22,13 +22,15 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_north_west_mirrored.json`, modelHelper.generateBlockModel(block, namespace, baseBlock, "minecraft:block/cube_north_west_mirrored_all"))
     
     },
+
+    writePoweredBlock: function writePoweredBlockModels(block, namespace, baseBlock) {
+        if (block.includes(":")) {
+            namespace = block.split(":")[0]
+            block = block.split(":")[1]
+        }
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, undefined, "cutout"))
+        writeFile(`${helpers.modelPath}${block}_on.json`, modelHelper.generateBlockModel(block, namespace, id(block + "_on"), undefined, "translucent"))
     
-    writeCraftingTables: function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
-        blockModel = generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
-        writeFile(`${helpers.modelPath}${block}.json`, blockModel, function (err) {
-            if (err) throw err;
-    
-        });
     },
 
     writeDoors: function writeDoorBlockModels(block) {
@@ -216,8 +218,12 @@ module.exports = {
     },
 
     writeCraftingTables: function writeCraftingTableBlockModels(block, namespace, baseBlock, altNamespace) {
+        let modelSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
         blockModel = modelHelper.generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
-        writeFile(`${helpers.modelPath}${block}.json`, blockModel)
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, blockModel)
     },
     
     writeLevers: function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {

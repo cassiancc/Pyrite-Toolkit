@@ -58,11 +58,6 @@ const vanillaWalls = [
 	"end_stone_brick",
 ];
 
-const trickyTrialsWalls = ["polished_tuff", "tuff_brick", "tuff"];
-
-const winterDropWalls = ["resin_brick"];
-const winterDropWoods = ["pale_oak"];
-
 const vanillaResources = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 
 // Paths to various files.
@@ -160,9 +155,11 @@ class Block {  // Create a class
 			writePlates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
 		else if (blockType == "framed_glass") {
+			tagHelper.tagBoth(blockID, "c:glass_blocks/colorless")
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "cutout")
 		}
 		else if (blockType == "stained_framed_glass") {
+			tagHelper.tagBoth(blockID, "c:glass_blocks")
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "translucent")
 		}
 		else if (blockType == "locked_chest") {
@@ -290,8 +287,11 @@ function generateResources() {
 
 	writeCraftingTablesFromArray(vanillaWood, mc)
 	if (versionAbove("1.21.4")) {
-		writeCraftingTablesFromArray(winterDropWoods, mc)
+		writeCraftingTablesFromArray(["pale_oak"], mc)
 	}
+
+	writeCraftingTablesFromArray(["skyroot"], "aether")
+
 
 	const shroomBlockTemplate = "_mushroom"
 	const redShroom = "red" + shroomBlockTemplate
@@ -386,12 +386,12 @@ function generateResources() {
 
 	// 1.21 - Tricky Trials Tuff walls
 	if (majorVersion >= 21) {
-		writeWallGatesFromArray(trickyTrialsWalls)
+		writeWallGatesFromArray(["polished_tuff", "tuff_brick", "tuff"])
 	}
 
 	// 1.21.4 - Winter Drop Resin walls
 	if (majorVersion > 22 || (mcVersion == "1.21.4")) {
-		writeWallGatesFromArray(winterDropWalls)
+		writeWallGatesFromArray(["resin_brick"])
 	}
 
 	vanillaResources.forEach(function (block) {
@@ -483,6 +483,7 @@ function generateResources() {
 	writeFlower("buttercup")
 
 	writeFenceGates("nether_brick_fence_gate", modID, id(mc, "nether_bricks"), mc)
+	writePoweredBlock(id(modID, "switchable_glass"))
 
 	// Add Pyrite tags to MC/convention tags.
 	tagHelper.tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
@@ -530,7 +531,7 @@ generateResources()
 
 function writeLang() {
 	writeFile(`${helpers.paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
-	// writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
+	writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
 	writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
 }
 
@@ -565,18 +566,25 @@ function generateBlockLang(block) {
 	generateLang(block, "block", modID)
 }
 
-function writeBlockItemModel(block, namespace) {
+function writeBlockItemModel(block, namespace, altNamespace) {
 	if (namespace === undefined) {
 		namespace = modID
+	}
+	if (altNamespace === undefined) {
+		altNamespace = namespace
+	}
+	let modelSubdirectory = ""
+	if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+		modelSubdirectory = altNamespace + "/"
 	}
 	const blockPath = getPath(block)
 	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(namespace, "block", blockPath)
-		const modelItem = { "parent": "minecraft:item/generated", "textures": { "layer0": `${namespace}:block/${blockPath}` } }
+		const modelItem = { "parent": "minecraft:item/generated", "textures": { "layer0": `${namespace}:block/${modelSubdirectory}${blockPath}` } }
 		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 	else {
-		const modelItem = `{"parent": "${namespace}:block/${blockPath}"}`
+		const modelItem = `{"parent": "${namespace}:block/${modelSubdirectory}${blockPath}"}`
 		writeFile(`${paths.itemModels}${blockPath}.json`, modelItem);
 	}
 }
@@ -861,14 +869,39 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	writeLootTables(block)
 }
 
+function writePoweredBlock(block) {
+	let namespace, path
+	if (block.includes(":")) {
+		namespace = modID
+		path = block.split(":")[1]
+	}
+	const blockState = {
+		"variants": {
+		  "powered=false": {
+			"model": `${namespace}:block/${path}`
+		  },
+		  "powered=true": {
+			"model": `${namespace}:block/${path}_on`
+		  }
+		}
+	  }
+	writeBlockstate(block, blockState, namespace)
+	modelWriter.writePoweredBlock(block)
+	writeBlockItemModel(block, namespace)
+	generateBlockLang(block)
+	writeLootTables(block, namespace)
+	writeRecipes(block, "powered", undefined, namespace)
+	writeLootTables(block)
+}
+
 function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	const blockState = stateHelper.gen(block, namespace)
+	const blockState = stateHelper.gen(block, namespace, altNamespace)
 	writeBlockstate(block, blockState, namespace)
 	modelWriter.writeCraftingTables(block, namespace, baseBlock, altNamespace)
-	writeBlockItemModel(block, namespace)
+	writeBlockItemModel(block, namespace, altNamespace)
 	generateBlockLang(block)
 	tagHelper.tagBoth(block, "crafting_tables")
 	tagHelper.checkAndAddStainedTag(block, baseBlock)
@@ -1170,7 +1203,7 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	fenceGateBlockState = stateHelper.genFenceGates(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, namespace, baseBlock)
 	modelWriter.writeFenceGates(block, altNamespace, baseBlock)
-	writeBlockItemModel(block, namespace, baseBlock)
+	writeBlockItemModel(block, namespace, altNamespace)
 	generateBlockLang(block)
 	writeLootTables(block)
 
@@ -1198,7 +1231,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writeWallGates(block, altNamespace, baseBlock)
 	generateBlockLang(block)
 	writeLootTables(block)
-	writeBlockItemModel(block, modID, baseBlock)
+	writeBlockItemModel(block, modID, altNamespace)
 	tagHelper.tagBoth(block, "wall_gates", true)
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
 	writeStonecutterRecipes(block, baseBlock, 1)

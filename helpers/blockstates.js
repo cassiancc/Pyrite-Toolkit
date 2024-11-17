@@ -583,11 +583,18 @@ module.exports = {
             }
           }
     },
-    gen: function generateBasicBlockstate(block, namespace) {
+    gen: function generateBasicBlockstate(block, namespace, altNamespace) {
+        if (altNamespace == undefined) {
+            altNamespace = namespace
+        }
+        let modelSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
        return {
                 "variants": {
                     "": {
-                        "model": `${namespace}:block/${block}`
+                        "model": `${namespace}:block/${modelSubdirectory}${block}`
                     }
                 }
             }

@@ -89,16 +89,23 @@ module.exports = {
     },
 
     generateCraftingTableBlockModel: function generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace) {
+        let modelSubdirectory = "", textureSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
+        if (altNamespace == "aether") {
+            textureSubdirectory = "construction/"
+        }
         return `{
             "parent": "minecraft:block/cube",
             "textures": {
-                "particle": "${namespace}:block/${block}_front",
-                "north": "${namespace}:block/${block}_front",
-                "south": "${namespace}:block/${block}_side",
-                "east": "${namespace}:block/${block}_side",
-                "west": "${namespace}:block/${block}_front",
-                "up": "${namespace}:block/${block}_top",
-                "down": "${altNamespace}:block/${baseBlock}"
+                "particle": "${namespace}:block/${modelSubdirectory}${block}_front",
+                "north": "${namespace}:block/${modelSubdirectory}${block}_front",
+                "south": "${namespace}:block/${modelSubdirectory}${block}_side",
+                "east": "${namespace}:block/${modelSubdirectory}${block}_side",
+                "west": "${namespace}:block/${modelSubdirectory}${block}_front",
+                "up": "${namespace}:block/${modelSubdirectory}${block}_top",
+                "down": "${altNamespace}:block/${textureSubdirectory}${baseBlock}"
             }
         }`
     },

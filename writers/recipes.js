@@ -10,7 +10,11 @@ function writeRecipes(block, type, other, namespace, altNamespace) {
 		if (block.includes(":")) {
 			block = block.split(":")[1]
 		}
-		helpers.writeFile(`${helpers.recipePath}${block}.json`, recipe)
+		let recipePath = helpers.recipePath
+		if (altNamespace == "aether") {
+			recipePath = recipePath.replace("pyrite", "aether")
+		}
+		helpers.writeFile(`${recipePath}${block}.json`, recipe)
 	}
 }
 

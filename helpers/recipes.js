@@ -388,6 +388,13 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		}
 		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, vanillaFlower)], id(modID, block), 1)
 	}
+	else if (type == "powered") {
+		recipe = generateShapedRecipe({ "G": "minecraft:tinted_glass", "R": "minecraft:redstone" }, id(namespace, block), 2, [
+			" R ",
+			"RGR",
+			" R ",
+		])
+	}
 	else {
 		// console.log(block, type)
 	}
