@@ -349,6 +349,7 @@ function generateResources() {
 
 	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone")
 	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
+	recipeWriter.writeShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:moss_block"], "pyrite:mossy_cobblestone_bricks", 1, "from_moss_block")
 	generateBrickSet("smooth_stone_bricks", "smooth_stone_bricks", "minecraft:smooth_stone")
 
 	writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
@@ -536,7 +537,7 @@ function generateResources() {
 	tagHelper.tagBlocks(readFileAsJson("./overrides/mineable/shovel.json"), "minecraft:mineable/shovel")
 
 	// Add Pyrite tags to beacon bases
-	tagHelper.tagBlocks(["#pyrite:emerald", "#pyrite:diamond", "#pyrite:gold", "#pyrite:iron", "#pyrite:netherite"], "minecraft:beacon_base_blocks")
+	// tagHelper.tagBlocks(["#pyrite:emerald", "#pyrite:diamond", "#pyrite:gold", "#pyrite:iron", "#pyrite:netherite"], "minecraft:beacon_base_blocks")
 
 	// Add Pyrite tags to Pyrite tags
 	tagHelper.tagBlock("#pyrite:terracotta_bricks", "bricks")
@@ -982,7 +983,9 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		tagHelper.checkAndAddDyedTag(block, baseBlock)
 	}
 	else if (blockType.includes("resource_bricks")) {
-		tagHelper.tagBlock(block, baseBlock.split(":")[1].split("cut_")[1])
+		const blockType = baseBlock.split(":")[1].split("cut_")[1]
+		tagHelper.tagBlock(block, blockType)
+		tagHelper.checkAndAddBeaconTag(block, blockType)
 		// tagHelper.tagBlock(block, block.split("smooth_")[1])
 		// tagHelper.tagBlock(block, "smooth_blocks")
 	}
@@ -1016,11 +1019,15 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		tagHelper.tagBlock(block, "minecraft:infiburn_overworld", true)
 	}
 	else if (blockType.includes("smooth_resource")) {
-		tagHelper.tagBlock(block, block.split("smooth_")[1])
+		const blockType = block.split("smooth_")[1]
+		tagHelper.tagBlock(block, blockType)
+		tagHelper.checkAndAddBeaconTag(block, blockType)
 		tagHelper.tagBlock(block, "smooth_blocks")
 	}
 	else if (blockType.includes("cut_")) {
-		tagHelper.tagBlock(block, block.split("cut_")[1])
+		const blockType = block.split("cut_")[1]
+		tagHelper.tagBlock(block, blockType)
+		tagHelper.checkAndAddBeaconTag(block, blockType)
 		tagHelper.tagBlock(block, "cut_blocks")
 	}
 	else if (blockType.includes("obsidian")) (
@@ -1130,7 +1137,9 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
-	tagHelper.tagBlock(block, getPath(baseBlock).split("_block")[0])
+	const blockType = getPath(baseBlock).split("_block")[0]
+	tagHelper.tagBlock(block, blockType)
+	tagHelper.checkAndAddBeaconTag(block, blockType)
 	writeRecipes(block, special, baseBlock)
 	writeStonecutterRecipes(block, baseBlock, 1)
 

@@ -90,6 +90,14 @@ function checkAndAddStainedTag(block, baseBlock) {
 		}
 	}
 }
+
+
+function checkAndAddBeaconTag(block, baseBlock) {
+	if ((baseBlock == "iron") || (baseBlock == "gold") || (baseBlock == "emerald") || (baseBlock == "diamond") || (baseBlock == "netherite")) {
+		tagBlock(block, `minecraft:beacon_base_blocks`)
+	}
+}
+
 function checkAndAddDyedTag(block, baseBlock) {
 	block = getPath(block)
 	baseBlock = getPath(block)
@@ -125,5 +133,7 @@ module.exports = {
     
     checkAndAddStainedTag: checkAndAddStainedTag,
     
-    checkAndAddDyedTag: checkAndAddDyedTag
+    checkAndAddDyedTag: checkAndAddDyedTag,
+
+	checkAndAddBeaconTag: checkAndAddBeaconTag
 }

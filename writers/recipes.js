@@ -24,13 +24,16 @@ function writeShapedRecipe(ingredients, result, quantity, shape, pattern) {
 	}
 }
 
-function writeShapelessRecipe(ingredients, result, quantity) {
+function writeShapelessRecipe(ingredients, result, quantity, addon) {
+	if (addon === undefined) {
+		addon = ""
+	}
 	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity)
 	if ((recipe !== "")) {
 		if (result.includes(":")) {
 			result = result.split(":")[1]
 		}
-		helpers.writeFile(`${helpers.recipePath}${result}.json`, recipe)
+		helpers.writeFile(`${helpers.recipePath}${result}${addon}.json`, recipe)
 	}
 }
 
