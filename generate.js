@@ -1320,16 +1320,7 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	plateBlockState = `{
-		"variants": {
-		  "powered=false": {
-			"model": "${namespace}:block/${block}"
-		  },
-		  "powered=true": {
-			"model": "${namespace}:block/${block}_down"
-		  }
-		}
-	  }`
+	const plateBlockState = stateHelper.generatePlateBlockstate(block, namespace)
 	writeBlockstate(block, plateBlockState)
 	writePlateBlockModels(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)

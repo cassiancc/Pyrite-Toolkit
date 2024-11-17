@@ -322,6 +322,19 @@ module.exports = {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}},{"when":{"north":"false"},"apply":{"model":"${namespace}:block/${block}_noside"}},{"when":{"east":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt"}},{"when":{"south":"false"},"apply":{"model":"${namespace}:block/${block}_noside_alt","y":90}},{"when":{"west":"false"},"apply":{"model":"${namespace}:block/${block}_noside","y":270}}]}`
     },
 
+    generatePlateBlockstate: function generatePlateBlockstate(block, namespace) {
+        return `{
+		"variants": {
+		  "powered=false": {
+			"model": "${namespace}:block/${block}"
+		  },
+		  "powered=true": {
+			"model": "${namespace}:block/${block}_down"
+		  }
+		}
+	  }`
+    },
+
     generateDoorBlockState: function generateDoorBlockState(block, namespace, baseBlock) {
         return `{
                 "variants": {
