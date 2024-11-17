@@ -148,10 +148,10 @@ class Block {  // Create a class
 			writeBlock(this.blockID, this.namespace, special, this.baseBlock, undefined, undefined, undefined, stonelike)
 		}
 		else if (blockType === "slab") {
-			writeSlabsV2(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
+			writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
 		}
 		else if (blockType === "stairs") {
-			writeStairsV2(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
+			writeStairs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
 		}
 		else if (blockType === "wall") {
 			writeWalls(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
@@ -366,32 +366,32 @@ function generateResources() {
 
 	// Nostalgia Turf Set
 	writeBlock("nostalgia_grass_turf", modID, "nostalgia_grass_turf", id(modID, "nostalgia_grass_block"), undefined, modID, "pyrite:nostalgia_grass_block_top")
-	writeSlabsV2("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
-	writeStairsV2("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
+	writeSlabs("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
+	writeStairs("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	writeCarpet("nostalgia_grass_carpet", modID, "nostalgia_grass_block_top", modID)
 
 	// Podzol Turf Set
 	writeBlock("podzol_turf", modID, "podzol_turf", id(mc, "podzol"), undefined, mc, "minecraft:podzol_top")
-	writeSlabsV2("podzol_slab", "podzol_turf", "minecraft:podzol_top")
-	writeStairsV2("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
+	writeSlabs("podzol_slab", "podzol_turf", "minecraft:podzol_top")
+	writeStairs("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
 	writeCarpet("podzol_carpet", modID, "podzol_top", mc)
 
 	// Grass Turf Set
 	writeBlock("grass_turf", modID, "grass_turf", id(mc, "grass_block"), undefined, mc, "minecraft:grass_block_top")
-	writeSlabsV2("grass_slab", "grass_turf", "minecraft:grass_block_top")
-	writeStairsV2("grass_stairs", "grass_turf", "minecraft:grass_block_top")
+	writeSlabs("grass_slab", "grass_turf", "minecraft:grass_block_top")
+	writeStairs("grass_stairs", "grass_turf", "minecraft:grass_block_top")
 	writeCarpet("grass_carpet", modID, "minecraft:grass_block_top", mc)
 
 	// Mycelium Turf Set
 	writeBlock("mycelium_turf", modID, "mycelium_turf", id(mc, "mycelium"), undefined, mc, "minecraft:mycelium_top")
-	writeSlabsV2("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
-	writeStairsV2("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
+	writeSlabs("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
+	writeStairs("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
 	writeCarpet("mycelium_carpet", modID, "mycelium_top", mc)
 
 	// Path Turf Set
 	writeBlock("path_turf", modID, "path_turf", id(mc, "dirt_path"), undefined, mc, "minecraft:dirt_path_top")
-	writeSlabsV2("path_slab", "path_turf", "minecraft:dirt_path_top")
-	writeStairsV2("path_stairs", "path_turf", "minecraft:dirt_path_top")
+	writeSlabs("path_slab", "path_turf", "minecraft:dirt_path_top")
+	writeStairs("path_stairs", "path_turf", "minecraft:dirt_path_top")
 	writeCarpet("path_carpet", modID, "dirt_path_top", mc)
 
 	// Pyrite Dyes, Wool, Carpet, Terracotta
@@ -446,8 +446,8 @@ function generateResources() {
 			baseBlock = baseTexture;
 			altNamespace = modID
 			writeBlock(cutBlockID, modID, cutBlockID, id(mc, baseBlock), undefined, undefined, cutBlockID, true)
-			writeSlabs(`${cutBlockID}_slab`, modID, cutBlockID, undefined, true)
-			writeStairs(`${cutBlockID}_stairs`, modID, cutBlockID, undefined, true)
+			writeSlabs(`${cutBlockID}_slab`, cutBlockID, id(modID, cutBlockID), true)
+			writeStairs(`${cutBlockID}_stairs`, cutBlockID, id(modID, cutBlockID), true)
 		}
 
 		writeWalls(`cut_${block}_wall`, modID, id(altNamespace, cutBlockID))
@@ -463,8 +463,8 @@ function generateResources() {
 		else {
 			const smooth = `smooth_${block}`
 			writeBlock(smooth, modID, "smooth_resource", id(mc, baseBlock), undefined, undefined, smooth, true)
-			writeSlabs(`${smooth}_slab`, modID, `smooth_${block}`, undefined, true)
-			writeStairs(`${smooth}_stairs`, modID, `smooth_${block}`, undefined, true)
+			writeSlabs(`${smooth}_slab`, smooth, id(modID, smooth), true)
+			writeStairs(`${smooth}_stairs`, smooth, id(modID, smooth), true)
 			writeWalls(`${smooth}_wall`, modID, `smooth_${block}`)
 			writeWallGates(`${smooth}_wall_gate`, modID, `${smooth}`, modID)
 			writeBlock(block + "_bricks", modID, "resource_bricks", id(altNamespace, cutBlockID), undefined, modID, block + "_bricks", true)
@@ -1217,34 +1217,10 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 		tagHelper.tagBoth(block, "brick_walls")
 	}
 	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
-
 }
 
-// DEPRECATED - STAIR GENERATOR
-function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateStonecutterRecipes) {
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
-	const stairBlockState = stateHelper.generateStairBlockstate(block, namespace)
-	writeBlockstate(block, stairBlockState, namespace)
-	writeStairBlockModels(block, altNamespace, baseBlock)
-	writeBlockItemModel(block, namespace)
-	generateBlockLang(block)
-	tagHelper.tagBoth(block, "minecraft:stairs")
-	if (baseBlock.includes("smooth")) {
-		tagHelper.tagBlock(block, baseBlock.replace("smooth_", ""))
-	}
-	else if (baseBlock.includes("cut_")) {
-		tagHelper.tagBlock(block, baseBlock.replace("cut_", ""))
-	}
-	writeRecipes(block, "stairs", baseBlock, namespace)
-	if (shouldGenerateStonecutterRecipes === true) {
-		writeStonecutterRecipes(block, baseBlock, 1)
-	}
-}
-
-// V2 - STAIR GENERATOR
-function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipes) {
+// Generates Stair blocks
+function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes) {
 	let textureNamespace, texturePath;
 	if (texture == undefined) {
 		texture = baseBlock;
@@ -1263,6 +1239,9 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	writeStairBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
 	generateBlockLang(block)
+	writeLootTables(block)
+	
+	//Tag stairs
 	tagHelper.tagBoth(block, "minecraft:stairs")
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_stairs")
@@ -1271,48 +1250,25 @@ function writeStairsV2(block, baseBlock, texture, shouldGenerateStonecutterRecip
 	else if (baseBlock.includes("bricks")) {
 		tagHelper.tagBoth(block, "brick_stairs")
 	}
+	else if (baseBlock.includes("smooth")) {
+		tagHelper.tagBlock(block, baseBlock.replace("smooth_", ""))
+	}
+	else if (baseBlock.includes("cut_")) {
+		tagHelper.tagBlock(block, baseBlock.replace("cut_", ""))
+	}
 	else {
 		tagHelper.tagBlock(block, "turf_stairs")
 	}
+
+	// Generate recipes
 	writeRecipes(block, "stairs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
 	}
 }
 
-// DEPRECATED - SLAB GENERATOR
-function writeSlabs(block, namespace, baseBlock, altNamespace, shouldGenerateStonecutterRecipes) {
-	if (altNamespace == undefined) {
-		altNamespace = namespace
-	}
-
-	// Write blockstate
-	const slabBlockState = stateHelper.generateSlabBlockState(block, namespace, baseBlock)
-	writeBlockstate(block, slabBlockState, namespace)
-
-	// Write models
-	writeSlabBlockModels(block, altNamespace, baseBlock)
-	writeBlockItemModel(block, namespace)
-	generateBlockLang(block)
-
-	// Tag slabs
-	tagHelper.tagBlock(block, "minecraft:slabs")
-	if (baseBlock.includes("smooth_")) {
-		tagHelper.tagBlock(block, baseBlock.split("smooth_")[1])
-	}
-	else if (baseBlock.includes("cut_")) {
-		tagHelper.tagBlock(block, baseBlock.split("cut_")[1])
-	}
-
-	// Generate recipes
-	writeRecipes(block, "slabs", baseBlock, namespace)
-	if (shouldGenerateStonecutterRecipes === true) {
-		writeStonecutterRecipes(block, baseBlock, 2)
-	}
-}
-
-// V2 - STAIR GENERATOR
-function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipes) {
+// Generates Slab blocks.
+function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes) {
 	let textureNamespace, texturePath;
 	if (texture == undefined) {
 		texture = baseBlock;
@@ -1331,6 +1287,7 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	writeSlabBlockModels(block, textureNamespace, texture)
 	writeBlockItemModel(block, modID)
 	generateBlockLang(block)
+	writeLootTables(block)
 
 	// Tag slabs
 	tagHelper.tagBlock(block, "minecraft:slabs")
@@ -1342,6 +1299,12 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 		tagHelper.tagBlock(block, "brick_slabs")
 		tagHelper.checkAndAddDyedTag(block, baseBlock)
 	}
+	else if (baseBlock.includes("smooth_")) {
+		tagHelper.tagBlock(block, baseBlock.split("smooth_")[1])
+	}
+	else if (baseBlock.includes("cut_")) {
+		tagHelper.tagBlock(block, baseBlock.split("cut_")[1])
+	}
 	else {
 		tagHelper.tagBlock(block, "turf_slabs")
 	}
@@ -1351,7 +1314,6 @@ function writeSlabsV2(block, baseBlock, texture, shouldGenerateStonecutterRecipe
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 2)
 	}
-	writeLootTables(block)
 }
 
 function writePlates(block, namespace, baseBlock, altNamespace) {
