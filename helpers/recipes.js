@@ -197,14 +197,19 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		altNamespace = getDyeNamespace(dye)
 		recipe = generateShapedRecipe({ "C": id(namespace, block.replace("_pane", "")) }, id(namespace, block), 16, ["CCC", "CCC"])
 	}
-	else if (type === "lamp") {
+	else if (type === "lamps") {
 		if (block === "glowstone_lamp") {
-			recipe = generateShapedRecipe({ "#": `minecraft:glowstone` }, { "X": `minecraft:iron_nugget` }, id(modID, block), 4, [
+			recipe = generateShapedRecipe({ "#": `minecraft:glowstone`, "X": `minecraft:iron_nugget` }, id(modID, block), 4, [
 				"X#X",
 				"#X#",
 				"X#X"
 			])
-		} else {
+		}
+		else if (block === "lit_redstone_lamp") {
+			// console.log(block)
+			generateShapelessRecipe([id(mc, "redstone_torch"), id(mc, "redstone_lamp")], id(modID, block), 1)
+		} 
+		else {
 			base = `${base}_dye`
 			altNamespace = getDyeNamespace(base)
 			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", base, namespace)
@@ -249,6 +254,9 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else if (type === "resource_pillar") {
+		if (base == "minecraft:copper") {
+			base += "_block"
+		}
 		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 2, [
 			"D",
 			"D"
@@ -379,16 +387,6 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			vanillaFlower = block.replace("rose", "tulip")
 		}
 		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, vanillaFlower)], id(modID, block), 1)
-	}
-	else if (block === "lit_redstone_lamp") {
-		generateShapelessRecipe([id(mc, "redstone_torch"), id(mc, "redstone_lamp")], id(modID, block), 1)
-	}
-	else if (block === "glowstone_lamp") {
-		recipe = generateShapedRecipe({ "#": `minecraft:glowstone`, "X": `minecraft:iron_nugget` }, id(modID, type), 4, [
-			"X#X",
-			"#X#",
-			"X#X"
-		])
 	}
 	else {
 		// console.log(block, type)

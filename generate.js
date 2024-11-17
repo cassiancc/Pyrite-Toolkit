@@ -490,6 +490,7 @@ function generateResources() {
 	tagHelper.tagBlock("#pyrite:obsidian", "minecraft:dragon_immune")
 	tagHelper.tagBlock("#pyrite:ladders", "minecraft:climbable")
 	tagHelper.tagBlock("#pyrite:carpet", "minecraft:sword_efficient")
+	tagHelper.tagBothFromArray(["#c:dyed/honey", "#c:dyed/glow", "#c:dyed/nostalgia", "#c:dyed/dragon", "#c:dyed/star", "#c:dyed/poisonous", "#c:dyed/rose"], "c:dyed")
 
 	// Add Pyrite tags to tool tags
 	tagHelper.tagBlocks(["#pyrite:wall_gates", "#pyrite:bricks"], "minecraft:needs_wood_tool")
@@ -529,7 +530,7 @@ generateResources()
 
 function writeLang() {
 	writeFile(`${helpers.paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
-	writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
+	// writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
 	writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
 }
 
@@ -664,7 +665,7 @@ function writeConcretePowder(block, dye, namespace) {
 	block = block + "_concrete_powder"
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `c:concrete_powder`)
-	// tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
+	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
 	writeBlock(block, namespace, "concrete_powder", dye)
 }
 

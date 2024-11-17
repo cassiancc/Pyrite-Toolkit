@@ -67,7 +67,7 @@ function tagItem(item, tag, optional) {
 	tagContent(item, tag, "item", optional)
 }
 function tagItems(items, tag, optional) {
-	items.forEach(function(block) {
+	items.forEach(function(item) {
 		tagItem(item, tag, optional)
 	})
 }
