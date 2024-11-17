@@ -349,11 +349,23 @@ function generateResources() {
 	writeCarpet("path_carpet", modID, "dirt_path_top", mc)
 
 	// Pyrite Dyes, Wool, Carpet, Terracotta
+	vanillaDyes.forEach(function (dye) {
+		const concrete = dye + "_concrete"
+		writeSlabs(concrete + "_slab", id(mc, concrete), id(mc, concrete), true)
+		writeStairs(concrete + "_stairs", id(mc, concrete), id(mc, concrete), true)
+
+	})
+
 	modDyes.forEach(function (dye) {
 		writeDye(dye)
 		writeWool(dye + "_wool", dye, modID)
 		writeCarpet(dye + "_carpet", modID, dye + "_wool")
 		writeTerracotta(dye, dye, modID)
+		const concrete = dye + "_concrete"
+		writeConcrete(dye, dye, modID)
+		writeConcretePowder(dye, dye, modID)
+		writeSlabs(concrete + "_slab", id(modID, concrete), id(modID, concrete), true)
+		writeStairs(concrete + "_stairs", id(modID, concrete), id(modID, concrete), true)
 	})
 
 	// Lamps
@@ -447,7 +459,7 @@ function generateResources() {
 			}
 		}
 
-		new Block(`nostalgia_${block}_block`, modID, undefined, "nostalgia", baseBlock, block)
+		new Block(`nostalgia_${block}_block`, modID, undefined, "nostalgia", id(mc, baseBlock), block)
 
 		// Unoxidized Copper Blocks use `copper_block` as their texture ID
 		if (block === "copper") {
@@ -490,15 +502,15 @@ function generateResources() {
 	tagHelper.tagBlocks(readFileAsJson("./overrides/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
 	tagHelper.tagBlocks(readFileAsJson("./overrides/mineable/shovel.json"), "minecraft:mineable/shovel")
 
-	// Add Pyrite tags to beacon bases
-	// tagHelper.tagBlocks(["#pyrite:emerald", "#pyrite:diamond", "#pyrite:gold", "#pyrite:iron", "#pyrite:netherite"], "minecraft:beacon_base_blocks")
-
 	// Add Pyrite tags to Pyrite tags
 	tagHelper.tagBlock("#pyrite:terracotta_bricks", "bricks")
 
 	// Generate translations for Pyrite item tags.
-	const newModTags = ["wall_gates", "lamps", "bricks", "dyed_bricks", 
-		"stained_framed_glass", "fences", "wool", "metal_bars", "planks", "brick_stairs", "metal_trapdoors", "brick_walls", "metal_buttons"]
+	const newModTags = [
+		"wall_gates", "lamps", "bricks", "dyed_bricks", 
+		"stained_framed_glass", "fences", "wool", "metal_bars", "planks", "brick_stairs", "metal_trapdoors", "brick_walls", "metal_buttons",
+		"concrete_slabs", "concrete_stairs"
+	]
 	newModTags.forEach(function(tag) {
 		generateLang(tag, "tag.item", modID)
 	})
@@ -638,6 +650,22 @@ function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	writeBlock(block, namespace, "terracotta", dye)
+}
+
+function writeConcrete(block, dye, namespace) {
+	block = block + "_concrete"
+	tagHelper.tagBoth(block, `c:dyed/${dye}`)
+	tagHelper.tagBoth(block, `c:concrete`)
+	tagHelper.tagBlock(block, `minecraft:mineable/pickaxe`)
+	writeBlock(block, namespace, "concrete", dye)
+}
+
+function writeConcretePowder(block, dye, namespace) {
+	block = block + "_concrete_powder"
+	tagHelper.tagBoth(block, `c:dyed/${dye}`)
+	tagHelper.tagBoth(block, `c:concrete_powder`)
+	// tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
+	writeBlock(block, namespace, "concrete_powder", dye)
 }
 
 function writeLamps(block, type, texture) {
@@ -1005,6 +1033,10 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 	else if ((baseBlock.includes("smooth")) || (baseBlock.includes("cut_"))) {
 		tagHelper.checkAndAddResourceTag(block, baseBlock)
 	}
+	else if (baseBlock.includes("concrete")) {
+		tagHelper.tagBoth(block, "concrete_stairs")
+		tagHelper.checkAndAddDyedTag(block, baseBlock)
+	}
 	else {
 		tagHelper.tagBlock(block, "turf_stairs")
 	}
@@ -1050,6 +1082,10 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	}
 	else if (baseBlock.includes("smooth_") || baseBlock.includes("cut_")) {
 		tagHelper.checkAndAddResourceTag(block, baseBlock)
+	}
+	else if (baseBlock.includes("concrete")) {
+		tagHelper.tagBoth(block, "concrete_slabs")
+		tagHelper.checkAndAddDyedTag(block, baseBlock)
 	}
 	else {
 		tagHelper.tagBlock(block, "turf_slabs")

@@ -130,8 +130,12 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	else if (type === "terracotta") {
 		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
-		//FIX
 		recipe = createDyeRecipe(namespace, block, altNamespace, id(mc, "terracotta"), base)
+	}
+	else if (type === "concrete_powder") {
+		base = `${base}_dye`
+		altNamespace = getDyeNamespace(base)
+		recipe = generateShapelessRecipe(["minecraft:sand", "minecraft:sand", "minecraft:sand", "minecraft:sand", "minecraft:gravel", "minecraft:gravel", "minecraft:gravel", "minecraft:gravel", id(altNamespace, base)], id(namespace, block), 8)
 	}
 	else if (type === "terracotta_bricks") {
 		altNamespace = getDyeNamespace(base)
@@ -347,7 +351,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		recipe = generateShapelessRecipe([id(altNamespace, base), `#${mc}:buttons`], id(namespace, block), 1)
 	}
 	else if ((type.includes("nostalgia")) || (type === "locked_chest")) {
-		if (base == "copper") {
+		if (base == "minecraft:copper") {
 			base += "_block"
 		}
 		base = base.replace("nostalgia_", "")

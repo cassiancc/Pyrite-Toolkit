@@ -25,7 +25,10 @@
     "pyrite:nostalgia_cobblestone",
     "pyrite:nostalgia_mossy_cobblestone",
     "#pyrite:stained_framed_glass",
-    "#pyrite:metal_bars"
+    "#pyrite:metal_bars",
+    "#pyrite:concrete_slabs",
+    "#pyrite:concrete_stairs"
+
 
 
   ]
