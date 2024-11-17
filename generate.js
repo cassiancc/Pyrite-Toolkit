@@ -243,16 +243,25 @@ function generateResources() {
 
 	}
 
-	function writeWallGatesFromArray(array, namespace) {
+	function writeWallGatesFromArray(array, namespace, baseBlockArray) {
 		if (namespace == undefined) {
 			namespace = mc;
 		}
+		let i = 0;
 		array.forEach(function (wall) {
 			let blockTemplate = wall.replace("_wall", "")
 			let baseBlock = blockTemplate
-			baseBlock = `${baseBlock.replace("brick", "bricks")}`
-			baseBlock = `${baseBlock.replace("tile", "tiles")}`
-			new Block(blockTemplate + "_wall_gate", modID, namespace, "wall_gate", id(mc, baseBlock), "stone")
+			// If a base block is provided, use it.
+			if (baseBlockArray != undefined) {
+				baseBlock = baseBlockArray[i]
+			}
+			// If not, try and assume the base block.
+			else {
+				baseBlock = `${baseBlock.replace("brick", "bricks")}`
+				baseBlock = `${baseBlock.replace("tile", "tiles")}`
+			}
+			new Block(blockTemplate + "_wall_gate", modID, namespace, "wall_gate", id(namespace, baseBlock), "stone")
+			i++
 		})
 	}
 
@@ -291,6 +300,7 @@ function generateResources() {
 	}
 
 	writeCraftingTablesFromArray(["skyroot"], "aether")
+	writeWallGatesFromArray(["holystone", "mossy_holystone", "holystone_brick", "icestone", "aerogel", "carved", "angelic", "hellfire"], "aether", ["holystone", "mossy_holystone", "holystone_bricks", "icestone", "aerogel", "carved_stone", "angelic_stone", "hellfire_stone"])
 
 
 	const shroomBlockTemplate = "_mushroom"
@@ -535,7 +545,14 @@ function writeLang() {
 	writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
 }
 
-function writeBlockstate(block, blockState, namespace) {
+function writeBlockstate(block, blockState, namespace, altNamespace) {
+	if (altNamespace == undefined) {
+		altNamespace = namespace
+	}
+	let modelSubdirectory = ""
+	if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+		modelSubdirectory = altNamespace + "/"
+	}
 	block = getPath(block)
 	writeFile(`${paths.blockstates}${block}.json`, blockState)
 }
@@ -903,7 +920,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writeCraftingTables(block, namespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace, altNamespace)
 	generateBlockLang(block)
-	tagHelper.tagBoth(block, "crafting_tables")
+	tagHelper.tagBoth(block, "crafting_tables", true)
 	tagHelper.checkAndAddStainedTag(block, baseBlock)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
 }
@@ -1202,7 +1219,7 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	}
 	fenceGateBlockState = stateHelper.genFenceGates(block, namespace)
 	writeBlockstate(block, fenceGateBlockState, namespace, baseBlock)
-	modelWriter.writeFenceGates(block, altNamespace, baseBlock)
+	modelWriter.writeFenceGates(block, altNamespace, baseBlock, altNamespace)
 	writeBlockItemModel(block, namespace, altNamespace)
 	generateBlockLang(block)
 	writeLootTables(block)
@@ -1226,9 +1243,9 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
-	let fenceGateBlockState = stateHelper.genFenceGates(block, namespace)
-	writeBlockstate(block, fenceGateBlockState, modID, baseBlock)
-	modelWriter.writeWallGates(block, altNamespace, baseBlock)
+	const fenceGateBlockState = stateHelper.genFenceGates(block, namespace, altNamespace)
+	writeBlockstate(block, fenceGateBlockState, modID, altNamespace)
+	modelWriter.writeWallGates(block, altNamespace, baseBlock, altNamespace)
 	generateBlockLang(block)
 	writeLootTables(block)
 	writeBlockItemModel(block, modID, altNamespace)

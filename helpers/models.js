@@ -92,9 +92,9 @@ module.exports = {
         let modelSubdirectory = "", textureSubdirectory = ""
         if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
             modelSubdirectory = altNamespace + "/"
-        }
-        if (altNamespace == "aether") {
-            textureSubdirectory = "construction/"
+            if (altNamespace == "aether") {
+                textureSubdirectory = "construction/"
+            }
         }
         return `{
             "parent": "minecraft:block/cube",
@@ -149,7 +149,19 @@ module.exports = {
     },
 
     generateFenceGateBlockModels: function generateFenceGateBlockModels(block, namespace, baseBlock, model, altNamespace) {
-        return `{"parent": "${altNamespace}:block/${model}","textures": {"texture": "${namespace}:block/${baseBlock}"}}`
+        let textureSubdirectory = "";
+        if (altNamespace == "aether") {
+            if (baseBlock == "holystone" || baseBlock == "mossy_holystone" || baseBlock == "icestone" ) {
+                textureSubdirectory = "natural/"
+            }
+            else if (baseBlock == "hellfire_stone" || baseBlock == "angelic_stone" || baseBlock == "carved_stone" ) {
+                textureSubdirectory = "dungeon/"
+            }
+            else {
+                textureSubdirectory = "construction/"
+            }
+        }
+        return `{"parent": "${model}","textures": {"texture": "${namespace}:block/${textureSubdirectory}${baseBlock}"}}`
     },
 
     generateFenceBlockModels: function generateFenceBlockModels(block, baseBlock, namespace, model) {

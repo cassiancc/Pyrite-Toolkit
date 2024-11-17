@@ -100,9 +100,14 @@ module.exports = {
     },
 
     genSlabs: function generateSlabBlockState(block, namespace, baseBlock) {
+        let altNamespace = namespace;
+        if (baseBlock.includes(":")) {
+            altNamespace = helpers.getNamespace(baseBlock)
+        }
+        
         block = helpers.getPath(block)
         baseBlock = helpers.getPath(baseBlock)
-        return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${namespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
+        return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${altNamespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
     },
 
     genStairs: function generateStairBlockstate(block, namespace) {
@@ -469,82 +474,89 @@ module.exports = {
         return `{"variants":{"face=ceiling,facing=east,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":270},"face=ceiling,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":270},"face=ceiling,facing=north,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":180},"face=ceiling,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":180},"face=ceiling,facing=south,powered=false":{"model":"${namespace}:block/${block}","x":180},"face=ceiling,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180},"face=ceiling,facing=west,powered=false":{"model":"${namespace}:block/${block}","x":180,"y":90},"face=ceiling,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","x":180,"y":90},"face=floor,facing=east,powered=false":{"model":"${namespace}:block/${block}","y":90},"face=floor,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","y":90},"face=floor,facing=north,powered=false":{"model":"${namespace}:block/${block}"},"face=floor,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed"},"face=floor,facing=south,powered=false":{"model":"${namespace}:block/${block}","y":180},"face=floor,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","y":180},"face=floor,facing=west,powered=false":{"model":"${namespace}:block/${block}","y":270},"face=floor,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","y":270},"face=wall,facing=east,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":90},"face=wall,facing=east,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":90},"face=wall,facing=north,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90},"face=wall,facing=north,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90},"face=wall,facing=south,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":180},"face=wall,facing=south,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":180},"face=wall,facing=west,powered=false":{"model":"${namespace}:block/${block}","uvlock":true,"x":90,"y":270},"face=wall,facing=west,powered=true":{"model":"${namespace}:block/${block}_pressed","uvlock":true,"x":90,"y":270}}}`
     },
     
-    genFenceGates: function generateFenceGateBlockState(block, namespace) {
+    genFenceGates: function generateFenceGateBlockState(block, namespace, altNamespace) {
+        if (altNamespace == undefined) {
+            altNamespace = namespace
+        }
+        let modelSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
         return `{
             "variants": {
                 "facing=east,in_wall=false,open=false": {
-                    "model": "${namespace}:block/${block}",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}",
                     "uvlock": true,
                     "y": 270
                 },
                 "facing=east,in_wall=false,open=true": {
-                    "model": "${namespace}:block/${block}_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_open",
                     "uvlock": true,
                     "y": 270
                 },
                 "facing=east,in_wall=true,open=false": {
-                    "model": "${namespace}:block/${block}_wall",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall",
                     "uvlock": true,
                     "y": 270
                 },
                 "facing=east,in_wall=true,open=true": {
-                    "model": "${namespace}:block/${block}_wall_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall_open",
                     "uvlock": true,
                     "y": 270
                 },
                 "facing=north,in_wall=false,open=false": {
-                    "model": "${namespace}:block/${block}",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}",
                     "uvlock": true,
                     "y": 180
                 },
                 "facing=north,in_wall=false,open=true": {
-                    "model": "${namespace}:block/${block}_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_open",
                     "uvlock": true,
                     "y": 180
                 },
                 "facing=north,in_wall=true,open=false": {
-                    "model": "${namespace}:block/${block}_wall",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall",
                     "uvlock": true,
                     "y": 180
                 },
                 "facing=north,in_wall=true,open=true": {
-                    "model": "${namespace}:block/${block}_wall_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall_open",
                     "uvlock": true,
                     "y": 180
                 },
                 "facing=south,in_wall=false,open=false": {
-                    "model": "${namespace}:block/${block}",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}",
                     "uvlock": true
                 },
                 "facing=south,in_wall=false,open=true": {
-                    "model": "${namespace}:block/${block}_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_open",
                     "uvlock": true
                 },
                 "facing=south,in_wall=true,open=false": {
-                    "model": "${namespace}:block/${block}_wall",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall",
                     "uvlock": true
                 },
                 "facing=south,in_wall=true,open=true": {
-                    "model": "${namespace}:block/${block}_wall_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall_open",
                     "uvlock": true
                 },
                 "facing=west,in_wall=false,open=false": {
-                    "model": "${namespace}:block/${block}",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}",
                     "uvlock": true,
                     "y": 90
                 },
                 "facing=west,in_wall=false,open=true": {
-                    "model": "${namespace}:block/${block}_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_open",
                     "uvlock": true,
                     "y": 90
                 },
                 "facing=west,in_wall=true,open=false": {
-                    "model": "${namespace}:block/${block}_wall",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall",
                     "uvlock": true,
                     "y": 90
                 },
                 "facing=west,in_wall=true,open=true": {
-                    "model": "${namespace}:block/${block}_wall_open",
+                    "model": "${namespace}:block/${modelSubdirectory}${block}_wall_open",
                     "uvlock": true,
                     "y": 90
                 }

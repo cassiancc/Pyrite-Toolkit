@@ -329,7 +329,10 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		baseWall = `${baseWall.replace("bricks", "brick")}`
 		baseWall = `${baseWall.replace("tiles", "tile")}`
 		baseWall = baseWall + "_wall"
-		if (!base.includes(":")) {
+		if (altNamespace == "aether") {
+			baseWall = baseWall.replace("_stone", "")
+		}
+ 		if (!base.includes(":")) {
 			base = id(base)
 		}
 		if (!baseWall.includes(":")) {

@@ -155,9 +155,8 @@ module.exports = {
             baseBlock = baseBlock.split(":")[1]
         }
         block = getPath(block)
-        const generateSlabBlockModel = modelHelper.generateSlabBlockModel
-        writeFile(`${helpers.modelPath}${block}.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab"));
-        writeFile(`${helpers.modelPath}${block}_top.json`, generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab"));
+        writeFile(`${helpers.modelPath}${block}_top.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
     },
     
     writePressurePlates: function writePlateBlockModels(block, namespace, baseBlock) {
@@ -178,26 +177,40 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_inventory.json`, modelHelper.generateFenceBlockModels(block, baseBlock, namespace, "fence_inventory"));
     },
 
-    writeFenceGates: function writeFenceGateBlockModels(block, namespace, baseBlock) {
+    writeFenceGates: function writeFenceGateBlockModels(block, namespace, baseBlock, altNamespace) {
+        if (altNamespace == undefined) {
+            altNamespace = namespace
+        }
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
         }
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate", mc))
-        writeFile(`${helpers.modelPath}${block}_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_open", mc))
-        writeFile(`${helpers.modelPath}${block}_wall.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_wall", mc))
-        writeFile(`${helpers.modelPath}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_wall_open", mc))
+        let modelSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate", mc))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate_open", mc))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_wall.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate_wall", mc))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate_wall_open", mc))
     },
     
-    writeWallGates: function writeWallGateBlockModels(block, namespace, baseBlock) {
+    writeWallGates: function writeWallGateBlockModels(block, namespace, baseBlock, altNamespace) {
+        if (altNamespace == undefined) {
+            altNamespace = namespace
+        }
         if (baseBlock.includes(":")) {
             namespace = baseBlock.split(":")[0]
             baseBlock = baseBlock.split(":")[1]
         }
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate", mc))
-        writeFile(`${helpers.modelPath}${block}_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_fence_gate_open", mc))
-        writeFile(`${helpers.modelPath}${block}_wall.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_wall_gate_wall", modID))
-        writeFile(`${helpers.modelPath}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "template_wall_gate_wall_open", modID))
+        let modelSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate", altNamespace))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate_open", altNamespace))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_wall.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "pyrite:block/template_wall_gate_wall", altNamespace))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "pyrite:block/template_wall_gate_wall_open", altNamespace))
     },
     
     writeTrapdoors: function writeTrapdoorBlockModels(block, namespace) {
