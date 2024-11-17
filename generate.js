@@ -1172,7 +1172,7 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	writeBlockItemModel(block, namespace, baseBlock)
 	generateBlockLang(block)
 	if (baseBlock.includes("planks")) {
-		tagHelper.tagBlock(block, "minecraft:wooden_fence_gates", true)
+		tagHelper.tagBoth(block, "minecraft:wooden_fence_gates", true)
 		tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
 	}
 	else {
