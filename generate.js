@@ -961,11 +961,13 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writeWalls(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
 	generateBlockLang(block)
-	writeRecipes(block, "wall", baseBlock, altNamespace)
+	
 	tagHelper.tagBoth(block, "minecraft:walls")
 	if (baseBlock.includes("bricks")) {
 		tagHelper.tagBoth(block, "brick_walls")
 	}
+
+	writeRecipes(block, "wall", baseBlock, altNamespace)
 	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
 }
 
@@ -1069,6 +1071,8 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writePressurePlates(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, namespace)
 	generateBlockLang(block)
+	writeLootTables(block)
+
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_pressure_plates", true)
 		tagHelper.checkAndAddStainedTag(block, baseBlock)
@@ -1076,8 +1080,8 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	else {
 		tagHelper.tagBlock(block, "minecraft:pressure_plates", true)
 	}
+	
 	writeRecipes(block, "plates", baseBlock)
-	writeLootTables(block)
 }
 
 function writeButtons(block, namespace, baseBlock, altNamespace, type) {
@@ -1092,14 +1096,16 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	modelWriter.writeButtons(block, altNamespace, baseBlock)
 	writeInventoryModel(block)
 	generateBlockLang(block)
+	writeLootTables(block)
+
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_buttons", true)
 	}
 	else {
 		tagHelper.tagBoth(block, "metal_buttons", true)
 	}
+	
 	writeRecipes(block, type, baseBlock, namespace, altNamespace)
-	writeLootTables(block)
 }
 
 function writeFences(block, namespace, baseBlock) {
@@ -1107,12 +1113,14 @@ function writeFences(block, namespace, baseBlock) {
 	writeBlockstate(block, fenceBlockState)
 	modelWriter.writeFences(block, baseBlock, namespace)
 	writeInventoryModel(block)
+	writeLootTables(block)
+
 	tagHelper.tagBoth(block, "fences")
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_fences", true)
 	}
+
 	writeRecipes(block, "fences", baseBlock, namespace)
-	writeLootTables(block)
 }
 
 function writeFenceGates(block, namespace, baseBlock, altNamespace) {
@@ -1127,6 +1135,8 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writeFenceGates(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace, baseBlock)
 	generateBlockLang(block)
+	writeLootTables(block)
+
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_fence_gates", true)
 		tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
@@ -1134,8 +1144,8 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	else {
 		tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
 	}
+
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
-	writeLootTables(block)
 }
 
 function writeWallGates(block, namespace, baseBlock, altNamespace) {
@@ -1149,10 +1159,10 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, fenceGateBlockState, modID, baseBlock)
 	modelWriter.writeWallGates(block, altNamespace, baseBlock)
 	generateBlockLang(block)
+	writeLootTables(block)
 	writeBlockItemModel(block, modID, baseBlock)
 	tagHelper.tagBoth(block, "wall_gates", true)
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
-	writeLootTables(block)
 
 }
 
@@ -1166,19 +1176,22 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, stateHelper.genCarpet(block, namespace, baseBlock), modID)
 	modelWriter.writeCarpets(block, altNamespace, baseBlock)
 	writeBlockItemModel(block, namespace)
+	generateBlockLang(block)
+	writeLootTables(block)
 	if (baseBlock.search("_top") !== -1) {
 		baseBlock = baseBlock.split("_top")[0]
-
 	}
+
+	//Tags
 	if (baseBlock.includes("wool")) {
 		tagHelper.tagBoth(block, "minecraft:wool_carpets")
 	}
 	else {
 		tagHelper.tagBlock(block, "carpet")
 	}
-	generateBlockLang(block)
+	
+	// Recipes
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
-	writeLootTables(block)
 }
 
 function writeLootTables(block, namespace) {
