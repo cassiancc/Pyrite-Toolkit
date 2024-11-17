@@ -161,7 +161,12 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		recipe = generateShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:vine"], id(namespace, block), 1)
 	}
 	else if (type === "glowing_obsidian") {
-		recipe = generateShapedRecipe({ "X": `minecraft:crying_obsidian`, "#": `minecraft:magma_block` }, `pyrite:glowing_obsidian`, 4, ["X#", "#X"])
+		if (block === "glowing_obsidian") {
+			recipe = generateShapedRecipe({ "X": `minecraft:crying_obsidian`, "#": `minecraft:magma_block` }, `pyrite:glowing_obsidian`, 4, ["X#", "#X"])
+		}
+		else {
+			recipe = generateShapedRecipe({ "X": `pyrite:glowing_obsidian`, "#": `pyrite:nostalgia_dye` }, `pyrite:nostalgia_glowing_obsidian`, 1, ["X#", "#X"])
+		}
 	}
 	else if (type.includes("cut_")) {
 		let baseBlock = type.split("_")[1]
@@ -358,7 +363,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			vanillaFlower = "peony"
 		}
 		else if (block === "buttercup") {
-			vanillaFlower = "peony"
+			vanillaFlower = "dandelion"
 		}
 		else if (block === "blue_rose") {
 			vanillaFlower = "blue_orchid"
@@ -370,6 +375,16 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			vanillaFlower = block.replace("rose", "tulip")
 		}
 		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, vanillaFlower)], id(modID, block), 1)
+	}
+	else if (block === "lit_redstone_lamp") {
+		generateShapelessRecipe([id(mc, "redstone_torch"), id(mc, "redstone_lamp")], id(modID, block), 1)
+	}
+	else if (block === "glowstone_lamp") {
+		recipe = generateShapedRecipe({ "#": `minecraft:glowstone`, "X": `minecraft:iron_nugget` }, id(modID, type), 4, [
+			"X#X",
+			"#X#",
+			"X#X"
+		])
 	}
 	else {
 		console.log(block, type)

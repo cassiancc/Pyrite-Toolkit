@@ -13,7 +13,7 @@ const { existsSync } = require("fs");
 if (process.argv[2] != undefined) {
     if (existsSync(process.argv[2])) {
         writeFile("./en_ud.json", flipTranslationFile(readFileAsJson(process.argv[2])))
-        console.log(`Upside downified ${process.argv[2].split("/").at(-1)}! `)
+        console.log(`Upside downified ${process.argv[2].split("/").at(-1)}!`)
     }
     else {
         console.log(upsideDownify(process.argv[2]))

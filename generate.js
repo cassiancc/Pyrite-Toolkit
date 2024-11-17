@@ -1231,6 +1231,12 @@ function writeStairs(block, namespace, baseBlock, altNamespace, shouldGenerateSt
 	writeBlockItemModel(block, namespace)
 	generateBlockLang(block)
 	tagHelper.tagBoth(block, "minecraft:stairs")
+	if (baseBlock.includes("smooth")) {
+		tagHelper.tagBlock(block, baseBlock.replace("smooth_", ""))
+	}
+	else if (baseBlock.includes("cut_")) {
+		tagHelper.tagBlock(block, baseBlock.replace("cut_", ""))
+	}
 	writeRecipes(block, "stairs", baseBlock, namespace)
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
