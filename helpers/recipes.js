@@ -133,7 +133,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		//FIX
 		recipe = createDyeRecipe(namespace, block, altNamespace, id(mc, "terracotta"), base)
 	}
-	if (type === "terracotta_bricks") {
+	else if (type === "terracotta_bricks") {
 		altNamespace = getDyeNamespace(base)
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC", "CC"])
 	}
@@ -203,42 +203,33 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 
 	}
 	else if (type === "bricks") {
-
-		if (block === "charred_nether_bricks") {
-			recipe = `{
-		"type": "minecraft:smelting",
-		"category": "blocks",
-		"cookingtime": 200,
-		"experience": 0.1,
-		"ingredient": {
-		  "item": "minecraft:nether_bricks"
-		},
-		"result": "pyrite:charred_nether_bricks"
-	  }`
-		}
-		else if (block === "blue_nether_bricks") {
-			recipe = generateShapedRecipe({ "N": `minecraft:nether_brick` }, { "W": `minecraft:warped_fungus` }, `pyrite:${block}`, 1, [
-				"NW",
-				"WN"
-			])
-		}
-		else {
-			base = `${base}_dye`
-			altNamespace = getDyeNamespace(base)
-			recipe = generateShapedRecipe({ "C": id(altNamespace, base), "D": `minecraft:bricks` }, `pyrite:${block}`, 4, ["CCC", "CDC", "CCC"])
-		}
+		base = `${base}_dye`
+		altNamespace = getDyeNamespace(base)
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "D": `minecraft:bricks` }, `pyrite:${block}`, 4, ["CCC", "CDC", "CCC"])
+	}
+	else if (block === "charred_nether_bricks") {
+		recipe = `{
+			"type": "minecraft:smelting",
+			"category": "blocks",
+			"cookingtime": 200,
+			"experience": 0.1,
+			"ingredient": {
+			"item": "minecraft:nether_bricks"
+			},
+			"result": {"id": "pyrite:charred_nether_bricks"}
+		}`
+	}
+	else if (type === "blue_nether_bricks") {
+		recipe = generateShapedRecipe({ "N": `minecraft:nether_brick`, "W": `minecraft:warped_fungus` }, `pyrite:${block}`, 1, [
+			"NW",
+			"WN"
+		])
 	}
 	else if (type === "resource_bricks") {
 		recipe = generateShapedRecipe({ "D": base }, id(namespace, block), 4, [
 			"DD",
 			"DD"
 		])
-	}
-	else if (type === "nostalgia") {
-		if (base == "copper") {
-			base += "_block"
-		}
-		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, base)], id(modID, block), 1)
 	}
 	else if (type === "chiseled_resource") {
 		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 4, [
@@ -347,6 +338,39 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	}
 	else if (type === "metal_buttons") {
 		recipe = generateShapelessRecipe([id(altNamespace, base), `#${mc}:buttons`], id(namespace, block), 1)
+	}
+	else if ((type.includes("nostalgia")) || (type === "locked_chest")) {
+		if (base == "copper") {
+			base += "_block"
+		}
+		base = base.replace("nostalgia_", "")
+		base = base.replace("locked_chest", "chest")
+		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, base)], id(modID, block), 1)
+	}
+	else if (type == "flower") {
+		let vanillaFlower;
+		if (block === "rose") {
+			vanillaFlower = "poppy"
+		}
+		else if (block === "paeonia") {
+			vanillaFlower = "peony"
+		}
+		else if (block === "buttercup") {
+			vanillaFlower = "peony"
+		}
+		else if (block === "blue_rose") {
+			vanillaFlower = "blue_orchid"
+		}
+		else if (block === "pink_daisy") {
+			vanillaFlower = "oxeye_daisy"
+		}
+		else {
+			vanillaFlower = block.replace("rose", "tulip")
+		}
+		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, vanillaFlower)], id(modID, block), 1)
+	}
+	else {
+		console.log(block, type)
 	}
 
 	return recipe

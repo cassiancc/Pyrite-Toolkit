@@ -356,7 +356,7 @@ function generateResources() {
 	writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
 	writeBlock("nostalgia_netherrack", modID, "nostalgia_netherrack", "nostalgia_netherrack")
 	writeBlock("nostalgia_gravel", modID, "nostalgia_gravel", "nostalgia_gravel")
-	new Block("nostalgia_grass_block", modID, undefined, "nostalgia_grass_block", "nostalgia_grass_block", "grass")
+	new Block("nostalgia_grass_block", modID, undefined, "nostalgia_grass_block", "grass_block", "grass")
 
 	//Framed Glass
 	new Block("framed_glass", modID, undefined, "framed_glass", "framed_glass", "framed_glass")
@@ -1126,7 +1126,7 @@ function writeFlower(block) {
 	tagHelper.tagBoth(block, "minecraft:small_flowers")
 	generateBlockLang(block)
 	writeLootTables(block, modID)
-	// writeRecipes(block, special, dye)
+	writeRecipes(block, "flower")
 
 }
 
@@ -1494,8 +1494,8 @@ function writeLootTables(block, namespace) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
-	let lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${block}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
-	writeFileSafe(filePath, lootTable);
+	const lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${block}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
+	writeFile(filePath, lootTable);
 }
 
 function writeDoorLootTables(block, namespace) {
