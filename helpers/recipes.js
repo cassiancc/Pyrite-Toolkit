@@ -232,13 +232,15 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else if (type === "chiseled_resource") {
-		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 4, [
+		const n = base.split(":")[0]
+		const ingredient = `cut_${base.split(":")[1].replace("_block", "_slab")}`
+		recipe = generateShapedRecipe({ "D": id(modID, ingredient) }, id(namespace, block), 1, [
 			"D",
 			"D"
 		])
 	}
-	else if (type === "chiseled_pillar") {
-		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 4, [
+	else if (type === "resource_pillar") {
+		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 2, [
 			"D",
 			"D"
 		])
