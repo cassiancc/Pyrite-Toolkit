@@ -171,7 +171,7 @@ class Block {  // Create a class
 		else if (blockType == "nostalgia_grass_block") {
 			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
-		else if (blockType.includes("smooth_stone_bricks")) {
+		else if ((blockType == "nostalgia") || (blockType.includes("smooth_stone_bricks"))) {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true)
 		}
 		else {
@@ -447,7 +447,7 @@ function generateResources() {
 			}
 		}
 
-		writeBlock(`nostalgia_${block}_block`, modID, "nostalgia", baseBlock)
+		new Block(`nostalgia_${block}_block`, modID, undefined, "nostalgia", baseBlock, block)
 
 		// Unoxidized Copper Blocks use `copper_block` as their texture ID
 		if (block === "copper") {
