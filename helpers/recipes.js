@@ -7,11 +7,15 @@ const minorVersion = helpers.minorVersion
 const modID = helpers.modID
 const mc = helpers.mc
 
-function enableNewRecipes() {
+function use21dot2Recipes() {
 	if (((majorVersion === 21) && (minorVersion !== 1)) || (majorVersion > 21)) {
 		return true;
 	}
 	else return false;
+}
+
+function usePre21dot1Recipes() {
+	return !use21dot2Recipes()
 }
 
 function itemOrId() {
@@ -22,7 +26,7 @@ function itemOrId() {
 }
 
 function addIngredients(ingredientArray, ingredient) {
-	if (enableNewRecipes()) {
+	if (use21dot2Recipes()) {
 		ingredientArray.push(ingredient)
 	}
 	else {
@@ -33,6 +37,25 @@ function addIngredients(ingredientArray, ingredient) {
 			ingredientArray.push({ "item": ingredient })
 		}
 	}
+}
+
+function generateModLoadCondition(mod) {
+	return {
+		"fabric:load_conditions": [
+			{
+				"condition": "fabric:all_mods_loaded",
+				"values": [
+					mod
+				]
+			}
+		],
+		"neoforge:conditions": [
+				{
+				"type": "neoforge:mod_loaded",
+				"modid": mod
+				}
+			]
+		}
 }
 
 
@@ -57,8 +80,8 @@ function generateShapelessRecipe(ingredients, result, quantity) {
 }
 
 function generateShapedRecipe(ingredients, result, quantity, shape) {
-	let newIngredients = {};
-	if (!enableNewRecipes()) {
+	let newIngredients = {}, loadCondition;
+	if (usePre21dot1Recipes()) {
 		const keys = Object.keys(ingredients)
 		const values = Object.values(ingredients)
 		let i = 0;
@@ -72,11 +95,20 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 			else {
 				itemOrTag = "item"
 			}
+			const valueNamespace = value.split(":")[0]
+			if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
+				loadCondition = generateModLoadCondition(valueNamespace)
+			}
 			Object.assign(newIngredients, JSON.parse(`{"${keys[i]}": {"${itemOrTag}": "${value}"}}`))
 			i++
 		})
 	}
-	else { newIngredients = ingredients }
+	else { 
+		newIngredients = ingredients 
+		if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
+			loadCondition = generateModLoadCondition(newIngredients.split(":")[0]);
+		}
+	}
 
 	let recipe = {
 		"type": "minecraft:crafting_shaped",
@@ -84,6 +116,11 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 		"key": newIngredients
 
 	}
+
+	if (loadCondition != undefined) {
+		Object.assign(recipe, loadCondition)
+	}
+
 
 	recipe.result = JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
 
@@ -409,6 +446,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 module.exports = {
     generateRecipes: generateRecipes,
     generateShapedRecipe: generateShapedRecipe,
-    generateShapelessRecipe: generateShapelessRecipe
+    generateShapelessRecipe: generateShapelessRecipe,
+	generateModLoadCondition: generateModLoadCondition
 
 }

@@ -46,7 +46,7 @@ function tagContent(arg, tag, folder, optional) {
 	if (!currentTag.values.includes(arg) && !(currentTag.values.some(e => e.id === arg))) {
 		// If not, add it to the tag.
 		if (optional === true) {
-			currentTag.values.push({ "id": arg, "optional": true })
+			currentTag.values.push({ "id": arg, "required": false })
 		}
 		else {
 			currentTag.values.push(arg)
@@ -127,7 +127,9 @@ function checkAndAddDyedTag(block, baseBlock, blockOnly) {
 		if (blockOnly === true) {
 			tagBlock(block, `c:dyed/${colour}`)
 		}
-		tagBoth(block, `c:dyed/${colour}`)
+		else {
+			tagBoth(block, `c:dyed/${colour}`)
+		}
 	}
 }
 

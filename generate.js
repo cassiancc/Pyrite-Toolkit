@@ -927,6 +927,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	tagHelper.tagBoth(block, "crafting_tables", true)
 	tagHelper.checkAndAddStainedTag(block, baseBlock)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
+	writeLootTables(block, namespace, undefined, altNamespace)
 }
 
 function writeLadders(block, namespace, baseBlock, altNamespace) {
@@ -1012,7 +1013,7 @@ function writeSigns(blockID, baseBlockID, texture) {
 	writeUniqueItemModel(blockID)
 	// Loot Tables
 	writeLootTables(blockID, modID)
-	writeLootTables(wallBlockID, modID)
+	writeLootTables(wallBlockID, modID, blockID)
 	// Language Entries
 	generateBlockLang(blockID)
 	// Tags
@@ -1280,7 +1281,12 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	generateBlockLang(block)
 	writeLootTables(block)
 	writeBlockItemModel(block, modID, altNamespace)
-	tagHelper.tagBoth(block, "wall_gates", true)
+	let optionality = false;
+	if ((altNamespace != mc) && (altNamespace != modID)) {
+		optionality = true;
+	}
+	tagHelper.tagBoth(block, "wall_gates", optionality)
+
 	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
 	writeStonecutterRecipes(block, baseBlock, 1)
 
@@ -1314,13 +1320,19 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 }
 
-function writeLootTables(block, namespace) {
+function writeLootTables(block, namespace, baseBlock, altNamespace) {
 	block = getPath(block)
 	const filePath = `${paths.loot}${block}.json`
 	if (namespace === undefined) {
 		namespace = modID
 	}
-	const lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${block}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
+	if (baseBlock === undefined) {
+		baseBlock = block
+	}
+	if (altNamespace === undefined) {
+		altNamespace = namespace
+	}
+	let lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${baseBlock}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
 	writeFile(filePath, lootTable);
 }
 
