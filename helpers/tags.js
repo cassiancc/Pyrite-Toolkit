@@ -107,7 +107,7 @@ function checkAndAddResourceTag(block, baseBlock) {
 	}
 }
 
-function checkAndAddDyedTag(block, baseBlock) {
+function checkAndAddDyedTag(block, baseBlock, blockOnly) {
 	block = getPath(block)
 	baseBlock = getPath(block)
 	let colour;
@@ -117,10 +117,16 @@ function checkAndAddDyedTag(block, baseBlock) {
 	if (baseBlock.includes("light_gray")) {
 		colour = "light_gray"
 	}
+	if (baseBlock.includes("mushroom")) {
+		return
+	}
 	else {
 		colour = baseBlock.split("_")[0]
 	}
 	if (dyes.includes(colour)) {
+		if (blockOnly === true) {
+			tagBlock(block, `c:dyed/${colour}`)
+		}
 		tagBoth(block, `c:dyed/${colour}`)
 	}
 }

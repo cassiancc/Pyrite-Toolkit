@@ -117,6 +117,9 @@ class Block {  // Create a class
 		else if (blockType === "ladder") {
 			writeLadders(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
+		else if (blockType === "sign") {
+			writeSigns(this.blockID, id(modID, this.baseBlock))
+		}
 		else if (blockType === "door") {
 			writeDoors(this.blockID, this.baseBlock)
 		}
@@ -149,7 +152,7 @@ class Block {  // Create a class
 			writeTerracottaBricks(this.blockID, this.namespace, "terracotta_bricks", this.baseBlock)
 		}
 		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane")) {
-			writePaneBlock(this.blockID, this.namespace, this.baseBlock)
+			writePanes(this.blockID, this.namespace, this.baseBlock)
 		}
 		else if (blockType === "pressure_plate") {
 			writePlates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
@@ -216,6 +219,7 @@ function generateResources() {
 		new Block(template + "_ladder", modID, modID, "ladder", stainedPlankBase, "wood")
 		// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
 		new Block(template + "_door", modID, modID, "door", stainedPlankBase, "wood")
+		new Block(template + "_sign", modID, modID, "sign", stainedPlankBase, "wood")
 		new Block(template + "_trapdoor", modID, modID, "trapdoor", stainedPlankBase, "wood")
 	}
 
@@ -325,7 +329,7 @@ function generateResources() {
 	//Framed Glass
 	new Block("framed_glass", modID, undefined, "framed_glass", "framed_glass", "framed_glass")
 	// Framed Glass Panes
-	writePaneBlock("framed_glass_pane", modID, "framed_glass")
+	writePanes("framed_glass_pane", modID, "framed_glass")
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
 	// Nostalgia Turf Set
@@ -449,7 +453,7 @@ function generateResources() {
 
 		// Iron Bars already exist
 		if (!block.includes("iron")) {
-			writeBarBlock(block, modID, baseBlock)
+			writeBars(block, modID, baseBlock)
 		}
 		// Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
 		if (block.includes("copper")) {
@@ -994,7 +998,34 @@ function writeOrientableBlock(block, namespace, blockType, baseBlock) {
 	writeRecipes(block, blockType, baseBlock)
 }
 
-function writePaneBlock(block, namespace, baseBlock) {
+function writeSigns(blockID, baseBlockID, texture) {
+	// Setup
+	const wallBlockID = blockID.replace("_sign", "_wall_sign")
+	if (texture == undefined) {
+		texture = baseBlockID
+	}
+	// Blockstates
+	writeBlockstate(blockID, stateHelper.gen(blockID, modID), modID)
+	writeBlockstate(wallBlockID, stateHelper.gen(blockID, modID), modID)
+	// Models
+	modelWriter.writePlanks(blockID, modID, texture)
+	writeUniqueItemModel(blockID)
+	// Loot Tables
+	writeLootTables(blockID, modID)
+	writeLootTables(wallBlockID, modID)
+	// Language Entries
+	generateBlockLang(blockID)
+	// Tags
+	tagHelper.tagBoth(blockID, "minecraft:signs")
+	tagHelper.tagBlock(wallBlockID, "minecraft:wall_signs")
+	tagHelper.checkAndAddDyedTag(blockID, baseBlockID)
+	tagHelper.checkAndAddDyedTag(wallBlockID, baseBlockID, true)
+	// Generate recipes
+	writeRecipes(blockID, "sign", baseBlockID, modID)
+	return blockID;
+}
+
+function writePanes(block, namespace, baseBlock) {
 	baseBlock = block.replace("_pane", "")
 	writeBlockstate(block, stateHelper.genPanes(block, namespace, baseBlock), namespace)
 	modelWriter.writePanes(block, namespace, baseBlock)
@@ -1006,7 +1037,7 @@ function writePaneBlock(block, namespace, baseBlock) {
 	generateBlockLang(block)
 }
 
-function writeBarBlock(block, namespace, baseBlock) {
+function writeBars(block, namespace, baseBlock) {
 	baseBlock = block
 	block = block + "_bars"
 	writeBlockstate(block, stateHelper.genBars(block, namespace, baseBlock), namespace)
