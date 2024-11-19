@@ -1,5 +1,9 @@
 {
-	"itemGroup.pyrite.group": "Pyrite",
+	"itemGroup.pyrite.pyrite_group": "Pyrite Building Blocks",
+	"itemGroup.pyrite.wood_group": "Pyrite Wooden Blocks",
+	"itemGroup.pyrite.resource_group": "Pyrite Resource Blocks",
+	"itemGroup.pyrite.brick_group": "Pyrite Brick Blocks",
+	"itemGroup.pyrite.redstone_group": "Pyrite Redstone Blocks",
 	"lore.pyrite.amethyst_bricks": "A variant of Amethyst that has been carved into Bricks.",
 	"lore.pyrite.amethyst_door": "A variant of Amethyst that has been carved into a Door.",
 	"lore.pyrite.amethyst_pillar": "A variant of Amethyst that has been carved into a Pillar.",

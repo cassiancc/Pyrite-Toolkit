@@ -1055,7 +1055,7 @@ function writeHangingSigns(blockID, baseBlockID, texture) {
 	// Tags
 	tagHelper.tagBlock(blockID, "minecraft:ceiling_hanging_signs")
 	tagHelper.tagBlock(wallBlockID, "minecraft:wall_hanging_signs")
-	tagHelper.tagItem(wallBlockID, "minecraft:hanging_signs")
+	tagHelper.tagItem(blockID, "minecraft:hanging_signs")
 	tagHelper.checkAndAddDyedTag(blockID, baseBlockID)
 	tagHelper.checkAndAddDyedTag(wallBlockID, baseBlockID, true)
 	// Generate recipes
