@@ -50,12 +50,12 @@ function generateModLoadCondition(mod) {
 			}
 		],
 		"neoforge:conditions": [
-				{
-				"type": "neoforge:mod_loaded",
-				"modid": mod
-				}
-			]
-		}
+			{
+			"type": "neoforge:mod_loaded",
+			"modid": mod
+			}
+		]
+	}
 }
 
 
@@ -332,6 +332,12 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	}
 	else if (type === "plates") {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["CC"])
+	}
+	else if (type === "sign") {
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "stick") }, id(namespace, block), 3, ["CCC", "CCC", " S "])
+	}
+	else if (type === "hanging_sign") {
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "chain") }, id(namespace, block), 6, ["S S", "CCC", "CCC"])
 	}
 	else if (type === "door") {
 		base.replace("gold_block", "gold_ingot")

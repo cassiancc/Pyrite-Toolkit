@@ -7,6 +7,7 @@ const recipeHelper = require('./helpers/recipes');
 const recipeWriter = require('./writers/recipes');
 const modelHelper = require('./helpers/models');
 const modelWriter = require('./writers/models');
+const lootTableWriter = require('./writers/loot_tables');
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
 const id = helpers.id
@@ -18,6 +19,7 @@ const writeFile = helpers.writeFile
 const writeFileSafe = helpers.writeFileSafe
 const writeRecipes = recipeWriter.writeRecipes
 const writeStonecutterRecipes = recipeWriter.writeStonecutterRecipes
+const writeLootTables = lootTableWriter.writeLootTables
 
 const modID = helpers.modID;
 const mc = helpers.mc;
@@ -120,6 +122,9 @@ class Block {  // Create a class
 		else if (blockType === "sign") {
 			writeSigns(this.blockID, id(modID, this.baseBlock))
 		}
+		else if (blockType === "hanging_sign") {
+			writeHangingSigns(this.blockID, id(modID, this.baseBlock))
+		}
 		else if (blockType === "door") {
 			writeDoors(this.blockID, this.baseBlock)
 		}
@@ -179,14 +184,14 @@ class Block {  // Create a class
 		}
 
 		//Generate block loot table
-		if (blockType === "door") {
-			writeDoorLootTables(this.blockID, this.namespace)
+		// if (blockType === "door") {
+		// 	lootTableWriter.writeDoorLootTables(this.blockID, this.namespace)
 
-		}
-		else {
-			writeLootTables(this.blockID, this.namespace)
+		// }
+		// else {
+		// 	writeLootTables(this.blockID, this.namespace)
 
-		}
+		// }
 
 	}
 	generateFullID() {
@@ -220,6 +225,7 @@ function generateResources() {
 		// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
 		new Block(template + "_door", modID, modID, "door", stainedPlankBase, "wood")
 		new Block(template + "_sign", modID, modID, "sign", stainedPlankBase, "wood")
+		new Block(template + "_hanging_sign", modID, modID, "hanging_sign", stainedPlankBase, "wood")
 		new Block(template + "_trapdoor", modID, modID, "trapdoor", stainedPlankBase, "wood")
 	}
 
@@ -581,10 +587,11 @@ function generateLang(block, type, namespace) {
 	if (!upsideDownTranslations.hasOwnProperty(key)) {
 		upsideDownTranslations = Object.assign(upsideDownTranslations, JSON.parse(`{"${key}": "${langHelper.upsideDownify(value)}"}`));
 	}
+	return value;
 }
 
 function generateBlockLang(block) {
-	generateLang(block, "block", modID)
+	return generateLang(block, "block", modID)
 }
 
 function writeBlockItemModel(block, namespace, altNamespace) {
@@ -713,6 +720,7 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	modelWriter.writeMirroredBricks(block, namespace, block)
 	writeBlockItemModel(block, namespace)
 	writeRecipes(block, special, baseBlock, namespace)
+	lootTableWriter.writeLootTables(block)
 	if (block.includes("terracotta")) {
 		tagHelper.tagBlock(block, "terracotta_bricks")
 	}
@@ -740,7 +748,7 @@ function writeDoors(block, baseBlock) {
 	modelWriter.writeDoors(block)
 	writeUniqueItemModel(block)
 	generateBlockLang(block)
-
+	lootTableWriter.writeDoorLootTables(block)
 	tagHelper.tagBoth(block, "minecraft:doors")
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_doors")
@@ -777,7 +785,7 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		texture = baseBlock
 	}
 	writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
-	modelWriter.writePlanks(block, namespace, texture, undefined, render_type)
+	modelWriter.writeBlock(block, namespace, texture, undefined, render_type)
 	writeBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	generateBlockLang(block)
@@ -827,9 +835,9 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 		tagHelper.tagBlock(block, "minecraft:enderman_holdable", true)
 	}
 	else if (blockType.includes("netherrack")) {
-		tagHelper.tagBlock(block, "minecraft:infiburn_end", true)
-		tagHelper.tagBlock(block, "minecraft:infiburn_nether", true)
-		tagHelper.tagBlock(block, "minecraft:infiburn_overworld", true)
+		tagHelper.tagBlock(block, "minecraft:infiniburn_end", true)
+		tagHelper.tagBlock(block, "minecraft:infiniburn_nether", true)
+		tagHelper.tagBlock(block, "minecraft:infiniburn_overworld", true)
 	}
 	else if (blockType.includes("smooth_resource")) {
 		const blockType = block.split("smooth_")[1]
@@ -936,7 +944,7 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	}
 	const blockState = `{"variants":{"facing=east":{"model":"${namespace}:block/${block}","y":90},"facing=north":{"model":"${namespace}:block/${block}"},"facing=south":{"model":"${namespace}:block/${block}","y":180},"facing=west":{"model":"${namespace}:block/${block}","y":270}}}`
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writePlanks(block, namespace, baseBlock, "pyrite:block/template_ladder")
+	modelWriter.writeBlock(block, namespace, baseBlock, "pyrite:block/template_ladder")
 	writeUniqueBlockItemModel(block, namespace, namespace)
 	writeLootTables(block, namespace)
 	tagHelper.tagBlock(block, "ladders")
@@ -951,7 +959,7 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 	block += "_chest"
 	const blockState = stateHelper.gen(block, namespace)
 	writeBlockstate(block, blockState, namespace)
-	modelWriter.writePlanks(block, namespace, baseBlock)
+	modelWriter.writeBlock(block, namespace, baseBlock)
 	writeUniqueBlockItemModel(block, namespace)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "chest", baseBlock, namespace, altNamespace)
@@ -986,6 +994,7 @@ function writeUprightColumnBlock(block, namespace, blockType, baseBlock) {
 	writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
 	modelWriter.writeColumns(block, namespace, baseBlock)
 	writeBlockItemModel(block, namespace)
+	lootTableWriter.writeLootTables(block)
 	generateBlockLang(block)
 	writeRecipes(block, blockType, baseBlock)
 }
@@ -1009,7 +1018,7 @@ function writeSigns(blockID, baseBlockID, texture) {
 	writeBlockstate(blockID, stateHelper.gen(blockID, modID), modID)
 	writeBlockstate(wallBlockID, stateHelper.gen(blockID, modID), modID)
 	// Models
-	modelWriter.writePlanks(blockID, modID, texture)
+	modelWriter.writeBlock(blockID, modID, texture)
 	writeUniqueItemModel(blockID)
 	// Loot Tables
 	writeLootTables(blockID, modID)
@@ -1023,6 +1032,34 @@ function writeSigns(blockID, baseBlockID, texture) {
 	tagHelper.checkAndAddDyedTag(wallBlockID, baseBlockID, true)
 	// Generate recipes
 	writeRecipes(blockID, "sign", baseBlockID, modID)
+	return blockID;
+}
+
+function writeHangingSigns(blockID, baseBlockID, texture) {
+	// Setup
+	const wallBlockID = blockID.replace("_sign", "_wall_sign")
+	if (texture == undefined) {
+		texture = baseBlockID
+	}
+	// Blockstates
+	writeBlockstate(blockID, stateHelper.gen(blockID, modID), modID)
+	writeBlockstate(wallBlockID, stateHelper.gen(blockID, modID), modID)
+	// Models
+	modelWriter.writeBlock(blockID, modID, texture)
+	writeUniqueItemModel(blockID)
+	// Loot Tables
+	writeLootTables(blockID, modID)
+	writeLootTables(wallBlockID, modID, blockID)
+	// Language Entries
+	generateBlockLang(blockID)
+	// Tags
+	tagHelper.tagBlock(blockID, "minecraft:ceiling_hanging_signs")
+	tagHelper.tagBlock(wallBlockID, "minecraft:wall_hanging_signs")
+	tagHelper.tagItem(wallBlockID, "minecraft:hanging_signs")
+	tagHelper.checkAndAddDyedTag(blockID, baseBlockID)
+	tagHelper.checkAndAddDyedTag(wallBlockID, baseBlockID, true)
+	// Generate recipes
+	writeRecipes(blockID, "hanging_sign", baseBlockID, modID)
 	return blockID;
 }
 
@@ -1054,6 +1091,7 @@ function writeLogs(block, namespace, special) {
 	blockState = `{"variants":{"axis=x":{"model":"${namespace}:block/${block}_horizontal","x":90,"y":90},"axis=y":{"model":"${namespace}:block/${block}"},"axis=z":{"model":"${namespace}:block/${block}_horizontal","x":90}}}`
 	writeBlockstate(block, blockState, namespace)
 	modelWriter.writeLogs(block, namespace)
+	lootTableWriter.writeLootTables(block)
 	writeBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "minecraft:logs")
 	writeRecipes(block, special)
@@ -1071,6 +1109,7 @@ function writeWalls(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, wallBlockState, namespace)
 	modelWriter.writeWalls(block, altNamespace, baseBlock)
 	writeInventoryModel(block, namespace)
+	writeLootTables(block)
 	generateBlockLang(block)
 	
 	tagHelper.tagBoth(block, "minecraft:walls")
@@ -1279,7 +1318,7 @@ function writeWallGates(block, namespace, baseBlock, altNamespace) {
 	writeBlockstate(block, fenceGateBlockState, modID, altNamespace)
 	modelWriter.writeWallGates(block, altNamespace, baseBlock, altNamespace)
 	generateBlockLang(block)
-	writeLootTables(block)
+	writeLootTables(block, undefined, undefined, altNamespace)
 	writeBlockItemModel(block, modID, altNamespace)
 	let optionality = false;
 	if ((altNamespace != mc) && (altNamespace != modID)) {
@@ -1318,30 +1357,6 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	
 	// Recipes
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
-}
-
-function writeLootTables(block, namespace, baseBlock, altNamespace) {
-	block = getPath(block)
-	const filePath = `${paths.loot}${block}.json`
-	if (namespace === undefined) {
-		namespace = modID
-	}
-	if (baseBlock === undefined) {
-		baseBlock = block
-	}
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
-	let lootTable = `{"type": "minecraft:block","pools": [{"rolls": 1,"entries": [{"type": "minecraft:item","name": "${namespace}:${baseBlock}"}],"conditions": [{"condition": "minecraft:survives_explosion"}]}]}`
-	writeFile(filePath, lootTable);
-}
-
-function writeDoorLootTables(block, namespace) {
-	if (namespace === undefined) {
-		namespace = modID
-	}
-	let lootTable = `{"type": "minecraft:block","pools": [{"bonus_rolls": 0.0,"conditions": [{"condition": "minecraft:survives_explosion"}],"entries": [{"type": "minecraft:item","conditions": [{"block": "${namespace}:${block}","condition": "minecraft:block_state_property","properties": {"half": "lower"}}],"name": "${namespace}:${block}"}],"rolls": 1.0}]}`
-	writeFile(`${paths.loot}${block}.json`, lootTable);
 }
 
 function getDyeIngredient(dye) {
