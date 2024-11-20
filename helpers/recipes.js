@@ -97,17 +97,20 @@ function generateStonecutterRecipe(block, ingredient, quantity, type) {
 	return recipe;
 }
 
-function generateSmeltingRecipe(block, ingredient, cookingtime, experience) {
-    let recipe = {
+function generateSmeltingRecipe(block, ingredient, quantity, cookingtime, experience) {
+	if (!block.includes(":"))
+		block = id(block)
+
+    let recipe = JSON.parse(`{
         "type": "minecraft:smelting",
         "category": "blocks",
-        "cookingtime": cookingtime,
-        "experience": experience,
+        "cookingtime": ${cookingtime},
+        "experience": ${experience},
         "ingredient": "",
         "result": {
-            "id": block
+            "${itemOrId()}": "${block}"
         }
-    }
+    }`)
 	if (useRecipesFrom21dot1AndBelow()) {
 		recipe.ingredient = {item: ingredient}
 	}

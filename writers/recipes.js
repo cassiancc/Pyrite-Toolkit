@@ -42,6 +42,9 @@ function writeShapelessRecipe(ingredients, result, quantity, addon) {
 }
 
 function writeStonecutterRecipes(block, ingredient, quantity, addon) {
+	if (block === ingredient) {
+		return
+	}
 	if (addon === undefined) { addon = "" } else { addon = addon + "_" }
 	let path;
 	if (!block.includes(":")) {

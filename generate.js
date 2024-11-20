@@ -408,7 +408,7 @@ function generateResources() {
 	}
 
 	// 1.21.4 - Winter Drop Resin walls
-	if (majorVersion > 22 || (mcVersion == "1.21.4")) {
+	if (majorVersion > 22 || (mcVersion.includes("1.21.4"))) {
 		writeWallGatesFromArray(["resin_brick"])
 	}
 
@@ -643,10 +643,8 @@ function writeUniqueItemModel(block) {
 	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(modID, "item", block, block)
 	}
-	else {
-		let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${block}"}}`
-		writeFile(`${paths.itemModels}${block}.json`, modelItem);
-	}
+	let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${block}"}}`
+	writeFile(`${paths.itemModels}${block}.json`, modelItem);
 }
 
 function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
@@ -662,10 +660,8 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	if (versionAbove("1.21.4")) {
 		writeWinterDropItem(altNamespace, "item", block, baseBlock)
 	}
-	else {
-		const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${altNamespace}:block/${baseBlock}"}}`
-		writeFile(`${paths.itemModels}${block}.json`, modelItem)
-	}
+	const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${altNamespace}:block/${baseBlock}"}}`
+	writeFile(`${paths.itemModels}${block}.json`, modelItem)
 }
 
 function writeInventoryModel(block, namespace) {
