@@ -132,6 +132,9 @@ function checkAndAddDyedTag(block, baseBlock, blockOnly) {
 	if (baseBlock.includes("mushroom")) {
 		return
 	}
+	if (baseBlock.includes("blue_nether")) {
+		return
+	}
 	else {
 		colour = baseBlock.split("_")[0]
 	}
