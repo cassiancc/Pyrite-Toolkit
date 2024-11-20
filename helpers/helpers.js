@@ -9,6 +9,9 @@ const mcVersion = getVersion();
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
+const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
+
+
 function commonPath() {
     const projectType = readFileAsJson("./config.json").projectType
     if (projectType == "architectury") {
@@ -103,18 +106,18 @@ function getDyeNamespace(dye) {
 		return dye.split(":")[0]
 	}
 	if (dye.includes("terracotta")) {
-		dye = dye.replace("terracotta", "dye")
+		dye = dye.replace("terracotta", "")
 	}
-	if (!dye.includes("_dye")) {
-		dye = dye + "_dye"
+	if (dye.includes("_dye")) {
+		dye.replace("_dye", "")
 	}
 
-	if ((dye === "glow_dye") || (dye === "dragon_dye") || (dye === "star_dye") || (dye === "honey_dye") || (dye === "rose_dye") || (dye === "nostalgia_dye") || (dye === "poisonous_dye")) {
-		return modID
-	}
-	else {
-		return mc
-	}
+    if (vanillaDyes.includes(dye)) {
+        return mc
+    }
+    else {
+        return modID
+    }
 }
 
 module.exports = {
