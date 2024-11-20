@@ -1,15 +1,23 @@
 const fs = require('fs');
 
-const rootFolder = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/`
-const resourcesPath = rootFolder+`common/src/main/resources/`
+const rootFolder = readFileAsJson("./config.json").modPath
+const resourcesPath = rootFolder+`${commonPath()}/src/main/resources/`
 
-const modID = "pyrite";
+const modID = readFileAsJson("./config.json").modID
 const mc = "minecraft";
 const mcVersion = getVersion();
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
-
+function commonPath() {
+    const projectType = readFileAsJson("./config.json").projectType
+    if (projectType == "architectury") {
+        return "common"
+    }
+    else {
+        return ""
+    }
+}
 
 function getVersion() {
     let gradleProperties = readFile(rootFolder+"gradle.properties")
@@ -34,19 +42,31 @@ function getTrialPlural() {
 
 const paths = {
     base: `${resourcesPath}`,
-    assets: `${resourcesPath}assets/pyrite/`,
-    data: `${resourcesPath}data/pyrite/`,
-    recipes: `${resourcesPath}data/pyrite/recipe${s}/`,
-    models: `${resourcesPath}assets/pyrite/models/block${s}/`,
-    itemModels: `${resourcesPath}assets/pyrite/models/item${s}/`,
-    blockstates: `${resourcesPath}assets/pyrite/blockstates/`,
-    items: `${resourcesPath}assets/pyrite/items/`,
-    loot: `${resourcesPath}data/pyrite/loot_table${s}/blocks/`,
+    assets: `${resourcesPath}assets/${modID}/`,
+    data: `${resourcesPath}data/${modID}/`,
+    recipes: `${resourcesPath}data/${modID}/recipe${s}/`,
+    models: `${resourcesPath}assets/${modID}/models/block${s}/`,
+    itemModels: `${resourcesPath}assets/${modID}/models/item${s}/`,
+    blockstates: `${resourcesPath}assets/${modID}/blockstates/`,
+    items: `${resourcesPath}assets/${modID}/items/`,
+    loot: `${resourcesPath}data/${modID}/loot_table${s}/blocks/`,
 
 }
 
 function readFile(path) {
     return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
+}
+
+function readFileAsJson(path) {
+    let file;
+    try {
+        file = JSON.parse(readFile(path))
+
+    }
+    catch {
+        file = undefined
+    }
+    return file
 }
 
 function writeFile(path, data) {
@@ -127,17 +147,7 @@ module.exports = {
     writeFile, writeFile,
     writeFileSafe, writeFileSafe,
 
-    readFileAsJson: function readFileAsJson(path) {
-        let file;
-        try {
-            file = JSON.parse(readFile(path))
- 
-        }
-        catch {
-            file = undefined
-        }
-        return file
-    },
+    readFileAsJson: readFileAsJson,
 
     getPath: function getPath(namespacedString) {
         if (namespacedString.includes(":")) {
