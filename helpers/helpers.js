@@ -144,6 +144,7 @@ module.exports = {
     recipePath: paths.recipes,
     modelPath: paths.models,
     paths: paths,
+    vanillaDyes: vanillaDyes,
 
     
     readFile: readFile,

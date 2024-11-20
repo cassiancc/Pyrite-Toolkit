@@ -27,11 +27,9 @@ const mcVersion = helpers.mcVersion;
 const majorVersion = helpers.majorVersion
 const minorVersion = helpers.minorVersion
 
-const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
-
 const modDyes = ["glow", "dragon", "star", "honey", "nostalgia", "rose", "poisonous",]
 
-const dyes = vanillaDyes.concat(modDyes)
+const dyes = helpers.vanillaDyes.concat(modDyes)
 
 const vanillaWood = ["spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped"]
 
@@ -369,7 +367,7 @@ function generateResources() {
 	writeCarpet("path_carpet", modID, "dirt_path_top", mc)
 
 	// Pyrite Dyes, Wool, Carpet, Terracotta
-	vanillaDyes.forEach(function (dye) {
+	helpers.vanillaDyes.forEach(function (dye) {
 		const concrete = dye + "_concrete"
 		writeSlabs(concrete + "_slab", id(mc, concrete), id(mc, concrete), true)
 		writeStairs(concrete + "_stairs", id(mc, concrete), id(mc, concrete), true)
