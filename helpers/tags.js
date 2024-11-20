@@ -36,12 +36,17 @@ function tagContent(arg, tag, folder, optional) {
 		fs.mkdirSync(dir, { recursive: true })
 	}
 	// Ensure tag file exists
+	const emptyTag = { "replace": false, "values": [] };
 	if (!fs.existsSync(path)) {
 		// If not, create an empty tag.
-		fs.writeFileSync(path, JSON.stringify({ "replace": false, "values": [] }), function (err) { if (err) throw err; })
+		fs.writeFileSync(path, JSON.stringify(emptyTag), function (err) { if (err) throw err; })
 	}
 	// Read the tag file.
-	const currentTag = readFileAsJson(path)
+	let currentTag = readFileAsJson(path)
+	// Catch file read errors
+	if (currentTag === undefined) {
+		currentTag = emptyTag
+	}
 	// Check if the namespaced string is already in the tag.
 	if (!currentTag.values.includes(arg) && !(currentTag.values.some(e => e.id === arg))) {
 		// If not, add it to the tag.

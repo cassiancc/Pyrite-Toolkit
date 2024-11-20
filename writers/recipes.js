@@ -42,11 +42,8 @@ function writeShapelessRecipe(ingredients, result, quantity, addon) {
 }
 
 function writeStonecutterRecipes(block, ingredient, quantity, addon) {
-	if (block === ingredient) {
-		return
-	}
-	let path;
 	if (addon === undefined) { addon = "" } else { addon = addon + "_" }
+	let path;
 	if (!block.includes(":")) {
 		path = block
 		block = id(block)
@@ -54,36 +51,10 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 	else {
 		path = block.split(":")[1]
 	}
-	if (!ingredient.includes(":")) {
-		ingredient = id(ingredient)
+	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity)
+	if (recipe !== undefined) {
+		helpers.writeFile(`${helpers.recipePath}${addon}${path}_stonecutting.json`, recipe)
 	}
-
-	// Overrides for Quartz and Copper
-	if (ingredient.includes("quartz")) {
-		ingredient = ingredient.replace("_bottom", "")
-		ingredient = ingredient.replace("_top", "")
-	}
-	else if (ingredient == "minecraft:copper") { ingredient = "minecraft:copper_block" }
-	
-
-	let recipe = {
-		"type": "minecraft:stonecutting",
-		"ingredient": {
-			"item": ingredient
-		},
-		"result": {
-			"id": block,
-			"count": quantity
-		}
-	}
-
-	const ingredientNamespace = ingredient.split(":")[0];
-	if ((ingredientNamespace !== helpers.modID) && (ingredientNamespace !== helpers.mc)) { 
-		Object.assign(recipe, recipeHelper.generateModLoadCondition(ingredientNamespace))
-	}
-
-	helpers.writeFile(`${helpers.recipePath}${addon}${path}_stonecutting.json`, recipe)
-
 }
 
 module.exports = {

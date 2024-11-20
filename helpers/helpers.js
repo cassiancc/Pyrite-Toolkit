@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const modID = "pyrite";
 const mc = "minecraft";
-const mcVersion = "1.21.1";
+const mcVersion = "1.21.3";
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
@@ -116,7 +116,15 @@ module.exports = {
     writeFileSafe, writeFileSafe,
 
     readFileAsJson: function readFileAsJson(path) {
-        return JSON.parse(readFile(path))
+        let file;
+        try {
+            file = JSON.parse(readFile(path))
+ 
+        }
+        catch {
+            file = undefined
+        }
+        return file
     },
 
     getPath: function getPath(namespacedString) {

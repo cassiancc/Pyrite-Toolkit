@@ -7,15 +7,15 @@ const minorVersion = helpers.minorVersion
 const modID = helpers.modID
 const mc = helpers.mc
 
-function use21dot2Recipes() {
+function useRecipesFrom21dot2AndAbove() {
 	if (((majorVersion === 21) && (minorVersion !== 1)) || (majorVersion > 21)) {
 		return true;
 	}
 	else return false;
 }
 
-function usePre21dot1Recipes() {
-	return !use21dot2Recipes()
+function useRecipesFrom21dot1AndBelow() {
+	return !useRecipesFrom21dot2AndAbove()
 }
 
 function itemOrId() {
@@ -26,7 +26,7 @@ function itemOrId() {
 }
 
 function addIngredients(ingredientArray, ingredient) {
-	if (use21dot2Recipes()) {
+	if (useRecipesFrom21dot2AndAbove()) {
 		ingredientArray.push(ingredient)
 	}
 	else {
@@ -58,6 +58,42 @@ function generateModLoadCondition(mod) {
 	}
 }
 
+function generateStonecutterRecipe(block, ingredient, quantity) {
+	if (block === ingredient) {
+		return
+	}
+	if (!ingredient.includes(":")) {
+		ingredient = id(ingredient)
+	}
+
+	// Overrides for Quartz and Copper
+	if (ingredient.includes("quartz")) {
+		ingredient = ingredient.replace("_bottom", "")
+		ingredient = ingredient.replace("_top", "")
+	}
+	else if (ingredient == "minecraft:copper") { ingredient = "minecraft:copper_block" }
+
+	let recipe = {
+		"type": "minecraft:stonecutting",
+		"result": {
+			"id": block,
+			"count": quantity
+		}
+	}
+	if (useRecipesFrom21dot1AndBelow()) {
+		recipe.ingredient = {item: ingredient}
+	}
+	else {
+		recipe.ingredient = ingredient
+	}
+
+	const ingredientNamespace = ingredient.split(":")[0];
+	if ((ingredientNamespace !== helpers.modID) && (ingredientNamespace !== helpers.mc)) { 
+		Object.assign(recipe, generateModLoadCondition(ingredientNamespace))
+	}
+	return recipe;
+}
+
 
 function generateShapelessRecipe(ingredients, result, quantity) {
 	let recipe = {
@@ -81,7 +117,7 @@ function generateShapelessRecipe(ingredients, result, quantity) {
 
 function generateShapedRecipe(ingredients, result, quantity, shape) {
 	let newIngredients = {}, loadCondition;
-	if (usePre21dot1Recipes()) {
+	if (useRecipesFrom21dot1AndBelow()) {
 		const keys = Object.keys(ingredients)
 		const values = Object.values(ingredients)
 		let i = 0;
@@ -105,9 +141,13 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 	}
 	else { 
 		newIngredients = ingredients 
-		if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
-			loadCondition = generateModLoadCondition(newIngredients.split(":")[0]);
+		const valueNamespace = Object.values(ingredients)[0].split(":")[0]
+		if (valueNamespace !== undefined) {
+			if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
+				loadCondition = generateModLoadCondition(valueNamespace);
+			}
 		}
+		
 	}
 
 	let recipe = {
@@ -252,6 +292,11 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", base, namespace)
 		}
 
+	}
+	else if (type === "lamp") {
+		base = `${base}_dye`
+		altNamespace = getDyeNamespace(base)
+		recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", base, namespace)
 	}
 	else if (type === "bricks") {
 		base = `${base}_dye`
@@ -452,6 +497,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 module.exports = {
     generateRecipes: generateRecipes,
     generateShapedRecipe: generateShapedRecipe,
+	generateStonecutterRecipe: generateStonecutterRecipe,
     generateShapelessRecipe: generateShapelessRecipe,
 	generateModLoadCondition: generateModLoadCondition
 
