@@ -1,16 +1,17 @@
 const fs = require('fs');
 
-const rootFolder = readFileAsJson("./config.json").modPath
+const config = readFileAsJson("./config.json")
+
+const rootFolder = config.modPath
 const resourcesPath = rootFolder+`${commonPath()}/src/main/resources/`
 
-const modID = readFileAsJson("./config.json").modID
+const modID = config.modID
 const mc = "minecraft";
 const mcVersion = getVersion();
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
 const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
-
 
 function commonPath() {
     const projectType = readFileAsJson("./config.json").projectType
@@ -85,7 +86,7 @@ function writeFile(path, data) {
 		catch { }
 
 	}
-	if (demoMode === false) {
+	if (config.disableWriting === false) {
         if (!path.includes("undefined")) {
             fs.writeFile(path, data, function (err) { if (err) throw err; })
         }
@@ -108,10 +109,12 @@ function getDyeNamespace(dye) {
 	if (dye.includes("terracotta")) {
 		dye = dye.replace("terracotta", "")
 	}
-	if (dye.includes("_dye")) {
-		dye.replace("_dye", "")
+	else if (dye.includes("_dye")) {
+		dye = dye.replace("_dye", "")
 	}
-
+    else if (dye.includes("_framed_glass")) {
+		dye = dye.replace("_framed_glass", "")
+	}
     if (vanillaDyes.includes(dye)) {
         return mc
     }
@@ -145,6 +148,7 @@ module.exports = {
     modelPath: paths.models,
     paths: paths,
     vanillaDyes: vanillaDyes,
+    config: config,
 
     
     readFile: readFile,

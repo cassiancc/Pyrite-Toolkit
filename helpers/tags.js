@@ -57,7 +57,14 @@ function tagContent(arg, tag, folder, optional) {
 			currentTag.values.push(arg)
 		}
 		// Write new tag file to disk.
-		fs.writeFileSync(path, JSON.stringify(currentTag))
+		if (helpers.config.disableWriting === false) {
+			if (!path.includes("undefined")) {
+				fs.writeFileSync(path, JSON.stringify(currentTag))
+			}
+			else {
+				console.log("Preventing write of " + path)
+			}
+		}
 	}
 }
 function tagBlock(block, tag, optional) {
