@@ -51,7 +51,7 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 	else {
 		path = block.split(":")[1]
 	}
-	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity)
+	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity, "stonecutting")
 	if (recipe !== undefined) {
 		helpers.writeFile(`${helpers.recipePath}${addon}${path}_stonecutting.json`, recipe)
 	}

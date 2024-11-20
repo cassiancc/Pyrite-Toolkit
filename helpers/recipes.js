@@ -58,7 +58,7 @@ function generateModLoadCondition(mod) {
 	}
 }
 
-function generateStonecutterRecipe(block, ingredient, quantity) {
+function generateStonecutterRecipe(block, ingredient, quantity, type) {
 	if (block === ingredient) {
 		return
 	}
@@ -72,9 +72,12 @@ function generateStonecutterRecipe(block, ingredient, quantity) {
 		ingredient = ingredient.replace("_top", "")
 	}
 	else if (ingredient == "minecraft:copper") { ingredient = "minecraft:copper_block" }
-
+	if (type == undefined) {
+		type = "stonecutting"
+	}
 	let recipe = {
-		"type": "minecraft:stonecutting",
+		"type": `minecraft:${type}`,
+		"ingredient": "",
 		"result": {
 			"id": block,
 			"count": quantity
@@ -92,6 +95,26 @@ function generateStonecutterRecipe(block, ingredient, quantity) {
 		Object.assign(recipe, generateModLoadCondition(ingredientNamespace))
 	}
 	return recipe;
+}
+
+function generateSmeltingRecipe(block, ingredient, cookingtime, experience) {
+    let recipe = {
+        "type": "minecraft:smelting",
+        "category": "blocks",
+        "cookingtime": cookingtime,
+        "experience": experience,
+        "ingredient": "",
+        "result": {
+            "id": block
+        }
+    }
+	if (useRecipesFrom21dot1AndBelow()) {
+		recipe.ingredient = {item: ingredient}
+	}
+	else {
+		recipe.ingredient = ingredient
+	}
+	return recipe
 }
 
 
@@ -304,16 +327,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "D": `minecraft:bricks` }, `pyrite:${block}`, 4, ["CCC", "CDC", "CCC"])
 	}
 	else if (block === "charred_nether_bricks") {
-		recipe = `{
-			"type": "minecraft:smelting",
-			"category": "blocks",
-			"cookingtime": 200,
-			"experience": 0.1,
-			"ingredient": {
-			"item": "minecraft:nether_bricks"
-			},
-			"result": {"id": "pyrite:charred_nether_bricks"}
-		}`
+		recipe = generateSmeltingRecipe(block, "minecraft:nether_bricks", 1, 200, 0.1)
 	}
 	else if (type === "blue_nether_bricks") {
 		recipe = generateShapedRecipe({ "N": `minecraft:nether_brick`, "W": `minecraft:warped_fungus` }, `pyrite:${block}`, 1, [

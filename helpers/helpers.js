@@ -1,13 +1,25 @@
 const fs = require('fs');
 
+const rootFolder = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/`
+const basePath = rootFolder+`common/src/main/resources/`
+
 const modID = "pyrite";
 const mc = "minecraft";
-const mcVersion = "1.21.3";
+const mcVersion = getVersion();
 const majorVersion = parseInt(mcVersion.split(".")[1]);
 const minorVersion = parseInt(mcVersion.split(".")[2]);
 
 
-const basePath = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/common/src/main/resources/`
+
+function getVersion() {
+    let gradleProperties = readFile(rootFolder+"gradle.properties")
+    gradleProperties = gradleProperties.split("minecraft_version")[1]
+    gradleProperties = gradleProperties.split("\n")[0]
+    gradleProperties = gradleProperties.replace("=", "").trim()
+
+    return gradleProperties;
+
+}
 
 const s = getTrialPlural()
 
