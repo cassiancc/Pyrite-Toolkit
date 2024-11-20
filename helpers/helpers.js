@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const rootFolder = `/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/`
-const basePath = rootFolder+`common/src/main/resources/`
+const resourcesPath = rootFolder+`common/src/main/resources/`
 
 const modID = "pyrite";
 const mc = "minecraft";
@@ -33,15 +33,15 @@ function getTrialPlural() {
 }
 
 const paths = {
-    base: `${basePath}`,
-    assets: `${basePath}assets/pyrite/`,
-    data: `${basePath}data/pyrite/`,
-    recipes: `${basePath}data/pyrite/recipe${s}/`,
-    models: `${basePath}assets/pyrite/models/block${s}/`,
-    itemModels: `${basePath}assets/pyrite/models/item${s}/`,
-    blockstates: `${basePath}assets/pyrite/blockstates/`,
-    items: `${basePath}assets/pyrite/items/`,
-    loot: `${basePath}data/pyrite/loot_table${s}/blocks/`,
+    base: `${resourcesPath}`,
+    assets: `${resourcesPath}assets/pyrite/`,
+    data: `${resourcesPath}data/pyrite/`,
+    recipes: `${resourcesPath}data/pyrite/recipe${s}/`,
+    models: `${resourcesPath}assets/pyrite/models/block${s}/`,
+    itemModels: `${resourcesPath}assets/pyrite/models/item${s}/`,
+    blockstates: `${resourcesPath}assets/pyrite/blockstates/`,
+    items: `${resourcesPath}assets/pyrite/items/`,
+    loot: `${resourcesPath}data/pyrite/loot_table${s}/blocks/`,
 
 }
 
@@ -117,7 +117,7 @@ module.exports = {
         return namespace + ":" + path
     },
 
-    basePath: basePath,
+    basePath: resourcesPath,
     recipePath: paths.recipes,
     modelPath: paths.models,
     paths: paths,
