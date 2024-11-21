@@ -27,8 +27,15 @@ module.exports = {
         if (texture.includes("minecraft:grass_block_top")) {
             return helpers.readFile(`./overrides/models/grass_turf.json`)
         }
+        let parent;
+        if (model.includes("TOOLKIT_NO_PARENT")) {
+            parent = ""
+        }
+        else {
+            parent = `"parent": "${model}",`
+        }
     
-        return `{"parent": "${model}","textures": {"${texture_type}": "${namespace}:block/${block}"}${render_type}}`
+        return `{${parent}"textures": {"${texture_type}": "${namespace}:block/${block}"}${render_type}}`
     
     },
     generatePaneBlockModels: function generatePaneBlockModels(block, namespace, baseBlock, model) {

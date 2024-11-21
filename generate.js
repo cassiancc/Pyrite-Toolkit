@@ -1012,7 +1012,10 @@ function writeSigns(blockID, baseBlockID, texture) {
 	writeBlockstate(blockID, stateHelper.gen(blockID, modID), modID)
 	writeBlockstate(wallBlockID, stateHelper.gen(blockID, modID), modID)
 	// Models
-	modelWriter.writeBlock(blockID, modID, texture)
+	if (versionAbove("1.21.4"))
+		modelWriter.writeProvided(blockID, modelHelper.generateBlockModel(blockID, modID, baseBlockID, "TOOLKIT_NO_PARENT", undefined, "particle"))
+	else
+		modelWriter.writeBlock(blockID, modID, texture)
 	writeUniqueItemModel(blockID)
 	// Loot Tables
 	writeLootTables(blockID, modID)
@@ -1039,7 +1042,10 @@ function writeHangingSigns(blockID, baseBlockID, texture) {
 	writeBlockstate(blockID, stateHelper.gen(blockID, modID), modID)
 	writeBlockstate(wallBlockID, stateHelper.gen(blockID, modID), modID)
 	// Models
-	modelWriter.writeBlock(blockID, modID, texture)
+	if (versionAbove("1.21.4"))
+		modelWriter.writeProvided(blockID, modelHelper.generateBlockModel(blockID, modID, baseBlockID, "TOOLKIT_NO_PARENT", undefined, "particle"))
+	else
+		modelWriter.writeBlock(blockID, modID, texture)
 	writeUniqueItemModel(blockID)
 	// Loot Tables
 	writeLootTables(blockID, modID)
