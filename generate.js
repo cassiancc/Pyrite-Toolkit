@@ -16,7 +16,6 @@ const getNamespace = helpers.getNamespace;
 const readFile = helpers.readFile
 const readFileAsJson = helpers.readFileAsJson
 const writeFile = helpers.writeFile
-const writeFileSafe = helpers.writeFileSafe
 const writeRecipes = recipeWriter.writeRecipes
 const writeStonecutterRecipes = recipeWriter.writeStonecutterRecipes
 const writeLootTables = lootTableWriter.writeLootTables
@@ -1382,7 +1381,11 @@ function versionAbove(version) {
 	const localMajor = parseInt(version.split(".")[1])
 	const localMinor = parseInt(version.split(".")[2])
 
-	if ((localMajor > majorVersion) || (majorVersion == localMajor) && (minorVersion >= localMinor)) {
+	if ((localMajor < majorVersion)) {
+		console.log(localMajor, majorVersion)
+		return true;
+	}
+	else if ((majorVersion === localMajor) && (minorVersion >= localMinor)) {
 		return true;
 	}
 	else {
@@ -1395,6 +1398,6 @@ function populateTemplates() {
 	const templatePath = "./overrides/models/templates/"
 	const templates = fs.readdirSync(templatePath)
 	templates.forEach(function(template) {
-		writeFileSafe(`${helpers.modelPath}${template}`, readFile(templatePath + template))
+		helpers.writeFileSafe(`${helpers.modelPath}${template}`, readFile(templatePath + template))
 	})
 }

@@ -49,8 +49,8 @@ const paths = {
     assets: `${resourcesPath}assets/${modID}/`,
     data: `${resourcesPath}data/${modID}/`,
     recipes: `${resourcesPath}data/${modID}/recipe${s}/`,
-    models: `${resourcesPath}assets/${modID}/models/block${s}/`,
-    itemModels: `${resourcesPath}assets/${modID}/models/item${s}/`,
+    models: `${resourcesPath}assets/${modID}/models/block/`,
+    itemModels: `${resourcesPath}assets/${modID}/models/item/`,
     blockstates: `${resourcesPath}assets/${modID}/blockstates/`,
     items: `${resourcesPath}assets/${modID}/items/`,
     loot: `${resourcesPath}data/${modID}/loot_table${s}/blocks/`,
@@ -87,7 +87,7 @@ function writeFile(path, data) {
 
 	}
 	if (config.disableWriting === false) {
-        if (!path.includes("undefined")) {
+        if (!path.includes("undefined") && data !== "") {
             fs.writeFile(path, data, function (err) { if (err) throw err; })
         }
         else {

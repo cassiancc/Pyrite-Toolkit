@@ -19,7 +19,8 @@ function useRecipesFrom21dot1AndBelow() {
 }
 
 function itemOrId() {
-	if ((majorVersion <= 21)) {
+	if ((majorVersion >= 21)) {
+		console.log("id")
 		return "id";
 	}
 	else return "item";
@@ -88,6 +89,10 @@ function generateStonecutterRecipe(block, ingredient, quantity, type) {
 	}
 	else {
 		recipe.ingredient = ingredient
+	}
+	if (helpers.mcVersion == "1.20.1") {
+		recipe.result = block
+		recipe.count = quantity
 	}
 
 	const ingredientNamespace = ingredient.split(":")[0];
