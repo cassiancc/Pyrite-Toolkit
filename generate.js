@@ -68,13 +68,15 @@ let catTranslations = readFileAsJson("./overrides/lang/lol_us.json")
 let upsideDownTranslations = langHelper.flipTranslationFile("./overrides/lang/en_us.json")
 
 class Block {  // Create a class
-	constructor(blockID, namespace, baseNamespace, blockType, baseBlock, material) {
+	constructor(blockID, blockType, baseBlock, material) {
 		// Initialize with basic variables
 		this.blockID = blockID;
-		this.namespace = namespace
-		this.baseNamespace = baseNamespace
-		if (baseNamespace === undefined) {
-			this.baseNamespace = namespace
+		this.namespace = modID
+		if (!baseBlock.includes(":")) {
+			this.baseNamespace = this.namespace
+		}
+		else {
+			this.baseNamespace = getNamespace(baseBlock)
 		}
 		this.blockType = blockType;
 		this.baseBlock = baseBlock;
@@ -206,27 +208,27 @@ function generateResources() {
 
 	populateTemplates()
 
-	new Block("torch_lever", modID, mc, "torch_lever", "torch", "torch")
-	new Block("redstone_torch_lever", modID, mc, "torch_lever", "redstone_torch", "torch")
-	new Block("soul_torch_lever", modID, mc, "torch_lever", "soul_torch", "torch")
+	new Block("torch_lever", "torch_lever", id(mc,"torch"), "torch")
+	new Block("redstone_torch_lever", "torch_lever", id(mc,"redstone_torch"), "torch")
+	new Block("soul_torch_lever", "torch_lever", id(mc,"soul_torch"), "torch")
 
 	function generateWoodSet(template) {
 		const stainedPlankBase = template + "_planks"
 
-		new Block(template + "_button", modID, modID, "button", stainedPlankBase, "wood")
-		new Block(template + "_stairs", modID, modID, "stairs", stainedPlankBase, "wood")
-		new Block(template + "_slab", modID, modID, "slab", stainedPlankBase, "wood")
-		new Block(template + "_pressure_plate", modID, undefined, "pressure_plate", stainedPlankBase, "wood")
-		new Block(template + "_fence", modID, modID, "fence", stainedPlankBase, "wood")
-		new Block(template + "_fence_gate", modID, modID, "fence_gate", stainedPlankBase, "wood")
-		new Block(template + "_planks", modID, modID, "planks", template, "wood")
-		new Block(template + "_crafting_table", modID, undefined, "crafting_table", stainedPlankBase, "wood")
-		new Block(template + "_ladder", modID, modID, "ladder", stainedPlankBase, "wood")
+		new Block(template + "_button", "button", stainedPlankBase, "wood")
+		new Block(template + "_stairs", "stairs", stainedPlankBase, "wood")
+		new Block(template + "_slab", "slab", stainedPlankBase, "wood")
+		new Block(template + "_pressure_plate", "pressure_plate", stainedPlankBase, "wood")
+		new Block(template + "_fence", "fence", stainedPlankBase, "wood")
+		new Block(template + "_fence_gate", "fence_gate", stainedPlankBase, "wood")
+		new Block(template + "_planks", "planks", template, "wood")
+		new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
+		new Block(template + "_ladder", "ladder", stainedPlankBase, "wood")
 		// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
-		new Block(template + "_door", modID, modID, "door", stainedPlankBase, "wood")
-		new Block(template + "_sign", modID, modID, "sign", stainedPlankBase, "wood")
-		new Block(template + "_hanging_sign", modID, modID, "hanging_sign", stainedPlankBase, "wood")
-		new Block(template + "_trapdoor", modID, modID, "trapdoor", stainedPlankBase, "wood")
+		new Block(template + "_door", "door", stainedPlankBase, "wood")
+		new Block(template + "_sign", "sign", stainedPlankBase, "wood")
+		new Block(template + "_hanging_sign", "hanging_sign", stainedPlankBase, "wood")
+		new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
 	}
 
 	function generateBrickSet(template, type, baseBlock) {
@@ -245,11 +247,11 @@ function generateResources() {
 		}
 
 		const bricksBase = brickBase + "s"
-		new Block(bricksBase, modID, undefined, type, baseBlock, type)
-		new Block(brickBase + "_slab", modID, undefined, "slab", bricksBase, type)
-		new Block(brickBase + "_stairs", modID, undefined, "stairs", bricksBase, type)
-		new Block(brickBase + "_wall", modID, undefined, "wall", bricksBase, type)
-		new Block(brickBase + "_wall_gate", modID, undefined, "wall_gate", bricksBase, type)
+		new Block(bricksBase, type, baseBlock, type)
+		new Block(brickBase + "_slab", "slab", bricksBase, type)
+		new Block(brickBase + "_stairs", "stairs", bricksBase, type)
+		new Block(brickBase + "_wall", "wall", bricksBase, type)
+		new Block(brickBase + "_wall_gate", "wall_gate", bricksBase, type)
 
 	}
 
@@ -270,7 +272,7 @@ function generateResources() {
 				baseBlock = `${baseBlock.replace("brick", "bricks")}`
 				baseBlock = `${baseBlock.replace("tile", "tiles")}`
 			}
-			new Block(blockTemplate + "_wall_gate", modID, namespace, "wall_gate", id(namespace, baseBlock), "stone")
+			new Block(blockTemplate + "_wall_gate", "wall_gate", id(namespace, baseBlock), "stone")
 			i++
 		})
 	}
@@ -282,7 +284,7 @@ function generateResources() {
 		woodArray.forEach(function (dye) {
 			const template = dye
 			const plankBase = template + "_planks"
-			new Block(template + "_crafting_table", modID, namespace, "crafting_table", plankBase, "wood")
+			new Block(template + "_crafting_table", "crafting_table", id(namespace,plankBase), "wood")
 		})
 	}
 
@@ -293,15 +295,15 @@ function generateResources() {
 		generateBrickSet(dye + "_terracotta_bricks", "terracotta_bricks", `${helpers.getDyeNamespace(dye)}:${dye}_terracotta`)
 
 		// Lamps
-		new Block(dye + "_lamp", modID, undefined, "lamp", dye, "lamp")
+		new Block(dye + "_lamp", "lamp", dye, "lamp")
 		//Torches
-		new Block(dye + "_torch", modID, undefined, "torch", dye, "torch")
+		new Block(dye + "_torch", "torch", dye, "torch")
 		//Torch Levers
-		new Block(dye + "_torch_lever", modID, modID, "torch_lever", dye, "torch")
+		new Block(dye + "_torch_lever", "torch_lever", dye, "torch")
 		//Framed Glass
-		new Block(dye + "_framed_glass", modID, undefined, "stained_framed_glass", dye, "stained_framed_glass")
+		new Block(dye + "_framed_glass", "stained_framed_glass", dye, "stained_framed_glass")
 		//Framed Glass Panes
-		new Block(dye + "_framed_glass_pane", modID, undefined, "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
+		new Block(dye + "_framed_glass_pane", "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
 	})
 
 	writeCraftingTablesFromArray(vanillaWood, mc)
@@ -317,9 +319,9 @@ function generateResources() {
 	const redShroom = "red" + shroomBlockTemplate
 	const brownShroom = "brown" + shroomBlockTemplate
 	generateWoodSet(redShroom)
-	red_stem = new Block(redShroom + "_stem", modID, undefined, "mushroom_stem", redShroom + "_planks", "wood")
+	red_stem = new Block(redShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
 	generateWoodSet(brownShroom)
-	brown_stem = new Block(brownShroom + "_stem", modID, undefined, "mushroom_stem", redShroom + "_planks", "wood")
+	brown_stem = new Block(brownShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
 
 	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone")
 	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
@@ -334,10 +336,10 @@ function generateResources() {
 	writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
 	writeBlock("nostalgia_netherrack", modID, "nostalgia_netherrack", "nostalgia_netherrack")
 	writeBlock("nostalgia_gravel", modID, "nostalgia_gravel", "nostalgia_gravel")
-	new Block("nostalgia_grass_block", modID, undefined, "nostalgia_grass_block", "grass_block", "grass")
+	new Block("nostalgia_grass_block", "nostalgia_grass_block", "grass_block", "grass")
 
 	//Framed Glass
-	new Block("framed_glass", modID, undefined, "framed_glass", "framed_glass", "framed_glass")
+	new Block("framed_glass", "framed_glass", "framed_glass", "framed_glass")
 	// Framed Glass Panes
 	writePanes("framed_glass_pane", modID, "framed_glass")
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
@@ -399,7 +401,7 @@ function generateResources() {
 	// April Fools Blocks
 	writeBlock("glowing_obsidian", modID, "glowing_obsidian", "glowing_obsidian")
 	writeBlock("nostalgia_glowing_obsidian", modID, "glowing_obsidian", "glowing_obsidian")
-	new Block("locked_chest", modID, undefined, "locked_chest", "locked_chest", "wood")
+	new Block("locked_chest", "locked_chest", "locked_chest", "wood")
 
 	// Nether Brick Sets
 	generateBrickSet("charred_nether_bricks", "charred_nether_bricks")
@@ -483,7 +485,7 @@ function generateResources() {
 			}
 		}
 
-		new Block(`nostalgia_${block}_block`, modID, undefined, "nostalgia", id(mc, baseBlock), block)
+		new Block(`nostalgia_${block}_block`, "nostalgia", id(mc, baseBlock), block)
 
 		// Unoxidized Copper Blocks use `copper_block` as their texture ID
 		if (block === "copper") {
@@ -877,6 +879,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 		uprightBlock += "_torch"
 		baseBlock += "_torch"
 	}
+	baseBlock = getPath(baseBlock)
 
 	const blockState = `{"variants":{"face=ceiling,facing=east,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180,"y":270},"face=ceiling,facing=east,powered=true":{"model":"${namespace}:block/${block}","x":180,"y":270},"face=ceiling,facing=north,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180,"y":180},"face=ceiling,facing=north,powered=true":{"model":"${namespace}:block/${block}","x":180,"y":180},"face=ceiling,facing=south,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180},"face=ceiling,facing=south,powered=true":{"model":"${namespace}:block/${block}","x":180},"face=ceiling,facing=west,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180,"y":90},"face=ceiling,facing=west,powered=true":{"model":"${namespace}:block/${block}","x":180,"y":90},"face=floor,facing=east,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","y":90},"face=floor,facing=east,powered=true":{"model":"${namespace}:block/${block}","y":90},"face=floor,facing=north,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright"},"face=floor,facing=north,powered=true":{"model":"${namespace}:block/${block}"},"face=floor,facing=south,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","y":180},"face=floor,facing=south,powered=true":{"model":"${namespace}:block/${block}","y":180},"face=floor,facing=west,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","y":270},"face=floor,facing=west,powered=true":{"model":"${namespace}:block/${block}","y":270},"face=wall,facing=east,powered=false":{"model":"${namespace}:block/${block}_wall"},"face=wall,facing=east,powered=true":{"model":"${namespace}:block/${block}","x":90,"y":90},"face=wall,facing=north,powered=false":{"model":"${namespace}:block/${block}_wall","y":270},"face=wall,facing=north,powered=true":{"model":"${namespace}:block/${block}","x":90},"face=wall,facing=south,powered=false":{"model":"${namespace}:block/${block}_wall","y":90},"face=wall,facing=south,powered=true":{"model":"${namespace}:block/${block}","x":90,"y":180},"face=wall,facing=west,powered=false":{"model":"${namespace}:block/${block}_wall","y":180},"face=wall,facing=west,powered=true":{"model":"${namespace}:block/${block}","x":90,"y":270}}}`
 	writeBlockstate(block, blockState, namespace)
@@ -927,6 +930,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
 	}
+	baseBlock = getPath(baseBlock)
 	const blockState = stateHelper.gen(block, namespace, altNamespace)
 	writeBlockstate(block, blockState, namespace)
 	modelWriter.writeCraftingTables(block, namespace, baseBlock, altNamespace)
