@@ -20,7 +20,6 @@ function useRecipesFrom21dot1AndBelow() {
 
 function itemOrId() {
 	if ((majorVersion >= 21)) {
-		console.log("id")
 		return "id";
 	}
 	else return "item";
@@ -343,7 +342,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			"WN"
 		])
 	}
-	else if (type === "resource_bricks") {
+	else if ((type === "resource_bricks") || (type === "stone_bricks")) {
 		recipe = generateShapedRecipe({ "D": base }, id(namespace, block), 4, [
 			"DD",
 			"DD"

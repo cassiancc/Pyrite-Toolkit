@@ -147,6 +147,9 @@ class Block {  // Create a class
 		else if (blockType === "cobblestone_bricks") {
 			writeTerracottaBricks(this.blockID, this.namespace, "cobblestone_bricks", this.baseBlock)
 		}
+		else if (blockType === "stone_bricks") {
+			writeTerracottaBricks(this.blockID, this.namespace, this.blockType, this.baseBlock)
+		}
 		else if (blockType === "mossy_cobblestone_bricks") {
 			writeTerracottaBricks(this.blockID, this.namespace, "mossy_cobblestone_bricks", this.baseBlock)
 		}
@@ -322,6 +325,10 @@ function generateResources() {
 	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
 	recipeWriter.writeShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:moss_block"], "pyrite:mossy_cobblestone_bricks", 1, "from_moss_block")
 	generateBrickSet("smooth_stone_bricks", "smooth_stone_bricks", "minecraft:smooth_stone")
+	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:granite")
+	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:andesite")
+	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:diorite")
+
 
 	writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
 	writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
