@@ -186,6 +186,13 @@ function catify(value) {
 	value = value.replace("Gold", "Shiny")
 	value = value.replace("Crimson", "Crimzn")
 	value = value.replace("Warped", "Warpt")
+	value = value.replace("Torch Lever", "burny flipurr")
+	value = value.replace("Torch", "burny thing")
+	value = value.replace("Trapdoor", "Trap")
+	value = value.replace("Hanging", "Danglin'")
+	value = value.replace("White", "Wite")
+	value = value.replace(" Dye", " powder")
+
 
 
 
@@ -217,6 +224,7 @@ function catify(value) {
 	else {
 		value = value.replace("Slab", "half blok")
 	}
+
 	return value;
 
 

@@ -246,7 +246,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	}
 	else if (type === "terracotta_bricks") {
 		altNamespace = getDyeNamespace(base)
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC", "CC"])
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 4, ["CC", "CC"])
 	}
 	else if (type === "torch") {
 		base = `${base}_dye`
@@ -331,7 +331,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	else if (type === "bricks") {
 		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "D": `minecraft:bricks` }, `pyrite:${block}`, 4, ["CCC", "CDC", "CCC"])
+		recipe = generateShapedRecipe({ "D": id(altNamespace, base), "C": `minecraft:bricks` }, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
 	}
 	else if (block === "charred_nether_bricks") {
 		recipe = generateSmeltingRecipe(block, "minecraft:nether_bricks", 1, 200, 0.1)
