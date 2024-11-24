@@ -76,6 +76,9 @@ class Block {  // Create a class
 		if ((material === "stone") || (material.includes("brick"))) {
 			stonelike = true;
 		}
+		if (material.includes("mossy")) {
+			stonelike = false
+		}
 
 		//Generate block state
 		if (blockType === "block") {
@@ -130,11 +133,11 @@ class Block {  // Create a class
 			blockWriter.writeLogs(this.blockID, this.namespace, this.baseBlock)
 			tagHelper.tagBoth(this.blockID, "mushroom_stem")
 		}
-		else if (blockType.includes("cobblestone_bricks") || (blockType === "terracotta_bricks")) {
-			blockWriter.writeTerracottaBricks(this.blockID, this.namespace, blockType, this.baseBlock)
+		else if (blockID.includes("cobblestone_bricks") || (blockType === "terracotta_bricks")) {
+			blockWriter.writeTerracottaBricks(this.blockID, this.namespace, blockType, this.baseBlock, stonelike)
 		}
-		else if (blockType === "stone_bricks") {
-			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true, true)
+		else if ((blockType === "stone_bricks") || (blockType === "mossy_stone_bricks")) {
+			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), stonelike, true)
 		}
 		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane")) {
 			blockWriter.writePanes(this.blockID, this.namespace, this.baseBlock)
@@ -218,7 +221,7 @@ function generateResources() {
 		new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
 	}
 
-	function generateBrickSet(template, type, baseBlock) {
+	function generateBrickSet(template, type, baseBlock, generateMossyBrickSet) {
 		let brickBase;
 		if (type === undefined) {
 			type = "bricks"
@@ -239,6 +242,12 @@ function generateResources() {
 		new Block(brickBase + "_stairs", "stairs", bricksBase, type)
 		new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
 		new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
+		if (generateMossyBrickSet === true) {
+			const mossyBricksBase = "mossy_" + bricksBase
+			generateBrickSet(mossyBricksBase, "mossy_stone_bricks", id(bricksBase))
+			recipeWriter.writeShapelessRecipe([id(bricksBase), "minecraft:moss_block"], id(mossyBricksBase), 1, "_from_moss_block")
+		}
+			
 
 	}
 
@@ -310,14 +319,12 @@ function generateResources() {
 	generateWoodSet(brownShroom)
 	brown_stem = new Block(brownShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
 
-	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone")
-	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
-	recipeWriter.writeShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:moss_block"], "pyrite:mossy_cobblestone_bricks", 1, "from_moss_block")
-	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone")
-	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite")
-	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite")
-	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite")
-	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite")
+	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone", true)
+	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true)
+	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true)
+	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
+	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true)
+	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true)
 
 
 	blockWriter.writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
@@ -543,6 +550,7 @@ function generateResources() {
 
 	// Write final language file.
 	langHelper.writeLang()
+	langHelper.countBlocks()
 }
 
 generateResources()

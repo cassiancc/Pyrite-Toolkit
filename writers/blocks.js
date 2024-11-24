@@ -713,7 +713,7 @@ function writeWool(block, dye, namespace) {
 	writeBlock(block, namespace, "wool", dye, undefined, undefined, undefined, undefined, false)
 }
 
-function writeTerracottaBricks(block, namespace, special, baseBlock) {
+function writeTerracottaBricks(block, namespace, special, baseBlock, stonelike) {
 	const blockState = stateHelper.gen(`${block}_north_west_mirrored`, namespace)
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
 	modelWriter.writeMirroredBricks(block, namespace, block)
@@ -727,7 +727,8 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	else {
 		tagHelper.tagBlock(block, "bricks")
 	}
-	recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
+	if (stonelike !== false)
+		recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
 }
 
 

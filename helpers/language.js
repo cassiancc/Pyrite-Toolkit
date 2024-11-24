@@ -12,6 +12,15 @@ function writeLang() {
 	helpers.writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "), false)
 }
 
+function countBlocksInLang() {
+	let count = 0;
+	Object.keys(blockTranslations).forEach(function(translation) {
+		if (translation.includes("block." + modID))
+			count++
+	})
+	console.log(count)
+}
+
 function generateLang(block, type, namespace) {
 	if (type === undefined) {
 		type = "block";
@@ -241,5 +250,6 @@ module.exports = {
 
 	writeLang: writeLang,
 
-	generateLang: generateLang
+	generateLang: generateLang,
+	countBlocks: countBlocksInLang
 }
