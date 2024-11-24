@@ -23,6 +23,9 @@ function writeRecipeAdvancement(block, trigger) {
 	if (trigger === undefined) {
 		trigger = "minecraft:crafting_table"
 	}
+  // Failsafe for copper trigger.
+  if (trigger === "minecraft:copper")
+      trigger = "minecraft:copper_block"
 
 	// Override for quartz
 	if (trigger.includes("quartz_block_"))

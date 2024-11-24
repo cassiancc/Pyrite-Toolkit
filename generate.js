@@ -147,17 +147,11 @@ class Block {  // Create a class
 			writeLogs(this.blockID, this.namespace, this.baseBlock)
 			tagHelper.tagBoth(this.blockID, "mushroom_stem")
 		}
-		else if (blockType === "cobblestone_bricks") {
-			writeTerracottaBricks(this.blockID, this.namespace, "cobblestone_bricks", this.baseBlock)
+		else if (blockType.includes("cobblestone_bricks") || (blockType === "terracotta_bricks")) {
+			writeTerracottaBricks(this.blockID, this.namespace, blockType, this.baseBlock)
 		}
 		else if (blockType === "stone_bricks") {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true, true)
-		}
-		else if (blockType === "mossy_cobblestone_bricks") {
-			writeTerracottaBricks(this.blockID, this.namespace, "mossy_cobblestone_bricks", this.baseBlock)
-		}
-		else if (blockType === "terracotta_bricks") {
-			writeTerracottaBricks(this.blockID, this.namespace, "terracotta_bricks", this.baseBlock)
 		}
 		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane")) {
 			writePanes(this.blockID, this.namespace, this.baseBlock)
@@ -167,11 +161,11 @@ class Block {  // Create a class
 		}
 		else if (blockType == "framed_glass") {
 			tagHelper.tagBoth(blockID, "c:glass_blocks/colorless")
-			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "cutout")
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "cutout", undefined, undefined, false, "minecraft:glass")
 		}
 		else if (blockType == "stained_framed_glass") {
 			tagHelper.tagBoth(blockID, "c:glass_blocks")
-			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "translucent")
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "translucent", undefined, undefined, undefined, "pyrite:framed_glass")
 		}
 		else if (blockType == "locked_chest") {
 			writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
@@ -179,11 +173,20 @@ class Block {  // Create a class
 		else if (blockType == "nostalgia_grass_block") {
 			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock))
 		}
-		else if ((blockType == "nostalgia") || (blockType.includes("smooth_stone_bricks"))) {
+		else if (blockType == "nostalgia") {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true, true)
 		}
 		else {
-			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
+			let recipeIngredient;
+			if (blockType == "planks")
+				recipeIngredient = "#minecraft:planks"
+			else if (blockType == "bricks")
+				recipeIngredient = "minecraft:bricks"
+			else if (blockType == "lamp")
+				recipeIngredient = "pyrite:glowstone_lamp"
+			else
+				recipeIngredient = "minecraft:nether_bricks"
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, undefined, undefined, recipeIngredient)
 		}
 
 		//Generate block loot table
@@ -327,7 +330,7 @@ function generateResources() {
 	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone")
 	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
 	recipeWriter.writeShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:moss_block"], "pyrite:mossy_cobblestone_bricks", 1, "from_moss_block")
-	generateBrickSet("smooth_stone_bricks", "smooth_stone_bricks", "minecraft:smooth_stone")
+	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone")
 	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite")
 	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite")
 	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite")
@@ -879,8 +882,13 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
 	}
-	if (shouldGenerateRecipeAdvancements === true) {
-		writeRecipeAdvancement(block, baseBlock)
+	if (shouldGenerateRecipeAdvancements !== undefined) {
+		if (shouldGenerateRecipeAdvancements === true)
+			writeRecipeAdvancement(block, baseBlock)
+		else if (shouldGenerateRecipeAdvancements === false) {}
+		else {
+			writeRecipeAdvancement(block, shouldGenerateRecipeAdvancements)
+		}
 	}
 	writeLootTables(block)
 	return block;
