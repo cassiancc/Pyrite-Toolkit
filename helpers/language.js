@@ -7,9 +7,9 @@ let upsideDownTranslations = flipTranslationFile("./overrides/lang/en_us.json")
 const modID = helpers.modID
 
 function writeLang() {
-	helpers.writeFile(`${helpers.paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
-	helpers.writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
-	helpers.writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
+	helpers.writeFile(`${helpers.paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "), false)
+	helpers.writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "), false)
+	helpers.writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "), false)
 }
 
 function generateLang(block, type, namespace) {

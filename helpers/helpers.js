@@ -74,18 +74,19 @@ function readFileAsJson(path) {
     return file
 }
 
-function writeFile(path, data) {
+function writeFile(path, data, minify) {
 	const demoMode = false
 	if (data instanceof Object) {
 		data = JSON.stringify(data)
 	}
 	else {
-		try {
-			data = JSON.parse(data)
-			data = JSON.stringify(data)
-		}
-		catch { }
-
+        if (minify !== false) {
+            try {
+                data = JSON.parse(data)
+                data = JSON.stringify(data)
+            }
+            catch { }
+        }
 	}
 	if (config.disableWriting === false) {
         if (!path.includes("undefined") && data !== "") {
@@ -222,7 +223,7 @@ module.exports = {
 
     getDyeNamespace: getDyeNamespace,
     getDyeIngredient: getDyeIngredient,
-    
+
     versionAbove: versionAbove,
     populateTemplates: populateTemplates
 }
