@@ -54,6 +54,7 @@ const paths = {
     blockstates: `${resourcesPath}assets/${modID}/blockstates/`,
     items: `${resourcesPath}assets/${modID}/items/`,
     loot: `${resourcesPath}data/${modID}/loot_table${s}/blocks/`,
+    advancementRecipes: `${resourcesPath}data/${modID}/advancement${s}/recipes/`,
 
 }
 
@@ -91,7 +92,7 @@ function writeFile(path, data) {
             fs.writeFile(path, data, function (err) { if (err) throw err; })
         }
         else {
-            console.log("Preventing write of " + path)
+            // console.log("Preventing write of " + path)
         }
 	}
 }

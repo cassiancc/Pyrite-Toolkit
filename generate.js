@@ -8,6 +8,7 @@ const recipeWriter = require('./writers/recipes');
 const modelHelper = require('./helpers/models');
 const modelWriter = require('./writers/models');
 const lootTableWriter = require('./writers/loot_tables');
+const { writeRecipeAdvancement } = require('./writers/advancements');
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
 const id = helpers.id
@@ -95,7 +96,7 @@ class Block {  // Create a class
 
 		//Generate block state
 		if (blockType === "block") {
-			writeBlock(this.blockID, this.namespace, special, this.baseBlock, undefined, undefined, undefined, stonelike)
+			writeBlock(this.blockID, this.namespace, special, this.baseBlock, undefined, undefined, undefined, stonelike, true)
 		}
 		else if (blockType === "slab") {
 			writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
@@ -104,10 +105,10 @@ class Block {  // Create a class
 			writeStairs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
 		}
 		else if (blockType === "wall") {
-			writeWalls(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
+			writeWalls(this.blockID, this.baseBlock, this.baseBlock)
 		}
 		else if (blockType === "wall_gate") {
-			writeWallGates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
+			writeWallGates(this.blockID, this.baseBlock)
 		}
 		else if (blockType === "fence") {
 			writeFences(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
@@ -150,7 +151,7 @@ class Block {  // Create a class
 			writeTerracottaBricks(this.blockID, this.namespace, "cobblestone_bricks", this.baseBlock)
 		}
 		else if (blockType === "stone_bricks") {
-			writeTerracottaBricks(this.blockID, this.namespace, this.blockType, this.baseBlock)
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true, true)
 		}
 		else if (blockType === "mossy_cobblestone_bricks") {
 			writeTerracottaBricks(this.blockID, this.namespace, "mossy_cobblestone_bricks", this.baseBlock)
@@ -176,10 +177,10 @@ class Block {  // Create a class
 			writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
 		else if (blockType == "nostalgia_grass_block") {
-			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
+			writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock))
 		}
 		else if ((blockType == "nostalgia") || (blockType.includes("smooth_stone_bricks"))) {
-			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true)
+			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true, true)
 		}
 		else {
 			writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
@@ -250,8 +251,8 @@ function generateResources() {
 		new Block(bricksBase, type, baseBlock, type)
 		new Block(brickBase + "_slab", "slab", bricksBase, type)
 		new Block(brickBase + "_stairs", "stairs", bricksBase, type)
-		new Block(brickBase + "_wall", "wall", bricksBase, type)
-		new Block(brickBase + "_wall_gate", "wall_gate", bricksBase, type)
+		new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
+		new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
 
 	}
 
@@ -327,9 +328,9 @@ function generateResources() {
 	generateBrickSet("mossy_cobblestone_bricks", "mossy_cobblestone_bricks")
 	recipeWriter.writeShapelessRecipe(["pyrite:cobblestone_bricks", "minecraft:moss_block"], "pyrite:mossy_cobblestone_bricks", 1, "from_moss_block")
 	generateBrickSet("smooth_stone_bricks", "smooth_stone_bricks", "minecraft:smooth_stone")
-	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:granite")
-	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:andesite")
-	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:diorite")
+	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite")
+	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite")
+	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite")
 
 
 	writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
@@ -423,49 +424,53 @@ function generateResources() {
 	vanillaResources.forEach(function (block) {
 		let baseBlock = block
 		let altNamespace;
-		let cutBlockID = `cut_${block}`
+		let cutBlock = `cut_${block}`
 		let baseTexture = block + "_block";
 		// Cut Blocks - Copper is ignored.
 		if (block === "copper" || block === "exposed_copper" || block === "oxidized_copper" || block === "weathered_copper") {
 			baseTexture = block;
 			altNamespace = mc
 			// Vanilla swaps Cut and Oxidization state
-			cutBlockID = cutBlockID.replace("cut_weathered", "weathered_cut")
-			cutBlockID = cutBlockID.replace("cut_oxidized", "oxidized_cut")
-			cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
+			cutBlock = cutBlock.replace("cut_weathered", "weathered_cut")
+			cutBlock = cutBlock.replace("cut_oxidized", "oxidized_cut")
+			cutBlock = cutBlock.replace("cut_exposed", "exposed_cut")
+			writeWalls(`cut_${block}_wall`, id(mc, cutBlock))
+			writeWallGates(`cut_${block}_wall_gate`, id(mc, cutBlock))
 		}
 		else {
 			baseBlock = baseTexture;
 			altNamespace = modID
-			writeBlock(cutBlockID, modID, cutBlockID, id(mc, baseBlock), undefined, undefined, cutBlockID, true)
-			writeSlabs(`${cutBlockID}_slab`, cutBlockID, id(modID, cutBlockID), true)
-			writeStairs(`${cutBlockID}_stairs`, cutBlockID, id(modID, cutBlockID), true)
+			writeBlock(cutBlock, modID, cutBlock, id(mc, baseBlock), undefined, undefined, cutBlock, true, true)
+			writeSlabs(`${cutBlock}_slab`, cutBlock, id(modID, cutBlock), true)
+			writeStairs(`${cutBlock}_stairs`, cutBlock, id(modID, cutBlock), true)
+			writeWalls(`cut_${block}_wall`, id(altNamespace, cutBlock))
+			writeWallGates(`cut_${block}_wall_gate`, id(altNamespace, cutBlock))
+			writeWalls(`cut_${block}_wall`, id(modID, cutBlock))
+			writeWallGates(`cut_${block}_wall_gate`, id(modID, cutBlock))
 		}
-
-		writeWalls(`cut_${block}_wall`, modID, id(altNamespace, cutBlockID))
-		writeWallGates(`cut_${block}_wall_gate`, modID, id(altNamespace, cutBlockID), modID)
 
 		// Smooth, Chiseled, and Pillar blocks. Quartz is mostly ignored - Walls and Wall Gates are generated.
 		if (block === "quartz") {
 			baseTexture = baseBlock + "_top"
 			// Vanilla uses quartz's bottom texture instead of a dedicated smooth texture.
-			writeWalls(`smooth_${block}_wall`, modID, `minecraft:quartz_block_bottom`)
-			writeWallGates(`smooth_${block}_wall_gate`, modID, `minecraft:quartz_block_bottom`, modID)
+			writeWalls(`smooth_${block}_wall`, "minecraft:quartz_block", id(mc, "quartz_block_bottom"))
+			writeWallGates(`smooth_${block}_wall_gate`, "minecraft:quartz_block", id(mc, "quartz_block_bottom"))
 		}
 		else {
 			const smooth = `smooth_${block}`
-			writeBlock(smooth, modID, "smooth_resource", id(mc, baseBlock), undefined, undefined, smooth, true)
-			writeSlabs(`${smooth}_slab`, smooth, id(modID, smooth), true)
-			writeStairs(`${smooth}_stairs`, smooth, id(modID, smooth), true)
-			writeWalls(`${smooth}_wall`, modID, smooth)
-			writeWallGates(`${smooth}_wall_gate`, modID, `${smooth}`, modID)
-			writeBlock(block + "_bricks", modID, "resource_bricks", id(altNamespace, cutBlockID), undefined, modID, block + "_bricks", true)
+			const smoothID = id(modID, smooth)
+			writeBlock(smooth, modID, "smooth_resource", id(mc, baseBlock), undefined, undefined, smooth, true, true)
+			writeSlabs(`${smooth}_slab`, smooth, smoothID, true)
+			writeStairs(`${smooth}_stairs`, smooth, smoothID, true)
+			writeWalls(`${smooth}_wall`, smoothID, smoothID)
+			writeWallGates(`${smooth}_wall_gate`, smoothID, smoothID)
+			writeBlock(block + "_bricks", modID, "resource_bricks", id(altNamespace, cutBlock), undefined, modID, block + "_bricks", true)
 			writeChiseledBlock(`${block}_pillar`, id(mc, baseBlock), modID, "resource_pillar")
 		}
 
 		// Iron Bars already exist
 		if (!block.includes("iron")) {
-			writeBars(block, modID, baseBlock)
+			writeBars(block, modID, id(altNamespace, cutBlock))
 		}
 		// Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
 		if (block.includes("copper")) {
@@ -688,6 +693,7 @@ function writeInventoryModel(block, namespace) {
 function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
+	writeRecipeAdvancement(block, id(dye+"_dye"))
 	writeBlock(block, namespace, "terracotta", dye)
 }
 
@@ -704,16 +710,19 @@ function writeConcretePowder(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `c:concrete_powder`)
 	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
+	writeRecipeAdvancement(block, id(dye+"_dye"))
 	writeBlock(block, namespace, "concrete_powder", dye)
 }
 
 function writeLamps(block, type, texture) {
+	writeRecipeAdvancement(id(block), id(mc, "redstone_lamp"))
 	writeBlock(block, modID, "lamps", type, undefined, undefined, texture, false)
 }
 
 function writeWool(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
-	writeBlock(block, namespace, "wool", dye)
+	writeRecipeAdvancement(id(block), id(dye + "_dye"))
+	writeBlock(block, namespace, "wool", dye, undefined, undefined, undefined, undefined, false)
 }
 
 function writeTerracottaBricks(block, namespace, special, baseBlock) {
@@ -721,6 +730,7 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 	writeBlockstate(block, blockState, namespace)
 	modelWriter.writeMirroredBricks(block, namespace, block)
 	writeBlockItemModel(block, namespace)
+	writeRecipeAdvancement(id(block), id(baseBlock))
 	writeRecipes(block, special, baseBlock, namespace)
 	lootTableWriter.writeLootTables(block)
 	if (block.includes("terracotta")) {
@@ -734,8 +744,11 @@ function writeTerracottaBricks(block, namespace, special, baseBlock) {
 
 function writeDye(item) {
 	item = item + "_dye"
+	const itemID = id(item)
+	const dyeIngredient = getDyeIngredient(item)
 	writeItem(item, modID)
-	recipeWriter.writeShapelessRecipe(getDyeIngredient(item), id(item), 1)
+	writeRecipeAdvancement(itemID, dyeIngredient)
+	recipeWriter.writeShapelessRecipe(dyeIngredient, itemID, 1)
 }
 
 function writeItem(item) {
@@ -758,7 +771,7 @@ function writeDoors(block, baseBlock) {
 	else {
 		tagHelper.tagBlock(block, baseBlock.split(":")[1].split("_block")[0])
 	}
-
+	writeRecipeAdvancement(id(block), id(baseBlock))
 	writeRecipes(block, "door", baseBlock)
 }
 
@@ -775,10 +788,11 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	else {
 		tagHelper.tagBoth(block, "metal_trapdoors")
 	}
+	writeRecipeAdvancement(id(block), id(baseBlock))
 	writeRecipes(block, "trapdoor", baseBlock)
 }
 
-function writeBlock(block, namespace, blockType, baseBlock, render_type, altNamespace, texture, shouldGenerateStonecutterRecipes) {
+function writeBlock(block, namespace, blockType, baseBlock, render_type, altNamespace, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace;
 
@@ -865,6 +879,9 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
 	}
+	if (shouldGenerateRecipeAdvancements === true) {
+		writeRecipeAdvancement(block, baseBlock)
+	}
 	writeLootTables(block)
 	return block;
 }
@@ -887,6 +904,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 	writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "torch_lever", baseBlock, namespace, altNamespace)
+	writeRecipeAdvancement(id(namespace, block), id(altNamespace, baseBlock))
 	writeLootTables(block)
 }
 
@@ -898,6 +916,7 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, `c:dyed/${baseBlock}`)
 	writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
+	writeRecipeAdvancement(id(block),"minecraft:torch")
 	writeLootTables(block)
 }
 
@@ -923,6 +942,7 @@ function writePoweredBlock(block) {
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
 	writeRecipes(block, "powered", undefined, namespace)
+	writeRecipeAdvancement(block, id(mc, "redstone"))
 	writeLootTables(block)
 }
 
@@ -939,6 +959,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	tagHelper.tagBoth(block, "crafting_tables", true)
 	tagHelper.checkAndAddStainedTag(block, baseBlock)
 	writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
+	writeRecipeAdvancement(id(block), id(altNamespace, baseBlock))
 	writeLootTables(block, namespace, undefined, altNamespace)
 }
 
@@ -953,6 +974,7 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	writeLootTables(block, namespace)
 	tagHelper.tagBlock(block, "ladders")
 	writeRecipes(block, "ladder", baseBlock, namespace, altNamespace)
+	writeRecipeAdvancement(block, id(altNamespace, baseBlock))
 	writeLootTables(block)
 }
 
@@ -978,6 +1000,7 @@ function writeFlower(block) {
 	generateBlockLang(block)
 	writeLootTables(block, modID)
 	writeRecipes(block, "flower")
+	writeRecipeAdvancement(block, id(mc, "poppy"))
 }
 
 function writeChiseledBlock(block, baseBlock, namespace, special) {
@@ -990,17 +1013,22 @@ function writeChiseledBlock(block, baseBlock, namespace, special) {
 	const blockType = getPath(baseBlock).split("_block")[0]
 	tagHelper.tagBlock(block, blockType)
 	tagHelper.checkAndAddBeaconTag(block, blockType)
-	writeRecipes(block, special, baseBlock)
 	writeStonecutterRecipes(block, baseBlock, 1)
+	if (baseBlock == "minecraft:copper") {
+		baseBlock += "_block"
+	}
+	writeRecipeAdvancement(block, baseBlock)
+	writeRecipes(block, special, baseBlock)
 }
 
-function writeUprightColumnBlock(block, namespace, blockType, baseBlock) {
+function writeUprightColumnBlock(block, namespace, blockType, baseBlockID) {
 	writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
-	modelWriter.writeColumns(block, namespace, baseBlock)
+	modelWriter.writeColumns(block, namespace, getPath(baseBlockID))
 	writeBlockItemModel(block, namespace)
 	lootTableWriter.writeLootTables(block)
 	generateBlockLang(block)
-	writeRecipes(block, blockType, baseBlock)
+	writeRecipes(block, blockType, getPath(baseBlockID))
+	writeRecipeAdvancement(block, baseBlockID)
 }
 
 function writeOrientableBlock(block, namespace, blockType, baseBlock) {
@@ -1038,6 +1066,7 @@ function writeSigns(blockID, baseBlockID, texture) {
 	tagHelper.checkAndAddDyedTag(blockID, baseBlockID)
 	tagHelper.checkAndAddDyedTag(wallBlockID, baseBlockID, true)
 	// Generate recipes
+	writeRecipeAdvancement(id(blockID), baseBlockID)
 	writeRecipes(blockID, "sign", baseBlockID, modID)
 	return blockID;
 }
@@ -1069,6 +1098,7 @@ function writeHangingSigns(blockID, baseBlockID, texture) {
 	tagHelper.checkAndAddDyedTag(blockID, baseBlockID)
 	tagHelper.checkAndAddDyedTag(wallBlockID, baseBlockID, true)
 	// Generate recipes
+	writeRecipeAdvancement(blockID, baseBlockID)
 	writeRecipes(blockID, "hanging_sign", baseBlockID, modID)
 	return blockID;
 }
@@ -1081,20 +1111,23 @@ function writePanes(block, namespace, baseBlock) {
 	writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, "c:glass_panes")
 	tagHelper.checkAndAddDyedTag(block, baseBlock)
+	writeRecipeAdvancement(block, id(baseBlock))
 	writeRecipes(block, "glass_pane", baseBlock)
 	generateBlockLang(block)
 }
 
-function writeBars(block, namespace, baseBlock) {
-	baseBlock = block
+function writeBars(block, namespace, ingredientID) {
+	const baseBlock = block
 	block = block + "_bars"
+	const blockID = id(block)
 	writeBlockstate(block, stateHelper.genBars(block, namespace, baseBlock), namespace)
 	modelWriter.writeBars(block, namespace, block)
 	writeUniqueBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "metal_bars")
 	generateBlockLang(block)
 	writeLootTables(block, namespace)
-	writeRecipes(block, "bars", baseBlock)
+	writeRecipeAdvancement(blockID, ingredientID)
+	writeRecipes(block, "bars", ingredientID)
 }
 
 function writeLogs(block, namespace, special) {
@@ -1107,28 +1140,23 @@ function writeLogs(block, namespace, special) {
 	writeRecipes(block, special)
 }
 
-function writeWalls(block, namespace, baseBlock, altNamespace) {
-	if (namespace === undefined) {
-		namespace = modID
-	}
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
-
-	wallBlockState = stateHelper.genWalls(block, namespace)
-	writeBlockstate(block, wallBlockState, namespace)
-	modelWriter.writeWalls(block, altNamespace, baseBlock)
-	writeInventoryModel(block, namespace)
+function writeWalls(block, baseBlockID, texture) {
+	if (texture == undefined)
+		texture = baseBlockID
+	wallBlockState = stateHelper.genWalls(block, modID)
+	writeBlockstate(block, wallBlockState, modID)
+	modelWriter.writeWalls(block, undefined, texture)
+	writeInventoryModel(block, modID)
 	writeLootTables(block)
 	generateBlockLang(block)
 	
 	tagHelper.tagBoth(block, "minecraft:walls")
-	if (baseBlock.includes("bricks")) {
+	if (baseBlockID.includes("bricks")) {
 		tagHelper.tagBoth(block, "brick_walls")
 	}
-
-	writeRecipes(block, "wall", baseBlock, altNamespace)
-	writeStonecutterRecipes(id(namespace, block), id(namespace, baseBlock), 1)
+	writeRecipeAdvancement(block, baseBlockID)
+	recipe = recipeHelper.generateShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC","CCC"])
+	writeStonecutterRecipes(id(block), baseBlockID, 1)
 }
 
 // Generates Stair blocks
@@ -1174,7 +1202,8 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 	}
 
 	// Generate recipes
-	writeRecipes(block, "stairs", baseBlock, modID)
+	writeRecipeAdvancement(id(block),id(baseBlock))
+	writeRecipes(block, "stairs", baseBlock, modID)	
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 1)
 	}
@@ -1224,6 +1253,7 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	}
 
 	// Generate recipes
+	writeRecipeAdvancement(id(block),id(baseBlock))
 	writeRecipes(block, "slabs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
 		writeStonecutterRecipes(block, baseBlock, 2)
@@ -1248,7 +1278,7 @@ function writePlates(block, namespace, baseBlock, altNamespace) {
 	else {
 		tagHelper.tagBlock(block, "minecraft:pressure_plates", true)
 	}
-	
+	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
 	writeRecipes(block, "plates", baseBlock)
 }
 
@@ -1272,7 +1302,7 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	else {
 		tagHelper.tagBoth(block, "metal_buttons", true)
 	}
-	
+	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
 	writeRecipes(block, type, baseBlock, namespace, altNamespace)
 }
 
@@ -1287,7 +1317,7 @@ function writeFences(block, namespace, baseBlock) {
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_fences", true)
 	}
-
+	writeRecipeAdvancement(id(block),id(baseBlock))
 	writeRecipes(block, "fences", baseBlock, namespace)
 }
 
@@ -1313,31 +1343,41 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	else {
 		tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
 	}
-
+	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
 	writeRecipes(block, "fence_gates", baseBlock, namespace)
 }
 
-function writeWallGates(block, namespace, baseBlock, altNamespace) {
-	if (namespace === undefined) {
-		namespace = modID
-	}
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
-	const fenceGateBlockState = stateHelper.genFenceGates(block, namespace, altNamespace)
-	writeBlockstate(block, fenceGateBlockState, modID, altNamespace)
-	modelWriter.writeWallGates(block, altNamespace, baseBlock, altNamespace)
+function writeWallGates(block, baseBlock, texture) {
+	// Standardize inputs.
+	if (texture == undefined)
+		texture = baseBlock
+	const baseBlockNamespace = getNamespace(baseBlock)
+
+	// Blockstates
+	const fenceGateBlockState = stateHelper.genFenceGates(block, modID, baseBlockNamespace)
+	writeBlockstate(block, fenceGateBlockState, modID, undefined)
+
+	// Models
+	modelWriter.writeWallGates(block, undefined, texture, undefined)
+	writeBlockItemModel(block, modID, baseBlockNamespace)
+
+	// Language files
 	generateBlockLang(block)
-	writeLootTables(block, undefined, undefined, altNamespace)
-	writeBlockItemModel(block, modID, altNamespace)
+
+	// Loot tables
+	writeLootTables(block, modID, block, baseBlockNamespace)
+
+	// Tags
 	let optionality = false;
-	if ((altNamespace != mc) && (altNamespace != modID)) {
+	if ((baseBlockNamespace != mc) && (baseBlockNamespace != modID)) {
 		optionality = true;
 	}
 	tagHelper.tagBoth(block, "wall_gates", optionality)
 
-	writeRecipes(block, "wall_gates", baseBlock, namespace, altNamespace)
-	writeStonecutterRecipes(block, baseBlock, 1)
+	// Recipes
+	writeRecipeAdvancement(id(block),id(baseBlock))
+	recipeWriter.writeRecipes(block, "wall_gate", baseBlock)
+	recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
 
 }
 
@@ -1366,6 +1406,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	}
 	
 	// Recipes
+	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
 	writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 }
 

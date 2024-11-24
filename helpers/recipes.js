@@ -357,25 +357,13 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else if (type === "resource_pillar") {
-		if (base == "minecraft:copper") {
-			base += "_block"
-		}
 		recipe = generateShapedRecipe({ "D": id(mc, base) }, id(namespace, block), 2, [
 			"D",
 			"D"
 		])
 	}
 	else if (type === "bars") {
-		let localID, cutBlockID;
-		cutBlockID = `cut_${base}`
-		if (block.includes("copper")) {
-			localID = mc;
-			cutBlockID = cutBlockID.replace("cut_weathered", "weathered_cut")
-			cutBlockID = cutBlockID.replace("cut_oxidized", "oxidized_cut")
-			cutBlockID = cutBlockID.replace("cut_exposed", "exposed_cut")
-		}
-		else { localID = modID }
-		recipe = generateShapedRecipe({ "D": id(localID, cutBlockID) }, id(namespace, block), 32, [
+		recipe = generateShapedRecipe({ "D": base }, id(namespace, block), 32, [
 			"DDD",
 			"DDD"
 		])
@@ -388,9 +376,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	}
 	else if (type === "wall") {
-		if (!base.includes(":")) {
-			base = id(base)
-		}
+		base = id(base)
 		recipe = generateShapedRecipe({ "C": `${base}` }, id(namespace, block), 6, ["CCC","CCC"])
 	}
 	else if (type === "slabs") {
