@@ -221,7 +221,7 @@ function generateResources() {
 		new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
 	}
 
-	function generateBrickSet(template, type, baseBlock, generateMossyBrickSet) {
+	function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet) {
 		let brickBase;
 		if (type === undefined) {
 			type = "bricks"
@@ -242,12 +242,17 @@ function generateResources() {
 		new Block(brickBase + "_stairs", "stairs", bricksBase, type)
 		new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
 		new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
-		if (generateMossyBrickSet === true) {
-			const mossyBricksBase = "mossy_" + bricksBase
-			generateBrickSet(mossyBricksBase, "mossy_stone_bricks", id(bricksBase))
-			recipeWriter.writeShapelessRecipe([id(bricksBase), "minecraft:moss_block"], id(mossyBricksBase), 1, "_from_moss_block")
+		if (shouldGenerateMossyBrickSet === true) {
+			generateMossyBrickSet(bricksBase, id(bricksBase))
 		}
 			
+
+	}
+
+	function generateMossyBrickSet(bricksBase, baseBlockID) {
+		const mossyBricksBase = "mossy_" + bricksBase
+		generateBrickSet(mossyBricksBase, "mossy_stone_bricks", baseBlockID)
+		recipeWriter.writeShapelessRecipe([baseBlockID, "minecraft:moss_block"], id(mossyBricksBase), 1, "_from_moss_block")
 
 	}
 
@@ -325,7 +330,9 @@ function generateResources() {
 	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
 	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true)
 	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true)
-
+	if (majorVersion > 20)
+		generateMossyBrickSet("tuff_bricks", "minecraft:tuff_bricks")
+	generateMossyBrickSet("deepslate_bricks", "minecraft:deepslate_bricks")
 
 	blockWriter.writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
 	blockWriter.writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")

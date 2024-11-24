@@ -47,7 +47,7 @@ function writeWallGates(block, baseBlock, texture) {
 
 	// Recipes
 	writeRecipeAdvancement(id(block), id(baseBlock));
-	recipeWriter.writeRecipes(block, "wall_gate", baseBlock);
+	recipeWriter.writeRecipes(block, "wall_gates", baseBlock);
 	recipeWriter.writeStonecutterRecipes(block, baseBlock, 1);
 
 }
