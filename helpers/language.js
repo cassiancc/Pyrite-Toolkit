@@ -1,4 +1,44 @@
+const helpers = require("../helpers/helpers");
 const { readFileAsJson } = require("../helpers/helpers");
+
+let blockTranslations = readFileAsJson("./overrides/lang/en_us.json")
+let catTranslations = readFileAsJson("./overrides/lang/lol_us.json")
+let upsideDownTranslations = flipTranslationFile("./overrides/lang/en_us.json")
+const modID = helpers.modID
+
+function writeLang() {
+	helpers.writeFile(`${helpers.paths.assets}lang/en_us.json`, JSON.stringify(blockTranslations, undefined, " "))
+	helpers.writeFile(`${helpers.paths.assets}lang/lol_us.json`, JSON.stringify(catTranslations, undefined, " "))
+	helpers.writeFile(`${helpers.paths.assets}lang/en_ud.json`, JSON.stringify(upsideDownTranslations, undefined, " "))
+}
+
+function generateLang(block, type, namespace) {
+	if (type === undefined) {
+		type = "block";
+	}
+	block = helpers.getPath(block)
+	let langBlock = block;
+	langBlock = langBlock.replaceAll("_", " ");
+	langBlock = langBlock.replaceAll("/", " ");
+	langBlock = langBlock.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(); });
+	const key = `${type}.${namespace}.${block.replace("/", ".")}`;
+	const value = langBlock;
+	if (!blockTranslations.hasOwnProperty(key)) {
+		blockTranslations = Object.assign(blockTranslations, JSON.parse(`{"${key}": "${value}"}`));
+	}
+	if (!catTranslations.hasOwnProperty(key)) {
+		catTranslations = Object.assign(catTranslations, JSON.parse(`{"${key}": "${catify(value)}"}`));
+	}
+	if (!upsideDownTranslations.hasOwnProperty(key)) {
+		upsideDownTranslations = Object.assign(upsideDownTranslations, JSON.parse(`{"${key}": "${upsideDownify(value)}"}`));
+	}
+	return value;
+}
+
+
+function generateBlockLang(block) {
+	return generateLang(block, "block", modID)
+}
 
 function flipTranslationFile(path) {
     let upsideDownTranslations = {};
@@ -82,108 +122,116 @@ function upsideDownify(value) {
 	return newValue
 }
 
-module.exports = {
-	catify: function catify(value) {
-		value = value.replace("Quartz", "Kwartz")
-		value = value.replace("Pillar", "piler")
-		value = value.replace("Grass", "Gras")
+function catify(value) {
+	value = value.replace("Quartz", "Kwartz")
+	value = value.replace("Pillar", "piler")
+	value = value.replace("Grass", "Gras")
+	value = value.replace("Block", "Blak")
+	value = value.replace("Podzol", "Durtee durt")
+	value = value.replace("Mycelium", "miceliwm")
+	value = value.replace("Path", "Durt roud")
+	value = value.replace("Path", "Durt roud")
+	value = value.replace("Nether Bricks", "Brik from Nether")
+	value = value.replace("Charred", "hot!!!")
+	value = value.replace("Oak", "Oac")
+	value = value.replace("Spruce", "Spruz")
+	value = value.replace("Birch", "Berch")
+	value = value.replace("Jungle", "Junglz")
+	value = value.replace("Bamboo", "Gren")
+	value = value.replace("Cherry", "Sakura")
+	value = value.replace("Mangrove", "mengruv")
+	value = value.replace("Nostalgia", "OLD")
+	value = value.replace("Amethyst", "Purpur shinee")
+	value = value.replace("Lapis ", "Glosy Blu ")
+	value = value.replace("Emerald ", "Emmiez ")
+	value = value.replace("Cut ", "1000° kniv vs ")
+	value = value.replace("Chiseled ", "Chizald ")
+	value = value.replace("Mossy Cobblestone ", "DURTY COBULSTOWN ")
+	value = value.replace("Cobblestone", "Cooblestoneh")
+	value = value.replace("Exposed", "Seen")
+	value = value.replace("Weathered", "Yucky old")
+	value = value.replace("Oxidized", "Old")
+	value = value.replace("Tuff", "Tff")
+	value = value.replace("Lamp", "lapm")
+	value = value.replace("Deepslate", "dark ston")
+	value = value.replace("Carpet", "Cat Rug")
+	value = value.replace("Light ", "Lite ")
+	value = value.replace("Blue ", "Bloo ")
+	value = value.replace("Purple ", "Parpal ")
+	value = value.replace("Brown ", "Brownish ")
+	value = value.replace("Magenta ", "Majenta ")
+	value = value.replace("Red ", "Redish ")
+	value = value.replace("Orange ", "Ornge ")
+	value = value.replace("Yellow ", "Yello ")
+	value = value.replace("Green ", "Greenish ")
+	value = value.replace("Cyan ", "Sighun ")
+	value = value.replace("Pink ", "Pinky ")
+	value = value.replace("Lime", "Limd")
+	value = value.replace("Poisonous", "yucky")
+	value = value.replace("Lit ", "Bright ")
+	value = value.replace("Terracotta", "Teracottah")
+	value = value.replace("Stairs", "Stairz")
+	value = value.replace("Wool", "Fur Bluk")
+	value = value.replace("Crafting Table", "Krafting Tabal")
+	value = value.replace("Gate", "dor")
+	value = value.replace("Wall", "Wal")
+	value = value.replace("Pressure Plate", "prueusure platt")
+	value = value.replace("Ladder", "Ladr")
+	value = value.replace("Pane", "Payn")
+	value = value.replace("Star", "Asterisk")
+	value = value.replace("Glass", "Glazz")
+	value = value.replace("Bars", "Jeil Bahz")
+	value = value.replace("Iron", "Irony")
+	value = value.replace("Door", "Dor")
+	value = value.replace("Gold", "Shiny")
+	value = value.replace("Crimson", "Crimzn")
+	value = value.replace("Warped", "Warpt")
+
+
+
+	if (Math.floor(Math.random() * 2) == 0) {
+		value = value.replace("Stained", "Staned")
+	}
+	else {
+		value = value.replace("Stained", "Stainedly")
+	}
+
+
+	if (Math.floor(Math.random() * 2) == 0) {
+		value = value.replace("Copper", "cuprr")
+	}
+	else {
+		value = value.replace("Copper", "copurr")
+	}
+
+	if (Math.floor(Math.random() * 2) == 0) {
 		value = value.replace("Block", "Blak")
-		value = value.replace("Podzol", "Durtee durt")
-		value = value.replace("Mycelium", "miceliwm")
-		value = value.replace("Path", "Durt roud")
-		value = value.replace("Path", "Durt roud")
-		value = value.replace("Nether Bricks", "Brik from Nether")
-		value = value.replace("Charred", "hot!!!")
-		value = value.replace("Oak", "Oac")
-		value = value.replace("Spruce", "Spruz")
-		value = value.replace("Birch", "Berch")
-		value = value.replace("Jungle", "Junglz")
-		value = value.replace("Bamboo", "Gren")
-		value = value.replace("Cherry", "Sakura")
-		value = value.replace("Mangrove", "mengruv")
-		value = value.replace("Nostalgia", "OLD")
-		value = value.replace("Amethyst", "Purpur shinee")
-		value = value.replace("Lapis ", "Glosy Blu ")
-		value = value.replace("Emerald ", "Emmiez ")
-		value = value.replace("Cut ", "1000° kniv vs ")
-		value = value.replace("Chiseled ", "Chizald ")
-		value = value.replace("Mossy Cobblestone ", "DURTY COBULSTOWN ")
-		value = value.replace("Cobblestone", "Cooblestoneh")
-		value = value.replace("Exposed", "Seen")
-		value = value.replace("Weathered", "Yucky old")
-		value = value.replace("Oxidized", "Old")
-		value = value.replace("Tuff", "Tff")
-		value = value.replace("Lamp", "lapm")
-		value = value.replace("Deepslate", "dark ston")
-		value = value.replace("Carpet", "Cat Rug")
-		value = value.replace("Light ", "Lite ")
-		value = value.replace("Blue ", "Bloo ")
-		value = value.replace("Purple ", "Parpal ")
-		value = value.replace("Brown ", "Brownish ")
-		value = value.replace("Magenta ", "Majenta ")
-		value = value.replace("Red ", "Redish ")
-		value = value.replace("Orange ", "Ornge ")
-		value = value.replace("Yellow ", "Yello ")
-		value = value.replace("Green ", "Greenish ")
-		value = value.replace("Cyan ", "Sighun ")
-		value = value.replace("Pink ", "Pinky ")
-		value = value.replace("Lime", "Limd")
-		value = value.replace("Poisonous", "yucky")
-		value = value.replace("Lit ", "Bright ")
-		value = value.replace("Terracotta", "Teracottah")
-		value = value.replace("Stairs", "Stairz")
-		value = value.replace("Wool", "Fur Bluk")
-		value = value.replace("Crafting Table", "Krafting Tabal")
-		value = value.replace("Gate", "dor")
-		value = value.replace("Wall", "Wal")
-		value = value.replace("Pressure Plate", "prueusure platt")
-		value = value.replace("Ladder", "Ladr")
-		value = value.replace("Pane", "Payn")
-		value = value.replace("Star", "Asterisk")
-		value = value.replace("Glass", "Glazz")
-		value = value.replace("Bars", "Jeil Bahz")
-		value = value.replace("Iron", "Irony")
-		value = value.replace("Door", "Dor")
-		value = value.replace("Gold", "Shiny")
-		value = value.replace("Crimson", "Crimzn")
-		value = value.replace("Warped", "Warpt")
+	}
+	else {
+		value = value.replace("Block", "bluk")
+	}
+
+	if (Math.floor(Math.random() * 2) == 0) {
+		value = value.replace("Slab", "Sleb")
+	}
+	else {
+		value = value.replace("Slab", "half blok")
+	}
+	return value;
 
 
-	
-		if (Math.floor(Math.random() * 2) == 0) {
-			value = value.replace("Stained", "Staned")
-		}
-		else {
-			value = value.replace("Stained", "Stainedly")
-		}
-	
-	
-		if (Math.floor(Math.random() * 2) == 0) {
-			value = value.replace("Copper", "cuprr")
-		}
-		else {
-			value = value.replace("Copper", "copurr")
-		}
-	
-		if (Math.floor(Math.random() * 2) == 0) {
-			value = value.replace("Block", "Blak")
-		}
-		else {
-			value = value.replace("Block", "bluk")
-		}
-	
-		if (Math.floor(Math.random() * 2) == 0) {
-			value = value.replace("Slab", "Sleb")
-		}
-		else {
-			value = value.replace("Slab", "half blok")
-		}
-		return value;
-	
-	
-	},
+}
+
+module.exports = {
+	catify: catify,
 
 	upsideDownify: upsideDownify,
 
-	flipTranslationFile: flipTranslationFile
+	flipTranslationFile: flipTranslationFile,
+
+	generateBlockLang: generateBlockLang,
+
+	writeLang: writeLang,
+
+	generateLang: generateLang
 }

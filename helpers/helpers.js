@@ -124,6 +124,50 @@ function getDyeNamespace(dye) {
     }
 }
 
+function getDyeIngredient(dye) {
+	switch (dye) {
+		case "glow_dye":
+			return "minecraft:glow_ink_sac"
+		case "dragon_dye":
+			return "minecraft:dragon_breath"
+		case "star_dye":
+			return "minecraft:nether_star"
+		case "honey_dye":
+			return "minecraft:honeycomb"
+		case "rose_dye":
+			return ["minecraft:red_dye", "minecraft:pink_dye"]
+		case "nostalgia_dye":
+			return "minecraft:apple"
+		case "poisonous_dye":
+			return "minecraft:poisonous_potato"
+	}
+}
+
+function versionAbove(version) {
+	const localMajor = parseInt(version.split(".")[1])
+	const localMinor = parseInt(version.split(".")[2])
+
+	if ((localMajor < majorVersion)) {
+		console.log(localMajor, majorVersion)
+		return true;
+	}
+	else if ((majorVersion === localMajor) && (minorVersion >= localMinor)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+
+function populateTemplates() {
+	const templatePath = "./overrides/models/templates/"
+	const templates = fs.readdirSync(templatePath)
+	templates.forEach(function(template) {
+		writeFileSafe(`${paths.models}${template}`, readFile(templatePath + template))
+	})
+}
+
 module.exports = {
     modID: modID,
     mc: mc,
@@ -176,5 +220,9 @@ module.exports = {
         }
     },
 
-    getDyeNamespace: getDyeNamespace
+    getDyeNamespace: getDyeNamespace,
+    getDyeIngredient: getDyeIngredient,
+    
+    versionAbove: versionAbove,
+    populateTemplates: populateTemplates
 }
