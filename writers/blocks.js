@@ -183,13 +183,13 @@ function writeBlock(block, namespace, blockType, baseBlock, render_type, altName
 	}
 	else if (blockType.includes("smooth_resource")) {
 		const blockType = block.split("smooth_")[1]
-		tagHelper.tagBlock(block, blockType)
+		tagHelper.checkAndAddResourceTag(block, block)
 		tagHelper.checkAndAddBeaconTag(block, blockType)
 		tagHelper.tagBlock(block, "smooth_blocks")
 	}
 	else if (blockType.includes("cut_")) {
 		const blockType = block.split("cut_")[1]
-		tagHelper.tagBlock(block, blockType)
+		tagHelper.checkAndAddResourceTag(block, block)
 		tagHelper.checkAndAddBeaconTag(block, blockType)
 		tagHelper.tagBlock(block, "cut_blocks")
 	}
@@ -563,7 +563,7 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	lootTableWriter.writeLootTables(block)
 
 	// Tag slabs
-	tagHelper.tagBlock(block, "minecraft:slabs")
+	tagHelper.tagBoth(block, "minecraft:slabs")
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_slabs")
 		tagHelper.checkAndAddStainedTag(block, baseBlock)
@@ -591,38 +591,43 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	}
 }
 
-function writePlates(block, namespace, baseBlock, altNamespace) {
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
+function writePlates(block, baseBlockID, texture) {
+	let namespace = modID
+	if (block.includes(":"))
+		namespace = helpers.getNamespace(block)
+	if (texture == undefined)
+		texture = baseBlockID
+	let baseBlockPath = helpers.getPath(baseBlockID)
 	const plateBlockState = stateHelper.genPressurePlates(block, namespace)
 	blockstateHelper.writeBlockstate(block, plateBlockState)
-	modelWriter.writePressurePlates(block, altNamespace, baseBlock)
+	modelWriter.writePressurePlates(block, texture)
 	itemModelWriter.writeBlockItemModel(block, namespace, namespace)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block)
 
-	if (baseBlock.includes("planks")) {
+	if (baseBlockPath.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_pressure_plates", true)
-		tagHelper.checkAndAddStainedTag(block, baseBlock)
+		tagHelper.checkAndAddStainedTag(block, baseBlockPath)
 	}
 	else {
 		tagHelper.tagBlock(block, "minecraft:pressure_plates", true)
 	}
-	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
-	recipeWriter.writeRecipes(block, "plates", baseBlock)
+	writeRecipeAdvancement(id(block), baseBlockID)
+	recipeWriter.writeRecipes(block, "plates", baseBlockID)
 }
 
-function writeButtons(block, namespace, baseBlock, altNamespace, type) {
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
+function writeButtons(block, baseBlockID, texture, type) {
+	let namespace = modID
+	if (block.includes(":"))
+		namespace = helpers.getNamespace(block)
+	let baseNamespace = helpers.getNamespace(baseBlockID)
+	let baseBlock = helpers.getPath(baseBlockID)
 	if (type == undefined) {
 		type = "buttons"
 	}
-	let buttonBlockState = stateHelper.genButtons(block, namespace, baseBlock)
+	let buttonBlockState = stateHelper.genButtons(block, modID, baseBlock)
 	blockstateHelper.writeBlockstate(block, buttonBlockState)
-	modelWriter.writeButtons(block, altNamespace, baseBlock)
+	modelWriter.writeButtons(block, baseNamespace, texture)
 	itemModelWriter.writeInventoryModel(block)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block)
@@ -633,8 +638,8 @@ function writeButtons(block, namespace, baseBlock, altNamespace, type) {
 	else {
 		tagHelper.tagBoth(block, "metal_buttons", true)
 	}
-	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
-	recipeWriter.writeRecipes(block, type, baseBlock, namespace, altNamespace)
+	writeRecipeAdvancement(id(block),baseBlockID)
+	recipeWriter.writeRecipes(block, type, baseBlock, namespace, baseNamespace)
 }
 
 function writeFences(block, namespace, baseBlock) {

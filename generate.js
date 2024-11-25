@@ -5,6 +5,8 @@ const recipeWriter = require('./writers/recipes');
 const blockWriter = require("./writers/blocks")
 const { writeRecipeAdvancement } = require('./writers/advancements');
 const itemModelWriter = require('./writers/item_models');
+const constants = require('./helpers/constants');
+
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
 const id = helpers.id;
@@ -47,8 +49,6 @@ const vanillaWalls = [
 	"end_stone_brick",
 ];
 
-const vanillaResources = ["iron", "gold", "emerald", "diamond", "netherite", "quartz", "amethyst", "lapis", "redstone", "copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
-
 let blockIDs = []
 
 class Block {  // Create a class
@@ -75,9 +75,6 @@ class Block {  // Create a class
 		let stonelike = false;
 		if ((material === "stone") || (material.includes("brick"))) {
 			stonelike = true;
-		}
-		if (material.includes("mossy")) {
-			stonelike = false
 		}
 
 		//Generate block state
@@ -121,7 +118,7 @@ class Block {  // Create a class
 			blockWriter.writeCraftingTableBlock(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
 		else if (blockType === "button") {
-			blockWriter.writeButtons(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
+			blockWriter.writeButtons(this.blockID, id(this.baseNamespace, this.baseBlock), id(this.baseNamespace, this.baseBlock))
 		}
 		else if (blockType === "torch") {
 			blockWriter.writeTorchBlock(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
@@ -134,16 +131,22 @@ class Block {  // Create a class
 			tagHelper.tagBoth(this.blockID, "mushroom_stem")
 		}
 		else if (blockID.includes("cobblestone_bricks") || (blockType === "terracotta_bricks")) {
+			if (material.includes("mossy")) {
+				stonelike = false
+			}
 			blockWriter.writeTerracottaBricks(this.blockID, this.namespace, blockType, this.baseBlock, stonelike)
 		}
-		else if ((blockType === "stone_bricks") || (blockType === "mossy_stone_bricks")) {
+		else if ((blockType === "stone_bricks") || (blockType === "mossy_stone_bricks") || (blockType === "cut_stone")) {
+			if (material.includes("mossy")) {
+				stonelike = false
+			}
 			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), stonelike, true)
 		}
 		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane")) {
 			blockWriter.writePanes(this.blockID, this.namespace, this.baseBlock)
 		}
 		else if (blockType === "pressure_plate") {
-			blockWriter.writePlates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
+			blockWriter.writePlates(this.blockID, id(this.baseNamespace, this.baseBlock))
 		}
 		else if (blockType == "framed_glass") {
 			tagHelper.tagBoth(blockID, "c:glass_blocks/colorless")
@@ -169,21 +172,11 @@ class Block {  // Create a class
 			else if (blockType == "bricks")
 				recipeIngredient = "minecraft:bricks"
 			else if (blockType == "lamp")
-				recipeIngredient = "pyrite:glowstone_lamp"
+				recipeIngredient = id("glowstone_lamp")
 			else
 				recipeIngredient = "minecraft:nether_bricks"
 				blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, undefined, undefined, recipeIngredient)
 		}
-
-		//Generate block loot table
-		// if (blockType === "door") {
-		// 	lootTableWriter.writeDoorLootTables(this.blockID, this.namespace)
-
-		// }
-		// else {
-		// 	writeLootTables(this.blockID, this.namespace)
-
-		// }
 
 	}
 	generateFullID() {
@@ -249,6 +242,22 @@ function generateResources() {
 
 	}
 
+	function generateCutSet(template, type, baseBlock) {
+		if (type === undefined) {
+			type = "cut"
+		}
+		if (baseBlock === undefined) {
+			baseBlock = template
+		}
+
+		new Block(template, type, baseBlock, baseBlock)
+		new Block(template + "_slab", "slab", template, type)
+		new Block(template + "_stairs", "stairs", template, type)
+		new Block(template + "_wall", "wall", id(modID, template), type)
+		new Block(template + "_wall_gate", "wall_gate", id(modID, template), type)
+
+	}
+
 	function generateMossyBrickSet(bricksBase, baseBlockID) {
 		const mossyBricksBase = "mossy_" + bricksBase
 		generateBrickSet(mossyBricksBase, "mossy_stone_bricks", baseBlockID)
@@ -307,32 +316,41 @@ function generateResources() {
 		new Block(dye + "_framed_glass_pane", "stained_framed_glass_pane", dye, "stained_framed_glass_pane")
 	})
 
+	// Vanilla Crafting Tables
 	writeCraftingTablesFromArray(vanillaWood, mc)
 	if (helpers.versionAbove("1.21.4")) {
 		writeCraftingTablesFromArray(["pale_oak"], mc)
 	}
 
+	// Aether compat
 	writeCraftingTablesFromArray(["skyroot"], "aether")
 	writeWallGatesFromArray(["holystone", "mossy_holystone", "holystone_brick", "icestone", "aerogel", "carved", "angelic", "hellfire"], "aether", ["holystone", "mossy_holystone", "holystone_bricks", "icestone", "aerogel", "carved_stone", "angelic_stone", "hellfire_stone"])
 
-
-	const shroomBlockTemplate = "_mushroom"
-	const redShroom = "red" + shroomBlockTemplate
-	const brownShroom = "brown" + shroomBlockTemplate
+	// Red Mushroom
+	const redShroom = "red_mushroom"
 	generateWoodSet(redShroom)
 	red_stem = new Block(redShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
+	// Brown Mushroom
+	const brownShroom = "brown_mushroom"
 	generateWoodSet(brownShroom)
 	brown_stem = new Block(brownShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
 
+	// Cobblestone
 	generateBrickSet("cobblestone_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
 	generateBrickSet("sandstone_bricks", "terracotta_bricks", "minecraft:cut_sandstone", false)
 	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true)
+	// Granite
 	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true)
+	// Andesite
 	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
+	// Diorite
 	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true)
+	// Calcite
 	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true)
+	// Tuff
 	if (majorVersion > 20)
 		generateMossyBrickSet("tuff_bricks", "minecraft:tuff_bricks")
+	// Deepslate
 	generateMossyBrickSet("deepslate_bricks", "minecraft:deepslate_bricks")
 
 	blockWriter.writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
@@ -423,7 +441,7 @@ function generateResources() {
 		writeWallGatesFromArray(["resin_brick"])
 	}
 
-	vanillaResources.forEach(function (block) {
+	constants.vanillaResourceBlocks.forEach(function (block) {
 		let baseBlock = block
 		let altNamespace;
 		let cutBlock = `cut_${block}`
@@ -497,11 +515,12 @@ function generateResources() {
 		// Unoxidized Copper Blocks use `copper_block` as their texture ID
 		if (block === "copper") {
 			baseTexture = baseBlock + "_block";
+			baseBlock = baseBlock + "_block"
 		}
-		blockWriter.writeButtons(block + "_button", modID, id(mc, baseTexture), mc, "metal_buttons")
+		blockWriter.writeButtons(block + "_button", id(mc, baseBlock), id(mc, baseTexture), "metal_buttons")
 		// Iron and Gold Pressure Plates already exist.
 		if (!((block === "gold") || (block === "iron"))) {
-			blockWriter.writePlates(block + "_pressure_plate", modID, id(mc, baseTexture), mc)
+			blockWriter.writePlates(block + "_pressure_plate", id(mc, baseBlock), id(mc, baseTexture))
 		}
 
 	})
@@ -539,6 +558,7 @@ function generateResources() {
 
 	// Add Pyrite tags to Pyrite tags
 	tagHelper.tagBlock("#pyrite:terracotta_bricks", "bricks")
+	recipeWriter.writeShapelessRecipe("#pyrite:crafting_tables", "minecraft:crafting_table", 1, "s")
 
 	// Generate translations for Pyrite item tags.
 	const newModTags = [

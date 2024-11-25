@@ -1,3 +1,4 @@
+const { vanillaResourceBlocks: vanillaResources } = require('./constants');
 const helpers = require('./helpers');
 const fs = require('fs');
 const id = helpers.id
@@ -111,12 +112,13 @@ function checkAndAddBeaconTag(block, baseBlock) {
 }
 
 function checkAndAddResourceTag(block, baseBlock) {
-	if (baseBlock.includes("smooth_")) {
-		tagBlock(block, baseBlock.split("smooth_")[1])
-	}
-	else if (baseBlock.includes("cut_")) {
-		tagBlock(block, baseBlock.split("cut_")[1])
-	}
+	let base;
+	if (baseBlock.includes("smooth_"))
+		base = baseBlock.split("smooth_")[1]
+	else if (baseBlock.includes("cut_"))
+		base = baseBlock.split("cut_")[1]
+	if (vanillaResources.includes(base))
+		tagBlock(block, base)
 }
 
 function checkAndAddDyedTag(block, baseBlock, blockOnly) {

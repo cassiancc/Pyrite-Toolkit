@@ -130,19 +130,19 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_outer.json`, modelHelper.generateStairBlockModel(block, namespace, baseBlock, "outer_stairs"));
     },
     
-    writeButtons: function writeButtonBlockModels(block, namespace, baseBlock) {
+    writeButtons: function writeButtonBlockModels(block, namespace, texture) {
         if (namespace == undefined) {
             namespace = modID
         }
-        if (!baseBlock.includes(":")) {
-            baseBlock = id(modID, baseBlock)
+        if (!texture.includes(":")) {
+            texture = id(modID, texture)
         }
     
         const generate = modelHelper.generateBlockModel
         
-        const buttonModel = generate(block, namespace, baseBlock, "button", undefined, "texture")
-        const buttonModelInventory = generate(block, namespace, baseBlock, "button_inventory", undefined, "texture")
-        const buttonModelPressed = generate(block, namespace, baseBlock, "button_pressed", undefined, "texture")
+        const buttonModel = generate(block, namespace, texture, "button", undefined, "texture")
+        const buttonModelInventory = generate(block, namespace, texture, "button_inventory", undefined, "texture")
+        const buttonModelPressed = generate(block, namespace, texture, "button_pressed", undefined, "texture")
         
         writeFile(`${helpers.modelPath}${block}.json`, buttonModel)
         writeFile(`${helpers.modelPath}${block}_inventory.json`, buttonModelInventory);
@@ -159,13 +159,14 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_top.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
     },
     
-    writePressurePlates: function writePlateBlockModels(block, namespace, baseBlock) {
-        if (baseBlock.includes(":")) {
-            namespace = baseBlock.split(":")[0]
-            baseBlock = baseBlock.split(":")[1]
+    writePressurePlates: function writePlateBlockModels(block, texture) {
+        let namespace = modID;
+        if (texture.includes(":")) {
+            namespace = texture.split(":")[0]
+            texture = texture.split(":")[1]
         }
-        const plateModel = modelHelper.generateBlockModel(block, namespace, id(namespace, baseBlock), "pressure_plate_up", undefined, "texture")
-        const plateModelDown = modelHelper.generateBlockModel(block, namespace, id(namespace, baseBlock), "pressure_plate_down", undefined, "texture")
+        const plateModel = modelHelper.generateBlockModel(block, namespace, id(namespace, texture), "pressure_plate_up", undefined, "texture")
+        const plateModelDown = modelHelper.generateBlockModel(block, namespace, id(namespace, texture), "pressure_plate_down", undefined, "texture")
     
         writeFile(`${helpers.modelPath}${block}.json`, plateModel);
         writeFile(`${helpers.modelPath}${block}_down.json`, plateModelDown);

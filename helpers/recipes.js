@@ -213,14 +213,6 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	}
 	let recipe = ""
 
-	// Fix Quartz texture IDs being used as part of the recipe
-	if (base != undefined) {
-		if (base.includes("quartz")) {
-			base = base.replace("_bottom", "")
-			base = base.replace("_top", "")
-		}
-	}
-
 	if (type === "planks") {
 		if ((base === "red_mushroom") || (base === "brown_mushroom")) {
 			recipe = generateShapelessRecipe(`pyrite:${base}_stem`, id(namespace, block), 4)
@@ -313,8 +305,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			])
 		}
 		else if (block === "lit_redstone_lamp") {
-			// console.log(block)
-			generateShapelessRecipe([id(mc, "redstone_torch"), id(mc, "redstone_lamp")], id(modID, block), 1)
+			recipe = generateShapelessRecipe([id(mc, "redstone_torch"), id(mc, "redstone_lamp")], id(modID, block), 1)
 		} 
 		else {
 			base = `${base}_dye`

@@ -1,5 +1,6 @@
 const recipeHelper = require('../helpers/recipes');
 const helpers = require('../helpers/helpers');
+const { writeRecipeAdvancement } = require('./advancements');
 
 const id = helpers.id
 
@@ -55,8 +56,10 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 		path = block.split(":")[1]
 	}
 	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity, "stonecutting")
+	const fullPath = `${addon}${path}_stonecutting`
+	writeRecipeAdvancement(id(fullPath), ingredient)
 	if (recipe !== undefined) {
-		helpers.writeFile(`${helpers.recipePath}${addon}${path}_stonecutting.json`, recipe)
+		helpers.writeFile(helpers.recipePath + fullPath +`.json`, recipe)
 	}
 }
 
