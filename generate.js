@@ -324,7 +324,8 @@ function generateResources() {
 	generateWoodSet(brownShroom)
 	brown_stem = new Block(brownShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
 
-	generateBrickSet("cobblestone_bricks", "cobblestone_bricks", "minecraft:cobblestone", true)
+	generateBrickSet("cobblestone_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
+	generateBrickSet("sandstone_bricks", "terracotta_bricks", "minecraft:cut_sandstone", false)
 	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true)
 	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true)
 	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
