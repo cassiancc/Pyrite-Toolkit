@@ -79,7 +79,7 @@ class Block {  // Create a class
 		this.addTranslation()
 
 		let stonelike = false;
-		if ((material === "stone") || (material.includes("brick"))) {
+		if ((material === "stone") || (material.includes("brick")) || (material === "concrete")) {
 			stonelike = true;
 		}
 
@@ -90,10 +90,10 @@ class Block {  // Create a class
 			blockWriter.writeBlock(id(this.namespace, this.blockID), special, this.baseBlock, undefined, textureID, stonelike, true)
 		}
 		else if (blockType === "slab") {
-			blockWriter.writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
+			blockWriter.writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), textureID, stonelike)
 		}
 		else if (blockType === "stairs") {
-			blockWriter.writeStairs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
+			blockWriter.writeStairs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), textureID, stonelike)
 		}
 		else if (blockType === "wall") {
 			blockWriter.writeWalls(this.blockID, this.baseBlock, this.baseBlock)
@@ -170,10 +170,10 @@ class Block {  // Create a class
 		else if (blockType == "nostalgia_grass_block") {
 			blockWriter.writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock))
 		}
-		else if (blockType == "nostalgia") {
+		else if ((blockType == "nostalgia") || (blockType == "nostalgia_resource")) {
 			if (textureID == undefined)
 				this.textureID = id(this.blockID)
-			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, true, true)
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, stonelike, true)
 		}
 		else {
 			let recipeIngredient;
@@ -183,8 +183,11 @@ class Block {  // Create a class
 				recipeIngredient = "minecraft:bricks"
 			else if (blockType == "lamp")
 				recipeIngredient = id("glowstone_lamp")
-			else
+			else if (blockType.includes("nether_bricks"))
 				recipeIngredient = "minecraft:nether_bricks"
+			else {
+				recipeIngredient = this.baseBlock
+			}
 			if (textureID == undefined)
 				this.textureID = id(this.blockID)
 			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, stonelike, recipeIngredient)
@@ -250,8 +253,6 @@ function generateResources() {
 		if (shouldGenerateMossyBrickSet === true) {
 			generateMossyBrickSet(bricksBase, id(bricksBase))
 		}
-			
-
 	}
 
 	function generateCutSet(template, type, baseBlock) {
@@ -291,8 +292,8 @@ function generateResources() {
 			}
 			// If not, try and assume the base block.
 			else {
-				baseBlock = `${baseBlock.replace("brick", "bricks")}`
-				baseBlock = `${baseBlock.replace("tile", "tiles")}`
+				baseBlock = baseBlock.replace("brick", "bricks")
+				baseBlock = baseBlock.replace("tile", "tiles")
 			}
 			new Block(blockTemplate + "_wall_gate", "wall_gate", id(namespace, baseBlock), "stone")
 			i++
@@ -377,35 +378,25 @@ function generateResources() {
 	blockWriter.writePanes("framed_glass_pane", modID, "framed_glass")
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
+	function generateTurfSet(block, baseBlockID) {
+		const turf = block + "_turf"
+		const texture = baseBlockID + "_top"
+		blockWriter.writeBlock(turf, "turf", baseBlockID, undefined, texture)
+		new Block(block + "_slab", "slab", turf, "turf", texture)
+		new Block(block + "_stairs", "stairs", turf, "turf", texture)
+		blockWriter.writeCarpet(block + "_carpet", modID, texture, modID)
+	}
+
 	// Nostalgia Turf Set
-	blockWriter.writeBlock("nostalgia_grass_turf", "nostalgia_grass_turf", id(modID, "nostalgia_grass_block"), undefined, "pyrite:nostalgia_grass_block_top")
-	blockWriter.writeSlabs("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
-	blockWriter.writeStairs("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
-	blockWriter.writeCarpet("nostalgia_grass_carpet", modID, "nostalgia_grass_block_top", modID)
-
-	// Podzol Turf Set
-	blockWriter.writeBlock("podzol_turf", "podzol_turf", id(mc, "podzol"), undefined, "minecraft:podzol_top")
-	blockWriter.writeSlabs("podzol_slab", "podzol_turf", "minecraft:podzol_top")
-	blockWriter.writeStairs("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
-	blockWriter.writeCarpet("podzol_carpet", modID, "podzol_top", mc)
-
+	generateTurfSet("nostalgia_grass", "pyrite:nostalgia_grass_block")
+	// Podzol
+	generateTurfSet("podzol", id(mc, "podzol"))
 	// Grass Turf Set
-	blockWriter.writeBlock("grass_turf", "grass_turf", id(mc, "grass_block"), undefined, "minecraft:grass_block_top")
-	blockWriter.writeSlabs("grass_slab", "grass_turf", "minecraft:grass_block_top")
-	blockWriter.writeStairs("grass_stairs", "grass_turf", "minecraft:grass_block_top")
-	blockWriter.writeCarpet("grass_carpet", modID, "minecraft:grass_block_top", mc)
-
+	generateTurfSet("grass", id(mc, "grass_block"))
 	// Mycelium Turf Set
-	blockWriter.writeBlock("mycelium_turf", "mycelium_turf", id(mc, "mycelium"), undefined, "minecraft:mycelium_top")
-	blockWriter.writeSlabs("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
-	blockWriter.writeStairs("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
-	blockWriter.writeCarpet("mycelium_carpet",modID, "mycelium_top", mc)
-
+	generateTurfSet("mycelium", id(mc, "mycelium"))
 	// Path Turf Set
-	blockWriter.writeBlock("path_turf", "path_turf", id(mc, "dirt_path"), undefined, "minecraft:dirt_path_top")
-	blockWriter.writeSlabs("path_slab", "path_turf", "minecraft:dirt_path_top")
-	blockWriter.writeStairs("path_stairs", "path_turf", "minecraft:dirt_path_top")
-	blockWriter.writeCarpet("path_carpet", modID, "dirt_path_top", mc)
+	generateTurfSet("path", id(mc, "dirt_path"))
 
 	// Pyrite Dyes, Wool, Carpet, Terracotta
 	helpers.vanillaDyes.forEach(function (dye) {
@@ -423,17 +414,19 @@ function generateResources() {
 		const concrete = dye + "_concrete"
 		blockWriter.writeConcrete(dye, dye, modID)
 		blockWriter.writeConcretePowder(dye, dye, modID)
-		blockWriter.writeSlabs(concrete + "_slab", id(modID, concrete), id(modID, concrete), true)
-		blockWriter.writeStairs(concrete + "_stairs", id(modID, concrete), id(modID, concrete), true)
+		new Block(concrete + "_slab", "slab", id(modID, concrete), "concrete", id(modID, concrete))
+		new Block(concrete + "_stairs", "stairs", id(modID, concrete), "concrete", id(modID, concrete))
 	})
 
 	// Lamps
+	// new Block("glowstone_lamp", "lamp", id(mc, "glowstone"), "glass")
+	// new Block("lit_redstone_lamp", "lit_redstone", id(mc, "glowstone"), "glass", id(mc, "redstone_lamp_on"))
 	blockWriter.writeLamps("glowstone_lamp", "glowstone")
 	blockWriter.writeLamps("lit_redstone_lamp", "lit_redstone", "minecraft:redstone_lamp_on")
 
 	// April Fools Blocks
-	blockWriter.writeBlock("glowing_obsidian", "glowing_obsidian", "glowing_obsidian")
-	blockWriter.writeBlock("nostalgia_glowing_obsidian", "glowing_obsidian", "glowing_obsidian")
+	new Block("glowing_obsidian", "glowing_obsidian", id(mc, "obsidian"), "obsidian")
+	new Block("nostalgia_glowing_obsidian", "nostalgia", id("glowing_obsidian"), "obsidian")
 	new Block("locked_chest", "locked_chest", "locked_chest", "wood")
 
 	// Nether Brick Sets
@@ -491,13 +484,13 @@ function generateResources() {
 		else {
 			const smooth = `smooth_${block}`
 			const smoothID = id(modID, smooth)
-			blockWriter.writeBlock(smooth, "smooth_resource", id(mc, baseBlock), undefined, smooth, true, true)
-			blockWriter.writeSlabs(`${smooth}_slab`, smooth, smoothID, true)
-			blockWriter.writeStairs(`${smooth}_stairs`, smooth, smoothID, true)
+			new Block(smooth, "smooth_resource", id(mc, baseBlock), block)
+			new Block(`${smooth}_slab`, "slab", smoothID, block)
+			new Block(`${smooth}_stairs`, "stairs", smoothID, block)
 			blockWriter.writeWalls(`${smooth}_wall`, smoothID, smoothID)
 			blockWriter.writeWallGates(`${smooth}_wall_gate`, smoothID, smoothID)
 			blockWriter.writeBlock(block + "_bricks", "resource_bricks", id(altNamespace, cutBlock), undefined, block + "_bricks", true)
-			blockWriter.writeChiseledBlock(`${block}_pillar`, id(mc, baseBlock), modID, "resource_pillar")
+			blockWriter.writeChiseledBlock(`${block}_pillar`, id(mc, baseBlock), "resource_pillar")
 		}
 
 		// Iron Bars already exist
@@ -507,22 +500,22 @@ function generateResources() {
 		// Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
 		if (block.includes("copper")) {
 			if (majorVersion < 21) {
-				blockWriter.writeChiseledBlock(`chiseled_${block}_block`, id(mc, baseBlock), modID, "chiseled_resource")
-				blockWriter.writeDoors(`${block}_door`, id(mc, baseBlock))
-				blockWriter.writeTrapdoors(`${block}_trapdoor`, modID, id(mc, baseBlock))
+				blockWriter.writeChiseledBlock(`chiseled_${block}_block`, id(mc, baseBlock), "chiseled_resource")
+				new Block(`${block}_door`, "door", id(mc, baseBlock), block)
+				new Block(`${block}_trapdoor`, "trapdoor", id(mc, baseBlock), block)
 			}
 		}
 		else {
 			if (!block.includes("quartz")) {
-				blockWriter.writeChiseledBlock(`chiseled_${block}_block`, id(mc, baseBlock), modID, "chiseled_resource")
+				blockWriter.writeChiseledBlock(`chiseled_${block}_block`, id(mc, baseBlock), "chiseled_resource")
 			}
 			if (!block.includes("iron")) {
-				blockWriter.writeDoors(`${block}_door`, id(mc, baseBlock))
-				blockWriter.writeTrapdoors(`${block}_trapdoor`, modID, id(mc, baseBlock))
+				new Block(`${block}_door`, "door", id(mc, baseBlock), block)
+				new Block(`${block}_trapdoor`, "trapdoor", id(mc, baseBlock), block)
 			}
 		}
 
-		new Block(`nostalgia_${block}_block`, "nostalgia", id(mc, baseBlock), block)
+		new Block(`nostalgia_${block}_block`, "nostalgia_resource", id(mc, baseBlock), block)
 
 		// Unoxidized Copper Blocks use `copper_block` as their texture ID
 		if (block === "copper") {

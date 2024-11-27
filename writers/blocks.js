@@ -211,7 +211,7 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	else if (blockType.includes("obsidian")) (
 		tagHelper.tagBlock(block, "obsidian")
 	)
-	else if (blockType == "nostalgia") {
+	else if (blockType == "nostalgia_resource") {
 		tagHelper.tagBlock(block, block.split("nostalgia_")[1].split("_block")[0])
 	}
 
@@ -349,7 +349,12 @@ function writeFlower(block) {
 	writeRecipeAdvancement(block, id(mc, "poppy"))
 }
 
-function writeChiseledBlock(block, baseBlock, namespace, special) {
+function writeChiseledBlock(block, baseBlock, special) {
+	let namespace;
+	if (block.includes(":"))
+		namespace = helpers.getNamespace(block)
+	else
+		namespace = modID
 	blockState = `{"variants":{"axis=x":{"model":"${namespace}:block/${block}_horizontal","x":90,"y":90},"axis=y":{"model":"${namespace}:block/${block}"},"axis=z":{"model":"${namespace}:block/${block}_horizontal","x":90}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
 	modelWriter.writeColumns(block, namespace, baseBlock)
