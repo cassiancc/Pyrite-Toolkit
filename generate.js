@@ -5,7 +5,7 @@ const recipeWriter = require('./writers/recipes');
 const blockWriter = require("./writers/blocks")
 const { writeRecipeAdvancement } = require('./writers/advancements');
 const itemModelWriter = require('./writers/item_models');
-const constants = require('./helpers/constants');
+const vanillaConstants = require('./helpers/constants');
 
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
@@ -52,15 +52,21 @@ const vanillaWalls = [
 let blockIDs = []
 
 class Block {  // Create a class
-	constructor(blockID, blockType, baseBlock, material) {
+	constructor(blockID, blockType, baseBlock, material, textureID) {
 		// Initialize with basic variables
 		this.blockID = blockID;
 		this.namespace = modID
+		if (blockID.includes(":")) {
+			this.namespace = helpers.getNamespace(blockID)
+		}
 		if (!baseBlock.includes(":")) {
 			this.baseNamespace = this.namespace
 		}
 		else {
 			this.baseNamespace = helpers.getNamespace(baseBlock)
+		}
+		if (textureID == undefined) {
+			this.textureID = id(baseBlock)
 		}
 		this.blockType = blockType;
 		this.baseBlock = baseBlock;
@@ -79,7 +85,9 @@ class Block {  // Create a class
 
 		//Generate block state
 		if (blockType === "block") {
-			blockWriter.writeBlock(this.blockID, this.namespace, special, this.baseBlock, undefined, undefined, undefined, stonelike, true)
+			if (textureID == undefined)
+				this.textureID = id(this.blockID)
+			blockWriter.writeBlock(id(this.namespace, this.blockID), special, this.baseBlock, undefined, textureID, stonelike, true)
 		}
 		else if (blockType === "slab") {
 			blockWriter.writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), undefined, stonelike)
@@ -91,13 +99,13 @@ class Block {  // Create a class
 			blockWriter.writeWalls(this.blockID, this.baseBlock, this.baseBlock)
 		}
 		else if (blockType === "wall_gate") {
-			blockWriter.writeWallGates(this.blockID, this.baseBlock)
+			blockWriter.writeWallGates(this.blockID, this.baseBlock, this.textureID)
 		}
 		else if (blockType === "fence") {
 			blockWriter.writeFences(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
 		else if (blockType === "fence_gate") {
-			blockWriter.writeFenceGates(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
+			blockWriter.writeFenceGates(this.blockID, this.namespace, id(this.baseNamespace, this.baseBlock))
 		}
 		else if (blockType === "ladder") {
 			blockWriter.writeLadders(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
@@ -140,7 +148,7 @@ class Block {  // Create a class
 			if (material.includes("mossy")) {
 				stonelike = false
 			}
-			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), stonelike, true)
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, id(this.namespace, this.blockID), stonelike, true)
 		}
 		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane")) {
 			blockWriter.writePanes(this.blockID, this.namespace, this.baseBlock)
@@ -150,11 +158,11 @@ class Block {  // Create a class
 		}
 		else if (blockType == "framed_glass") {
 			tagHelper.tagBoth(blockID, "c:glass_blocks/colorless")
-			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "cutout", undefined, undefined, false, "minecraft:glass")
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, "cutout", undefined, false, "minecraft:glass")
 		}
 		else if (blockType == "stained_framed_glass") {
 			tagHelper.tagBoth(blockID, "c:glass_blocks")
-			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, "translucent", undefined, undefined, undefined, "pyrite:framed_glass")
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, "translucent", undefined, undefined, "pyrite:framed_glass")
 		}
 		else if (blockType == "locked_chest") {
 			blockWriter.writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
@@ -163,7 +171,9 @@ class Block {  // Create a class
 			blockWriter.writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock))
 		}
 		else if (blockType == "nostalgia") {
-			blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, id(this.namespace, this.blockID), true, true)
+			if (textureID == undefined)
+				this.textureID = id(this.blockID)
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, true, true)
 		}
 		else {
 			let recipeIngredient;
@@ -175,7 +185,9 @@ class Block {  // Create a class
 				recipeIngredient = id("glowstone_lamp")
 			else
 				recipeIngredient = "minecraft:nether_bricks"
-				blockWriter.writeBlock(this.blockID, this.namespace, this.blockType, this.baseBlock, undefined, undefined, undefined, undefined, recipeIngredient)
+			if (textureID == undefined)
+				this.textureID = id(this.blockID)
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, stonelike, recipeIngredient)
 		}
 
 	}
@@ -353,10 +365,10 @@ function generateResources() {
 	// Deepslate
 	generateMossyBrickSet("deepslate_bricks", "minecraft:deepslate_bricks")
 
-	blockWriter.writeBlock("nostalgia_cobblestone", modID, "nostalgia_cobblestone", "nostalgia_cobblestone")
-	blockWriter.writeBlock("nostalgia_mossy_cobblestone", modID, "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
-	blockWriter.writeBlock("nostalgia_netherrack", modID, "nostalgia_netherrack", "nostalgia_netherrack")
-	blockWriter.writeBlock("nostalgia_gravel", modID, "nostalgia_gravel", "nostalgia_gravel")
+	blockWriter.writeBlock("nostalgia_cobblestone", "nostalgia_cobblestone", "nostalgia_cobblestone")
+	blockWriter.writeBlock("nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
+	blockWriter.writeBlock("nostalgia_netherrack", "nostalgia_netherrack", "nostalgia_netherrack")
+	blockWriter.writeBlock("nostalgia_gravel", "nostalgia_gravel", "nostalgia_gravel")
 	new Block("nostalgia_grass_block", "nostalgia_grass_block", "grass_block", "grass")
 
 	//Framed Glass
@@ -366,31 +378,31 @@ function generateResources() {
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
 	// Nostalgia Turf Set
-	blockWriter.writeBlock("nostalgia_grass_turf", modID, "nostalgia_grass_turf", id(modID, "nostalgia_grass_block"), undefined, modID, "pyrite:nostalgia_grass_block_top")
+	blockWriter.writeBlock("nostalgia_grass_turf", "nostalgia_grass_turf", id(modID, "nostalgia_grass_block"), undefined, "pyrite:nostalgia_grass_block_top")
 	blockWriter.writeSlabs("nostalgia_grass_slab", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	blockWriter.writeStairs("nostalgia_grass_stairs", "nostalgia_grass_turf", "nostalgia_grass_block_top")
 	blockWriter.writeCarpet("nostalgia_grass_carpet", modID, "nostalgia_grass_block_top", modID)
 
 	// Podzol Turf Set
-	blockWriter.writeBlock("podzol_turf", modID, "podzol_turf", id(mc, "podzol"), undefined, mc, "minecraft:podzol_top")
+	blockWriter.writeBlock("podzol_turf", "podzol_turf", id(mc, "podzol"), undefined, "minecraft:podzol_top")
 	blockWriter.writeSlabs("podzol_slab", "podzol_turf", "minecraft:podzol_top")
 	blockWriter.writeStairs("podzol_stairs", "podzol_turf", "minecraft:podzol_top")
 	blockWriter.writeCarpet("podzol_carpet", modID, "podzol_top", mc)
 
 	// Grass Turf Set
-	blockWriter.writeBlock("grass_turf", modID, "grass_turf", id(mc, "grass_block"), undefined, mc, "minecraft:grass_block_top")
+	blockWriter.writeBlock("grass_turf", "grass_turf", id(mc, "grass_block"), undefined, "minecraft:grass_block_top")
 	blockWriter.writeSlabs("grass_slab", "grass_turf", "minecraft:grass_block_top")
 	blockWriter.writeStairs("grass_stairs", "grass_turf", "minecraft:grass_block_top")
 	blockWriter.writeCarpet("grass_carpet", modID, "minecraft:grass_block_top", mc)
 
 	// Mycelium Turf Set
-	blockWriter.writeBlock("mycelium_turf", modID, "mycelium_turf", id(mc, "mycelium"), undefined, mc, "minecraft:mycelium_top")
+	blockWriter.writeBlock("mycelium_turf", "mycelium_turf", id(mc, "mycelium"), undefined, "minecraft:mycelium_top")
 	blockWriter.writeSlabs("mycelium_slab", "mycelium_turf", "minecraft:mycelium_top")
 	blockWriter.writeStairs("mycelium_stairs", "mycelium_turf", "minecraft:mycelium_top")
-	blockWriter.writeCarpet("mycelium_carpet", modID, "mycelium_top", mc)
+	blockWriter.writeCarpet("mycelium_carpet",modID, "mycelium_top", mc)
 
 	// Path Turf Set
-	blockWriter.writeBlock("path_turf", modID, "path_turf", id(mc, "dirt_path"), undefined, mc, "minecraft:dirt_path_top")
+	blockWriter.writeBlock("path_turf", "path_turf", id(mc, "dirt_path"), undefined, "minecraft:dirt_path_top")
 	blockWriter.writeSlabs("path_slab", "path_turf", "minecraft:dirt_path_top")
 	blockWriter.writeStairs("path_stairs", "path_turf", "minecraft:dirt_path_top")
 	blockWriter.writeCarpet("path_carpet", modID, "dirt_path_top", mc)
@@ -420,8 +432,8 @@ function generateResources() {
 	blockWriter.writeLamps("lit_redstone_lamp", "lit_redstone", "minecraft:redstone_lamp_on")
 
 	// April Fools Blocks
-	blockWriter.writeBlock("glowing_obsidian", modID, "glowing_obsidian", "glowing_obsidian")
-	blockWriter.writeBlock("nostalgia_glowing_obsidian", modID, "glowing_obsidian", "glowing_obsidian")
+	blockWriter.writeBlock("glowing_obsidian", "glowing_obsidian", "glowing_obsidian")
+	blockWriter.writeBlock("nostalgia_glowing_obsidian", "glowing_obsidian", "glowing_obsidian")
 	new Block("locked_chest", "locked_chest", "locked_chest", "wood")
 
 	// Nether Brick Sets
@@ -441,7 +453,7 @@ function generateResources() {
 		writeWallGatesFromArray(["resin_brick"])
 	}
 
-	constants.vanillaResourceBlocks.forEach(function (block) {
+	vanillaConstants.vanillaResourceBlocks.forEach(function (block) {
 		let baseBlock = block
 		let altNamespace;
 		let cutBlock = `cut_${block}`
@@ -460,7 +472,7 @@ function generateResources() {
 		else {
 			baseBlock = baseTexture;
 			altNamespace = modID
-			blockWriter.writeBlock(cutBlock, modID, cutBlock, id(mc, baseBlock), undefined, undefined, cutBlock, true, true)
+			blockWriter.writeBlock(cutBlock, cutBlock, id(mc, baseBlock), undefined, cutBlock, true, true)
 			blockWriter.writeSlabs(`${cutBlock}_slab`, cutBlock, id(modID, cutBlock), true)
 			blockWriter.writeStairs(`${cutBlock}_stairs`, cutBlock, id(modID, cutBlock), true)
 			blockWriter.writeWalls(`cut_${block}_wall`, id(altNamespace, cutBlock))
@@ -479,12 +491,12 @@ function generateResources() {
 		else {
 			const smooth = `smooth_${block}`
 			const smoothID = id(modID, smooth)
-			blockWriter.writeBlock(smooth, modID, "smooth_resource", id(mc, baseBlock), undefined, undefined, smooth, true, true)
+			blockWriter.writeBlock(smooth, "smooth_resource", id(mc, baseBlock), undefined, smooth, true, true)
 			blockWriter.writeSlabs(`${smooth}_slab`, smooth, smoothID, true)
 			blockWriter.writeStairs(`${smooth}_stairs`, smooth, smoothID, true)
 			blockWriter.writeWalls(`${smooth}_wall`, smoothID, smoothID)
 			blockWriter.writeWallGates(`${smooth}_wall_gate`, smoothID, smoothID)
-			blockWriter.writeBlock(block + "_bricks", modID, "resource_bricks", id(altNamespace, cutBlock), undefined, modID, block + "_bricks", true)
+			blockWriter.writeBlock(block + "_bricks", "resource_bricks", id(altNamespace, cutBlock), undefined, block + "_bricks", true)
 			blockWriter.writeChiseledBlock(`${block}_pillar`, id(mc, baseBlock), modID, "resource_pillar")
 		}
 
@@ -534,7 +546,7 @@ function generateResources() {
 	blockWriter.writeFlower("pink_daisy")
 	blockWriter.writeFlower("buttercup")
 
-	blockWriter.writeFenceGates("nether_brick_fence_gate", modID, id(mc, "nether_bricks"), mc)
+	new Block("nether_brick_fence_gate", "fence_gate", id(mc, "nether_bricks"), "nether_bricks")
 	blockWriter.writePoweredBlock(id(modID, "switchable_glass"))
 
 	// Add Pyrite tags to MC/convention tags.

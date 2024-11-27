@@ -104,28 +104,43 @@ function writeDoors(block, baseBlock) {
 function writeTrapdoors(block, namespace, baseBlock) {
 	let doorBlockState = stateHelper.genTrapdoors(block, namespace, baseBlock)
 	blockstateHelper.writeBlockstate(block, doorBlockState, namespace)
+
+	// Models
 	modelWriter.writeTrapdoors(block, namespace, baseBlock)
 	itemModelWriter.writeTrapdoorItemModel(block, namespace)
+
+	// Loot Table
 	lootTableWriter.writeLootTables(block, namespace)
+
+	// Lang
 	langHelper.generateBlockLang(block)
-	if (baseBlock.includes("planks")) {
+
+	// Tags
+	if (baseBlock.includes("planks"))
 		tagHelper.tagBoth(block, "minecraft:wooden_trapdoors")
-	}
-	else {
+	else
 		tagHelper.tagBoth(block, "metal_trapdoors")
-	}
+
+	// Recipes
 	writeRecipeAdvancement(id(block), id(baseBlock))
 	recipeWriter.writeRecipes(block, "trapdoor", baseBlock)
 }
 
-function writeBlock(block, namespace, blockType, baseBlock, render_type, altNamespace, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements) {
-	if (altNamespace === undefined) {
-		altNamespace = namespace;
-
+function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements) {
+	// Setup
+	let namespace, block;
+	if (blockID.includes(":")) {
+		namespace = helpers.getNamespace(blockID)
+		block = helpers.getPath(blockID)
 	}
-	if (texture == undefined) {
+	else {
+		block = blockID;
+		namespace = modID 
+	}
+	if (texture == undefined)
 		texture = baseBlock
-	}
+
+	// Blockstates
 	blockstateHelper.writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
 	modelWriter.writeBlock(block, namespace, texture, undefined, render_type)
 	itemModelWriter.writeBlockItemModel(block, namespace)
@@ -657,17 +672,13 @@ function writeFences(block, namespace, baseBlock) {
 	recipeWriter.writeRecipes(block, "fences", baseBlock, namespace)
 }
 
-function writeFenceGates(block, namespace, baseBlock, altNamespace) {
-	if (namespace === undefined) {
-		namespace = modID
-	}
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
+function writeFenceGates(block, namespace, baseBlockID) {
+	const baseNamespace = helpers.getNamespace(baseBlockID)
+	const baseBlock = helpers.getPath(baseBlockID)
 	fenceGateBlockState = stateHelper.genFenceGates(block, namespace)
 	blockstateHelper.writeBlockstate(block, fenceGateBlockState, namespace, baseBlock)
-	modelWriter.writeFenceGates(block, altNamespace, baseBlock, altNamespace)
-	itemModelWriter.writeBlockItemModel(block, namespace, altNamespace)
+	modelWriter.writeFenceGates(block, baseNamespace, baseBlock, baseNamespace)
+	itemModelWriter.writeBlockItemModel(block, namespace, baseNamespace)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block)
 
@@ -679,15 +690,17 @@ function writeFenceGates(block, namespace, baseBlock, altNamespace) {
 	else {
 		tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
 	}
-	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
-	recipeWriter.writeRecipes(block, "fence_gates", baseBlock, namespace)
+
+	// Recipes
+	writeRecipeAdvancement(id(block), baseBlockID)
+	recipeWriter.writeRecipes(block, "fence_gates", baseBlockID, namespace)
 }
 
 function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	writeRecipeAdvancement(block, id(dye+"_dye"))
-	writeBlock(block, namespace, "terracotta", dye)
+	writeBlock(id(namespace, block), "terracotta", dye)
 }
 
 function writeConcrete(block, dye, namespace) {
@@ -695,7 +708,7 @@ function writeConcrete(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `c:concrete`)
 	tagHelper.tagBlock(block, `minecraft:mineable/pickaxe`)
-	writeBlock(block, namespace, "concrete", dye)
+	writeBlock(id(namespace, block), "concrete", dye)
 }
 
 function writeConcretePowder(block, dye, namespace) {
@@ -704,18 +717,18 @@ function writeConcretePowder(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:concrete_powder`)
 	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
 	writeRecipeAdvancement(block, id(dye+"_dye"))
-	writeBlock(block, namespace, "concrete_powder", dye)
+	writeBlock(id(namespace, block), "concrete_powder", dye)
 }
 
 function writeLamps(block, type, texture) {
 	writeRecipeAdvancement(id(block), id(mc, "redstone_lamp"))
-	writeBlock(block, modID, "lamps", type, undefined, undefined, texture, false)
+	writeBlock(block, "lamps", type, undefined, texture, false)
 }
 
 function writeWool(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	writeRecipeAdvancement(id(block), id(dye + "_dye"))
-	writeBlock(block, namespace, "wool", dye, undefined, undefined, undefined, undefined, false)
+	writeBlock(id(namespace, block), "wool", dye, undefined, undefined, undefined, false)
 }
 
 function writeTerracottaBricks(block, namespace, special, baseBlock, stonelike) {
