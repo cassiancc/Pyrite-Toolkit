@@ -138,6 +138,18 @@ function upsideDownify(value) {
 	value.split("").forEach(char => {
 		newValue = char + newValue
 	});
+	newValue = newValue.replaceAll("s%", "%s")
+
+	const count = (newValue.match(/%s/g) || []).length;
+	if (count > 1) {
+		let countRemaining = count
+		console.log(count);
+	
+		for (let i = 0; i < count; i++) {
+			newValue = newValue.replace("%s", `%${countRemaining}$s`)
+			countRemaining--
+		}
+	}
 	return newValue
 }
 
