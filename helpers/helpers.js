@@ -24,12 +24,18 @@ function commonPath() {
 }
 
 function getVersion() {
-    let gradleProperties = readFile(rootFolder+"gradle.properties")
-    gradleProperties = gradleProperties.split("minecraft_version")[1]
-    gradleProperties = gradleProperties.split("\n")[0]
-    gradleProperties = gradleProperties.replace("=", "").trim()
+    try {
+        let gradleProperties = readFile(rootFolder+"gradle.properties")
+        gradleProperties = gradleProperties.split("minecraft_version")[1]
+        gradleProperties = gradleProperties.split("\n")[0]
+        gradleProperties = gradleProperties.replace("=", "").trim()
+        return gradleProperties;
+    }
+    catch {
+        return "1.21.1"
+    }
+   
 
-    return gradleProperties;
 
 }
 
@@ -75,9 +81,13 @@ function readFileAsJson(path) {
 }
 
 function writeFile(path, data, minify) {
-	const demoMode = false
 	if (data instanceof Object) {
-		data = JSON.stringify(data)
+        if (minify !== false) {
+            data = JSON.stringify(data)
+        }
+        else {
+            data = JSON.stringify(data, null, " ")
+        }
 	}
 	else {
         if (minify !== false) {

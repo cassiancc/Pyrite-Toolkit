@@ -1,3 +1,4 @@
+const { existsSync } = require("fs");
 const helpers = require("../helpers/helpers");
 const { readFileAsJson } = require("../helpers/helpers");
 
@@ -50,11 +51,20 @@ function generateBlockLang(block) {
 }
 
 function flipTranslationFile(path) {
+	let file;
     let upsideDownTranslations = {};
-    const file = readFileAsJson(path)
+	if (path == Object) {
+		file = path
+	}
+	else if (existsSync(path))
+    	file = readFileAsJson(path)
+	else
+		file = path
+	
     for (const [key, value] of Object.entries(file)) {
         if (!upsideDownTranslations.hasOwnProperty(key)) {
-            upsideDownTranslations = Object.assign(upsideDownTranslations, JSON.parse(`{"${key}": "${upsideDownify(value)}"}`));
+			let values = new Map([[key, upsideDownify(value)]])
+            upsideDownTranslations = Object.assign(upsideDownTranslations, Object.fromEntries(values));
         }
       }
     return upsideDownTranslations

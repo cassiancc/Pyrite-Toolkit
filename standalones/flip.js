@@ -1,7 +1,7 @@
 const { upsideDownify } = require("../helpers/language");
 const { readFileAsJson, writeFile } = require("../helpers/helpers");
 const {flipTranslationFile} = require("../helpers/language");
-const { existsSync } = require("fs");
+const fs = require("fs");
 
 // console.log(upsideDownify("test"))
 // console.log(flipTranslationFile("./overrides/lang/en_us.json"))
@@ -11,12 +11,23 @@ const { existsSync } = require("fs");
 //   });
 
 if (process.argv[2] != undefined) {
-    if (existsSync(process.argv[2])) {
-        writeFile("./en_ud.json", flipTranslationFile(readFileAsJson(process.argv[2])))
-        console.log(`Upside downified ${process.argv[2].split("/").at(-1)}!`)
+    let dir = process.argv[2]
+    if (fs.existsSync(dir)) {
+        let path = dir
+        if (fs.lstatSync(path).isDirectory()) {
+            path += "/en_us.json"
+            
+        }
+        else {
+            dir = dir.slice(0, dir.lastIndexOf("/"))
+            console.log(dir)
+        }
+        flipped = flipTranslationFile(path)
+        writeFile(dir+"/en_ud.json", flipped, false)
+        console.log(`Upside downified ${path.split("/").at(-1)}!`)
     }
     else {
-        console.log(upsideDownify(process.argv[2]))
+        console.log(upsideDownify(dir))
     }
 }
 else if (existsSync("./en_us.json")) {
