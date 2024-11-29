@@ -184,8 +184,7 @@ function upsideDownify(value) {
 
     newValue = (upsideDownTable[char] || char) + newValue
   })
-
-  newValue = newValue.replaceAll(/(.)§/, "§$1")
+  newValue = newValue.replaceAll(/(.)§/g, "§$1")
 
   const count = (newValue.match(/%s/g) || []).length
   if (count > 1) {
