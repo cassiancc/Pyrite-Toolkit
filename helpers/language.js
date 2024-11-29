@@ -19,7 +19,7 @@ function countBlocksInLang() {
 		if (translation.includes("block." + modID))
 			count++
 	})
-	console.log(count)
+	return count
 }
 
 function generateLang(block, type, namespace) {

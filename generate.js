@@ -583,7 +583,8 @@ function generateResources() {
 
 	// Write final language file.
 	langHelper.writeLang()
-	langHelper.countBlocks()
+	count = langHelper.countBlocks()
+	console.log(`Pyrite Toolkit generated ${count} blocks in the ${mcVersion} format.`)
 }
 
 generateResources()
