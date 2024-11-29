@@ -26,11 +26,12 @@ function writeLang() {
 }
 
 function countBlocksInLang() {
-  let count = 0
-  Object.keys(blockTranslations).forEach(function (translation) {
-    if (translation.includes("block." + modID)) count++
-  })
-  console.log(count)
+	let count = 0;
+	Object.keys(blockTranslations).forEach(function(translation) {
+		if (translation.includes("block." + modID))
+			count++
+	})
+	return count
 }
 
 function generateLang(block, type, namespace) {
