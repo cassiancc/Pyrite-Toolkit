@@ -79,7 +79,7 @@ class Block {  // Create a class
 		this.addTranslation()
 
 		let stonelike = false;
-		if ((material === "stone") || (material.includes("brick")) || (material === "concrete")) {
+		if ((material === "stone") || (material.includes("brick")) || (material === "concrete") || (vanillaConstants.vanillaResourceBlocks.includes(material))) {
 			stonelike = true;
 		}
 
@@ -90,6 +90,7 @@ class Block {  // Create a class
 			blockWriter.writeBlock(id(this.namespace, this.blockID), special, this.baseBlock, undefined, textureID, stonelike, true)
 		}
 		else if (blockType === "slab") {
+			console.log(material)
 			blockWriter.writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), textureID, stonelike)
 		}
 		else if (blockType === "stairs") {
@@ -170,7 +171,7 @@ class Block {  // Create a class
 		else if (blockType == "nostalgia_grass_block") {
 			blockWriter.writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock))
 		}
-		else if ((blockType == "nostalgia") || (blockType == "nostalgia_resource")) {
+		else if ((blockType == "nostalgia") || (blockType == "nostalgia_resource") || (blockType == "smooth_resource")) {
 			if (textureID == undefined)
 				this.textureID = id(this.blockID)
 			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, stonelike, true)
@@ -190,7 +191,8 @@ class Block {  // Create a class
 			}
 			if (textureID == undefined)
 				this.textureID = id(this.blockID)
-			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, stonelike, recipeIngredient)
+			console.log(this.blockType)
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, false, recipeIngredient)
 		}
 
 	}
