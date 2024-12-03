@@ -12,9 +12,9 @@ These are functions that can work standalone and are therefore not Pyrite specif
 
 This script can be used to flip text or an entire language file. Just provide the path to the `en_us.json` language file or `lang` directory as a CLI argument, and the toolkit will create a upside down language file from an `en_us.json` file in the directory.
 
-### Helpers
+## Helpers
 
-Various helper functions that handle file writing, namespaced ID handling, and mod constants.
+These are various helper functions that work in the background to handle file writing, namespaced ID handling, and mod constants.
 
 #### Tag Helpers
 
