@@ -2,9 +2,9 @@ const { existsSync } = require("fs")
 const helpers = require("../helpers/helpers")
 const { readFileAsJson } = require("../helpers/helpers")
 
-let blockTranslations = readFileAsJson("./overrides/lang/en_us.json")
-let catTranslations = readFileAsJson("./overrides/lang/lol_us.json")
-let upsideDownTranslations = flipTranslationFile("./overrides/lang/en_us.json")
+let blockTranslations = readFileAsJson(`./overrides/${helpers.modID}/lang/en_us.json`)
+let catTranslations = readFileAsJson(`./overrides/${helpers.modID}/lang/lol_us.json`)
+let upsideDownTranslations = flipTranslationFile(`./overrides/${helpers.modID}/lang/en_us.json`)
 const modID = helpers.modID
 
 function writeLang() {

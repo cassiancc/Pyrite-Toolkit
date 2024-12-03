@@ -225,7 +225,7 @@ module.exports = {
         const generate = modelHelper.generateBlockModel
         let carpetModel = generate(block, namespace, id(namespace, baseBlock), "carpet", undefined, "wool")
         if (block === "grass_carpet") {
-            carpetModel = readFile(`./overrides/models/grass_carpet.json`)
+            carpetModel = readFile(`./overrides/pyrite/models/grass_carpet.json`)
         }
     
         writeFile(`${helpers.modelPath}${block}.json`, carpetModel);

@@ -1,6 +1,14 @@
-{
-    "modID": "pyrite",
-    "modPath": "/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/",
-    "projectType": "architectury",
-    "disableWriting": false
-}
+[
+    {
+        "modID": "pyrite",
+        "modPath": "/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/",
+        "projectType": "architectury",
+        "disableWriting": false
+    },
+    {
+        "modID": "infinity",
+        "modPath": "/home/cassian/Desktop/Minecraft/Mods/Infinite-Dimensions/",
+        "projectType": "architectury",
+        "disableWriting": true
+    }
+]

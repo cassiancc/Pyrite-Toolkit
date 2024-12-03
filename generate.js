@@ -18,9 +18,9 @@ const mcVersion = helpers.mcVersion;
 const majorVersion = helpers.majorVersion
 const minorVersion = helpers.minorVersion
 
-const modDyes = ["glow", "dragon", "star", "honey", "nostalgia", "rose", "poisonous",]
+const pyriteDyes = ["glow", "dragon", "star", "honey", "nostalgia", "rose", "poisonous",]
 
-const dyes = helpers.vanillaDyes.concat(modDyes)
+const dyes = helpers.vanillaDyes.concat(pyriteDyes)
 
 const vanillaWood = ["spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson", "warped"]
 
@@ -90,7 +90,6 @@ class Block {  // Create a class
 			blockWriter.writeBlock(id(this.namespace, this.blockID), special, this.baseBlock, undefined, textureID, stonelike, true)
 		}
 		else if (blockType === "slab") {
-			console.log(material)
 			blockWriter.writeSlabs(id(this.namespace, this.blockID), id(this.baseNamespace, this.baseBlock), textureID, stonelike)
 		}
 		else if (blockType === "stairs") {
@@ -191,7 +190,6 @@ class Block {  // Create a class
 			}
 			if (textureID == undefined)
 				this.textureID = id(this.blockID)
-			console.log(this.blockType)
 			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, false, recipeIngredient)
 		}
 
@@ -204,114 +202,13 @@ class Block {  // Create a class
 	}
 }
 
-function generateResources() {
+function generatePyriteResources() {
 
 	helpers.populateTemplates()
 
 	new Block("torch_lever", "torch_lever", id(mc,"torch"), "torch")
 	new Block("redstone_torch_lever", "torch_lever", id(mc,"redstone_torch"), "torch")
 	new Block("soul_torch_lever", "torch_lever", id(mc,"soul_torch"), "torch")
-
-	function generateWoodSet(template) {
-		const stainedPlankBase = template + "_planks"
-
-		new Block(template + "_button", "button", stainedPlankBase, "wood")
-		new Block(template + "_stairs", "stairs", stainedPlankBase, "wood")
-		new Block(template + "_slab", "slab", stainedPlankBase, "wood")
-		new Block(template + "_pressure_plate", "pressure_plate", stainedPlankBase, "wood")
-		new Block(template + "_fence", "fence", stainedPlankBase, "wood")
-		new Block(template + "_fence_gate", "fence_gate", stainedPlankBase, "wood")
-		new Block(template + "_planks", "planks", template, "wood")
-		new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
-		new Block(template + "_ladder", "ladder", stainedPlankBase, "wood")
-		// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
-		new Block(template + "_door", "door", stainedPlankBase, "wood")
-		new Block(template + "_sign", "sign", stainedPlankBase, "wood")
-		new Block(template + "_hanging_sign", "hanging_sign", stainedPlankBase, "wood")
-		new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
-	}
-
-	function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet) {
-		let brickBase;
-		if (type === undefined) {
-			type = "bricks"
-		}
-		if (template.search("bricks") === -1) {
-			brickBase = template + "_brick"
-		}
-		else {
-			brickBase = template.slice(0, -1)
-		}
-		if (baseBlock === undefined) {
-			baseBlock = template
-		}
-
-		const bricksBase = brickBase + "s"
-		new Block(bricksBase, type, baseBlock, type)
-		new Block(brickBase + "_slab", "slab", bricksBase, type)
-		new Block(brickBase + "_stairs", "stairs", bricksBase, type)
-		new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
-		new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
-		if (shouldGenerateMossyBrickSet === true) {
-			generateMossyBrickSet(bricksBase, id(bricksBase))
-		}
-	}
-
-	function generateCutSet(template, type, baseBlock) {
-		if (type === undefined) {
-			type = "cut"
-		}
-		if (baseBlock === undefined) {
-			baseBlock = template
-		}
-
-		new Block(template, type, baseBlock, baseBlock)
-		new Block(template + "_slab", "slab", template, type)
-		new Block(template + "_stairs", "stairs", template, type)
-		new Block(template + "_wall", "wall", id(modID, template), type)
-		new Block(template + "_wall_gate", "wall_gate", id(modID, template), type)
-
-	}
-
-	function generateMossyBrickSet(bricksBase, baseBlockID) {
-		const mossyBricksBase = "mossy_" + bricksBase
-		generateBrickSet(mossyBricksBase, "mossy_stone_bricks", baseBlockID)
-		recipeWriter.writeShapelessRecipe([baseBlockID, "minecraft:moss_block"], id(mossyBricksBase), 1, "_from_moss_block")
-
-	}
-
-	function writeWallGatesFromArray(array, namespace, baseBlockArray) {
-		if (namespace == undefined) {
-			namespace = mc;
-		}
-		let i = 0;
-		array.forEach(function (wall) {
-			let blockTemplate = wall.replace("_wall", "")
-			let baseBlock = blockTemplate
-			// If a base block is provided, use it.
-			if (baseBlockArray != undefined) {
-				baseBlock = baseBlockArray[i]
-			}
-			// If not, try and assume the base block.
-			else {
-				baseBlock = baseBlock.replace("brick", "bricks")
-				baseBlock = baseBlock.replace("tile", "tiles")
-			}
-			new Block(blockTemplate + "_wall_gate", "wall_gate", id(namespace, baseBlock), "stone")
-			i++
-		})
-	}
-
-	function writeCraftingTablesFromArray(woodArray, namespace) {
-		if (namespace == undefined) {
-			namespace = mc
-		}
-		woodArray.forEach(function (dye) {
-			const template = dye
-			const plankBase = template + "_planks"
-			new Block(template + "_crafting_table", "crafting_table", id(namespace,plankBase), "wood")
-		})
-	}
 
 	dyes.forEach(function (dye) {
 		let stainedBlockTemplate = dye + "_stained"
@@ -380,15 +277,6 @@ function generateResources() {
 	blockWriter.writePanes("framed_glass_pane", modID, "framed_glass")
 	// new Block("framed_glass_pane", globalNamespace, undefined, "framed_glass_pane", "framed_glass_pane", "framed_glass_pane")
 
-	function generateTurfSet(block, baseBlockID) {
-		const turf = block + "_turf"
-		const texture = baseBlockID + "_top"
-		blockWriter.writeBlock(turf, "turf", baseBlockID, undefined, texture)
-		new Block(block + "_slab", "slab", turf, "turf", texture)
-		new Block(block + "_stairs", "stairs", turf, "turf", texture)
-		blockWriter.writeCarpet(block + "_carpet", modID, texture, modID)
-	}
-
 	// Nostalgia Turf Set
 	generateTurfSet("nostalgia_grass", "pyrite:nostalgia_grass_block")
 	// Podzol
@@ -408,7 +296,7 @@ function generateResources() {
 
 	})
 
-	modDyes.forEach(function (dye) {
+	pyriteDyes.forEach(function (dye) {
 		writeDye(dye)
 		blockWriter.writeWool(dye + "_wool", dye, modID)
 		blockWriter.writeCarpet(dye + "_carpet", modID, dye + "_wool")
@@ -558,10 +446,10 @@ function generateResources() {
 	tagHelper.tagBlocks(["#pyrite:gold", "#pyrite:diamond", "#pyrite:emerald"], "minecraft:needs_iron_tool")
 	tagHelper.tagBlocks(["#pyrite:obsidian", "#pyrite:netherite"], "minecraft:needs_diamond_tool")
 
-	tagHelper.tagBlocks(readFileAsJson("./overrides/mineable/axe.json"), "minecraft:mineable/axe")
+	tagHelper.tagBlocks(readFileAsJson("./overrides/pyrite/mineable/axe.json"), "minecraft:mineable/axe")
 	tagHelper.tagBlocks(["#pyrite:carpet"], "minecraft:mineable/hoe")
-	tagHelper.tagBlocks(readFileAsJson("./overrides/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
-	tagHelper.tagBlocks(readFileAsJson("./overrides/mineable/shovel.json"), "minecraft:mineable/shovel")
+	tagHelper.tagBlocks(readFileAsJson("./overrides/pyrite/mineable/pickaxe.json"), "minecraft:mineable/pickaxe")
+	tagHelper.tagBlocks(readFileAsJson("./overrides/pyrite/mineable/shovel.json"), "minecraft:mineable/shovel")
 
 	// Add Pyrite tags to Pyrite tags
 	tagHelper.tagBlock("#pyrite:terracotta_bricks", "bricks")
@@ -589,7 +477,9 @@ function generateResources() {
 	console.log(`Pyrite Toolkit generated ${count} blocks in the ${mcVersion} format.`)
 }
 
-generateResources()
+if (process.argv[2] == "pyrite") {
+	generatePyriteResources()
+}
 
 function writeDye(item) {
 	item = item + "_dye"
@@ -604,4 +494,114 @@ function writeItem(item) {
 	langHelper.generateLang(item, "item", modID)
 	tagHelper.tagItem(item, "c:dyes")
 	itemModelWriter.writeUniqueItemModel(item)
+}
+
+function generateWoodSet(template) {
+	const stainedPlankBase = template + "_planks"
+
+	new Block(template + "_button", "button", stainedPlankBase, "wood")
+	new Block(template + "_stairs", "stairs", stainedPlankBase, "wood")
+	new Block(template + "_slab", "slab", stainedPlankBase, "wood")
+	new Block(template + "_pressure_plate", "pressure_plate", stainedPlankBase, "wood")
+	new Block(template + "_fence", "fence", stainedPlankBase, "wood")
+	new Block(template + "_fence_gate", "fence_gate", stainedPlankBase, "wood")
+	new Block(template + "_planks", "planks", template, "wood")
+	new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
+	new Block(template + "_ladder", "ladder", stainedPlankBase, "wood")
+	// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
+	new Block(template + "_door", "door", stainedPlankBase, "wood")
+	new Block(template + "_sign", "sign", stainedPlankBase, "wood")
+	new Block(template + "_hanging_sign", "hanging_sign", stainedPlankBase, "wood")
+	new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
+}
+
+function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet) {
+	let brickBase;
+	if (type === undefined) {
+		type = "bricks"
+	}
+	if (template.search("bricks") === -1) {
+		brickBase = template + "_brick"
+	}
+	else {
+		brickBase = template.slice(0, -1)
+	}
+	if (baseBlock === undefined) {
+		baseBlock = template
+	}
+
+	const bricksBase = brickBase + "s"
+	new Block(bricksBase, type, baseBlock, type)
+	new Block(brickBase + "_slab", "slab", bricksBase, type)
+	new Block(brickBase + "_stairs", "stairs", bricksBase, type)
+	new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
+	new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
+	if (shouldGenerateMossyBrickSet === true) {
+		generateMossyBrickSet(bricksBase, id(bricksBase))
+	}
+}
+
+function generateCutSet(template, type, baseBlock) {
+	if (type === undefined) {
+		type = "cut"
+	}
+	if (baseBlock === undefined) {
+		baseBlock = template
+	}
+
+	new Block(template, type, baseBlock, baseBlock)
+	new Block(template + "_slab", "slab", template, type)
+	new Block(template + "_stairs", "stairs", template, type)
+	new Block(template + "_wall", "wall", id(modID, template), type)
+	new Block(template + "_wall_gate", "wall_gate", id(modID, template), type)
+
+}
+
+function generateMossyBrickSet(bricksBase, baseBlockID) {
+	const mossyBricksBase = "mossy_" + bricksBase
+	generateBrickSet(mossyBricksBase, "mossy_stone_bricks", baseBlockID)
+	recipeWriter.writeShapelessRecipe([baseBlockID, "minecraft:moss_block"], id(mossyBricksBase), 1, "_from_moss_block")
+
+}
+
+function writeWallGatesFromArray(array, namespace, baseBlockArray) {
+	if (namespace == undefined) {
+		namespace = mc;
+	}
+	let i = 0;
+	array.forEach(function (wall) {
+		let blockTemplate = wall.replace("_wall", "")
+		let baseBlock = blockTemplate
+		// If a base block is provided, use it.
+		if (baseBlockArray != undefined) {
+			baseBlock = baseBlockArray[i]
+		}
+		// If not, try and assume the base block.
+		else {
+			baseBlock = baseBlock.replace("brick", "bricks")
+			baseBlock = baseBlock.replace("tile", "tiles")
+		}
+		new Block(blockTemplate + "_wall_gate", "wall_gate", id(namespace, baseBlock), "stone")
+		i++
+	})
+}
+
+function writeCraftingTablesFromArray(woodArray, namespace) {
+	if (namespace == undefined) {
+		namespace = mc
+	}
+	woodArray.forEach(function (dye) {
+		const template = dye
+		const plankBase = template + "_planks"
+		new Block(template + "_crafting_table", "crafting_table", id(namespace,plankBase), "wood")
+	})
+}
+
+function generateTurfSet(block, baseBlockID) {
+	const turf = block + "_turf"
+	const texture = baseBlockID + "_top"
+	blockWriter.writeBlock(turf, "turf", baseBlockID, undefined, texture)
+	new Block(block + "_slab", "slab", turf, "turf", texture)
+	new Block(block + "_stairs", "stairs", turf, "turf", texture)
+	blockWriter.writeCarpet(block + "_carpet", modID, texture, modID)
 }

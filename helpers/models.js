@@ -25,7 +25,7 @@ module.exports = {
         }
         // Override for Grass Turf for colour provider tinting.
         if (texture.includes("minecraft:grass_block_top")) {
-            return helpers.readFile(`./overrides/models/grass_turf.json`)
+            return helpers.readFile(`./overrides/pyrite/models/grass_turf.json`)
         }
         let parent;
         if (model.includes("TOOLKIT_NO_PARENT")) {
@@ -58,7 +58,7 @@ module.exports = {
 
     generateSlabBlockModel: function generateSlabBlockModel(block, namespace, baseBlock, model) {
         if (baseBlock === "grass_block_top") {
-            return helpers.readFile(`./overrides/models/grass_${model}.json`)
+            return helpers.readFile(`./overrides/pyrite/models/grass_${model}.json`)
         }
         return `{"parent": "minecraft:block/${model}","textures": {"bottom": "${namespace}:block/${baseBlock}","top": "${namespace}:block/${baseBlock}","side": "${namespace}:block/${baseBlock}"}}`
     
@@ -67,13 +67,13 @@ module.exports = {
     generateStairBlockModel: function generateStairBlockModel(block, namespace, baseBlock, model) {
         if (baseBlock === "grass_block_top") {
             if (model === "stairs") {
-                return helpers.readFile("./overrides/models/grass_stairs.json")
+                return helpers.readFile("./overrides/pyrite/models/grass_stairs.json")
             }
             else if (model === "inner_stairs") {
-                return helpers.readFile("./overrides/models/grass_stairs_inner.json")
+                return helpers.readFile("./overrides/pyrite/models/grass_stairs_inner.json")
             }
             else if (model === "outer_stairs") {
-                return helpers.readFile("./overrides/models/grass_stairs_outer.json")
+                return helpers.readFile("./overrides/pyrite/models/grass_stairs_outer.json")
             }
         }
         return `{

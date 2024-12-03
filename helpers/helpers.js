@@ -1,6 +1,28 @@
 const fs = require('fs');
 
-const config = readFileAsJson("./config.json")
+const config = readConfigFile()
+
+console.log(process.argv[2])
+
+function readConfigFile() {
+    let arg = process.argv[2]
+    let configPath = "./config.json"
+    if (arg.includes(".json")) {
+        configPath = arg
+    }
+    let localConfig = readFileAsJson(configPath)
+    if (localConfig instanceof Array) {
+        localConfig.forEach(function(configOption) {
+            if (arg == configOption.modID) {
+                return configOption
+            }
+        })
+        return localConfig[0];
+    }
+    else {
+        return localConfig
+    }
+}
 
 const rootFolder = config.modPath
 const resourcesPath = rootFolder+`${commonPath()}/src/main/resources/`
@@ -14,7 +36,7 @@ const minorVersion = parseInt(mcVersion.split(".")[2]);
 const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
 
 function commonPath() {
-    const projectType = readFileAsJson("./config.json").projectType
+    const projectType = config.projectType
     if (projectType == "architectury") {
         return "common"
     }
@@ -172,7 +194,7 @@ function versionAbove(version) {
 }
 
 function populateTemplates() {
-	const templatePath = "./overrides/models/templates/"
+	const templatePath = `./overrides/${modID}/models/templates/`
 	const templates = fs.readdirSync(templatePath)
 	templates.forEach(function(template) {
 		writeFileSafe(`${paths.models}${template}`, readFile(templatePath + template))
