@@ -4,6 +4,11 @@ The Pyrite Toolkit is a selection of Node.JS scripts that are used to datagen co
 ## Generate
 The main `generate.js` script is the primary script used for Pyrite. It generates blockstates, models, language entries, and loot tables for all blocks and items in Pyrite. It is designed to output these files in a format compatible with 1.20.1-1.21.4. It relies on various scripts to achieve this (see section on Helpers.)
 
+#### Example Usage
+```bash
+node generate.js pyrite
+```
+
 ## Standalones
 
 These are functions that can work standalone and are therefore not Pyrite specific.
@@ -11,6 +16,19 @@ These are functions that can work standalone and are therefore not Pyrite specif
 ### Flip
 
 This script can be used to flip text or an entire language file. Just provide the path to the `en_us.json` language file or `lang` directory as a CLI argument, and the toolkit will create a upside down language file from an `en_us.json` file in the directory.
+
+#### Example Usage
+```bash
+node standalones/flip.js /home/cassian/Desktop/Pyrite/resources/lang/en_us.json
+```
+
+### Resource Pack Path Fixer
+This script loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase.
+
+#### Example Usage
+```bash
+node standalones/rp-path-fixer.js /home/cassian/Desktop/ResourcePack/
+```
 
 ## Helpers
 
