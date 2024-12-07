@@ -1,7 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-const dir = `/home/cassian/Downloads/Moondrop CIT v.1.0.2 [zip file fix]`
+const dir = process.argv[2]
 
 let badPaths = []
 let badDirs = []
