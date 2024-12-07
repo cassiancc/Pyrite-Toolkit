@@ -15,7 +15,7 @@ These are functions that can work standalone and are therefore not Pyrite specif
 
 ### Flip
 
-This script `standalones/flip.js` can be used to flip text or an entire language file. Just provide the path to the `en_us.json` language file or `lang` directory as a CLI argument, and the toolkit will create a upside down language file from an `en_us.json` file in the directory.
+This script (`standalones/flip.js`) can be used to flip text or an entire language file. Just provide the path to the `en_us.json` language file or `lang` directory as a CLI argument, and the toolkit will create a upside down language file from an `en_us.json` file in the directory.
 
 #### Example Usage
 ```bash
@@ -23,7 +23,7 @@ node standalones/flip.js /home/cassian/Desktop/Pyrite/resources/lang/en_us.json
 ```
 
 ### Resource Pack Path Fixer
-This script (`standalones/rp-path-fixer`) loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase.
+This script (`standalones/rp-path-fixer`) loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase. As this is the newest script, it's undergoing active development to make it more usable.
 
 #### Example Usage
 ```bash
