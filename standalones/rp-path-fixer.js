@@ -6,6 +6,13 @@ const dir = process.argv[2]
 let badPaths = []
 let badDirs = []
 
+var isWin = process.platform === "win32";
+var assets = "assets/"
+
+if (isWin) {
+    assets = "assets\\"
+}
+
 
 async function* walk(dir) {
     for await (const d of await fs.promises.opendir(dir)) {
@@ -25,11 +32,11 @@ async function* walk(dir) {
 async function main() {
     for await (const p of walk(dir)) {
         try {
-            let pathArray = p.split("assets/")
+            let pathArray = p.split(assets)
             let badFile = pathArray[1].split("/")
             badFile = badFile[badFile.length - 1]
             pathArray[1] = pathArray[1].replaceAll(" ", "_").toLowerCase()
-            let newPath = pathArray[0] + "assets/" + pathArray[1]
+            let newPath = pathArray[0] + assets + pathArray[1]
     
             // console.log(badFile)
             badDirs.push(badFile)
@@ -40,11 +47,11 @@ async function main() {
     }
     // console.log(badPaths)
     badPaths.forEach(function (badPath) {
-        let pathArray = badPath.split("assets/")
+        let pathArray = badPath.split(assets)
         let badDir = pathArray[1].split("/")
         badDir = badDir[badDir.length - 1]
         pathArray[1] = pathArray[1].replaceAll(" ", "_").toLowerCase()
-        let newPath = pathArray[0] + "assets/" + pathArray[1]
+        let newPath = pathArray[0] + assets + pathArray[1]
 
         // console.log(badDir)
         badDirs.push(badDir)
@@ -56,10 +63,10 @@ async function main() {
                 let split = contents.split("model=")
                 if (split != undefined) {
                     try {
-                        split[1] = split[1].replace(" ", "_").toLowerCase()
-                        let newContents = split[0] + "model=" + split[1]
-                        console.log(newContents)
-                        fs.writeFile(p, newContents, function (err) { if (err) throw err; });
+                        let split1 = split[1].replace(" ", "_").toLowerCase()
+                        let newContents = split[0] + "model=" + split1
+                        if (split1 != split[1])
+                            fs.writeFile(p, newContents, function (err) { if (err) throw err; });
                     }
                     catch {
 
