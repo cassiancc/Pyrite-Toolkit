@@ -1,7 +1,7 @@
 # Pyrite Toolkit
-The Pyrite Toolkit is a selection of Node.JS scripts that are used to datagen code for Pyrite.
+The Pyrite Toolkit is a collection of Node.JS scripts that are used for various mod development tasks with a focus on datagen, originally developed for my [Pyrite](https://modrinth.com/mod/pyrite) mod. Since then, I've worked to add additional features to make it useful to my other mods, and maybe even people other than myself.
 
-## Generate
+## Data Generator
 The main `generate.js` script is the primary script used for Pyrite. It generates blockstates, models, language entries, and loot tables for all blocks and items in Pyrite. It is designed to output these files in a format compatible with 1.20.1-1.21.4. It relies on various scripts to achieve this (see section on Helpers.)
 
 #### Example Usage
@@ -15,7 +15,7 @@ These are functions that can work standalone and are therefore not Pyrite specif
 
 ### Flip
 
-This script can be used to flip text or an entire language file. Just provide the path to the `en_us.json` language file or `lang` directory as a CLI argument, and the toolkit will create a upside down language file from an `en_us.json` file in the directory.
+This script `standalones/flip.js` can be used to flip text or an entire language file. Just provide the path to the `en_us.json` language file or `lang` directory as a CLI argument, and the toolkit will create a upside down language file from an `en_us.json` file in the directory.
 
 #### Example Usage
 ```bash
@@ -23,7 +23,7 @@ node standalones/flip.js /home/cassian/Desktop/Pyrite/resources/lang/en_us.json
 ```
 
 ### Resource Pack Path Fixer
-This script loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase.
+This script (`standalones/rp-path-fixer`) loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase.
 
 #### Example Usage
 ```bash
