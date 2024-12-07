@@ -5,7 +5,7 @@ const id = helpers.id
 
 function writeUniqueItemModel(block) {
 	if (helpers.versionAbove("1.21.4")) {
-		writeWinterDropItem(modID, "item", block, block)
+		writeClientItem(modID, "item", block, block)
 	}
 	let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${block}"}}`
 	helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem);
@@ -22,7 +22,7 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 		baseBlock = block
 	}
 	if (helpers.versionAbove("1.21.4")) {
-		writeWinterDropItem(altNamespace, "item", block, baseBlock)
+		writeClientItem(altNamespace, "item", block, baseBlock)
 	}
 	const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${altNamespace}:block/${baseBlock}"}}`
 	helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem)
@@ -33,7 +33,7 @@ function writeInventoryModel(block, namespace) {
 		namespace = modID
 	}
 	if (helpers.versionAbove("1.21.4")) {
-		writeWinterDropItem(namespace, "block", block, `${block}_inventory`)
+		writeClientItem(namespace, "block", block, `${block}_inventory`)
 	}
 	else {
 		const modelItem = `{"parent": "${namespace}:block/${block}_inventory"}`
@@ -41,7 +41,7 @@ function writeInventoryModel(block, namespace) {
 	}
 }
 
-function writeWinterDropItem(namespace, folder, path, model) {
+function writeClientItem(namespace, folder, path, model) {
 	if (model == undefined) {
 		model = path
 	}
@@ -68,7 +68,7 @@ function writeBlockItemModel(block, namespace, altNamespace) {
 	}
 	const blockPath = helpers.getPath(block)
 	if (helpers.versionAbove("1.21.4")) {
-		writeWinterDropItem(namespace, "block", blockPath)
+		writeClientItem(namespace, "block", blockPath)
 		const modelItem = { "parent": "minecraft:item/generated", "textures": { "layer0": `${namespace}:block/${modelSubdirectory}${blockPath}` } }
 		helpers.writeFile(`${helpers.paths.itemModels}${blockPath}.json`, modelItem);
 	}
@@ -80,7 +80,7 @@ function writeBlockItemModel(block, namespace, altNamespace) {
 
 function writeTrapdoorItemModel(block, namespace) {
 	if (helpers.versionAbove("1.21.4")) {
-		writeWinterDropItem(namespace, "block", block, `${block}_bottom`)
+		writeClientItem(namespace, "block", block, `${block}_bottom`)
 	}
 	let modelItem = `{
 		"parent": "${namespace}:block/${block}_bottom"

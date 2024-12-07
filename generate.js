@@ -331,7 +331,7 @@ function generatePyriteResources() {
 		writeWallGatesFromArray(["polished_tuff", "tuff_brick", "tuff"])
 	}
 
-	// 1.21.4 - Winter Drop Resin walls
+	// 1.21.4 - Garden Awakens Resin walls
 	if (majorVersion > 22 || (mcVersion.includes("1.21.4"))) {
 		writeWallGatesFromArray(["resin_brick"])
 	}
