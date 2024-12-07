@@ -73,12 +73,17 @@ async function main() {
                 const jContents = JSON.parse(contents)
                 let texture = jContents.textures
                 let i = 0;
-                Object.keys(texture).forEach(function(key) { 
-                    texture[key] = texture[key].replaceAll(" ", "_")
-                });
-                jContents.textures = texture
-
-                fs.writeFile(p, JSON.stringify( jContents), function (err) { if (err) throw err; });
+                console.log(p)
+                if (texture != undefined) {
+                    Object.keys(texture).forEach(function(key) { 
+                        texture[key] = texture[key].replaceAll(" ", "_")
+                    });
+                    jContents.textures = texture
+    
+                    if (jContents != undefined)
+                        fs.writeFile(p, JSON.stringify( jContents), function (err) { if (err) throw err; });
+                }
+                
                 
             });
         }
