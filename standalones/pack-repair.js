@@ -4,6 +4,7 @@ const path = require('path');
 let badPaths = []
 let badDirs = []
 let fixedFiles = 0
+let repairCount = 0
 
 var isWin = process.platform === "win32";
 var assets = "assets/"
@@ -33,10 +34,7 @@ async function main(dir) {
         return
     }
     repair(dir)
-    // it seems to need to run twice to correct the full set of errors? worth investigating a fix here
-    repair(dir)
     
-    console.info("Resource Pack repair finished, " + fixedFiles + " files with broken paths repaired.")
 }
 
 function repairPath(path) {
@@ -72,7 +70,7 @@ async function repair(dir) {
     
             // console.log(badFile)
             badDirs.push(badFile)
-            console.log(badFile)
+            // console.log(badFile)
             fs.renameSync(p, newPath)
             fixedFiles++
         }
@@ -89,8 +87,12 @@ async function repair(dir) {
 
         // console.log(badDir)
         badDirs.push(badDir)
-        fs.renameSync(badPath, newPath)
-        fixedFiles++
+        try {
+            fs.renameSync(badPath, newPath)
+            fixedFiles++
+        }
+        catch {}
+        
     })
     for await (const p of walk(dir)) {
         if (p.includes(".properties")) {
@@ -137,6 +139,13 @@ async function repair(dir) {
             });
         }
 
+    }
+    // it seems to need to run twice to correct the full set of errors? worth investigating a fix here
+    repairCount++
+    if (repairCount == 1)
+        repair(dir)
+    else {
+        console.info("Resource Pack repair finished, " + fixedFiles + " files with broken paths repaired.")
     }
 }
 
