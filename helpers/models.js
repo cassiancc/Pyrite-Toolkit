@@ -1,6 +1,8 @@
 const helpers = require('./helpers');
 const modeler = require('./models');
 
+const id = helpers.id
+
 module.exports = {
     generateBlockModel: function generateBlockModel(block, namespace, texture, model, render_type, texture_type) {
         if (model === undefined) {
@@ -35,7 +37,7 @@ module.exports = {
             parent = `"parent": "${model}",`
         }
     
-        return `{${parent}"textures": {"${texture_type}": "${namespace}:block/${block}"}${render_type}}`
+        return `{${parent}"textures": {"${texture_type}": "${namespace}:block/${helpers.getPath(texture)}"}${render_type}}`
     
     },
     generatePaneBlockModels: function generatePaneBlockModels(block, namespace, baseBlock, model) {
@@ -149,6 +151,12 @@ module.exports = {
     
     generateMushroomStemModel: function generateMushroomStemModel(block, namespace, baseBlock, model) {
         return `{"parent": "minecraft:block/${model}","textures": {"end": "${namespace}:block/${block}_top","side": "minecraft:block/mushroom_stem"}}`
+    },
+
+    generateLogModel: function generateLogModel(topBlockID, sideBlockID, model) {
+        topBlockID = id(topBlockID)
+        sideBlockID = id(sideBlockID)
+        return `{"parent": "minecraft:block/${model}","textures": {"end": "${topBlockID.split(":")[0]}:block/${topBlockID.split(":")[1]}_top","side": "${sideBlockID.split(":")[0]}:block/${sideBlockID.split(":")[1]}"}}`
     },
     
     generateDoorBlockModels: function generateDoorBlockModels(block, namespace, modelID) {

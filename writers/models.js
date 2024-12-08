@@ -267,8 +267,8 @@ module.exports = {
     },
     
     writeLogs: function writeLogBlockModels(block, namespace, baseBlock) {
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateMushroomStemModel(block, namespace, baseBlock, "cube_column"))
-        writeFile(`${helpers.modelPath}${block}_horizontal.json`, modelHelper.generateMushroomStemModel(block, namespace, baseBlock, "cube_column_horizontal"))
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateLogModel(id(namespace, block), id(baseBlock), "cube_column"))
+        writeFile(`${helpers.modelPath}${block}_horizontal.json`, modelHelper.generateLogModel(id(namespace, block), id(baseBlock), "cube_column_horizontal"))
     }
 }
 

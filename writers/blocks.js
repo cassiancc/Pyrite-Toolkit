@@ -138,7 +138,7 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 		namespace = modID 
 	}
 	if (texture == undefined)
-		texture = baseBlock
+		texture = block
 
 	// Blockstates
 	blockstateHelper.writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
@@ -315,7 +315,7 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	}
 	const blockState = `{"variants":{"facing=east":{"model":"${namespace}:block/${block}","y":90},"facing=north":{"model":"${namespace}:block/${block}"},"facing=south":{"model":"${namespace}:block/${block}","y":180},"facing=west":{"model":"${namespace}:block/${block}","y":270}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
-	modelWriter.writeBlock(block, namespace, baseBlock, "pyrite:block/template_ladder")
+	modelWriter.writeBlock(block, namespace, block, "pyrite:block/template_ladder")
 	itemModelWriter.writeUniqueBlockItemModel(block, namespace, namespace)
 	lootTableWriter.writeLootTables(block, namespace)
 	tagHelper.tagBlock(block, "ladders")
@@ -481,14 +481,14 @@ function writeBars(block, namespace, ingredientID) {
 	recipeWriter.writeRecipes(block, "bars", ingredientID)
 }
 
-function writeLogs(block, namespace, special) {
+function writeLogs(block, namespace, baseBlock) {
 	blockState = `{"variants":{"axis=x":{"model":"${namespace}:block/${block}_horizontal","x":90,"y":90},"axis=y":{"model":"${namespace}:block/${block}"},"axis=z":{"model":"${namespace}:block/${block}_horizontal","x":90}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
-	modelWriter.writeLogs(block, namespace)
+	modelWriter.writeLogs(block, namespace, baseBlock)
 	lootTableWriter.writeLootTables(block)
 	itemModelWriter.writeBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "minecraft:logs")
-	recipeWriter.writeRecipes(block, special)
+	recipeWriter.writeRecipes(block, "log", block.replace("log", "planks").replace("stem", "planks"))
 }
 
 function writeWalls(block, baseBlockID, texture) {
@@ -722,7 +722,7 @@ function writeConcretePowder(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:concrete_powder`)
 	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
 	writeRecipeAdvancement(block, id(dye+"_dye"))
-	writeBlock(id(namespace, block), "concrete_powder", dye)
+	writeBlock(id(namespace, block), "concrete_powder", dye, undefined, block)
 }
 
 function writeLamps(block, type, texture) {

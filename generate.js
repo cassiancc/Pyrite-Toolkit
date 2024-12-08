@@ -134,9 +134,20 @@ class Block {  // Create a class
 		else if (blockType === "torch_lever") {
 			blockWriter.writeLeverBlock(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
-		else if (blockType === "mushroom_stem") {
+		else if ((blockType === "mushroom_stem") || (blockType === "log")) {
 			blockWriter.writeLogs(this.blockID, this.namespace, this.baseBlock)
-			tagHelper.tagBoth(this.blockID, "mushroom_stem")
+			if (blockType == "mushroom_stem") {
+				tagHelper.tagBoth(this.blockID, "mushroom_stem")
+			}
+			else {
+				let woodType = blockID.replace("_log", "_logs").replace("stripped_", "")
+				tagHelper.tagItem(this.blockID, woodType)
+			}
+		}
+		else if (blockType == "wood") {
+			blockWriter.writeBlock(this.blockID, blockType, this.baseBlock, undefined, this.baseBlock, false, true)
+			let woodType = blockID.replace("_wood", "_logs").replace("stripped_", "")
+			tagHelper.tagItem(this.blockID, woodType)
 		}
 		else if (blockID.includes("cobblestone_bricks") || (blockType === "terracotta_bricks")) {
 			if (material.includes("mossy")) {
@@ -241,11 +252,21 @@ function generatePyriteResources() {
 	// Red Mushroom
 	const redShroom = "red_mushroom"
 	generateWoodSet(redShroom)
-	red_stem = new Block(redShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
+	new Block(redShroom + "_stem", "mushroom_stem", "minecraft:mushroom_stem", "wood")
 	// Brown Mushroom
 	const brownShroom = "brown_mushroom"
 	generateWoodSet(brownShroom)
-	brown_stem = new Block(brownShroom + "_stem", "mushroom_stem", redShroom + "_planks", "wood")
+	new Block(brownShroom + "_stem", "mushroom_stem", "minecraft:mushroom_stem", "wood")
+
+	// Azalea
+	const azalea = "azalea_log"
+	generateWoodSet("azalea", azalea)
+	new Block(azalea, "log", azalea, "wood")
+	new Block("stripped_"+azalea, "log", "stripped_"+azalea, "wood")
+	new Block("azalea_wood", "wood", azalea, "wood", "azalea_log")
+	new Block("stripped_azalea_wood", "wood", "stripped_azalea_log", "wood")
+
+
 
 	// Cobblestone
 	generateBrickSet("cobblestone_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
@@ -459,7 +480,7 @@ function generatePyriteResources() {
 	const newModTags = [
 		"wall_gates", "lamps", "bricks", "dyed_bricks", 
 		"stained_framed_glass", "fences", "wool", "metal_bars", "planks", "brick_stairs", "metal_trapdoors", "brick_walls", "metal_buttons",
-		"concrete_slabs", "concrete_stairs"
+		"concrete_slabs", "concrete_stairs", "azalea_logs"
 	]
 	newModTags.forEach(function(tag) {
 		langHelper.generateLang(tag, "tag.item", modID)
@@ -496,8 +517,11 @@ function writeItem(item) {
 	itemModelWriter.writeUniqueItemModel(item)
 }
 
-function generateWoodSet(template) {
+function generateWoodSet(template, baseBlock) {
 	const stainedPlankBase = template + "_planks"
+	if (baseBlock == undefined) {
+		baseBlock = template
+	}
 
 	new Block(template + "_button", "button", stainedPlankBase, "wood")
 	new Block(template + "_stairs", "stairs", stainedPlankBase, "wood")
@@ -505,7 +529,7 @@ function generateWoodSet(template) {
 	new Block(template + "_pressure_plate", "pressure_plate", stainedPlankBase, "wood")
 	new Block(template + "_fence", "fence", stainedPlankBase, "wood")
 	new Block(template + "_fence_gate", "fence_gate", stainedPlankBase, "wood")
-	new Block(template + "_planks", "planks", template, "wood")
+	new Block(template + "_planks", "planks", baseBlock, "wood")
 	new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
 	new Block(template + "_ladder", "ladder", stainedPlankBase, "wood")
 	// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")

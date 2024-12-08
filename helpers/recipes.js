@@ -214,14 +214,20 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	let recipe = ""
 
 	if (type === "planks") {
-		if ((base === "red_mushroom") || (base === "brown_mushroom")) {
+		if (base.includes("stem")) {
 			recipe = generateShapelessRecipe(`pyrite:${base}_stem`, id(namespace, block), 4)
 		}
-		else {
+		else if (base.includes("log")) {
+			recipe = generateShapelessRecipe(`#pyrite:${base}s`, id(namespace, block), 4)
+		}
+		else if (base.includes("stained")) {
 			base = base.replace("stained", "dye")
 			altNamespace = getDyeNamespace(base)
 			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, base) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
 		}
+	}
+	else if (type === "wood") {
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC", "CC"])
 	}
 	else if (type === "ladder") {
 		recipe = generateShapedRecipe({ "C": `minecraft:stick`, "D": id(altNamespace, base) }, id(namespace, block), 3, ["C C", "CDC", "C C"])
