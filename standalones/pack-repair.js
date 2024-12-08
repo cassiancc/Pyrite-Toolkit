@@ -26,7 +26,6 @@ async function* walk(dir) {
     }
 }
 
-// Then, use it with a simple async for loop
 async function main(dir) {
     if (dir == undefined) {
         console.error("Please provide a path to the unzipped resource pack you wish to repair as a command line argument.")
@@ -34,22 +33,32 @@ async function main(dir) {
         return
     }
     repair(dir)
-    // repair(dir)
+    // it seems to need to run twice to correct the full set of errors? worth investigating a fix here
+    repair(dir)
     
     console.info("Resource Pack repair finished, " + fixedFiles + " files with broken paths repaired.")
 }
 
 function repairPath(path) {
-    let pathArray = path.split(assets)
-    let badDir = pathArray[1].split("/")
-    badDir = badDir[badDir.length - 1]
-    pathArray[1] = pathArray[1].replaceAll(" ", "_").toLowerCase()
-    let newPath = pathArray[0] + assets + pathArray[1]
-
-    // console.log(badDir)
-    badDirs.push(badDir)
-    fs.renameSync(path, newPath)
-    fixedFiles++
+    if (path.includes("assets")) {
+        try {
+            let pathArray = path.split(assets)
+            let badDir = pathArray[1].split("/")
+            badDir = badDir[badDir.length - 1]
+            pathArray[1] = pathArray[1].replaceAll(" ", "_").toLowerCase()
+            let newPath = pathArray[0] + assets + pathArray[1]
+        
+            // console.log(badDir)
+            badDirs.push(badDir)
+            fs.renameSync(path, newPath)
+            fixedFiles++
+        }
+        catch (e) {
+            console.log(path)
+            console.log(e)
+        }
+    }
+    
 }
 
 async function repair(dir) {
@@ -106,7 +115,7 @@ async function repair(dir) {
             });
             
         }
-        if (p.includes(".json")) {
+        else if (p.includes(".json")) {
             fs.readFile(p, 'utf8', (err, contents) => {
                 contents = contents.toLowerCase()
                 const jContents = JSON.parse(contents)
@@ -127,8 +136,6 @@ async function repair(dir) {
                 
             });
         }
-        
-
 
     }
 }
