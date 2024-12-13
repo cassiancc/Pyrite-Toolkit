@@ -26,11 +26,11 @@ node standalones/flip.js /home/cassian/Desktop/Pyrite/resources/lang/en_us.json
 ```
 
 ## Resource Pack Path Fixer
-This script (`standalones/rp-path-fixer`) loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase. As this is the newest script, it's undergoing active development to make it more usable.
+This script (`standalones/pack-repair`) loops through a provided resource pack, replacing broken paths wherever possible. At the moment, it replaces spaces with underscores, and converts all textures to lowercase. As this is the newest script, it's undergoing active development to make it more usable.
 
 ### Example Usage
 ```bash
-node standalones/rp-path-fixer.js /home/cassian/Desktop/ResourcePack/
+node standalones/pack-repair.js /home/cassian/Desktop/ResourcePack/
 ```
 
 # Data Generator Helpers
