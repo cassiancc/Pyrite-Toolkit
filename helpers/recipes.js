@@ -125,7 +125,7 @@ function generateSmeltingRecipe(block, ingredient, quantity, cookingtime, experi
 }
 
 
-function generateShapelessRecipe(ingredients, result, quantity) {
+function generateShapelessRecipe(ingredients, result, quantity, components) {
 	let recipe = {
 		"type": "minecraft:crafting_shapeless",
 		"ingredients": []
@@ -138,8 +138,12 @@ function generateShapelessRecipe(ingredients, result, quantity) {
 	else {
 		addIngredients(recipe.ingredients, ingredients)
 	}
+	
 
 	recipe.result = JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
+	if (components != undefined) {
+		recipe.result.components = components
+	}
 
 	return recipe
 

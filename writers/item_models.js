@@ -45,11 +45,22 @@ function writeClientItem(namespace, folder, path, model) {
 	if (model == undefined) {
 		model = path
 	}
+	let tints;
+	if (model.includes("grass")) {
+		tints = [
+			{
+				"type": "minecraft:grass",
+				"downfall": 1.0,
+				"temperature": 0.5
+			}
+		]
+	}
 	const item =
 	{
 		"model": {
 			"type": "minecraft:model",
-			"model": `${namespace}:${folder}/${model}`
+			"model": `${namespace}:${folder}/${model}`,
+			"tints": tints
 		}
 	}
 	helpers.writeFile(`${helpers.paths.assets}items/${path}.json`, item);

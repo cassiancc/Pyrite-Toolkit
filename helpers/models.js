@@ -20,6 +20,9 @@ module.exports = {
         if (texture_type === undefined) {
             texture_type = "all"
         }
+        if (model.includes("bibliocraft")) {
+            texture_type = "texture"
+        }
         // Extract namespace and block from texture, if present.
         if (texture.includes(":")) {
             namespace = texture.split(":")[0]

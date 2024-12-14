@@ -12,7 +12,7 @@ const readFile = helpers.readFile
 
 
 module.exports = {
-    writeBlock: function writePlankBlockModels(block, namespace, texture, model, render_type) {
+    writeBlockModel: function writePlankBlockModels(block, namespace, texture, model, render_type) {
         let blockModel = modelHelper.generateBlockModel(block, namespace, texture, model, render_type)
         writeFile(`${helpers.modelPath}${block}.json`, blockModel)
     },

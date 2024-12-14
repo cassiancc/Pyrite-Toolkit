@@ -184,7 +184,13 @@ class Block {  // Create a class
 		else if ((blockType == "nostalgia") || (blockType == "nostalgia_resource") || (blockType == "smooth_resource")) {
 			if (textureID == undefined)
 				this.textureID = id(this.blockID)
+			let tagBase = helpers.getPath(this.baseBlock).replace("_block", "")
+			tagHelper.checkAndAddBeaconTag(blockID, tagBase)
+			tagHelper.checkAndAddResourceTag(blockID, tagBase)
 			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, this.textureID, stonelike, true)
+		}
+		else if (blockType == "bibliocraft_bookcase") {
+			blockWriter.writeBibliocraftBlock(blockID, this.blockType, this.baseBlock, "bibliocraft:block/template/bookcase/bookcase", this.textureID)
 		}
 		else {
 			let recipeIngredient;
@@ -458,7 +464,8 @@ function generatePyriteResources() {
 	tagHelper.tagBoth("#pyrite:crafting_tables", "c:player_workstations/crafting_tables", true)
 	tagHelper.tagBlock("#pyrite:obsidian", "minecraft:dragon_immune")
 	tagHelper.tagBlock("#pyrite:ladders", "minecraft:climbable")
-	tagHelper.tagBlock("#pyrite:carpet", "minecraft:sword_efficient")
+	tagHelper.tagBlock("#pyrite:carpet", "minecraft:combination_step_sound_blocks")
+	tagHelper.tagItem("#pyrite:gold", "minecraft:piglin_loved")
 	tagHelper.tagBothFromArray(["#c:dyed/honey", "#c:dyed/glow", "#c:dyed/nostalgia", "#c:dyed/dragon", "#c:dyed/star", "#c:dyed/poisonous", "#c:dyed/rose"], "c:dyed")
 
 	// Add Pyrite tags to tool tags
@@ -480,7 +487,10 @@ function generatePyriteResources() {
 	const newModTags = [
 		"wall_gates", "lamps", "bricks", "dyed_bricks", 
 		"stained_framed_glass", "fences", "wool", "metal_bars", "planks", "brick_stairs", "metal_trapdoors", "brick_walls", "metal_buttons",
-		"concrete_slabs", "concrete_stairs", "azalea_logs"
+		"concrete_slabs", "concrete_stairs", "azalea_logs",
+		"gold", "iron", "diamond", "emerald", "amethyst", "copper",
+		"exposed_copper", "lapis", "netherite", "oxidized_copper",
+		"quartz", "redstone", "weathered_copper"
 	]
 	newModTags.forEach(function(tag) {
 		langHelper.generateLang(tag, "tag.item", modID)
@@ -537,6 +547,10 @@ function generateWoodSet(template, baseBlock) {
 	new Block(template + "_sign", "sign", stainedPlankBase, "wood")
 	new Block(template + "_hanging_sign", "hanging_sign", stainedPlankBase, "wood")
 	new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
+	
+	// bibliocraft integration
+	// new Block(id("bibliocraft", `${modID}_${template}_bookcase`), "bibliocraft_bookcase", stainedPlankBase, "wood")
+
 }
 
 function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet) {

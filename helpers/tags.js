@@ -112,13 +112,19 @@ function checkAndAddBeaconTag(block, baseBlock) {
 }
 
 function checkAndAddResourceTag(block, baseBlock) {
-	let base;
+	let base = getPath(baseBlock);
 	if (baseBlock.includes("smooth_"))
-		base = baseBlock.split("smooth_")[1]
-	else if (baseBlock.includes("cut_"))
-		base = baseBlock.split("cut_")[1]
-	if (vanillaResources.includes(base))
-		tagBlock(block, base)
+		base = base.split("smooth_")[1]
+	if (baseBlock.includes("cut_"))
+		base = base.split("cut_")[1]
+	if (baseBlock.includes("_block"))
+		base = base.split("_block")[0]
+	if (block.includes("trapdoor")) {
+		console.log(block, base)
+	}
+	if (vanillaResources.includes(base)) {
+		tagBoth(block, base)
+	}
 }
 
 function checkAndAddDyedTag(block, baseBlock, blockOnly) {

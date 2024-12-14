@@ -29,11 +29,11 @@ function writeShapedRecipe(ingredients, result, quantity, shape, pattern) {
 	}
 }
 
-function writeShapelessRecipe(ingredients, result, quantity, addon) {
+function writeShapelessRecipe(ingredients, result, quantity, addon, components) {
 	if (addon === undefined) {
 		addon = ""
 	}
-	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity)
+	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity, components)
 	if ((recipe !== "")) {
 		if (result.includes(":")) {
 			result = result.split(":")[1]
