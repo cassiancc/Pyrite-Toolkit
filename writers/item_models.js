@@ -3,14 +3,16 @@ const mc = helpers.mc
 const modID = helpers.modID
 const id = helpers.id
 
-function writeUniqueItemModel(block) {
+// Writes an block item model for items (e.g. dye), creating a client item (1.21.4+) and item model.
+function writeGeneratedItemModel(item) {
 	if (helpers.versionAbove("1.21.4")) {
-		writeClientItem(modID, "item", block, block)
+		writeClientItem(modID, "item", item, item)
 	}
-	let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${block}"}}`
-	helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem);
+	let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${item}"}}`
+	helpers.writeFile(`${helpers.paths.itemModels}${item}.json`, modelItem);
 }
 
+// Writes an block item model for blocks with a unique inventory model (e.g. signs), creating a client item (1.21.4+) and item model.
 function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	if (namespace === undefined) {
 		namespace = modID
@@ -28,6 +30,7 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 	helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem)
 }
 
+// Writes an block item model for blocks with a different inventory model (e.g. walls), passing data to create either a client item or legacy item model, depending on the version.
 function writeInventoryModel(block, namespace) {
 	if (namespace === undefined) {
 		namespace = modID
@@ -41,6 +44,7 @@ function writeInventoryModel(block, namespace) {
 	}
 }
 
+// Writes a 1.21.4+ compatible "client item". Client Items handle item rendering in a way similar to blockstates (but for items)
 function writeClientItem(namespace, folder, path, model) {
 	if (model == undefined) {
 		model = path
@@ -66,6 +70,7 @@ function writeClientItem(namespace, folder, path, model) {
 	helpers.writeFile(`${helpers.paths.assets}items/${path}.json`, item);
 }
 
+// Writes a block item model, passing data to create either a client item or legacy item model, depending on the version.
 function writeBlockItemModel(block, namespace, altNamespace) {
 	if (namespace === undefined) {
 		namespace = modID
@@ -89,6 +94,7 @@ function writeBlockItemModel(block, namespace, altNamespace) {
 	}
 }
 
+// Writes a trapdoor item model.
 function writeTrapdoorItemModel(block, namespace) {
 	if (helpers.versionAbove("1.21.4")) {
 		writeClientItem(namespace, "block", block, `${block}_bottom`)
@@ -102,7 +108,7 @@ function writeTrapdoorItemModel(block, namespace) {
 module.exports = {
     writeUniqueBlockItemModel: writeUniqueBlockItemModel,
     writeInventoryModel: writeInventoryModel,
-    writeUniqueItemModel: writeUniqueItemModel,
+    writeGeneratedItemModel: writeGeneratedItemModel,
     writeBlockItemModel: writeBlockItemModel,
     writeTrapdoorItemModel: writeTrapdoorItemModel
 }

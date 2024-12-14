@@ -56,9 +56,6 @@ function getVersion() {
     catch {
         return "1.21.1"
     }
-   
-
-
 }
 
 const s = getTrialPlural()
@@ -66,8 +63,7 @@ const s = getTrialPlural()
 function getTrialPlural() {
     if (majorVersion < 21) {
         return "s"
-    }
-    else {
+    } else {
         return ""
     }
 }
@@ -95,8 +91,7 @@ function readFileAsJson(path) {
     try {
         file = JSON.parse(readFile(path))
 
-    }
-    catch {
+    } catch {
         file = undefined
     }
     return file
@@ -183,11 +178,9 @@ function versionAbove(version) {
 	if ((localMajor < majorVersion)) {
 		console.log(localMajor, majorVersion)
 		return true;
-	}
-	else if ((majorVersion === localMajor) && (minorVersion >= localMinor)) {
+    } else if ((majorVersion === localMajor) && (minorVersion >= localMinor)) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 
@@ -238,8 +231,7 @@ module.exports = {
     getPath: function getPath(namespacedString) {
         if (namespacedString.includes(":")) {
             return namespacedString.split(":")[1]
-        }
-        else {
+        } else {
             return namespacedString;
         }
     },
@@ -247,8 +239,7 @@ module.exports = {
     getNamespace: function getNamespace(namespacedString) {
         if (namespacedString.includes(":")) {
             return namespacedString.split(":")[0]
-        }
-        else {
+        } else {
             return namespacedString;
         }
     },

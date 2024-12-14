@@ -53,8 +53,6 @@ function writeWallGates(block, baseBlock, texture) {
 
 }
 
-
-
 function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
@@ -74,13 +72,12 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	//Tags
 	if (baseBlock.includes("wool")) {
 		tagHelper.tagBoth(block, "minecraft:wool_carpets")
-	}
-	else {
+	} else {
 		tagHelper.tagBlock(block, "carpet")
 	}
-	
+
 	// Recipes
-	writeRecipeAdvancement(id(block),id(altNamespace, baseBlock))
+	writeRecipeAdvancement(id(block), id(altNamespace, baseBlock))
 	recipeWriter.writeRecipes(block, "carpet", baseBlock, namespace, altNamespace)
 }
 
@@ -88,14 +85,13 @@ function writeDoors(block, baseBlock) {
 	const doorBlockState = stateHelper.genDoors(block, modID, baseBlock)
 	blockstateHelper.writeBlockstate(block, doorBlockState, modID)
 	modelWriter.writeDoors(block)
-	itemModelWriter.writeUniqueItemModel(block)
+	itemModelWriter.writeGeneratedItemModel(block)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeDoorLootTables(block)
 	tagHelper.tagBoth(block, "minecraft:doors")
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_doors")
-	}
-	else {
+	} else {
 		tagHelper.tagBlock(block, baseBlock.split(":")[1].split("_block")[0])
 	}
 	writeRecipeAdvancement(id(block), id(baseBlock))
@@ -135,10 +131,9 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	if (blockID.includes(":")) {
 		namespace = helpers.getNamespace(blockID)
 		block = helpers.getPath(blockID)
-	}
-	else {
+	} else {
 		block = blockID;
-		namespace = modID 
+		namespace = modID
 	}
 	if (texture == undefined)
 		texture = block
@@ -150,72 +145,7 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	langHelper.generateBlockLang(block)
 
 	// Tag various blocks based off block type.
-	if (blockType == "planks") {
-		tagHelper.tagBoth(block, "minecraft:planks")
-		tagHelper.checkAndAddStainedTag(block, baseBlock)
-	}
-	else if (blockType == "wool") {
-		tagHelper.tagBoth(block, "minecraft:wool")
-	}
-	else if (blockType == "terracotta") {
-		tagHelper.tagBoth(block, "minecraft:terracotta")
-	}
-	else if ((blockType == "lamps") || (blockType == "lamp")) {
-		tagHelper.tagBoth(block, "lamps")
-		tagHelper.checkAndAddDyedTag(block, baseBlock)
-	}
-	else if (blockType.includes("resource_bricks")) {
-		const blockType = baseBlock.split(":")[1].split("cut_")[1]
-		tagHelper.tagBoth(block, blockType)
-		tagHelper.checkAndAddBeaconTag(block, blockType)
-	}
-	else if (blockType.includes("bricks")) {
-		if (blockType == "bricks") {
-			tagHelper.tagBoth(block, "dyed_bricks")
-		}
-		else if (blockType.includes("nether")) {
-			tagHelper.tagBoth(block, "c:bricks/nether", true)
-		}
-		tagHelper.tagBoth(block, "bricks")
-		tagHelper.checkAndAddDyedTag(block, baseBlock)
-	}
-	else if (blockType == "stained_framed_glass") {
-		tagHelper.tagBoth(block, "stained_framed_glass")
-		tagHelper.checkAndAddStainedTag(block, baseBlock)
-	}
-	else if (blockType.includes("turf") || blockType.includes("grass_block")) {
-		if (blockType.includes("turf")) {
-			tagHelper.tagBlock(block, "turf_blocks")
-		}
-		tagHelper.tagBoth(block, "minecraft:dirt", true)
-	}
-	else if (blockType.includes("gravel")) {
-		tagHelper.tagBlock(block, "minecraft:bamboo_plantable_on", true)
-		tagHelper.tagBlock(block, "minecraft:enderman_holdable", true)
-	}
-	else if (blockType.includes("netherrack")) {
-		tagHelper.tagBlock(block, "minecraft:infiniburn_end", true)
-		tagHelper.tagBlock(block, "minecraft:infiniburn_nether", true)
-		tagHelper.tagBlock(block, "minecraft:infiniburn_overworld", true)
-	}
-	else if (blockType.includes("smooth_resource")) {
-		const blockType = block.split("smooth_")[1]
-		tagHelper.checkAndAddResourceTag(block, blockType)
-		tagHelper.checkAndAddBeaconTag(block, blockType)
-		tagHelper.tagBlock(block, "smooth_blocks")
-	}
-	else if (blockType.includes("cut_")) {
-		const blockType = block.split("cut_")[1]
-		tagHelper.checkAndAddResourceTag(block, blockType)
-		tagHelper.checkAndAddBeaconTag(block, blockType)
-		tagHelper.tagBlock(block, "cut_blocks")
-	}
-	else if (blockType.includes("obsidian")) (
-		tagHelper.tagBlock(block, "obsidian")
-	)
-	else if (blockType == "nostalgia_resource") {
-		tagHelper.tagBoth(block, block.split("nostalgia_")[1].split("_block")[0])
-	}
+	tagHelper.checkAndAddBlockTypeTag(block, baseBlock, blockType)
 
 	// Generate recipes
 	recipeWriter.writeRecipes(block, blockType, baseBlock, namespace)
@@ -225,7 +155,7 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	if (shouldGenerateRecipeAdvancements !== undefined) {
 		if (shouldGenerateRecipeAdvancements === true)
 			writeRecipeAdvancement(block, baseBlock)
-		else if (shouldGenerateRecipeAdvancements === false) {}
+		else if (shouldGenerateRecipeAdvancements === false) { }
 		else {
 			writeRecipeAdvancement(block, shouldGenerateRecipeAdvancements)
 		}
@@ -240,10 +170,9 @@ function writeBibliocraftBlock(blockID, blockType, baseBlock, model, texture) {
 	if (blockID.includes(":")) {
 		namespace = helpers.getNamespace(blockID)
 		block = helpers.getPath(blockID)
-	}
-	else {
+	} else {
 		block = blockID;
-		namespace = modID 
+		namespace = modID
 	}
 	if (texture == undefined)
 		texture = block
@@ -263,10 +192,10 @@ function writeBibliocraftBlock(blockID, blockType, baseBlock, model, texture) {
 
 function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 	let uprightBlock;
+
 	if (altNamespace === mc) {
 		uprightBlock = block
-	}
-	else {
+	} else {
 		uprightBlock = baseBlock
 		uprightBlock += "_torch"
 		baseBlock += "_torch"
@@ -291,7 +220,7 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
 	lootTableWriter.writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, `c:dyed/${baseBlock}`)
 	recipeWriter.writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
-	writeRecipeAdvancement(id(block),"minecraft:torch")
+	writeRecipeAdvancement(id(block), "minecraft:torch")
 	lootTableWriter.writeLootTables(block)
 }
 
@@ -303,14 +232,14 @@ function writePoweredBlock(block) {
 	}
 	const blockState = {
 		"variants": {
-		  "powered=false": {
-			"model": `${namespace}:block/${path}`
-		  },
-		  "powered=true": {
-			"model": `${namespace}:block/${path}_on`
-		  }
+			"powered=false": {
+				"model": `${namespace}:block/${path}`
+			},
+			"powered=true": {
+				"model": `${namespace}:block/${path}_on`
+			}
 		}
-	  }
+	}
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
 	modelWriter.writePoweredBlock(block)
 	itemModelWriter.writeBlockItemModel(block, namespace)
@@ -367,7 +296,7 @@ function writeChests(block, dye, namespace, baseBlock, altNamespace) {
 }
 
 function writeFlower(block) {
-	const blockState =  stateHelper.gen(block, modID)
+	const blockState = stateHelper.gen(block, modID)
 	blockstateHelper.writeBlockstate(block, blockState, modID)
 	modelWriter.writeFlowers(block, modID)
 	itemModelWriter.writeUniqueBlockItemModel(block, modID)
@@ -376,13 +305,13 @@ function writeFlower(block) {
 	lootTableWriter.writeLootTables(block, modID)
 	recipeWriter.writeRecipes(block, "flower")
 	if (helpers.versionAbove("1.21.3"))
-		recipeWriter.writeShapelessRecipe([id(block), "minecraft:bowl", "minecraft:red_mushroom", "minecraft:brown_mushroom"], "minecraft:blidness", 1, "_from_"+ block, {
-		"minecraft:suspicious_stew_effects": [
-			{
-			"duration": 100,
-			"id": "minecraft:night_vision"
-			}
-		]
+		recipeWriter.writeShapelessRecipe([id(block), "minecraft:bowl", "minecraft:red_mushroom", "minecraft:brown_mushroom"], "minecraft:suspicious_stew", 1, "_from_" + block, {
+			"minecraft:suspicious_stew_effects": [
+				{
+					"duration": 100,
+					"id": "minecraft:blindness"
+				}
+			]
 		})
 	writeRecipeAdvancement(block, id(mc, "poppy"))
 }
@@ -443,7 +372,7 @@ function writeSigns(blockID, baseBlockID, texture) {
 		modelWriter.writeProvided(blockID, modelHelper.generateBlockModel(blockID, modID, baseBlockID, "TOOLKIT_NO_PARENT", undefined, "particle"))
 	else
 		modelWriter.writeBlockModel(blockID, modID, texture)
-	itemModelWriter.writeUniqueItemModel(blockID)
+	itemModelWriter.writeGeneratedItemModel(blockID)
 	// Loot Tables
 	lootTableWriter.writeLootTables(blockID, modID)
 	lootTableWriter.writeLootTables(wallBlockID, modID, blockID)
@@ -474,7 +403,7 @@ function writeHangingSigns(blockID, baseBlockID, texture) {
 		modelWriter.writeProvided(blockID, modelHelper.generateBlockModel(blockID, modID, baseBlockID, "TOOLKIT_NO_PARENT", undefined, "particle"))
 	else
 		modelWriter.writeBlockModel(blockID, modID, texture)
-	itemModelWriter.writeUniqueItemModel(blockID)
+	itemModelWriter.writeGeneratedItemModel(blockID)
 	// Loot Tables
 	lootTableWriter.writeLootTables(blockID, modID)
 	lootTableWriter.writeLootTables(wallBlockID, modID, blockID)
@@ -539,16 +468,15 @@ function writeWalls(block, baseBlockID, texture) {
 	itemModelWriter.writeInventoryModel(block, modID)
 	lootTableWriter.writeLootTables(block)
 	langHelper.generateBlockLang(block)
-	
+
 	tagHelper.tagBoth(block, "minecraft:walls")
 	if (baseBlockID.includes("bricks")) {
 		tagHelper.tagBoth(block, "brick_walls")
-	}
-	else {
+	} else {
 		tagHelper.checkAndAddResourceTag(block, baseBlockID)
 	}
 	writeRecipeAdvancement(block, baseBlockID)
-	recipeWriter.writeShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC","CCC"])
+	recipeWriter.writeShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC", "CCC"])
 	recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
 }
 
@@ -561,8 +489,7 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 	if (texture.includes(":")) {
 		textureNamespace = texture.split(":")[0]
 		texturePath = texture.split(":")[1]
-	}
-	else {
+	} else {
 		textureNamespace = modID;
 		texturePath = texture;
 	}
@@ -573,30 +500,26 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 	itemModelWriter.writeBlockItemModel(block, modID)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block)
-	
-	//Tag stairs
+
+	// Tag stairs
 	tagHelper.tagBoth(block, "minecraft:stairs")
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_stairs")
 		tagHelper.checkAndAddStainedTag(block, baseBlock)
-	}
-	else if (baseBlock.includes("bricks")) {
+	} else if (baseBlock.includes("bricks")) {
 		tagHelper.tagBoth(block, "brick_stairs")
-	}
-	else if ((baseBlock.includes("smooth")) || (baseBlock.includes("cut_"))) {
+	} else if ((baseBlock.includes("smooth")) || (baseBlock.includes("cut_"))) {
 		tagHelper.checkAndAddResourceTag(block, baseBlock)
-	}
-	else if (baseBlock.includes("concrete")) {
+	} else if (baseBlock.includes("concrete")) {
 		tagHelper.tagBoth(block, "concrete_stairs")
 		tagHelper.checkAndAddDyedTag(block, baseBlock)
-	}
-	else {
+	} else {
 		tagHelper.tagBlock(block, "turf_stairs")
 	}
 
 	// Generate recipes
-	writeRecipeAdvancement(id(block),id(baseBlock))
-	recipeWriter.writeRecipes(block, "stairs", baseBlock, modID)	
+	writeRecipeAdvancement(id(block), id(baseBlock))
+	recipeWriter.writeRecipes(block, "stairs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
 		recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
 	}
@@ -611,8 +534,7 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	if (texture.includes(":")) {
 		textureNamespace = texture.split(":")[0]
 		texturePath = texture.split(":")[1]
-	}
-	else {
+	} else {
 		textureNamespace = modID;
 		texturePath = texture;
 	}
@@ -629,24 +551,20 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_slabs")
 		tagHelper.checkAndAddStainedTag(block, baseBlock)
-	}
-	else if (baseBlock.includes("bricks")) {
+	} else if (baseBlock.includes("bricks")) {
 		tagHelper.tagBlock(block, "brick_slabs")
 		tagHelper.checkAndAddDyedTag(block, baseBlock)
-	}
-	else if (baseBlock.includes("smooth_") || baseBlock.includes("cut_")) {
+	} else if (baseBlock.includes("smooth_") || baseBlock.includes("cut_")) {
 		tagHelper.checkAndAddResourceTag(block, baseBlock)
-	}
-	else if (baseBlock.includes("concrete")) {
+	} else if (baseBlock.includes("concrete")) {
 		tagHelper.tagBoth(block, "concrete_slabs")
 		tagHelper.checkAndAddDyedTag(block, baseBlock)
-	}
-	else {
+	} else {
 		tagHelper.tagBlock(block, "turf_slabs")
 	}
 
 	// Generate recipes
-	writeRecipeAdvancement(id(block),id(baseBlock))
+	writeRecipeAdvancement(id(block), id(baseBlock))
 	recipeWriter.writeRecipes(block, "slabs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
 		recipeWriter.writeStonecutterRecipes(block, baseBlock, 2)
@@ -670,8 +588,7 @@ function writePlates(block, baseBlockID, texture) {
 	if (baseBlockPath.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_pressure_plates", true)
 		tagHelper.checkAndAddStainedTag(block, baseBlockPath)
-	}
-	else {
+	} else {
 		tagHelper.tagBlock(block, "minecraft:pressure_plates", true)
 	}
 	writeRecipeAdvancement(id(block), baseBlockID)
@@ -696,12 +613,11 @@ function writeButtons(block, baseBlockID, texture, type) {
 
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_buttons", true)
-	}
-	else {
+	} else {
 		tagHelper.tagBoth(block, "metal_buttons", true)
 		tagHelper.checkAndAddResourceTag(block, baseBlockID)
 	}
-	writeRecipeAdvancement(id(block),baseBlockID)
+	writeRecipeAdvancement(id(block), baseBlockID)
 	recipeWriter.writeRecipes(block, type, baseBlock, namespace, baseNamespace)
 }
 
@@ -716,7 +632,7 @@ function writeFences(block, namespace, baseBlock) {
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBoth(block, "minecraft:wooden_fences", true)
 	}
-	writeRecipeAdvancement(id(block),id(baseBlock))
+	writeRecipeAdvancement(id(block), id(baseBlock))
 	recipeWriter.writeRecipes(block, "fences", baseBlock, namespace)
 }
 
@@ -734,8 +650,7 @@ function writeFenceGates(block, namespace, baseBlockID) {
 	tagHelper.tagBoth(block, "minecraft:fence_gates", true)
 	if (baseBlock.includes("planks")) {
 		tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
-	}
-	else {
+	} else {
 		tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
 	}
 
@@ -747,7 +662,7 @@ function writeFenceGates(block, namespace, baseBlockID) {
 function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
-	writeRecipeAdvancement(block, id(dye+"_dye"))
+	writeRecipeAdvancement(block, id(dye + "_dye"))
 	writeBlock(id(namespace, block), "terracotta", dye)
 }
 
@@ -764,7 +679,7 @@ function writeConcretePowder(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `c:concrete_powder`)
 	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
-	writeRecipeAdvancement(block, id(dye+"_dye"))
+	writeRecipeAdvancement(block, id(dye + "_dye"))
 	writeBlock(id(namespace, block), "concrete_powder", dye, undefined, block)
 }
 
@@ -796,11 +711,6 @@ function writeTerracottaBricks(block, namespace, special, baseBlock, stonelike) 
 	if (stonelike !== false)
 		recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
 }
-
-
-
-
-
 
 
 module.exports = {

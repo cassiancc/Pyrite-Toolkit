@@ -13,8 +13,7 @@ module.exports = {
         }
         if (render_type === undefined) {
             render_type = ""
-        }
-        else {
+        } else {
             render_type = `,"render_type": "${render_type}"`
         }
         if (texture_type === undefined) {
@@ -73,11 +72,9 @@ module.exports = {
         if (baseBlock === "grass_block_top") {
             if (model === "stairs") {
                 return helpers.readFile("./overrides/pyrite/models/grass_stairs.json")
-            }
-            else if (model === "inner_stairs") {
+            } else if (model === "inner_stairs") {
                 return helpers.readFile("./overrides/pyrite/models/grass_stairs_inner.json")
-            }
-            else if (model === "outer_stairs") {
+            } else if (model === "outer_stairs") {
                 return helpers.readFile("./overrides/pyrite/models/grass_stairs_outer.json")
             }
         }
@@ -141,11 +138,9 @@ module.exports = {
                     const torchBlock = baseBlock.replace("torch", "wall_torch")
                     return `{"parent": "${altNamespace}:block/${torchBlock}","render_type": "cutout"}`
                 }
-            }
-            else if (addon === "_upright") {
+            } else if (addon === "_upright") {
                 return `{"parent": "${altNamespace}:block/${baseBlock}","render_type": "cutout"}`
-            }
-            else {
+            } else {
                 return `{"parent": "pyrite:block/template_torch_lever${addon}","textures": {"texture": "${altNamespace}:block/${baseBlock}"},"render_type": "cutout"}`
             }
         }
@@ -202,20 +197,15 @@ module.exports = {
     generateBarBlockModel: function generateBarBlockModel(block, namespace, model) {
         if (model == "side") {
             return generateBarSideBlockModel(block, namespace)
-        }
-        else if (model == "side_alt") {
+        } else if (model == "side_alt") {
             return generateBarSideAltBlockModel(block, namespace)
-        }
-        else if (model == "post_ends") {
+        } else if (model == "post_ends") {
             return generateBarPostEndsBlockModel(block, namespace)
-        }
-        else if (model == "cap_alt") {
+        } else if (model == "cap_alt") {
             return generateBarCapAltBlockModel(block, namespace)
-        }
-        else if (model == "post") {
+        } else if (model == "post") {
             return generateBarPostBlockModel(block, namespace)
-        }
-        else if (model == "cap") {
+        } else if (model == "cap") {
             return generateBarCapBlockModel(block, namespace)
         }
     }
