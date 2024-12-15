@@ -10,18 +10,22 @@ function readConfigFile() {
     if (arg.includes(".json")) {
         configPath = arg
     }
+    let returnedConfig;
     let localConfig = readFileAsJson(configPath)
     if (localConfig instanceof Array) {
         localConfig.forEach(function(configOption) {
+            console.log(arg == configOption.modID)
             if (arg == configOption.modID) {
-                return configOption
+                returnedConfig = configOption
             }
         })
-        return localConfig[0];
+        if (returnedConfig == undefined)
+            returnedConfig = localConfig[0];
     }
     else {
-        return localConfig
+        returnedConfig = localConfig
     }
+    return returnedConfig
 }
 
 const rootFolder = config.modPath
