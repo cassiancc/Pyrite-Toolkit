@@ -524,7 +524,7 @@ function writeDye(item) {
 function writeItem(item) {
 	langHelper.generateLang(item, "item", modID)
 	tagHelper.tagItem(item, "c:dyes")
-	itemModelWriter.writeUniqueItemModel(item)
+	itemModelWriter.writeGeneratedItemModel(item)
 }
 
 function generateWoodSet(template, baseBlock) {

@@ -119,9 +119,6 @@ function checkAndAddResourceTag(block, baseBlock) {
 		base = base.split("cut_")[1]
 	if (baseBlock.includes("_block"))
 		base = base.split("_block")[0]
-	if (block.includes("trapdoor")) {
-		console.log(block, base)
-	}
 	if (vanillaResources.includes(base)) {
 		tagBoth(block, base)
 	}

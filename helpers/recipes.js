@@ -40,22 +40,23 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	return {
-		"fabric:load_conditions": [
-			{
-				"condition": "fabric:all_mods_loaded",
-				"values": [
-					mod
-				]
-			}
-		],
-		"neoforge:conditions": [
-			{
-			"type": "neoforge:mod_loaded",
-			"modid": mod
-			}
-		]
-	}
+	if (mod != "#minecraft")
+		return {
+			"fabric:load_conditions": [
+				{
+					"condition": "fabric:all_mods_loaded",
+					"values": [
+						mod
+					]
+				}
+			],
+			"neoforge:conditions": [
+				{
+				"type": "neoforge:mod_loaded",
+				"modid": mod
+				}
+			]
+		}
 }
 
 function generateStonecutterRecipe(block, ingredient, quantity, type) {
@@ -220,6 +221,9 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			base = base.replace("stained", "dye")
 			altNamespace = getDyeNamespace(base)
 			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, base) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
+		}
+		else {
+			recipe = generateShapelessRecipe(`pyrite:${base}_stem`, id(namespace, block), 4)
 		}
 	}
 	else if (type === "wood") {

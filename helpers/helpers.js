@@ -2,8 +2,6 @@ const fs = require('fs');
 
 const config = readConfigFile()
 
-console.log(process.argv[2])
-
 function readConfigFile() {
     let arg = process.argv[2]
     let configPath = "./config.json"
@@ -14,7 +12,6 @@ function readConfigFile() {
     let localConfig = readFileAsJson(configPath)
     if (localConfig instanceof Array) {
         localConfig.forEach(function(configOption) {
-            console.log(arg == configOption.modID)
             if (arg == configOption.modID) {
                 returnedConfig = configOption
             }
@@ -180,7 +177,6 @@ function versionAbove(version) {
 	const localMinor = parseInt(version.split(".")[2])
 
 	if ((localMajor < majorVersion)) {
-		console.log(localMajor, majorVersion)
 		return true;
     } else if ((majorVersion === localMajor) && (minorVersion >= localMinor)) {
 		return true;
