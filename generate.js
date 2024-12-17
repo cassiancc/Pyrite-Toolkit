@@ -161,8 +161,12 @@ class Block {  // Create a class
 			}
 			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, undefined, id(this.namespace, this.blockID), stonelike, true)
 		}
-		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane")) {
-			blockWriter.writePanes(this.blockID, this.namespace, this.baseBlock)
+		else if ((blockType === "framed_glass_pane") || (blockType === "stained_framed_glass_pane") || (blockType === "glass_pane")) {
+			let shatters = false;
+			if (blockType == "glass_pane") {
+				shatters = true
+			}
+			blockWriter.writePanes(this.blockID, this.namespace, this.baseBlock, shatters)
 		}
 		else if (blockType === "pressure_plate") {
 			blockWriter.writePlates(this.blockID, id(this.baseNamespace, this.baseBlock))
@@ -171,9 +175,17 @@ class Block {  // Create a class
 			tagHelper.tagBoth(blockID, "c:glass_blocks/colorless")
 			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, "cutout", undefined, false, "minecraft:glass")
 		}
-		else if (blockType == "stained_framed_glass") {
+		else if ((blockType == "stained_framed_glass") || (blockType == "stained_glass")) {
+			let recipeIngredient, shatters = false;
+			if (blockType === "stained_framed_glass") {
+				recipeIngredient = "pyrite:framed_glass"
+			}
+			else if (blockType === "stained_glass") {
+				recipeIngredient = "minecraft:glass"
+				shatters = true
+			}
 			tagHelper.tagBoth(blockID, "c:glass_blocks")
-			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, "translucent", undefined, undefined, "pyrite:framed_glass")
+			blockWriter.writeBlock(id(this.namespace, this.blockID), this.blockType, this.baseBlock, "translucent", undefined, undefined, recipeIngredient, undefined, shatters)
 		}
 		else if (blockType == "locked_chest") {
 			blockWriter.writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
@@ -266,7 +278,7 @@ function generatePyriteResources() {
 
 	// Azalea
 	const azalea = "azalea_log"
-	generateWoodSet("azalea", azalea)
+	generateWoodSet("azalea", azalea, true)
 	new Block(azalea, "log", azalea, "wood")
 	new Block("stripped_"+azalea, "log", "stripped_"+azalea, "wood")
 	new Block("azalea_wood", "wood", azalea, "wood", "azalea_log")
@@ -333,6 +345,8 @@ function generatePyriteResources() {
 		blockWriter.writeConcretePowder(dye, dye, modID)
 		new Block(concrete + "_slab", "slab", id(modID, concrete), "concrete", id(modID, concrete))
 		new Block(concrete + "_stairs", "stairs", id(modID, concrete), "concrete", id(modID, concrete))
+		new Block(dye + "_stained_glass", "stained_glass", dye, "stained_glass")
+		new Block(dye + "_stained_glass_pane", "glass_pane", dye + "_stained_glass", "stained_framed_glass_pane")
 	})
 
 	// Lamps
@@ -490,7 +504,8 @@ function generatePyriteResources() {
 		"concrete_slabs", "concrete_stairs", "azalea_logs",
 		"gold", "iron", "diamond", "emerald", "amethyst", "copper",
 		"exposed_copper", "lapis", "netherite", "oxidized_copper",
-		"quartz", "redstone", "weathered_copper"
+		"quartz", "redstone", "weathered_copper",
+		"stained_glass"
 	]
 	newModTags.forEach(function(tag) {
 		langHelper.generateLang(tag, "tag.item", modID)
@@ -527,10 +542,14 @@ function writeItem(item) {
 	itemModelWriter.writeGeneratedItemModel(item)
 }
 
-function generateWoodSet(template, baseBlock) {
+function generateWoodSet(template, baseBlock, hasStrippedLog) {
 	const stainedPlankBase = template + "_planks"
 	if (baseBlock == undefined) {
 		baseBlock = template
+	}
+	let hangingSignBase = stainedPlankBase
+	if (hasStrippedLog) {
+		hangingSignBase = "stripped_"+template+"_log"
 	}
 
 	new Block(template + "_button", "button", stainedPlankBase, "wood")
@@ -545,7 +564,7 @@ function generateWoodSet(template, baseBlock) {
 	// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
 	new Block(template + "_door", "door", stainedPlankBase, "wood")
 	new Block(template + "_sign", "sign", stainedPlankBase, "wood")
-	new Block(template + "_hanging_sign", "hanging_sign", stainedPlankBase, "wood")
+	new Block(template + "_hanging_sign", "hanging_sign", hangingSignBase, "wood")
 	new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
 	
 	// bibliocraft integration

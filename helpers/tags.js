@@ -151,6 +151,9 @@ function checkAndAddBlockTypeTag(block, baseBlock, blockType) {
 	} else if (blockType == "stained_framed_glass") {
 		tagBoth(block, "stained_framed_glass")
 		checkAndAddStainedTag(block, baseBlock)
+	} else if (blockType == "stained_glass") {
+		tagBoth(block, "stained_glass")
+		checkAndAddStainedTag(block, baseBlock)
 	} else if (blockType.includes("turf") || blockType.includes("grass_block")) {
 		if (blockType.includes("turf")) {
 			tagBlock(block, "turf_blocks")

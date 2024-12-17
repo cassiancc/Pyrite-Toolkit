@@ -47,9 +47,13 @@ module.exports = {
         if (block.includes("bars")) {
             edge = baseBlock
         }
-        else {
+        else if (block.includes("framed")) {
             edge = "framed_glass_pane_top"
         }
+        else {
+            edge = baseBlock + "_pane_top"
+        }
+        
         return `{
         "parent": "minecraft:block/${model}",
         "textures": {

@@ -208,8 +208,9 @@ module.exports = {
         if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
             modelSubdirectory = altNamespace + "/"
         }
-        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate", altNamespace))
-        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate_open", altNamespace))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_inventory.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "minecraft:block/template_fence_gate", altNamespace))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "pyrite:block/template_wall_gate", altNamespace))
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "pyrite:block/template_wall_gate_open", altNamespace))
         writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_wall.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "pyrite:block/template_wall_gate_wall", altNamespace))
         writeFile(`${helpers.modelPath}${modelSubdirectory}${block}_wall_open.json`, modelHelper.generateFenceGateBlockModels(block, namespace, baseBlock, "pyrite:block/template_wall_gate_wall_open", altNamespace))
     },

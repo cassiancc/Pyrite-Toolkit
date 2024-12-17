@@ -30,7 +30,7 @@ function writeWallGates(block, baseBlock, texture) {
 
 	// Models
 	modelWriter.writeWallGates(block, modID, texture, undefined);
-	itemModelWriter.writeBlockItemModel(block, modID, baseBlockNamespace);
+	itemModelWriter.writeInventoryModel(block, modID, baseBlockNamespace);
 
 	// Language files
 	langHelper.generateBlockLang(block);
@@ -125,7 +125,7 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	recipeWriter.writeRecipes(block, "trapdoor", baseBlock)
 }
 
-function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements, customModel) {
+function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements, customModel, shatters) {
 	// Setup
 	let namespace, block;
 	if (blockID.includes(":")) {
@@ -141,7 +141,8 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	blockstateHelper.writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
 	modelWriter.writeBlockModel(block, namespace, texture, customModel, render_type)
 	itemModelWriter.writeBlockItemModel(block, namespace)
-	lootTableWriter.writeLootTables(block, namespace)
+	if (shatters !== true)
+		lootTableWriter.writeLootTables(block, namespace)
 	langHelper.generateBlockLang(block)
 
 	// Tag various blocks based off block type.
@@ -421,12 +422,13 @@ function writeHangingSigns(blockID, baseBlockID, texture) {
 	return blockID;
 }
 
-function writePanes(block, namespace, baseBlock) {
+function writePanes(block, namespace, baseBlock, shatters) {
 	baseBlock = block.replace("_pane", "")
 	blockstateHelper.writeBlockstate(block, stateHelper.genPanes(block, namespace, baseBlock), namespace)
 	modelWriter.writePanes(block, namespace, baseBlock)
 	itemModelWriter.writeUniqueBlockItemModel(block, namespace, namespace, baseBlock)
-	lootTableWriter.writeLootTables(block, namespace)
+	if (shatters !== true)
+		lootTableWriter.writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, "c:glass_panes")
 	tagHelper.checkAndAddDyedTag(block, baseBlock)
 	writeRecipeAdvancement(block, id(baseBlock))

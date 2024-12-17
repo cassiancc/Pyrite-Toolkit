@@ -280,6 +280,10 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
 		recipe = createDyeRecipe(namespace, block, altNamespace, "framed_glass", dye, namespace)
+	} else if ((type === "stained_glass")) {
+		const dye = `${base}_dye`
+		altNamespace = getDyeNamespace(dye)
+		recipe = createDyeRecipe(namespace, block, altNamespace, "minecraft:glass", dye, namespace)
 	} else if (type === "glass_pane") {
 		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
