@@ -1,8 +1,8 @@
-const { upsideDownify } = require("../helpers/language");
-const { readFileAsJson, writeFile } = require("../helpers/helpers");
-const {flipTranslationFile} = require("../helpers/language");
+const { upsideDownify } = require("./helpers/language");
+const { readFileAsJson, writeFile } = require("./helpers/helpers");
+const {flipTranslationFile} = require("./helpers/language");
 const fs = require("fs");
-const helpers = require("../helpers/helpers");
+const helpers = require("./helpers/helpers");
 
 // console.log(upsideDownify("test"))
 // console.log(flipTranslationFile("./overrides/lang/en_us.json"))
