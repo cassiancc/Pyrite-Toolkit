@@ -526,6 +526,12 @@ function generatePyriteResources() {
 if (process.argv[2] == "pyrite") {
 	generatePyriteResources()
 }
+else if (modID == "holiday-server-mod") {
+	writeItem("tater_banner_pattern")
+	recipeWriter.writeShapelessRecipe(["minecraft:paper", "minecraft:potato"], id("tater_banner_pattern"), 1)
+	writeItem("fabric_banner_pattern")
+	recipeWriter.writeShapelessRecipe(["minecraft:paper", "minecraft:loom"], id("fabric_banner_pattern"), 1)
+}
 
 function writeDye(item) {
 	item = item + "_dye"
@@ -534,11 +540,11 @@ function writeDye(item) {
 	writeItem(item, modID)
 	writeRecipeAdvancement(itemID, dyeIngredient)
 	recipeWriter.writeShapelessRecipe(dyeIngredient, itemID, 1)
+	tagHelper.tagItem(item, "c:dyes")
 }
 
 function writeItem(item) {
 	langHelper.generateLang(item, "item", modID)
-	tagHelper.tagItem(item, "c:dyes")
 	itemModelWriter.writeGeneratedItemModel(item)
 }
 

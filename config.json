@@ -10,5 +10,12 @@
         "modPath": "/home/cassian/Desktop/Minecraft/Mods/Infinite-Dimensions/",
         "projectType": "architectury",
         "disableWriting": true
+    },
+    {
+        "modID": "holiday-server-mod",
+        "modPath": "/home/cassian/Desktop/Minecraft/Mods/Forks/holiday-server-pack/mod",
+        "projectType": "fabric",
+        "disableWriting": false,
+        "version": "1.21.4"
     }
 ]

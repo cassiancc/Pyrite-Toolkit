@@ -72,6 +72,7 @@ function writeCarpet(block, namespace, baseBlock, altNamespace) {
 	//Tags
 	if (baseBlock.includes("wool")) {
 		tagHelper.tagBoth(block, "minecraft:wool_carpets")
+		tagHelper.tagBoth(block, `c:dyed/${baseBlock.replace("_wool", "")}`)
 	} else {
 		tagHelper.tagBlock(block, "carpet")
 	}

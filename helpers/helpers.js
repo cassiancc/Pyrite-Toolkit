@@ -47,16 +47,20 @@ function commonPath() {
 }
 
 function getVersion() {
-    try {
-        let gradleProperties = readFile(rootFolder+"gradle.properties")
-        gradleProperties = gradleProperties.split("minecraft_version")[1]
-        gradleProperties = gradleProperties.split("\n")[0]
-        gradleProperties = gradleProperties.replace("=", "").trim()
-        return gradleProperties;
+    if (config.version == null) {
+        try {
+            let gradleProperties = readFile(rootFolder+"gradle.properties")
+            gradleProperties = gradleProperties.split("minecraft_version")[1]
+            gradleProperties = gradleProperties.split("\n")[0]
+            gradleProperties = gradleProperties.replace("=", "").trim()
+            return gradleProperties;
+        }
+        catch {
+            return "1.21.1"
+        }
     }
-    catch {
-        return "1.21.1"
-    }
+    else return config.version
+    
 }
 
 const s = getTrialPlural()
