@@ -244,6 +244,7 @@ function generatePyriteResources() {
 		generateWoodSet(stainedBlockTemplate)
 		generateBrickSet(dye)
 		generateBrickSet(dye + "_terracotta_bricks", "terracotta_bricks", `${helpers.getDyeNamespace(dye)}:${dye}_terracotta`)
+		recipeWriter.writeDyeRecipe(id("terracotta_bricks"), dye+"_terracotta_bricks", dye, "_from_terracotta_bricks")
 
 		// Lamps
 		new Block(dye + "_lamp", "lamp", dye, "lamp")
@@ -288,21 +289,37 @@ function generatePyriteResources() {
 
 	// Cobblestone
 	generateBrickSet("cobblestone_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
+	recipeWriter.writeStonecutterRecipes(["cobblestone_brick_stairs", "cobblestone_brick_slab", "cobblestone_brick_wall", "cobblestone_brick_wall_gate"],
+		"minecraft:cobblestone", 1, "from_cobblestone")
 	generateBrickSet("sandstone_bricks", "terracotta_bricks", "minecraft:cut_sandstone", false)
+	blockWriter.writeStairs("smooth_stone_stairs", id(mc, "smooth_stone"), id(mc, "smooth_stone"), true)
 	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true)
+	recipeWriter.writeStonecutterRecipes(["smooth_stone_brick_stairs", "smooth_stone_brick_slab", "smooth_stone_brick_wall", "smooth_stone_brick_wall_gate"],
+		"minecraft:smooth_stone", 1, "from_smooth_stone")
 	// Granite
 	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true)
+	recipeWriter.writeStonecutterRecipes(["granite_brick_stairs", "granite_brick_slab", "granite_brick_wall", "granite_brick_wall_gate"],
+		 "minecraft:granite", 1, "from_granite")
 	// Andesite
 	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
+	recipeWriter.writeStonecutterRecipes(["cobblestone_brick_stairs", "cobblestone_brick_slab", "cobblestone_brick_wall", "cobblestone_brick_wall_gate"],
+		"minecraft:cobblestone", 1, "from_cobblestone")
 	// Diorite
 	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true)
+	recipeWriter.writeStonecutterRecipes(["diorite_brick_stairs", "diorite_brick_slab", "diorite_brick_wall", "diorite_brick_wall_gate"],
+		"minecraft:diorite", 1, "from_diorite")
 	// Calcite
 	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true)
+	recipeWriter.writeStonecutterRecipes(["calcite_brick_stairs", "calcite_brick_slab", "calcite_brick_wall", "calcite_brick_wall_gate"],
+		"minecraft:calcite", 1, "from_calcite")
 	// Tuff
 	if (majorVersion > 20)
 		generateMossyBrickSet("tuff_bricks", "minecraft:tuff_bricks")
 	// Deepslate
 	generateMossyBrickSet("deepslate_bricks", "minecraft:deepslate_bricks")
+
+	generateBrickSet("terracotta_bricks", "terracotta_bricks", "minecraft:terracotta", false)
+
 
 	blockWriter.writeBlock("nostalgia_cobblestone", "nostalgia_cobblestone", "nostalgia_cobblestone")
 	blockWriter.writeBlock("nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")

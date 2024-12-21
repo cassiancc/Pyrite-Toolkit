@@ -125,6 +125,7 @@ function generateSmeltingRecipe(block, ingredient, quantity, cookingtime, experi
 function generateShapelessRecipe(ingredients, result, quantity, components) {
 	let recipe = {
 		"type": "minecraft:crafting_shapeless",
+		"category": "building",
 		"ingredients": []
 	}
 	if (ingredients instanceof Array) {
@@ -182,6 +183,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 
 	let recipe = {
 		"type": "minecraft:crafting_shaped",
+		"category": "building",
 		"pattern": shape,
 		"key": newIngredients
 
@@ -196,11 +198,15 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 	return recipe
 }
 
-function createDyeRecipe(namespace, block, altNamespace, altBlock, other, baseNamespace) {
+function createDyeRecipe(block, namespace, altBlock, other, baseNamespace) {
 	if (baseNamespace === undefined) {
-		baseNamespace = altNamespace
+		baseNamespace = namespace
 	}
-	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(altNamespace, other) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
+	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(namespace, other) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
+}
+
+function generateDyeRecipe(blockID, baseBlockID, dyeID) {
+	return generateShapedRecipe({ "C": baseBlockID, "D": dyeID }, id(blockID), 8, ["CCC", "CDC", "CCC"])
 }
 
 function generateRecipes(block, type, base, namespace, altNamespace) {
@@ -233,7 +239,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	} else if (type === "terracotta") {
 		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
-		recipe = createDyeRecipe(namespace, block, altNamespace, id(mc, "terracotta"), base)
+		recipe = createDyeRecipe(block, altNamespace, id(mc, "terracotta"), base)
 	} else if (type === "concrete_powder") {
 		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
@@ -279,11 +285,11 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	} else if ((type === "dyed_framed_glass") || (type === "stained_framed_glass")) {
 		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
-		recipe = createDyeRecipe(namespace, block, altNamespace, "framed_glass", dye, namespace)
+		recipe = createDyeRecipe(block, altNamespace, "framed_glass", dye, namespace)
 	} else if ((type === "stained_glass")) {
 		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
-		recipe = createDyeRecipe(namespace, block, altNamespace, "minecraft:glass", dye, namespace)
+		recipe = createDyeRecipe(block, altNamespace, "minecraft:glass", dye, namespace)
 	} else if (type === "glass_pane") {
 		const dye = `${base}_dye`
 		altNamespace = getDyeNamespace(dye)
@@ -300,13 +306,13 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		} else {
 			base = `${base}_dye`
 			altNamespace = getDyeNamespace(base)
-			recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", base, namespace)
+			recipe = createDyeRecipe(block, altNamespace, "glowstone_lamp", base, namespace)
 		}
 
 	} else if (type === "lamp") {
 		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
-		recipe = createDyeRecipe(namespace, block, altNamespace, "glowstone_lamp", base, namespace)
+		recipe = createDyeRecipe(block, altNamespace, "glowstone_lamp", base, namespace)
 	} else if (type === "bricks") {
 		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
@@ -370,7 +376,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	} else if (type === "carpet") {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC"])
 	} else if (type === "fences") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "stick") }, id(namespace, block), 1, [
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "stick") }, id(namespace, block), 3, [
 			"CSC",
 			"CSC"
 		])
@@ -455,6 +461,7 @@ module.exports = {
     generateShapedRecipe: generateShapedRecipe,
 	generateStonecutterRecipe: generateStonecutterRecipe,
     generateShapelessRecipe: generateShapelessRecipe,
-	generateModLoadCondition: generateModLoadCondition
+	generateModLoadCondition: generateModLoadCondition,
+	generateDyeRecipe: generateDyeRecipe
 
 }

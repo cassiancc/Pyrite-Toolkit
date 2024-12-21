@@ -4,7 +4,6 @@ const { writeRecipeAdvancement } = require('./advancements');
 
 const id = helpers.id
 
-
 function writeRecipes(block, type, other, namespace, altNamespace) {
 	let recipe = recipeHelper.generateRecipes(block, type, other, namespace, altNamespace)
 	if ((recipe !== "")) {
@@ -42,7 +41,22 @@ function writeShapelessRecipe(ingredients, result, quantity, addon, components) 
 	}
 }
 
-function writeStonecutterRecipes(block, ingredient, quantity, addon) {
+function writeDyeRecipe(ingredient, result, dye, addon) {
+	if (addon === undefined) {
+		addon = ""
+	}
+	const dyeID = id(helpers.getDyeNamespace(dye), dye) + "_dye"
+	let recipe =  recipeHelper.generateDyeRecipe(result, ingredient, dyeID)
+
+	if ((recipe !== "")) {
+		if (result.includes(":")) {
+			result = result.split(":")[1]
+		}
+		helpers.writeFile(`${helpers.recipePath}${result}${addon}.json`, recipe)
+	}
+}
+
+function writeStonecutterRecipe(block, ingredient, quantity, addon) {
 	if (block === ingredient) {
 		return
 	}
@@ -63,9 +77,22 @@ function writeStonecutterRecipes(block, ingredient, quantity, addon) {
 	}
 }
 
+function writeStonecutterRecipes(blocks, ingredient, quantity, addon) {
+	if (blocks instanceof Array) {
+		blocks.forEach(block => {
+			writeStonecutterRecipe(block, ingredient, quantity, addon)
+		});
+	}
+	else {
+		writeStonecutterRecipe(blocks, ingredient, quantity, addon)
+	}
+}
+
 module.exports = {
     writeRecipes: writeRecipes,
     writeShapedRecipe, writeShapedRecipe,
     writeShapelessRecipe, writeShapelessRecipe,
-    writeStonecutterRecipes, writeStonecutterRecipes
+    writeStonecutterRecipes: writeStonecutterRecipe, 
+	writeStonecutterRecipes: writeStonecutterRecipes,
+	writeDyeRecipe: writeDyeRecipe
 }
