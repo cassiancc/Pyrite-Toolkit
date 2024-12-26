@@ -547,7 +547,7 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	modelWriter.writeSlabs(block, textureNamespace, texture)
 	itemModelWriter.writeBlockItemModel(block, modID)
 	langHelper.generateBlockLang(block)
-	lootTableWriter.writeLootTables(block)
+	lootTableWriter.writeSlabLootTables(id(block))
 
 	// Tag slabs
 	tagHelper.tagBoth(block, "minecraft:slabs")

@@ -40,7 +40,8 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	if (mod != "#minecraft")
+	console.log(mod)
+	if ((mod != "#minecraft") && (mod != "c"))
 		return {
 			"fabric:load_conditions": [
 				{
@@ -162,7 +163,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 			else {
 				itemOrTag = "item"
 			}
-			const valueNamespace = value.split(":")[0]
+			const valueNamespace = value.split(":")[0].replace("#", "")
 			if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
 				loadCondition = generateModLoadCondition(valueNamespace)
 			}

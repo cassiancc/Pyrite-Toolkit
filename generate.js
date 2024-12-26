@@ -533,6 +533,17 @@ function generatePyriteResources() {
 		langHelper.generateLang(tag, "tag.item", "c")
 	})
 
+	recipeWriter.writeShapedRecipe({
+		"#": "minecraft:iron_ingot",
+		"C": "#c:player_workstations/crafting_tables",
+		"D": "minecraft:dropper",
+		"R": "minecraft:redstone"
+	  }, "minecraft:crafter", 1, [
+		"###",
+		"#C#",
+		"RDR"
+	  ])
+
 
 	// Write final language file.
 	langHelper.writeLang()
