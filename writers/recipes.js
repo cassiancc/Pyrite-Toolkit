@@ -56,11 +56,12 @@ function writeDyeRecipe(ingredient, result, dye, addon) {
 	}
 }
 
-function writeStonecutterRecipe(block, ingredient, quantity, addon) {
+function writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonAfter) {
 	if (block === ingredient) {
 		return
 	}
-	if (addon === undefined) { addon = "" } else { addon = addon + "_" }
+	if (addonBefore === undefined) { addonBefore = "" } else { addonBefore = addonBefore + "_" }
+	if (addonAfter === undefined) { addonAfter = "" } else { addonAfter = "_" + addonAfter }
 	let path;
 	if (!block.includes(":")) {
 		path = block
@@ -70,22 +71,31 @@ function writeStonecutterRecipe(block, ingredient, quantity, addon) {
 		path = block.split(":")[1]
 	}
 	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity, "stonecutting")
-	const fullPath = `${addon}${path}_stonecutting`
+	const fullPath = `${addonBefore}${path}_stonecutting${addonAfter}`
 	writeRecipeAdvancement(id(fullPath), ingredient)
 	if (recipe !== undefined) {
 		helpers.writeFile(helpers.recipePath + fullPath +`.json`, recipe)
 	}
 }
 
-function writeStonecutterRecipes(blocks, ingredient, quantity, addon) {
+function writeStonecutterRecipes(blocks, ingredient, quantity, addonBefore, addonAfter) {
 	if (blocks instanceof Array) {
 		blocks.forEach(block => {
-			writeStonecutterRecipe(block, ingredient, quantity, addon)
+			writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonAfter)
 		});
 	}
 	else {
-		writeStonecutterRecipe(blocks, ingredient, quantity, addon)
+		writeStonecutterRecipe(blocks, ingredient, quantity, addonBefore, addonAfter)
 	}
+}
+
+function writeShortcutRecipes(blocks, baseBlockID) {
+	let blockSet = [];
+	const baseBlock = helpers.getPath(baseBlockID)
+	blocks.forEach(function(block) {
+		blockSet.push(baseBlock + "_" + block)
+	})
+	writeStonecutterRecipes(blockSet, baseBlockID, 1, undefined, "from_"+baseBlock)
 }
 
 module.exports = {
@@ -94,5 +104,6 @@ module.exports = {
     writeShapelessRecipe, writeShapelessRecipe,
     writeStonecutterRecipes: writeStonecutterRecipe, 
 	writeStonecutterRecipes: writeStonecutterRecipes,
-	writeDyeRecipe: writeDyeRecipe
+	writeDyeRecipe: writeDyeRecipe,
+	writeShortcutRecipes: writeShortcutRecipes
 }

@@ -316,6 +316,18 @@ function writeFlower(block) {
 			]
 		})
 	writeRecipeAdvancement(block, id(mc, "poppy"))
+	writeFlowerPot(block)
+}
+
+function writeFlowerPot(baseBlock) {
+	const block = "potted_"+baseBlock
+	const blockState = stateHelper.gen(block, modID)
+	blockstateHelper.writeBlockstate(block, blockState, modID)
+	const model = modelHelper.generateBlockModel(block, modID, baseBlock, "minecraft:block/flower_pot_cross", "cutout", "plant")
+	modelWriter.writeProvided(block, model)
+	langHelper.generateBlockLang(block)
+	tagHelper.tagBlock(block, "minecraft:flower_pots")
+	lootTableWriter.writeFlowerPotLootTables(block, id(baseBlock))
 }
 
 function writeChiseledBlock(block, baseBlock, special) {
@@ -665,6 +677,7 @@ function writeFenceGates(block, namespace, baseBlockID) {
 function writeTerracotta(block, dye, namespace) {
 	block = block + "_terracotta"
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
+	tagHelper.tagBoth(block, `terracotta`)
 	writeRecipeAdvancement(block, id(dye + "_dye"))
 	writeBlock(id(namespace, block), "terracotta", dye)
 }

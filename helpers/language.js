@@ -96,6 +96,7 @@ function flipTranslationFile(path) {
 }
 
 function upsideDownify(value) {
+  value = value.replace("Gray", "Grey").replace("Shovel", "Spade")
   let newValue = ""
   value.split("").forEach((char) => {
     const upsideDownTable = {

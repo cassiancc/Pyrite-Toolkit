@@ -40,7 +40,6 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	console.log(mod)
 	if ((mod != "#minecraft") && (mod != "c"))
 		return {
 			"fabric:load_conditions": [

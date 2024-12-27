@@ -78,6 +78,46 @@ function writeSlabLootTables(blockID) {
 
 
 }
+function writeFlowerPotLootTables(potBlock, blockID) {
+	const filePath = `${helpers.paths.loot}${potBlock}.json`
+	let lootTable = `{
+		"type": "minecraft:block",
+		"pools": [
+		  {
+			"bonus_rolls": 0.0,
+			"conditions": [
+			  {
+				"condition": "minecraft:survives_explosion"
+			  }
+			],
+			"entries": [
+			  {
+				"type": "minecraft:item",
+				"name": "minecraft:flower_pot"
+			  }
+			],
+			"rolls": 1.0
+		  },
+		  {
+			"bonus_rolls": 0.0,
+			"conditions": [
+			  {
+				"condition": "minecraft:survives_explosion"
+			  }
+			],
+			"entries": [
+			  {
+				"type": "minecraft:item",
+				"name": "${blockID}"
+			  }
+			],
+			"rolls": 1.0
+		  }
+		]
+	  }`
+	  writeFile(filePath, lootTable);
+
+}
 
 function writeDoorLootTables(block, namespace) {
 	if (namespace === undefined) {
@@ -103,5 +143,6 @@ function generateModLoadCondition(mod, block) {
 module.exports = {
     writeLootTables: writeLootTables,
     writeDoorLootTables: writeDoorLootTables,
-	writeSlabLootTables: writeSlabLootTables
+	writeSlabLootTables: writeSlabLootTables,
+	writeFlowerPotLootTables: writeFlowerPotLootTables
 }

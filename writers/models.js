@@ -264,7 +264,7 @@ module.exports = {
     },
     
     writeFlowers: function writeFlowerBlockModels(block, namespace) {
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", "cutout", "cross"))
     },
     
     writeLogs: function writeLogBlockModels(block, namespace, baseBlock) {
