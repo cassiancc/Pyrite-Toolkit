@@ -37,7 +37,7 @@ function writeRecipeAdvancement(block, trigger) {
             "conditions": {
               "items": [
                 {
-                  "items": "${trigger}"
+                  "items": ["${trigger}"]
                 }
               ]
             },

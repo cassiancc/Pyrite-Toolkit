@@ -29,7 +29,7 @@ function writeWallGates(block, baseBlock, texture) {
 	blockstateHelper.writeBlockstate(block, fenceGateBlockState, modID, undefined);
 
 	// Models
-	modelWriter.writeWallGates(block, modID, texture, undefined);
+	modelWriter.writeWallGates(block, modID, texture, baseBlockNamespace);
 	itemModelWriter.writeInventoryModel(block, modID, baseBlockNamespace);
 
 	// Language files
@@ -48,8 +48,8 @@ function writeWallGates(block, baseBlock, texture) {
 
 	// Recipes
 	writeRecipeAdvancement(id(block), id(baseBlock));
-	recipeWriter.writeRecipes(block, "wall_gates", baseBlock);
-	recipeWriter.writeStonecutterRecipes(block, baseBlock, 1);
+	recipeWriter.writeRecipes(block, "wall_gates", baseBlock, modID, baseBlockNamespace);
+	recipeWriter.writeStonecutterRecipe(block, baseBlock, 1);
 
 }
 
@@ -152,7 +152,7 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	// Generate recipes
 	recipeWriter.writeRecipes(block, blockType, baseBlock, namespace)
 	if (shouldGenerateStonecutterRecipes === true) {
-		recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
+		recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
 	}
 	if (shouldGenerateRecipeAdvancements !== undefined) {
 		if (shouldGenerateRecipeAdvancements === true)
@@ -345,7 +345,7 @@ function writeChiseledBlock(block, baseBlock, special) {
 	const blockType = getPath(baseBlock).split("_block")[0]
 	tagHelper.tagBoth(block, blockType)
 	tagHelper.checkAndAddBeaconTag(block, blockType)
-	recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
+	recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
 	if (baseBlock == "minecraft:copper") {
 		baseBlock += "_block"
 	}
@@ -492,7 +492,7 @@ function writeWalls(block, baseBlockID, texture) {
 	}
 	writeRecipeAdvancement(block, baseBlockID)
 	recipeWriter.writeShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC", "CCC"])
-	recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
+	recipeWriter.writeStonecutterRecipe(id(block), baseBlockID, 1)
 }
 
 // Generates Stair blocks
@@ -536,7 +536,7 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 	writeRecipeAdvancement(id(block), id(baseBlock))
 	recipeWriter.writeRecipes(block, "stairs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
-		recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
+		recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
 	}
 }
 
@@ -582,7 +582,7 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	writeRecipeAdvancement(id(block), id(baseBlock))
 	recipeWriter.writeRecipes(block, "slabs", baseBlock, modID)
 	if (shouldGenerateStonecutterRecipes === true) {
-		recipeWriter.writeStonecutterRecipes(block, baseBlock, 2)
+		recipeWriter.writeStonecutterRecipe(block, baseBlock, 2)
 	}
 }
 
@@ -725,7 +725,7 @@ function writeTerracottaBricks(block, namespace, special, baseBlock, stonelike) 
 		tagHelper.tagBlock(block, "bricks")
 	}
 	if (stonelike !== false)
-		recipeWriter.writeStonecutterRecipes(block, baseBlock, 1)
+		recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
 }
 
 

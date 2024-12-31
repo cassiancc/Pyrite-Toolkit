@@ -1,4 +1,5 @@
 const helpers = require('../helpers/helpers');
+const models = require('./models');
 const mc = helpers.mc
 const modID = helpers.modID
 const id = helpers.id
@@ -31,7 +32,7 @@ function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
 }
 
 // Writes an block item model for blocks with a different inventory model (e.g. walls), passing data to create either a client item or legacy item model, depending on the version.
-function writeInventoryModel(block, namespace) {
+function writeInventoryModel(block, namespace, baseBlockNamespace) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
@@ -39,7 +40,13 @@ function writeInventoryModel(block, namespace) {
 		writeClientItem(namespace, "block", block, `${block}_inventory`)
 	}
 	else {
-		const modelItem = `{"parent": "${namespace}:block/${block}_inventory"}`
+		let modelSubdirectory = ""
+		if (baseBlockNamespace != undefined) {
+			if ((baseBlockNamespace != modID) && (baseBlockNamespace != "minecraft")) {
+				modelSubdirectory = baseBlockNamespace + "/"
+			}
+		}
+		const modelItem = `{"parent": "${namespace}:block/${modelSubdirectory}${block}_inventory"}`
 		helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem);
 	}
 }

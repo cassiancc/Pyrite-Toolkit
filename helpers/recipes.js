@@ -387,8 +387,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	} else if (type === "wall_gates") {
 		let baseWall = base
-		baseWall = `${baseWall.replace("bricks", "brick")}`
-		baseWall = `${baseWall.replace("tiles", "tile")}`
+		baseWall = baseWall.replace("bricks", "brick").replace("tiles", "tile")
 		baseWall = baseWall + "_wall"
 		if (altNamespace == "aether") {
 			baseWall = baseWall.replace("_stone", "")

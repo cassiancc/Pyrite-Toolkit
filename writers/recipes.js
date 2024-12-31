@@ -102,7 +102,7 @@ module.exports = {
     writeRecipes: writeRecipes,
     writeShapedRecipe, writeShapedRecipe,
     writeShapelessRecipe, writeShapelessRecipe,
-    writeStonecutterRecipes: writeStonecutterRecipe, 
+    writeStonecutterRecipe: writeStonecutterRecipe, 
 	writeStonecutterRecipes: writeStonecutterRecipes,
 	writeDyeRecipe: writeDyeRecipe,
 	writeShortcutRecipes: writeShortcutRecipes
