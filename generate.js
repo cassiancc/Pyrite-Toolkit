@@ -411,6 +411,34 @@ function generatePyriteResources() {
 	if (majorVersion > 22 || (mcVersion.includes("1.21.4"))) {
 		writeWallGatesFromArray(["resin_brick"])
 	}
+	const copperBlocks = ["copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
+
+	copperBlocks.forEach(function(block) {
+		let cutBlock = `cut_${block}`
+		
+		let baseCutBlockID = id(mc, cutBlock.replace("cut_weathered", "weathered_cut").replace("cut_oxidized", "oxidized_cut").replace("cut_exposed", "exposed_cut"))
+
+		let baseWaxedCutBlockID = id(mc, "waxed_"+cutBlock)
+		let baseBlock = block
+		if (block == "copper") {
+			baseBlock = "copper_block"
+		}
+		blockWriter.writeWalls(`waxed_${cutBlock}_wall`, baseCutBlockID)
+		blockWriter.writeWallGates(`waxed_${cutBlock}_wall_gate`, baseCutBlockID)
+		const smooth = `smooth_${block}`
+		const smoothID = id(modID, smooth)
+		blockWriter.writeBlock("waxed_"+smooth, "smooth_resource", id(mc, block), undefined, smoothID, false, true, false, false)
+		new Block(`waxed_${smooth}_slab`, "slab", smoothID, block, smoothID)
+		new Block(`waxed_${smooth}_stairs`, "stairs", smoothID, block, smoothID)
+		blockWriter.writeWalls(`waxed_${smooth}_wall`, smoothID, smoothID)
+		blockWriter.writeWallGates(`waxed_${smooth}_wall_gate`, smoothID, smoothID)
+		blockWriter.writeBlock(`waxed_${block}_bricks`, "resource_bricks", baseCutBlockID, undefined, block + "_bricks", true)
+		blockWriter.writeChiseledBlock(`waxed_${block}_pillar`, id(mc, block), "resource_pillar")
+		recipeWriter.writeStonecutterRecipes([`waxed_${block}_bricks`, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`], id(mc, "waxed_"+ baseBlock), 1, undefined, "from_"+block)
+		blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID)
+		blockWriter.writeBlock(`waxed_nostalgia_${block}_block`, "nostalgia_resource", id(mc, block), undefined, id(`nostalgia_${block}_block`), false, true, false, false)
+
+	})
 
 	vanillaConstants.vanillaResourceBlocks.forEach(function (block) {
 		let baseBlock = block
@@ -419,7 +447,7 @@ function generatePyriteResources() {
 		let baseCutBlockID = id(cutBlock)
 		let baseTexture = block + "_block";
 		// Cut Blocks - Copper is ignored.
-		if (block === "copper" || block === "exposed_copper" || block === "oxidized_copper" || block === "weathered_copper") {
+		if (block.includes("copper")) {
 			baseTexture = block;
 			altNamespace = mc
 			// Vanilla swaps Cut and Oxidization state

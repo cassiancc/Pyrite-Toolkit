@@ -50,6 +50,7 @@ function writeWallGates(block, baseBlock, texture) {
 	writeRecipeAdvancement(id(block), id(baseBlock));
 	recipeWriter.writeRecipes(block, "wall_gates", baseBlock, modID, baseBlockNamespace);
 	recipeWriter.writeStonecutterRecipe(block, baseBlock, 1);
+	return block;
 
 }
 
@@ -351,6 +352,7 @@ function writeChiseledBlock(block, baseBlock, special) {
 	}
 	writeRecipeAdvancement(block, baseBlock)
 	recipeWriter.writeRecipes(block, special, baseBlock)
+	return block;
 }
 
 function writeUprightColumnBlock(block, namespace, blockType, baseBlockID) {
@@ -462,6 +464,7 @@ function writeBars(block, namespace, ingredientID) {
 	lootTableWriter.writeLootTables(block, namespace)
 	writeRecipeAdvancement(blockID, ingredientID)
 	recipeWriter.writeRecipes(block, "bars", ingredientID)
+	return block;
 }
 
 function writeLogs(block, namespace, baseBlock) {
@@ -472,6 +475,7 @@ function writeLogs(block, namespace, baseBlock) {
 	itemModelWriter.writeBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "minecraft:logs")
 	recipeWriter.writeRecipes(block, "log", block.replace("log", "planks").replace("stem", "planks"))
+	return block;
 }
 
 function writeWalls(block, baseBlockID, texture) {
@@ -493,6 +497,7 @@ function writeWalls(block, baseBlockID, texture) {
 	writeRecipeAdvancement(block, baseBlockID)
 	recipeWriter.writeShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC", "CCC"])
 	recipeWriter.writeStonecutterRecipe(id(block), baseBlockID, 1)
+	return block;
 }
 
 // Generates Stair blocks
@@ -538,6 +543,7 @@ function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes
 	if (shouldGenerateStonecutterRecipes === true) {
 		recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
 	}
+	return block;
 }
 
 // Generates Slab blocks.
@@ -584,6 +590,7 @@ function writeSlabs(block, baseBlock, texture, shouldGenerateStonecutterRecipes)
 	if (shouldGenerateStonecutterRecipes === true) {
 		recipeWriter.writeStonecutterRecipe(block, baseBlock, 2)
 	}
+	return block;
 }
 
 function writePlates(block, baseBlockID, texture) {
@@ -608,6 +615,7 @@ function writePlates(block, baseBlockID, texture) {
 	}
 	writeRecipeAdvancement(id(block), baseBlockID)
 	recipeWriter.writeRecipes(block, "plates", baseBlockID)
+	return block;
 }
 
 function writeButtons(block, baseBlockID, texture, type) {
@@ -634,6 +642,7 @@ function writeButtons(block, baseBlockID, texture, type) {
 	}
 	writeRecipeAdvancement(id(block), baseBlockID)
 	recipeWriter.writeRecipes(block, type, baseBlock, namespace, baseNamespace)
+	return block;
 }
 
 function writeFences(block, namespace, baseBlock) {
@@ -649,6 +658,7 @@ function writeFences(block, namespace, baseBlock) {
 	}
 	writeRecipeAdvancement(id(block), id(baseBlock))
 	recipeWriter.writeRecipes(block, "fences", baseBlock, namespace)
+	return block;
 }
 
 function writeFenceGates(block, namespace, baseBlockID) {
@@ -672,6 +682,7 @@ function writeFenceGates(block, namespace, baseBlockID) {
 	// Recipes
 	writeRecipeAdvancement(id(block), baseBlockID)
 	recipeWriter.writeRecipes(block, "fence_gates", baseBlockID, namespace)
+	return block;
 }
 
 function writeTerracotta(block, dye, namespace) {
@@ -679,7 +690,7 @@ function writeTerracotta(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `terracotta`)
 	writeRecipeAdvancement(block, id(dye + "_dye"))
-	writeBlock(id(namespace, block), "terracotta", dye)
+	return writeBlock(id(namespace, block), "terracotta", dye)
 }
 
 function writeConcrete(block, dye, namespace) {
@@ -687,7 +698,7 @@ function writeConcrete(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `c:concrete`)
 	tagHelper.tagBlock(block, `minecraft:mineable/pickaxe`)
-	writeBlock(id(namespace, block), "concrete", dye)
+	return writeBlock(id(namespace, block), "concrete", dye)
 }
 
 function writeConcretePowder(block, dye, namespace) {
@@ -696,18 +707,18 @@ function writeConcretePowder(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:concrete_powder`)
 	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
 	writeRecipeAdvancement(block, id(dye + "_dye"))
-	writeBlock(id(namespace, block), "concrete_powder", dye, undefined, block)
+	return writeBlock(id(namespace, block), "concrete_powder", dye, undefined, block)
 }
 
 function writeLamps(block, type, texture) {
 	writeRecipeAdvancement(id(block), id(mc, "redstone_lamp"))
-	writeBlock(block, "lamps", type, undefined, texture, false)
+	return writeBlock(block, "lamps", type, undefined, texture, false)
 }
 
 function writeWool(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	writeRecipeAdvancement(id(block), id(dye + "_dye"))
-	writeBlock(id(namespace, block), "wool", dye, undefined, undefined, undefined, false)
+	return writeBlock(id(namespace, block), "wool", dye, undefined, undefined, undefined, false)
 }
 
 function writeTerracottaBricks(block, namespace, special, baseBlock, stonelike) {
