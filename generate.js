@@ -423,6 +423,7 @@ function generatePyriteResources() {
 		if (block == "copper") {
 			baseBlock = "copper_block"
 		}
+
 		blockWriter.writeWalls(`waxed_${cutBlock}_wall`, baseCutBlockID)
 		blockWriter.writeWallGates(`waxed_${cutBlock}_wall_gate`, baseCutBlockID)
 		const smooth = `smooth_${block}`
@@ -437,6 +438,14 @@ function generatePyriteResources() {
 		recipeWriter.writeStonecutterRecipes([`waxed_${block}_bricks`, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`], id(mc, "waxed_"+ baseBlock), 1, undefined, "from_"+block)
 		blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID)
 		blockWriter.writeBlock(`waxed_nostalgia_${block}_block`, "nostalgia_resource", id(mc, block), undefined, id(`nostalgia_${block}_block`), false, true, false, false)
+
+		let waxedBlocks = [
+			`waxed_${cutBlock}_wall`, `waxed_${cutBlock}_wall_gate`, 
+			"waxed_"+smooth, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`,
+			`waxed_${block}_bricks`, `waxed_${block}_pillar`, "waxed_"+block+"_bars", `waxed_nostalgia_${block}_block`
+		]
+		
+		helpers.generateNeoWaxables(waxedBlocks)
 
 	})
 
