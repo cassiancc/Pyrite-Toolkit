@@ -40,11 +40,13 @@ function writeInventoryModel(block, namespace, baseBlockNamespace) {
 		writeClientItem(namespace, "block", block, `${block}_inventory`)
 	}
 	else {
-		if (block.includes(":")) {
-			namespace = helpers.getNamespace(block)
-			block = helpers.getPath(block)
+		let modelSubdirectory = ""
+		if (baseBlockNamespace != undefined) {
+			if ((baseBlockNamespace != modID) && (baseBlockNamespace != "minecraft")) {
+				modelSubdirectory = baseBlockNamespace + "/"
+			}
 		}
-		const modelItem = `{"parent": "${namespace}:block/${block}_inventory"}`
+		const modelItem = `{"parent": "${namespace}:block/${modelSubdirectory}${block}_inventory"}`
 		helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem);
 	}
 }

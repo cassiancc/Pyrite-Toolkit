@@ -464,24 +464,19 @@ function generatePyriteResources() {
 			baseTexture = block;
 			altNamespace = mc
 			// Vanilla swaps Cut and Oxidization state
-			cutBlock = cutBlock.replace("cut_weathered", "weathered_cut")
-			cutBlock = cutBlock.replace("cut_oxidized", "oxidized_cut")
-			cutBlock = cutBlock.replace("cut_exposed", "exposed_cut")
-			blockWriter.writeColumns(`cut_${block}_column`, id(mc, cutBlock))
-			blockWriter.writeWalls(`cut_${block}_wall`, id(mc, cutBlock))
-			blockWriter.writeWallGates(`cut_${block}_wall_gate`, id(mc, cutBlock))
+			baseCutBlockID = id(mc, cutBlock.replace("cut_weathered", "weathered_cut").replace("cut_oxidized", "oxidized_cut").replace("cut_exposed", "exposed_cut"))
+			recipeWriter.writeStonecutterRecipes([`${cutBlock}_wall`, `${cutBlock}_wall_gate`], id(mc, baseBlock), 1, undefined, "from_"+baseBlock)
 		}
 		else {
 			baseBlock = baseTexture;
 			altNamespace = modID
 			blockWriter.writeBlock(cutBlock, cutBlock, id(mc, baseBlock), undefined, cutBlock, true, true)
-			blockWriter.writeSlabs(`${cutBlock}_slab`, cutBlock, id(modID, cutBlock), true)
-			blockWriter.writeStairs(`${cutBlock}_stairs`, cutBlock, id(modID, cutBlock), true)
-			blockWriter.writeColumns(`cut_${block}_column`, id(altNamespace, cutBlock))
-			blockWriter.writeWalls(`cut_${block}_wall`, id(altNamespace, cutBlock))
-			blockWriter.writeWallGates(`cut_${block}_wall_gate`, id(altNamespace, cutBlock))
+			blockWriter.writeSlabs(`${cutBlock}_slab`, cutBlock, id(altNamespace, cutBlock), true)
+			blockWriter.writeStairs(`${cutBlock}_stairs`, cutBlock, id(altNamespace, cutBlock), true)
+			recipeWriter.writeStonecutterRecipes([`${cutBlock}_slab`, `${cutBlock}_stairs`, `${cutBlock}_wall`, `${cutBlock}_wall_gate`], id(mc, baseBlock), 1, undefined, "from_"+baseBlock)
 		}
 
+		blockWriter.writeColumns(`cut_${block}_column`, id(altNamespace, cutBlock))
 		blockWriter.writeWalls(`${cutBlock}_wall`, baseCutBlockID)
 		blockWriter.writeWallGates(`${cutBlock}_wall_gate`, baseCutBlockID)
 
