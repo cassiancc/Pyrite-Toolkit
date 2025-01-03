@@ -110,14 +110,14 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_noside_alt.json`, generate(block, namespace, baseBlock, "template_glass_pane_noside_alt"))
     },
     
-    writeBars: function writeBarBlockModels(block, namespace, baseBlock) {
+    writeBars: function writeBarBlockModels(block, namespace, texture) {
         const generate = modelHelper.generateBarBlockModel
-        writeFile(`${helpers.modelPath}${block}_cap.json`, generate(block, namespace, "cap"))
-        writeFile(`${helpers.modelPath}${block}_post.json`, generate(block, namespace, "post"))
-        writeFile(`${helpers.modelPath}${block}_side.json`, generate(block, namespace, "side"))
-        writeFile(`${helpers.modelPath}${block}_cap_alt.json`, generate(block, namespace, "cap_alt"))
-        writeFile(`${helpers.modelPath}${block}_side_alt.json`, generate(block, namespace, "side_alt"))
-        writeFile(`${helpers.modelPath}${block}_post_ends.json`, generate(block, namespace, "post_ends"))
+        writeFile(`${helpers.modelPath}${block}_cap.json`, generate(texture, namespace, "cap"))
+        writeFile(`${helpers.modelPath}${block}_post.json`, generate(texture, namespace, "post"))
+        writeFile(`${helpers.modelPath}${block}_side.json`, generate(texture, namespace, "side"))
+        writeFile(`${helpers.modelPath}${block}_cap_alt.json`, generate(texture, namespace, "cap_alt"))
+        writeFile(`${helpers.modelPath}${block}_side_alt.json`, generate(texture, namespace, "side_alt"))
+        writeFile(`${helpers.modelPath}${block}_post_ends.json`, generate(texture, namespace, "post_ends"))
     },
     
     writeStairs: function writeStairBlockModels(block, namespace, baseBlock) {
@@ -261,9 +261,9 @@ module.exports = {
         writeFile(`${helpers.modelPath}${block}_wall.json`, generateBlockModel(baseBlock, altNamespace, baseBlock, "template_torch_wall", "cutout", "torch"))
     },
     
-    writeColumns: function writeCubeColumnBlockModels(block, namespace, baseBlock) {
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column"))
-        writeFile(`${helpers.modelPath}${block}_horizontal.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, baseBlock, "cube_column_horizontal"))
+    writeColumns: function writeCubeColumnBlockModels(block, namespace, texture) {
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, texture, "cube_column"))
+        writeFile(`${helpers.modelPath}${block}_horizontal.json`, modelHelper.generateCubeColumnBlockModel(block, namespace, texture, "cube_column_horizontal"))
     },
     
     writeFlowers: function writeFlowerBlockModels(block, namespace) {

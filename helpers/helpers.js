@@ -99,6 +99,8 @@ const paths = {
 
 }
 
+const columnsEnabled = false;
+
 function readFile(path) {
     return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
 }
@@ -212,6 +214,9 @@ function populateTemplates() {
 
 function generateNeoWaxables(waxedBlocks) {
     let path = paths.datamaps + "/waxables.json"
+    if (!fs.existsSync(paths.datamaps)) {
+        fs.mkdirSync(paths.datamaps, { recursive: true })
+    }
     let template = {
         "values": {}
     }
@@ -236,6 +241,9 @@ function generateNeoOxidizables(waxedBlocks, stage) {
     let template = {
         "values": {}
     }
+    if (!fs.existsSync(paths.datamaps)) {
+        fs.mkdirSync(paths.datamaps, { recursive: true })
+    }
     if (fs.existsSync(path)) {
         let file = readFileAsJson(path)
         if (file != undefined) {
@@ -258,7 +266,7 @@ function generateNeoOxidizables(waxedBlocks, stage) {
         else {
             return;
         }
-        template.values[base] = {next_oxidized_stage: nextStage}
+        template.values[base] = {next_oxidation_stage: nextStage}
     })
 
     writeFile(path, template)
@@ -320,5 +328,6 @@ module.exports = {
     versionAbove: versionAbove,
     populateTemplates: populateTemplates,
     generateNeoWaxables: generateNeoWaxables,
-    generateNeoOxidizables: generateNeoOxidizables
+    generateNeoOxidizables: generateNeoOxidizables,
+    columnsEnabled: columnsEnabled
 }

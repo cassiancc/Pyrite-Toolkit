@@ -123,8 +123,8 @@ module.exports = {
         }`
     },
     
-    generateCubeColumnBlockModel: function generateCubeColumnBlockModel(block, namespace, baseBlock, model) {
-        return `{"parent":"minecraft:block/${model}","textures":{"end":"${namespace}:block/${block}_top","side":"${namespace}:block/${block}"}}`
+    generateCubeColumnBlockModel: function generateCubeColumnBlockModel(block, namespace, texture, model) {
+        return `{"parent":"minecraft:block/${model}","textures":{"end":"${namespace}:block/${texture}_top","side":"${namespace}:block/${texture}"}}`
     },
     
     genLevers: function generateLeverBlockModel(block, namespace, baseBlock, altNamespace, addon) {
@@ -253,7 +253,7 @@ function generateBarSideBlockModel(block, namespace) {
                     "up":    { "uv": [ 7, 0, 9, 7 ], "texture": "#edge" }
                 }
             }
-        ]
+        ],"render_type":"translucent"
     }
 }
 
@@ -295,7 +295,7 @@ function generateBarSideAltBlockModel(block, namespace) {
                     "up":    { "uv": [ 7, 9, 9, 16 ], "texture": "#edge" }
                 }
             }
-        ]
+        ],"render_type":"translucent"
     }
     
 }
@@ -322,19 +322,19 @@ function generateBarPostEndsBlockModel(block, namespace) {
                 "up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }
             }
         }
-    ]
+    ],"render_type":"translucent"
 }
 
 }
 
 function generateBarCapAltBlockModel(block, namespace) {
-    return { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}`, }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 8], "faces": { "west": { "uv": [8, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 7], "to": [9, 16, 7], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] }
+    return {"render_type":"translucent", "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}`, }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 8], "faces": { "west": { "uv": [8, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 7], "to": [9, 16, 7], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] }
 }
 
 function generateBarPostBlockModel(block, namespace) {
-    return { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 9], "faces": { "west": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }, { "from": [7, 0, 8], "to": [9, 16, 8], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] }
+    return {"render_type":"translucent",  "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 7], "to": [8, 16, 9], "faces": { "west": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "east": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }, { "from": [7, 0, 8], "to": [9, 16, 8], "faces": { "north": { "uv": [7, 0, 9, 16], "texture": "#bars" }, "south": { "uv": [9, 0, 7, 16], "texture": "#bars" } } }] }
 }
 
 function generateBarCapBlockModel(block, namespace) {
-    return { "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 8], "to": [8, 16, 9], "faces": { "west": { "uv": [8, 0, 7, 16], "texture": "#bars" }, "east": { "uv": [7, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 9], "to": [9, 16, 9], "faces": { "north": { "uv": [9, 0, 7, 16], "texture": "#bars" }, "south": { "uv": [7, 0, 9, 16], "texture": "#bars" } } }] }
+    return {"render_type":"translucent",  "ambientocclusion": false, "textures": { "particle": `${namespace}:block/${block}`, "bars": `${namespace}:block/${block}`, "edge": `${namespace}:block/${block}` }, "elements": [{ "from": [8, 0, 8], "to": [8, 16, 9], "faces": { "west": { "uv": [8, 0, 7, 16], "texture": "#bars" }, "east": { "uv": [7, 0, 8, 16], "texture": "#bars" } } }, { "from": [7, 0, 9], "to": [9, 16, 9], "faces": { "north": { "uv": [9, 0, 7, 16], "texture": "#bars" }, "south": { "uv": [7, 0, 9, 16], "texture": "#bars" } } }] }
 }

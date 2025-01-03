@@ -331,15 +331,18 @@ function writeFlowerPot(baseBlock) {
 	lootTableWriter.writeFlowerPotLootTables(block, id(baseBlock))
 }
 
-function writeChiseledBlock(block, baseBlock, special) {
+function writeChiseledBlock(block, baseBlock, special, texture) {
 	let namespace;
 	if (block.includes(":"))
 		namespace = helpers.getNamespace(block)
 	else
 		namespace = modID
+	if (texture == undefined) {
+		texture = block
+	}
 	blockState = `{"variants":{"axis=x":{"model":"${namespace}:block/${block}_horizontal","x":90,"y":90},"axis=y":{"model":"${namespace}:block/${block}"},"axis=z":{"model":"${namespace}:block/${block}_horizontal","x":90}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
-	modelWriter.writeColumns(block, namespace, baseBlock)
+	modelWriter.writeColumns(block, namespace, texture)
 	itemModelWriter.writeBlockItemModel(block, namespace)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block, namespace)
@@ -451,12 +454,14 @@ function writePanes(block, namespace, baseBlock, shatters) {
 	langHelper.generateBlockLang(block)
 }
 
-function writeBars(block, namespace, ingredientID) {
+function writeBars(block, namespace, ingredientID, texture) {
+	if (texture == undefined)
+		texture = block + "_bars"
 	const baseBlock = block
 	block = block + "_bars"
 	const blockID = id(block)
 	blockstateHelper.writeBlockstate(block, stateHelper.genBars(block, namespace, baseBlock), namespace)
-	modelWriter.writeBars(block, namespace, block)
+	modelWriter.writeBars(block, namespace, texture)
 	itemModelWriter.writeUniqueBlockItemModel(block, namespace)
 	tagHelper.tagBoth(block, "metal_bars")
 	tagHelper.checkAndAddResourceTag(block, ingredientID)
@@ -501,28 +506,29 @@ function writeWalls(block, baseBlockID, texture) {
 }
 
 function writeColumns(block, baseBlockID, texture) {
-	if (texture == undefined)
-		texture = baseBlockID
-	const blockID = id("holiday-server-pack", block)
-	const blockstate = stateHelper.genColumn(block)
-	blockstateHelper.writeBlockstate(block, blockstate, modID)
-	modelWriter.writeProvided(block +"_center", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_center", undefined, "all"))
-	modelWriter.writeProvided(block+"_end", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_end", undefined, "all"))
-	modelWriter.writeProvided(block+"_inventory", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_inventory", undefined, "all"))
-
-	itemModelWriter.writeInventoryModel(block, modID)
-	lootTableWriter.writeLootTables(block)
-	langHelper.generateBlockLang(block)
-
-	tagHelper.tagBoth(block, "columns:columns")
-	if (baseBlockID.includes("bricks")) {
-		tagHelper.tagBoth(block, "brick_columns")
-	} else {
-		tagHelper.checkAndAddResourceTag(block, baseBlockID)
+	if (helpers.columnsEnabled) {
+		if (texture == undefined)
+			texture = baseBlockID
+		const blockstate = stateHelper.genColumn(block)
+		blockstateHelper.writeBlockstate(block, blockstate, modID)
+		modelWriter.writeProvided(block +"_center", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_center", undefined, "all"))
+		modelWriter.writeProvided(block+"_end", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_end", undefined, "all"))
+		modelWriter.writeProvided(block+"_inventory", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_inventory", undefined, "all"))
+	
+		itemModelWriter.writeInventoryModel(block, modID)
+		lootTableWriter.writeLootTables(block)
+		langHelper.generateBlockLang(block)
+	
+		tagHelper.tagBoth(block, "columns:columns")
+		if (baseBlockID.includes("bricks")) {
+			tagHelper.tagBoth(block, "brick_columns")
+		} else {
+			tagHelper.checkAndAddResourceTag(block, baseBlockID)
+		}
+		writeRecipeAdvancement(block, baseBlockID)
+		recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"])
+		recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
 	}
-	writeRecipeAdvancement(block, baseBlockID)
-	recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"])
-	recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
 }
 
 // Generates Stair blocks
