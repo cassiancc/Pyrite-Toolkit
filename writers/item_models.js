@@ -39,6 +39,10 @@ function writeInventoryModel(block, namespace) {
 		writeClientItem(namespace, "block", block, `${block}_inventory`)
 	}
 	else {
+		if (block.includes(":")) {
+			namespace = helpers.getNamespace(block)
+			block = helpers.getPath(block)
+		}
 		const modelItem = `{"parent": "${namespace}:block/${block}_inventory"}`
 		helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem);
 	}
@@ -48,6 +52,10 @@ function writeInventoryModel(block, namespace) {
 function writeClientItem(namespace, folder, path, model) {
 	if (model == undefined) {
 		model = path
+	}
+	if (model.includes(":")) {
+		namespace = helpers.getNamespace(model)
+		model = helpers.getPath(model)
 	}
 	let tints;
 	if (model.includes("grass")) {
@@ -66,6 +74,10 @@ function writeClientItem(namespace, folder, path, model) {
 			"model": `${namespace}:${folder}/${model}`,
 			"tints": tints
 		}
+	}
+	if (path.includes(":")) {
+		namespace = helpers.getNamespace(path)
+		path = helpers.getPath(path)
 	}
 	helpers.writeFile(`${helpers.paths.assets}items/${path}.json`, item);
 }

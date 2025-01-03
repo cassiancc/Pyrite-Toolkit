@@ -74,6 +74,7 @@ module.exports = {
     },
 
     writeProvided: function writeProvidedBlockModel(block, model) {
+        block = getPath(block)
         writeFile(`${helpers.modelPath}${block}.json`, model)
     },
     

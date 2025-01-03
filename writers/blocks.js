@@ -483,6 +483,31 @@ function writeWalls(block, baseBlockID, texture) {
 	recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
 }
 
+function writeColumns(block, baseBlockID, texture) {
+	if (texture == undefined)
+		texture = baseBlockID
+	const blockID = id("holiday-server-pack", block)
+	const blockstate = stateHelper.genColumn(block)
+	blockstateHelper.writeBlockstate(block, blockstate, modID)
+	modelWriter.writeProvided(block +"_center", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_center", undefined, "all"))
+	modelWriter.writeProvided(block+"_end", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_end", undefined, "all"))
+	modelWriter.writeProvided(block+"_inventory", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_inventory", undefined, "all"))
+
+	itemModelWriter.writeInventoryModel(block, modID)
+	lootTableWriter.writeLootTables(block)
+	langHelper.generateBlockLang(block)
+
+	tagHelper.tagBoth(block, "columns:columns")
+	if (baseBlockID.includes("bricks")) {
+		tagHelper.tagBoth(block, "brick_columns")
+	} else {
+		tagHelper.checkAndAddResourceTag(block, baseBlockID)
+	}
+	writeRecipeAdvancement(block, baseBlockID)
+	recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"])
+	recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
+}
+
 // Generates Stair blocks
 function writeStairs(block, baseBlock, texture, shouldGenerateStonecutterRecipes) {
 	let textureNamespace, texturePath;
@@ -749,6 +774,7 @@ module.exports = {
 	writeChiseledBlock: writeChiseledBlock,
 	writeFlower: writeFlower,
 	writePoweredBlock: writePoweredBlock,
-	writeBibliocraftBlock: writeBibliocraftBlock
+	writeBibliocraftBlock: writeBibliocraftBlock,
+	writeColumns: writeColumns
 
 }

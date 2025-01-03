@@ -98,6 +98,9 @@ class Block {  // Create a class
 		else if (blockType === "wall") {
 			blockWriter.writeWalls(this.blockID, this.baseBlock, this.baseBlock)
 		}
+		else if (blockType === "column") {
+			blockWriter.writeColumns(this.blockID, this.baseBlock, this.baseBlock)
+		}
 		else if (blockType === "wall_gate") {
 			blockWriter.writeWallGates(this.blockID, this.baseBlock, this.textureID)
 		}
@@ -289,28 +292,28 @@ function generatePyriteResources() {
 
 	// Cobblestone
 	generateBrickSet("cobblestone_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
-	recipeWriter.writeStonecutterRecipes(["cobblestone_brick_stairs", "cobblestone_brick_slab", "cobblestone_brick_wall", "cobblestone_brick_wall_gate"],
+	recipeWriter.writeStonecutterRecipes(["cobblestone_brick_stairs", "cobblestone_brick_slab", "cobblestone_brick_wall", "cobblestone_brick_wall_gate", "cobblestone_brick_column"],
 		"minecraft:cobblestone", 1, "from_cobblestone")
 	generateBrickSet("sandstone_bricks", "terracotta_bricks", "minecraft:cut_sandstone", false)
 	blockWriter.writeStairs("smooth_stone_stairs", id(mc, "smooth_stone"), id(mc, "smooth_stone"), true)
 	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true)
-	recipeWriter.writeStonecutterRecipes(["smooth_stone_brick_stairs", "smooth_stone_brick_slab", "smooth_stone_brick_wall", "smooth_stone_brick_wall_gate"],
+	recipeWriter.writeStonecutterRecipes(["smooth_stone_brick_stairs", "smooth_stone_brick_slab", "smooth_stone_brick_wall", "smooth_stone_brick_wall_gate", "smooth_stone_brick_column"],
 		"minecraft:smooth_stone", 1, "from_smooth_stone")
 	// Granite
 	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true)
-	recipeWriter.writeStonecutterRecipes(["granite_brick_stairs", "granite_brick_slab", "granite_brick_wall", "granite_brick_wall_gate"],
+	recipeWriter.writeStonecutterRecipes(["granite_brick_stairs", "granite_brick_slab", "granite_brick_wall", "granite_brick_wall_gate", "granite_brick_column"],
 		 "minecraft:granite", 1, "from_granite")
 	// Andesite
 	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
-	recipeWriter.writeStonecutterRecipes(["cobblestone_brick_stairs", "cobblestone_brick_slab", "cobblestone_brick_wall", "cobblestone_brick_wall_gate"],
+	recipeWriter.writeStonecutterRecipes(["cobblestone_brick_stairs", "cobblestone_brick_slab", "cobblestone_brick_wall", "cobblestone_brick_wall_gate", "cobblestone_brick_column"],
 		"minecraft:cobblestone", 1, "from_cobblestone")
 	// Diorite
 	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true)
-	recipeWriter.writeStonecutterRecipes(["diorite_brick_stairs", "diorite_brick_slab", "diorite_brick_wall", "diorite_brick_wall_gate"],
+	recipeWriter.writeStonecutterRecipes(["diorite_brick_stairs", "diorite_brick_slab", "diorite_brick_wall", "diorite_brick_wall_gate", "diorite_brick_column"],
 		"minecraft:diorite", 1, "from_diorite")
 	// Calcite
 	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true)
-	recipeWriter.writeStonecutterRecipes(["calcite_brick_stairs", "calcite_brick_slab", "calcite_brick_wall", "calcite_brick_wall_gate"],
+	recipeWriter.writeStonecutterRecipes(["calcite_brick_stairs", "calcite_brick_slab", "calcite_brick_wall", "calcite_brick_wall_gate", "calcite_brick_column"],
 		"minecraft:calcite", 1, "from_calcite")
 	// Tuff
 	if (majorVersion > 20)
@@ -407,6 +410,7 @@ function generatePyriteResources() {
 			cutBlock = cutBlock.replace("cut_weathered", "weathered_cut")
 			cutBlock = cutBlock.replace("cut_oxidized", "oxidized_cut")
 			cutBlock = cutBlock.replace("cut_exposed", "exposed_cut")
+			blockWriter.writeColumns(`cut_${block}_column`, id(mc, cutBlock))
 			blockWriter.writeWalls(`cut_${block}_wall`, id(mc, cutBlock))
 			blockWriter.writeWallGates(`cut_${block}_wall_gate`, id(mc, cutBlock))
 		}
@@ -416,16 +420,16 @@ function generatePyriteResources() {
 			blockWriter.writeBlock(cutBlock, cutBlock, id(mc, baseBlock), undefined, cutBlock, true, true)
 			blockWriter.writeSlabs(`${cutBlock}_slab`, cutBlock, id(modID, cutBlock), true)
 			blockWriter.writeStairs(`${cutBlock}_stairs`, cutBlock, id(modID, cutBlock), true)
+			blockWriter.writeColumns(`cut_${block}_column`, id(altNamespace, cutBlock))
 			blockWriter.writeWalls(`cut_${block}_wall`, id(altNamespace, cutBlock))
 			blockWriter.writeWallGates(`cut_${block}_wall_gate`, id(altNamespace, cutBlock))
-			blockWriter.writeWalls(`cut_${block}_wall`, id(modID, cutBlock))
-			blockWriter.writeWallGates(`cut_${block}_wall_gate`, id(modID, cutBlock))
 		}
 
 		// Smooth, Chiseled, and Pillar blocks. Quartz is mostly ignored - Walls and Wall Gates are generated.
 		if (block === "quartz") {
 			baseTexture = baseBlock + "_top"
 			// Vanilla uses quartz's bottom texture instead of a dedicated smooth texture.
+			blockWriter.writeColumns(`smooth_${block}_column`, id(mc, "quartz_block_bottom"))
 			blockWriter.writeWalls(`smooth_${block}_wall`, "minecraft:quartz_block", id(mc, "quartz_block_bottom"))
 			blockWriter.writeWallGates(`smooth_${block}_wall_gate`, "minecraft:quartz_block", id(mc, "quartz_block_bottom"))
 		}
@@ -435,6 +439,7 @@ function generatePyriteResources() {
 			new Block(smooth, "smooth_resource", id(mc, baseBlock), block)
 			new Block(`${smooth}_slab`, "slab", smoothID, block)
 			new Block(`${smooth}_stairs`, "stairs", smoothID, block)
+			blockWriter.writeColumns(smooth+`_column`, smoothID)
 			blockWriter.writeWalls(`${smooth}_wall`, smoothID, smoothID)
 			blockWriter.writeWallGates(`${smooth}_wall_gate`, smoothID, smoothID)
 			blockWriter.writeBlock(block + "_bricks", "resource_bricks", id(altNamespace, cutBlock), undefined, block + "_bricks", true)
@@ -615,6 +620,7 @@ function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet
 	new Block(brickBase + "_slab", "slab", bricksBase, type)
 	new Block(brickBase + "_stairs", "stairs", bricksBase, type)
 	new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
+	new Block(brickBase + "_column", "column", id(modID, bricksBase), type)
 	new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
 	if (shouldGenerateMossyBrickSet === true) {
 		generateMossyBrickSet(bricksBase, id(bricksBase))
@@ -632,6 +638,7 @@ function generateCutSet(template, type, baseBlock) {
 	new Block(template, type, baseBlock, baseBlock)
 	new Block(template + "_slab", "slab", template, type)
 	new Block(template + "_stairs", "stairs", template, type)
+	new Block(template + "_column", "column", id(modID, template), type)
 	new Block(template + "_wall", "wall", id(modID, template), type)
 	new Block(template + "_wall_gate", "wall_gate", id(modID, template), type)
 

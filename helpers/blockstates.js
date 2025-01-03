@@ -2,6 +2,38 @@ const helpers = require('./helpers');
 
 module.exports = {
 
+    genColumn: function generateColumnModBlockstate(block) {
+        const namespace = helpers.getNamespace(block)
+        const path = helpers.getPath(block)
+        return `{
+            "multipart": [
+              {
+                "apply": {
+                  "model": "${namespace}:block/${path}_center"
+                }
+              },
+              {
+                "apply": {
+                  "model": "${namespace}:block/${path}_end"
+                },
+                "when": {
+                  "down": "true"
+                }
+              },
+              {
+                "apply": {
+                  "model": "${namespace}:block/${path}_end",
+                  "uvlock": true,
+                  "x": 180
+                },
+                "when": {
+                  "up": "true"
+                }
+              }
+            ]
+          }`
+    },
+
     genBars: function generateBarBlockState(block, namespace, baseBlock) {
         return `{"multipart":[{"apply":{"model":"${namespace}:block/${block}_post_ends"}},{"when":{"north":"false","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_post"}},{"when":{"north":"true","west":"false","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap"}},{"when":{"north":"false","west":"false","south":"false","east":"true"},"apply":{"model":"${namespace}:block/${block}_cap","y":90}},{"when":{"north":"false","west":"false","south":"true","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt"}},{"when":{"north":"false","west":"true","south":"false","east":"false"},"apply":{"model":"${namespace}:block/${block}_cap_alt","y":90}},{"when":{"north":"true"},"apply":{"model":"${namespace}:block/${block}_side"}},{"when":{"east":"true"},"apply":{"model":"${namespace}:block/${block}_side","y":90}},{"when":{"south":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt"}},{"when":{"west":"true"},"apply":{"model":"${namespace}:block/${block}_side_alt","y":90}}]}`
     },
