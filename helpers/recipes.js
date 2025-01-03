@@ -40,7 +40,7 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	if (mod != "#minecraft")
+	if ((mod != "#minecraft") && (mod != "c"))
 		return {
 			"fabric:load_conditions": [
 				{
@@ -162,7 +162,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 			else {
 				itemOrTag = "item"
 			}
-			const valueNamespace = value.split(":")[0]
+			const valueNamespace = value.split(":")[0].replace("#", "")
 			if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
 				loadCondition = generateModLoadCondition(valueNamespace)
 			}
@@ -387,8 +387,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		])
 	} else if (type === "wall_gates") {
 		let baseWall = base
-		baseWall = `${baseWall.replace("bricks", "brick")}`
-		baseWall = `${baseWall.replace("tiles", "tile")}`
+		baseWall = baseWall.replace("bricks", "brick").replace("tiles", "tile")
 		baseWall = baseWall + "_wall"
 		if (altNamespace == "aether") {
 			baseWall = baseWall.replace("_stone", "")

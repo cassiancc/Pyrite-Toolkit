@@ -5,7 +5,7 @@ const id = helpers.id
 
 module.exports = {
     generateBlockModel: function generateBlockModel(block, namespace, texture, model, render_type, texture_type) {
-        if (model === undefined) {
+        if ((model === undefined) || (model === false)) {
             model = "minecraft:block/cube_all"
         }
         if (!model.includes("block/")) {

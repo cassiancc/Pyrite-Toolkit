@@ -46,6 +46,16 @@ function commonPath() {
     }
 }
 
+function neoPath() {
+    const projectType = config.projectType
+    if (projectType == "architectury") {
+        return "neoforge"
+    }
+    else {
+        return ""
+    }
+}
+
 function getVersion() {
     if (config.version == null) {
         try {
@@ -84,6 +94,8 @@ const paths = {
     items: `${resourcesPath}assets/${modID}/items/`,
     loot: `${resourcesPath}data/${modID}/loot_table${s}/blocks/`,
     advancementRecipes: `${resourcesPath}data/${modID}/advancement${s}/recipes/`,
+    datamaps: `${rootFolder}/${neoPath()}/src/main/resources/data/neoforge/data_maps/block/`,
+
 
 }
 
@@ -122,7 +134,7 @@ function writeFile(path, data, minify) {
 	}
 	if (config.disableWriting === false) {
         if (!path.includes("undefined") && data !== "") {
-            fs.writeFile(path, data, function (err) { if (err) throw err; })
+            fs.writeFileSync(path, data, function (err) { if (err) throw err; })
         }
         else {
             // console.log("Preventing write of " + path)
@@ -198,6 +210,60 @@ function populateTemplates() {
 	})
 }
 
+function generateNeoWaxables(waxedBlocks) {
+    let path = paths.datamaps + "/waxables.json"
+    let template = {
+        "values": {}
+    }
+    if (fs.existsSync(path)) {
+        let file = readFileAsJson(path)
+        if (file != undefined) {
+            template = file
+        }
+    }
+    
+    waxedBlocks.forEach(function(waxedBlock) {
+        waxedBlock = "pyrite:"+waxedBlock
+        var base = waxedBlock.replace("waxed_", "")
+        template.values[base] = {waxed: waxedBlock}
+    })
+
+    writeFile(path, template)
+}
+
+function generateNeoOxidizables(waxedBlocks, stage) {
+    let path = paths.datamaps + "/oxidizables.json"
+    let template = {
+        "values": {}
+    }
+    if (fs.existsSync(path)) {
+        let file = readFileAsJson(path)
+        if (file != undefined) {
+            template = file
+        }
+    }
+    
+    waxedBlocks.forEach(function(waxedBlock) {
+        let base = "pyrite:"+waxedBlock.replace("waxed_", "")
+        let nextStage;
+        if (stage == "copper") {
+            nextStage = base.replace("copper", "exposed_copper")
+        }
+        else if (stage == "exposed_copper") {
+            nextStage = base.replace("exposed_copper", "weathered_copper")
+        }
+        else if (stage == "weathered_copper") {
+            nextStage = base.replace("weathered_copper", "oxidized_copper")
+        }
+        else {
+            return;
+        }
+        template.values[base] = {next_oxidized_stage: nextStage}
+    })
+
+    writeFile(path, template)
+}
+
 module.exports = {
     modID: modID,
     mc: mc,
@@ -252,5 +318,7 @@ module.exports = {
     getDyeIngredient: getDyeIngredient,
 
     versionAbove: versionAbove,
-    populateTemplates: populateTemplates
+    populateTemplates: populateTemplates,
+    generateNeoWaxables: generateNeoWaxables,
+    generateNeoOxidizables: generateNeoOxidizables
 }

@@ -13,7 +13,7 @@
     },
     {
         "modID": "holiday-server-mod",
-        "modPath": "/home/cassian/Desktop/Minecraft/Mods/Forks/holiday-server-pack/mod",
+        "modPath": "/home/cassian/Desktop/Minecraft/Modpacks/holiday-server-pack/mod",
         "projectType": "fabric",
         "disableWriting": false,
         "version": "1.21.4"

@@ -158,6 +158,8 @@ module.exports = {
         block = getPath(block)
         writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab"));
         writeFile(`${helpers.modelPath}${block}_top.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
+        writeFile(`${helpers.modelPath}${block}_double.json`, modelHelper.generateBlockModel(block, namespace, baseBlock));
+
     },
     
     writePressurePlates: function writePlateBlockModels(block, texture) {
@@ -265,7 +267,7 @@ module.exports = {
     },
     
     writeFlowers: function writeFlowerBlockModels(block, namespace) {
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", undefined, "cross"))
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateBlockModel(block, namespace, block, "cross", "cutout", "cross"))
     },
     
     writeLogs: function writeLogBlockModels(block, namespace, baseBlock) {

@@ -1,4 +1,4 @@
-const { getPath, paths, writeFile, getNamespace, id } = require("../helpers/helpers");
+const { getPath, paths, writeFile, getNamespace, id, majorVersion } = require("../helpers/helpers");
 
 function writeRecipeAdvancement(block, trigger) {
 	// Triggers for compat content are not yet working.
@@ -23,13 +23,19 @@ function writeRecipeAdvancement(block, trigger) {
 	if (trigger === undefined) {
 		trigger = "minecraft:crafting_table"
 	}
-  // Failsafe for copper trigger.
-  if (trigger === "minecraft:copper")
-      trigger = "minecraft:copper_block"
+	// Failsafe for copper trigger.
+	if (trigger === "minecraft:copper")
+		trigger = "minecraft:copper_block"
 
 	// Override for quartz
 	if (trigger.includes("quartz_block_"))
 		trigger = trigger.replace("_top", "").replace("_bottom", "")
+
+	// 1.20 and below require the trigger to be an array, even if it's one item.
+	// TODO handling for tags!
+	if (majorVersion < 21)
+		trigger = [trigger]
+	
 	const advancement = `{
         "parent": "minecraft:recipes/root",
         "criteria": {
