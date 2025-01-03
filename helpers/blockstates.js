@@ -107,7 +107,7 @@ module.exports = {
         
         block = helpers.getPath(block)
         baseBlock = helpers.getPath(baseBlock)
-        return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${altNamespace}:block/${baseBlock}"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
+        return `{"variants": {"type=bottom": {"model": "${namespace}:block/${block}"},"type=double": {"model": "${altNamespace}:block/${block}_double"},"type=top": {"model": "${namespace}:block/${block}_top"}}}`
     },
 
     genStairs: function generateStairBlockstate(block, namespace) {

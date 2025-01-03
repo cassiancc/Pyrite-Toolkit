@@ -300,22 +300,22 @@ function generatePyriteResources() {
 
 	// Smooth Stone
 	blockWriter.writeStairs("smooth_stone_stairs", id(mc, "smooth_stone"), id(mc, "smooth_stone"), true)
-	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true)
+	generateBrickSet("smooth_stone_bricks", "stone_bricks", "minecraft:smooth_stone", true, "cut_smooth_stone")
 	recipeWriter.writeShortcutRecipes(["brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:smooth_stone")
 	// Granite
-	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true)
+	generateBrickSet("granite_bricks", "stone_bricks", "minecraft:polished_granite", true, "cut_granite")
 	recipeWriter.writeShortcutRecipes(["bricks", "brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:granite")
 	recipeWriter.writeStonecutterRecipes(["granite_brick_stairs", "granite_brick_slab", "granite_brick_wall", "granite_brick_wall_gate"], "minecraft:polished_granite", 1, undefined, "from_polished_granite")
 	// Andesite
-	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true)
+	generateBrickSet("andesite_bricks", "stone_bricks", "minecraft:polished_andesite", true, "cut_andesite")
 	recipeWriter.writeShortcutRecipes(["bricks", "brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:andesite")
 	recipeWriter.writeStonecutterRecipes(["andesite_brick_stairs", "andesite_brick_slab", "andesite_brick_wall", "andesite_brick_wall_gate"], "minecraft:polished_andesite", 1, undefined, "from_polished_andesite")
 	// Diorite
-	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true)
+	generateBrickSet("diorite_bricks", "stone_bricks", "minecraft:polished_diorite", true, "cut_diorite", "cut_diorite")
 	recipeWriter.writeShortcutRecipes(["bricks", "brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:diorite")
 	recipeWriter.writeStonecutterRecipes(["diorite_brick_stairs", "diorite_brick_slab", "diorite_brick_wall", "diorite_brick_wall_gate"], "minecraft:polished_diorite", 1, undefined, "from_polished_diorite")
 	// Calcite
-	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true)
+	generateBrickSet("calcite_bricks", "stone_bricks", "minecraft:calcite", true, "cut_calcite")
 	recipeWriter.writeShortcutRecipes(["brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:calcite")
 	// Tuff
 	if (majorVersion > 20)
@@ -413,41 +413,42 @@ function generatePyriteResources() {
 	}
 	const copperBlocks = ["copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 
-	copperBlocks.forEach(function(block) {
-		let cutBlock = `cut_${block}`
+	// copperBlocks.forEach(function(block) {
+	// 	let cutBlock = `cut_${block}`
 		
-		let baseCutBlockID = id(mc, cutBlock.replace("cut_weathered", "weathered_cut").replace("cut_oxidized", "oxidized_cut").replace("cut_exposed", "exposed_cut"))
+	// 	let baseCutBlockID = id(mc, cutBlock.replace("cut_weathered", "weathered_cut").replace("cut_oxidized", "oxidized_cut").replace("cut_exposed", "exposed_cut"))
 
-		let baseWaxedCutBlockID = id(mc, "waxed_"+cutBlock)
-		let baseBlock = block
-		if (block == "copper") {
-			baseBlock = "copper_block"
-		}
+	// 	let baseWaxedCutBlockID = id(mc, "waxed_"+cutBlock)
+	// 	let baseBlock = block
+	// 	if (block == "copper") {
+	// 		baseBlock = "copper_block"
+	// 	}
 
-		blockWriter.writeWalls(`waxed_${cutBlock}_wall`, baseCutBlockID)
-		blockWriter.writeWallGates(`waxed_${cutBlock}_wall_gate`, baseCutBlockID)
-		const smooth = `smooth_${block}`
-		const smoothID = id(modID, smooth)
-		blockWriter.writeBlock("waxed_"+smooth, "smooth_resource", id(mc, block), undefined, smoothID, false, true, false, false)
-		new Block(`waxed_${smooth}_slab`, "slab", smoothID, block, smoothID)
-		new Block(`waxed_${smooth}_stairs`, "stairs", smoothID, block, smoothID)
-		blockWriter.writeWalls(`waxed_${smooth}_wall`, smoothID, smoothID)
-		blockWriter.writeWallGates(`waxed_${smooth}_wall_gate`, smoothID, smoothID)
-		blockWriter.writeBlock(`waxed_${block}_bricks`, "resource_bricks", baseCutBlockID, undefined, block + "_bricks", true)
-		blockWriter.writeChiseledBlock(`waxed_${block}_pillar`, id(mc, block), "resource_pillar")
-		recipeWriter.writeStonecutterRecipes([`waxed_${block}_bricks`, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`], id(mc, "waxed_"+ baseBlock), 1, undefined, "from_"+block)
-		blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID)
-		blockWriter.writeBlock(`waxed_nostalgia_${block}_block`, "nostalgia_resource", id(mc, block), undefined, id(`nostalgia_${block}_block`), false, true, false, false)
+	// 	blockWriter.writeWalls(`waxed_${cutBlock}_wall`, baseCutBlockID)
+	// 	blockWriter.writeWallGates(`waxed_${cutBlock}_wall_gate`, baseCutBlockID)
+	// 	const smooth = `smooth_${block}`
+	// 	const smoothID = id(modID, smooth)
+	// 	blockWriter.writeBlock("waxed_"+smooth, "smooth_resource", id(mc, block), undefined, smoothID, false, true, false, false)
+	// 	new Block(`waxed_${smooth}_slab`, "slab", smoothID, block, smoothID)
+	// 	new Block(`waxed_${smooth}_stairs`, "stairs", smoothID, block, smoothID)
+	// 	blockWriter.writeWalls(`waxed_${smooth}_wall`, smoothID, smoothID)
+	// 	blockWriter.writeWallGates(`waxed_${smooth}_wall_gate`, smoothID, smoothID)
+	// 	blockWriter.writeBlock(`waxed_${block}_bricks`, "resource_bricks", baseCutBlockID, undefined, block + "_bricks", true)
+	// 	blockWriter.writeChiseledBlock(`waxed_${block}_pillar`, id(mc, block), "resource_pillar")
+	// 	recipeWriter.writeStonecutterRecipes([`waxed_${block}_bricks`, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`], id(mc, "waxed_"+ baseBlock), 1, undefined, "from_"+block)
+	// 	blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID)
+	// 	blockWriter.writeBlock(`waxed_nostalgia_${block}_block`, "nostalgia_resource", id(mc, block), undefined, id(`nostalgia_${block}_block`), false, true, false, false)
 
-		let waxedBlocks = [
-			`waxed_${cutBlock}_wall`, `waxed_${cutBlock}_wall_gate`, 
-			"waxed_"+smooth, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`,
-			`waxed_${block}_bricks`, `waxed_${block}_pillar`, "waxed_"+block+"_bars", `waxed_nostalgia_${block}_block`
-		]
+	// 	let waxedBlocks = [
+	// 		`waxed_${cutBlock}_wall`, `waxed_${cutBlock}_wall_gate`, 
+	// 		"waxed_"+smooth, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`,
+	// 		`waxed_${block}_bricks`, `waxed_${block}_pillar`, "waxed_"+block+"_bars", `waxed_nostalgia_${block}_block`
+	// 	]
 		
-		helpers.generateNeoWaxables(waxedBlocks)
+	// 	helpers.generateNeoWaxables(waxedBlocks)
+	// 	helpers.generateNeoOxidizables(waxedBlocks, block)
 
-	})
+	// })
 
 	vanillaConstants.vanillaResourceBlocks.forEach(function (block) {
 		let baseBlock = block
@@ -679,25 +680,29 @@ function generateWoodSet(template, baseBlock, hasStrippedLog) {
 
 }
 
-function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet) {
+function generateBrickSet(template, type, baseBlock, shouldGenerateMossyBrickSet, altTexture) {
 	let brickBase;
 	if (type === undefined) {
 		type = "bricks"
 	}
+	
 	if (template.search("bricks") === -1) {
 		brickBase = template + "_brick"
 	}
 	else {
 		brickBase = template.slice(0, -1)
 	}
+	const bricksBase = brickBase + "s"
 	if (baseBlock === undefined) {
 		baseBlock = template
 	}
+	if (altTexture === undefined) {
+		altTexture == bricksBase
+	}
 
-	const bricksBase = brickBase + "s"
 	new Block(bricksBase, type, baseBlock, type)
-	new Block(brickBase + "_slab", "slab", bricksBase, type)
-	new Block(brickBase + "_stairs", "stairs", bricksBase, type)
+	new Block(brickBase + "_slab", "slab", bricksBase, type, altTexture)
+	new Block(brickBase + "_stairs", "stairs", bricksBase, type, altTexture)
 	new Block(brickBase + "_wall", "wall", id(modID, bricksBase), type)
 	new Block(brickBase + "_wall_gate", "wall_gate", id(modID, bricksBase), type)
 	if (shouldGenerateMossyBrickSet === true) {
