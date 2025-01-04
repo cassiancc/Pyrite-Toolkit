@@ -358,9 +358,11 @@ function writeChiseledBlock(block, baseBlock, special, texture) {
 	return block;
 }
 
-function writeUprightColumnBlock(block, namespace, blockType, baseBlockID) {
+function writeUprightColumnBlock(block, namespace, blockType, baseBlockID, texture) {
+	if (texture == undefined)
+		texture == baseBlockID
 	blockstateHelper.writeBlockstate(block, stateHelper.gen(block, namespace), namespace)
-	modelWriter.writeColumns(block, namespace, getPath(baseBlockID))
+	modelWriter.writeColumns(block, namespace, texture)
 	itemModelWriter.writeBlockItemModel(block, namespace)
 	lootTableWriter.writeLootTables(block)
 	langHelper.generateBlockLang(block)
@@ -462,12 +464,13 @@ function writeBars(block, namespace, ingredientID, texture) {
 	const blockID = id(block)
 	blockstateHelper.writeBlockstate(block, stateHelper.genBars(block, namespace, baseBlock), namespace)
 	modelWriter.writeBars(block, namespace, texture)
-	itemModelWriter.writeUniqueBlockItemModel(block, namespace)
+	itemModelWriter.writeUniqueBlockItemModel(block, namespace, undefined, texture)
 	tagHelper.tagBoth(block, "metal_bars")
 	tagHelper.checkAndAddResourceTag(block, ingredientID)
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block, namespace)
 	writeRecipeAdvancement(blockID, ingredientID)
+	ingredientID = ingredientID.replace("cut_weathered", "weathered_cut").replace("cut_oxidized", "oxidized_cut").replace("cut_exposed", "exposed_cut")
 	recipeWriter.writeRecipes(block, "bars", ingredientID)
 	return block;
 }

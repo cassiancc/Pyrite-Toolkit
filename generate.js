@@ -194,7 +194,7 @@ class Block {  // Create a class
 			blockWriter.writeOrientableBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
 		else if (blockType == "nostalgia_grass_block") {
-			blockWriter.writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock))
+			blockWriter.writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock), this.blockID)
 		}
 		else if ((blockType == "nostalgia") || (blockType == "nostalgia_resource") || (blockType == "smooth_resource")) {
 			if (textureID == undefined)

@@ -14,20 +14,20 @@ function writeGeneratedItemModel(item) {
 }
 
 // Writes an block item model for blocks with a unique inventory model (e.g. signs), creating a client item (1.21.4+) and item model.
-function writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock) {
+function writeUniqueBlockItemModel(block, namespace, textureNamespace, texture) {
 	if (namespace === undefined) {
 		namespace = modID
 	}
-	if (altNamespace === undefined) {
-		altNamespace = namespace;
+	if (textureNamespace === undefined) {
+		textureNamespace = namespace;
 	}
-	if (baseBlock === undefined) {
-		baseBlock = block
+	if (texture === undefined) {
+		texture = block
 	}
 	if (helpers.versionAbove("1.21.4")) {
-		writeClientItem(altNamespace, "item", block, baseBlock)
+		writeClientItem(textureNamespace, "item", block, texture)
 	}
-	const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${altNamespace}:block/${baseBlock}"}}`
+	const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${textureNamespace}:block/${texture}"}}`
 	helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem)
 }
 

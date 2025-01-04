@@ -64,7 +64,7 @@ module.exports = {
       }`
     },
 
-    generateSlabBlockModel: function generateSlabBlockModel(block, namespace, baseBlock, model) {
+    generateSlabBlockModel: function generateSlabBlockModel(namespace, baseBlock, model) {
         if (baseBlock === "grass_block_top") {
             return helpers.readFile(`./overrides/pyrite/models/grass_${model}.json`)
         }

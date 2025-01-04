@@ -156,8 +156,8 @@ module.exports = {
             baseBlock = baseBlock.split(":")[1]
         }
         block = getPath(block)
-        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab"));
-        writeFile(`${helpers.modelPath}${block}_top.json`, modelHelper.generateSlabBlockModel(block, namespace, baseBlock, "slab_top"));
+        writeFile(`${helpers.modelPath}${block}.json`, modelHelper.generateSlabBlockModel(namespace, baseBlock, "slab"));
+        writeFile(`${helpers.modelPath}${block}_top.json`, modelHelper.generateSlabBlockModel(namespace, baseBlock, "slab_top"));
         writeFile(`${helpers.modelPath}${block}_double.json`, modelHelper.generateBlockModel(block, namespace, baseBlock));
 
     },
