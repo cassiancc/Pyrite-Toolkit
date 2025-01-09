@@ -94,7 +94,7 @@ function writeBlockItemModel(block, namespace, altNamespace) {
 		altNamespace = namespace
 	}
 	let modelSubdirectory = ""
-	if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+	if ((altNamespace != modID) && (altNamespace != "minecraft")) {
 		modelSubdirectory = altNamespace + "/"
 	}
 	const blockPath = helpers.getPath(block)

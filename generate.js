@@ -642,6 +642,12 @@ else if (modID == "holiday-server-mod") {
 	// recipeWriter.writeShapelessRecipe(["minecraft:paper", "minecraft:loom"], id("fabric_banner_pattern"), 1)
 
 }
+else if (modID == "raspberry") {
+	blockWriter.writeStoveBlock("silt_stove", modID, "stove", "twigs:silt_bricks")
+	blockWriter.writeStoveBlock("ash_stove", modID, "stove", "supplementaries:ash_bricks")
+
+	langHelper.writeLang()
+}
 
 function writeDye(item) {
 	item = item + "_dye"

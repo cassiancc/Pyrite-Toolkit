@@ -379,6 +379,23 @@ function writeOrientableBlock(block, namespace, blockType, baseBlock) {
 	recipeWriter.writeRecipes(block, blockType, baseBlock)
 }
 
+function writeStoveBlock(block, namespace, blockType, baseBlock) {
+	// blockstateHelper.writeBlockstate(block, stateHelper.genOrientable(id(modID, block)), namespace)
+	// modelWriter.writeProvided(block, modelHelper.genOrientable(id(modID, block)))
+	itemModelWriter.writeBlockItemModel(block, namespace)
+	langHelper.generateBlockLang(block)
+	lootTableWriter.writeLootTables(block, namespace)
+	recipeWriter.writeShapedRecipe({
+			"I": "minecraft:iron_ingot",
+			"C": "minecraft:campfire",
+			"#": baseBlock,
+		  }, block, 1, [
+			"III",
+			"# #",
+			"#C#"
+		  ], undefined, true)
+}
+
 function writeSigns(blockID, baseBlockID, texture) {
 	// Setup
 	const wallBlockID = blockID.replace("_sign", "_wall_sign")
@@ -808,6 +825,7 @@ module.exports = {
 	writeFlower: writeFlower,
 	writePoweredBlock: writePoweredBlock,
 	writeBibliocraftBlock: writeBibliocraftBlock,
-	writeColumns: writeColumns
+	writeColumns: writeColumns,
+	writeStoveBlock: writeStoveBlock
 
 }

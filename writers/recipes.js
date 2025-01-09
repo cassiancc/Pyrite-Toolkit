@@ -18,8 +18,8 @@ function writeRecipes(block, type, other, namespace, altNamespace) {
 	}
 }
 
-function writeShapedRecipe(ingredients, result, quantity, shape, pattern) {
-	let recipe = recipeHelper.generateShapedRecipe(ingredients, result, quantity, shape, pattern)
+function writeShapedRecipe(ingredients, result, quantity, shape, pattern, disableLoadedChecks) {
+	let recipe = recipeHelper.generateShapedRecipe(ingredients, result, quantity, shape, disableLoadedChecks)
 	if ((recipe !== "")) {
 		if (result.includes(":")) {
 			result = result.split(":")[1]

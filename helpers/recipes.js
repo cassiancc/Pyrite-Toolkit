@@ -146,7 +146,7 @@ function generateShapelessRecipe(ingredients, result, quantity, components) {
 
 }
 
-function generateShapedRecipe(ingredients, result, quantity, shape) {
+function generateShapedRecipe(ingredients, result, quantity, shape, disableLoadedChecks) {
 	let newIngredients = {}, loadCondition;
 	if (useRecipesFrom21dot1AndBelow()) {
 		const keys = Object.keys(ingredients)
@@ -163,7 +163,8 @@ function generateShapedRecipe(ingredients, result, quantity, shape) {
 				itemOrTag = "item"
 			}
 			const valueNamespace = value.split(":")[0].replace("#", "")
-			if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
+			if ((valueNamespace !== modID) && (valueNamespace !== mc) && (disableLoadedChecks !== true)) {
+				console.log(disableLoadedChecks)
 				loadCondition = generateModLoadCondition(valueNamespace)
 			}
 			Object.assign(newIngredients, JSON.parse(`{"${keys[i]}": {"${itemOrTag}": "${value}"}}`))

@@ -511,7 +511,7 @@ module.exports = {
             altNamespace = namespace
         }
         let modelSubdirectory = ""
-        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+        if ((altNamespace != helpers.modID) && (altNamespace != "minecraft")) {
             modelSubdirectory = altNamespace + "/"
         }
         return `{
@@ -632,7 +632,7 @@ module.exports = {
             altNamespace = namespace
         }
         let modelSubdirectory = ""
-        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+        if ((altNamespace != helpers.modID) && (altNamespace != "minecraft")) {
             modelSubdirectory = altNamespace + "/"
         }
        return {

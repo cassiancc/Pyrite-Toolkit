@@ -135,7 +135,7 @@ function writeFile(path, data, minify) {
         }
 	}
 	if (config.disableWriting === false) {
-        if (!path.includes("undefined") && data !== "") {
+        if (!path.includes("undefined") && data !== "" && data !== undefined) {
             fs.writeFileSync(path, data, function (err) { if (err) throw err; })
         }
         else {

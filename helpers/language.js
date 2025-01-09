@@ -54,18 +54,21 @@ function generateLang(block, type, namespace) {
         JSON.parse(`{"${key}": "${value}"}`)
       )
     }
-    if (!catTranslations.hasOwnProperty(key)) {
-      catTranslations = Object.assign(
-        catTranslations,
-        JSON.parse(`{"${key}": "${catify(value)}"}`)
-      )
+    if (catTranslations != null) {
+      if (!catTranslations.hasOwnProperty(key)) {
+        catTranslations = Object.assign(
+          catTranslations,
+          JSON.parse(`{"${key}": "${catify(value)}"}`)
+        )
+      }
+      if (!upsideDownTranslations.hasOwnProperty(key)) {
+        upsideDownTranslations = Object.assign(
+          upsideDownTranslations,
+          JSON.parse(`{"${key}": "${upsideDownify(value)}"}`)
+        )
+      }
     }
-    if (!upsideDownTranslations.hasOwnProperty(key)) {
-      upsideDownTranslations = Object.assign(
-        upsideDownTranslations,
-        JSON.parse(`{"${key}": "${upsideDownify(value)}"}`)
-      )
-    }
+    
   }
   
   return value

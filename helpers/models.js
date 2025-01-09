@@ -103,7 +103,7 @@ module.exports = {
 
     generateCraftingTableBlockModel: function generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace) {
         let modelSubdirectory = "", textureSubdirectory = ""
-        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+        if ((altNamespace != helpers.modID) && (altNamespace != "minecraft")) {
             modelSubdirectory = altNamespace + "/"
             if (altNamespace == "aether") {
                 textureSubdirectory = "construction/"
