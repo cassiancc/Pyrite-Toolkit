@@ -329,5 +329,6 @@ module.exports = {
     populateTemplates: populateTemplates,
     generateNeoWaxables: generateNeoWaxables,
     generateNeoOxidizables: generateNeoOxidizables,
-    columnsEnabled: columnsEnabled
+    columnsEnabled: columnsEnabled,
+    getTrialPlural: getTrialPlural
 }

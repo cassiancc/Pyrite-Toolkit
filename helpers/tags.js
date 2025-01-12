@@ -69,7 +69,7 @@ function tagContent(arg, tag, folder, optional) {
 	}
 }
 function tagBlock(block, tag, optional) {
-	tagContent(block, tag, "block", optional)
+	tagContent(block, tag, "block" + helpers.getTrialPlural(), optional)
 }
 function tagBlocks(blocks, tag, optional) {
 	blocks.forEach(function (block) {
@@ -77,7 +77,7 @@ function tagBlocks(blocks, tag, optional) {
 	})
 }
 function tagItem(item, tag, optional) {
-	tagContent(item, tag, "item", optional)
+	tagContent(item, tag, "item" + helpers.getTrialPlural(), optional)
 }
 function tagItems(items, tag, optional) {
 	items.forEach(function (item) {

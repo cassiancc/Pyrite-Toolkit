@@ -40,23 +40,48 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	if ((mod != "#minecraft") && (mod != "c"))
-		return {
-			"fabric:load_conditions": [
-				{
-					"condition": "fabric:all_mods_loaded",
-					"values": [
-						mod
-					]
-				}
-			],
-			"neoforge:conditions": [
-				{
-				"type": "neoforge:mod_loaded",
-				"modid": mod
-				}
-			]
+	if ((mod != "#minecraft") && (mod != "c")) {
+		let loadCondition;
+		if (majorVersion > 20) {
+			loadCondition = {
+				"fabric:load_conditions": [
+					{
+						"condition": "fabric:all_mods_loaded",
+						"values": [
+							mod
+						]
+					}
+				],
+				"neoforge:conditions": [
+					{
+					"type": "neoforge:mod_loaded",
+					"modid": mod
+					}
+				]
+			}
 		}
+		else {
+			loadCondition = {
+				"fabric:load_conditions": [
+					{
+						"condition": "fabric:all_mods_loaded",
+						"values": [
+							mod
+						]
+					}
+				],
+				"forge:conditional": [
+					{
+					"type": "forge:mod_loaded",
+					"modid": mod
+					}
+				]
+			}
+		}
+		return loadCondition;
+		
+	}
+		
 }
 
 function generateStonecutterRecipe(block, ingredient, quantity, type) {
@@ -164,7 +189,6 @@ function generateShapedRecipe(ingredients, result, quantity, shape, disableLoade
 			}
 			const valueNamespace = value.split(":")[0].replace("#", "")
 			if ((valueNamespace !== modID) && (valueNamespace !== mc) && (disableLoadedChecks !== true)) {
-				console.log(disableLoadedChecks)
 				loadCondition = generateModLoadCondition(valueNamespace)
 			}
 			Object.assign(newIngredients, JSON.parse(`{"${keys[i]}": {"${itemOrTag}": "${value}"}}`))

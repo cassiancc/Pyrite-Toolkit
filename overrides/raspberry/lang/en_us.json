@@ -1,3 +1,8 @@
 {
-
-}
+    "block.raspberry.silt_stove": "Silt Stove",
+    "block.raspberry.ash_stove": "Ash Stove",
+    "config.raspberry.title": "Raspberry Core",
+    "config.raspberry.config.stovesStartLit": "Light stoves by default",
+    "config.raspberry.config.campfiresStartLit": "Light campfires by default"
+   
+   }

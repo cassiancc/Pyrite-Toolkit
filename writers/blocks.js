@@ -389,11 +389,16 @@ function writeStoveBlock(block, namespace, blockType, baseBlock) {
 			"I": "minecraft:iron_ingot",
 			"C": "minecraft:campfire",
 			"#": baseBlock,
-		  }, block, 1, [
+		  }, id(block), 1, [
 			"III",
 			"# #",
 			"#C#"
 		  ], undefined, true)
+	tagHelper.tagBlock(block, "farmersdelight:heat_sources", true)
+	tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
+	tagHelper.tagBlock(block, "create:passive_boiler_heaters", true)
+
+
 }
 
 function writeSigns(blockID, baseBlockID, texture) {

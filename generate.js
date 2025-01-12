@@ -643,8 +643,9 @@ else if (modID == "holiday-server-mod") {
 
 }
 else if (modID == "raspberry") {
-	blockWriter.writeStoveBlock("silt_stove", modID, "stove", "twigs:silt_bricks")
-	blockWriter.writeStoveBlock("ash_stove", modID, "stove", "supplementaries:ash_bricks")
+	// blockWriter.writeStoveBlock("silt_stove", modID, "stove", "twigs:silt_bricks")
+	// blockWriter.writeStoveBlock("ash_stove", modID, "stove", "supplementaries:ash_bricks")
+	blockWriter.writeBlock("lead_grate", modID, "grate", "oreganized:lead_block", undefined, true, true, undefined, false)
 
 	langHelper.writeLang()
 }
