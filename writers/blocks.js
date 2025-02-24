@@ -534,8 +534,10 @@ function writeColumns(block, baseBlockID, texture) {
 	if (helpers.columnsEnabled) {
 		if (texture == undefined)
 			texture = baseBlockID
-		const blockstate = stateHelper.genColumn(block)
-		blockstateHelper.writeBlockstate(block, blockstate, modID)
+		// if (texture.includes("cut")) {
+		// 	console.log(texture)
+		// }
+		blockstateHelper.writeBlockstate(block, stateHelper.genColumn(id(block)), modID)
 		modelWriter.writeProvided(block +"_center", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_center", undefined, "all"))
 		modelWriter.writeProvided(block+"_end", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_end", undefined, "all"))
 		modelWriter.writeProvided(block+"_inventory", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_inventory", undefined, "all"))
@@ -544,11 +546,11 @@ function writeColumns(block, baseBlockID, texture) {
 		lootTableWriter.writeLootTables(block)
 		langHelper.generateBlockLang(block)
 	
-		tagHelper.tagBoth(block, "columns:columns")
+		tagHelper.tagBoth(block, "columns:columns", true)
 		if (baseBlockID.includes("bricks")) {
-			tagHelper.tagBoth(block, "brick_columns")
+			tagHelper.tagBoth(block, "brick_columns", true)
 		} else {
-			tagHelper.checkAndAddResourceTag(block, baseBlockID)
+			tagHelper.checkAndAddResourceTag(block, baseBlockID, true)
 		}
 		writeRecipeAdvancement(block, baseBlockID)
 		recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"])

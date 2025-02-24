@@ -111,7 +111,7 @@ function checkAndAddBeaconTag(block, baseBlock) {
 	}
 }
 
-function checkAndAddResourceTag(block, baseBlock) {
+function checkAndAddResourceTag(block, baseBlock, optionality) {
 	let base = getPath(baseBlock);
 	if (base.includes("smooth_"))
 		base = base.replace("smooth_", "")
@@ -124,7 +124,7 @@ function checkAndAddResourceTag(block, baseBlock) {
 	if (base.includes("_block"))
 		base = base.replace("_block", "")
 	if (vanillaResources.includes(base)) {
-		tagBoth(block, base)
+		tagBoth(block, base, optionality)
 	}
 }
 

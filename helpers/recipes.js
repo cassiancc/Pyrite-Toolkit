@@ -280,7 +280,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 
 		recipe = generateShapelessRecipe(ingredients, result, 1)
 	} else if (type === "wool") {
-		recipe = generateShapelessRecipe([id(modID, `${base}_dye`), "minecraft:white_wool"], id(namespace, block), 1)
+		recipe = generateShapelessRecipe([id(modID, `${base}_dye`), "#minecraft:wool"], id(namespace, block), 1)
 	} else if (type === "torch_lever") {
 		recipe = generateShapelessRecipe([id(altNamespace, base), "minecraft:lever"], id(namespace, block), 1)
 	} else if (type === "cobblestone_bricks") {

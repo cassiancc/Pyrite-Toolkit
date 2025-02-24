@@ -28,8 +28,8 @@
     "#pyrite:metal_bars",
     "#pyrite:concrete_slabs",
     "#pyrite:concrete_stairs",
-    "#pyrite:terracotta"
-
+    "#pyrite:terracotta",
+    "pyrite:smooth_stone_stairs"
 
 
   ]

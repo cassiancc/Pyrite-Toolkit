@@ -99,7 +99,7 @@ const paths = {
 
 }
 
-const columnsEnabled = false;
+const columnsEnabled = true;
 
 function readFile(path) {
     return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
