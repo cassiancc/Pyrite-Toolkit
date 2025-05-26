@@ -652,6 +652,47 @@ else if (modID == "raspberry") {
 
 	langHelper.writeLang()
 }
+else if (modID == "bigger_fish") {
+	const fish = [
+		"bass",
+		"bluegill",
+		"carp",
+		"flounder",
+		"goldfish",
+		"grouper",
+		"herring",
+		"koi",
+		"mackerel",
+		"perch",
+		"sardine",
+		"soulfish",
+		"swordfish",
+		"tilapia",
+		"trout",
+		"tuna",
+	]
+	const bait = [
+		"worm",
+		"leech"
+	]
+	fish.forEach(function(ish) {
+		writeItem(ish)
+	})
+	bait.forEach(function(b) {
+		writeItem(b)
+	})
+
+	tagHelper.tagItem("#bigger_fish:fish", "minecraft:fishes", true)
+	tagHelper.tagItem("#bigger_fish:fish", "c:foods/raw_fish", true)
+	tagHelper.tagItem("copper_rod", "c:tools/fishing_rod", true)
+	tagHelper.tagItem("copper_rod", "minecraft:enchantable/fishing", true)
+
+	tagHelper.tagItems(["aquaculture:worm", "aquaculture:minnow", "bigger_fish:sardine", "minecraft:raw_chicken"], "bait", true)
+
+	tagHelper.tagItems(fish, "fish", true)
+	tagHelper.tagItems(bait, "bait", true)
+	langHelper.writeLang()
+}
 
 function writeDye(item) {
 	item = item + "_dye"

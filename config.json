@@ -17,5 +17,12 @@
         "projectType": "fabric",
         "disableWriting": false,
         "version": "1.21.4"
+    },
+    {
+        "modID": "bigger_fish",
+        "modPath": "/home/deck/Documents/GitHub/Always a Bigger FIsh/",
+        "projectType": "architectury",
+        "disableWriting": false,
+        "version": "1.21.5"
     }
 ]
