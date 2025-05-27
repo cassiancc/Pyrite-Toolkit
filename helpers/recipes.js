@@ -40,7 +40,8 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	if ((mod != "#minecraft") && (mod != "c")) {
+	mod = mod.replace("#", "")
+	if ((mod != "minecraft") && (mod != "c") && (mod != "forge")) {
 		let loadCondition;
 		if (majorVersion > 20) {
 			loadCondition = {

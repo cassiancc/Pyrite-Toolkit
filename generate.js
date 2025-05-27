@@ -6,6 +6,7 @@ const blockWriter = require("./writers/blocks")
 const { writeRecipeAdvancement } = require('./writers/advancements');
 const itemModelWriter = require('./writers/item_models');
 const vanillaConstants = require('./helpers/constants');
+const advancements = require('./writers/advancements');
 
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
@@ -653,6 +654,73 @@ else if (modID == "raspberry") {
 	langHelper.writeLang()
 }
 else if (modID == "bigger_fish") {
+	const cold_saltwater = [
+		"minecraft:salmon",
+		"minecraft:cod",
+		"herring",
+		"char",
+		"haddock",
+		"aquaculture:atlantic_cod",
+		"aquaculture:blackfish",
+		"aquaculture:pacific_halibut",
+		"aquaculture:atlantic_halibut",
+		"aquaculture:pollock",
+		"aquaculture:rainbow_trout"
+	]
+	const temperate_saltwater = [
+		"minecraft:salmon",
+		"minecraft:cod",
+		"herring",
+		"mackerel"
+	]
+	const hot_saltwater = [
+		"minecraft:salmon",
+		"minecraft:cod",
+		"herring",
+		"swordfish",
+		"minecraft:tropical_fish",
+		"flounder",
+		"butterflyfish",
+		"surgeonfish",
+		"minecraft:pufferfish",
+		"grouper",
+		"tuna",
+	]
+	const cold_freshwater = [
+		"minecraft:salmon",
+		"carp",
+		"koi",
+		"trout",
+		"pike",
+		"goldeye",
+		"walleye"
+	]
+	const temperate_freshwater = [
+		"minecraft:salmon",
+		"carp",
+		"koi",
+		"trout",
+		"goldfish",
+		"bass",
+		"bluegill",
+	]
+	const hot_freshwater = [
+		"minecraft:salmon",
+		"carp",
+		"koi",
+		"trout",
+		"tilapia",
+		"perch",
+		"aquaculture:perch",
+		"aquaculture:carp"
+	]
+	tagHelper.tagItems(cold_freshwater, "cold_freshwater_fish", true)
+	tagHelper.tagItems(temperate_freshwater, "temperate_freshwater_fish", true)
+	tagHelper.tagItems(hot_freshwater, "hot_freshwater_fish", true)
+	tagHelper.tagItems(cold_saltwater, "cold_saltwater_fish", true)
+	tagHelper.tagItems(hot_saltwater, "hot_saltwater_fish", true)
+	tagHelper.tagItems(temperate_saltwater, "temperate_saltwater_fish", true)
+
 	const fish = [
 		"bass",
 		"bluegill",
@@ -682,12 +750,23 @@ else if (modID == "bigger_fish") {
 		writeItem(b)
 	})
 
+	recipeWriter.writeShapedRecipe({
+		"#": "#c:strings",
+		"C": "#c:ingots/copper",
+	  }, "bigger_fish:copper_rod", 1, [
+		"  C",
+		" C#",
+		"C #"
+	  ], undefined, true)
+	  advancements.writeRecipeAdvancement("copper_rod", "minecraft:copper_ingot")
+
 	tagHelper.tagItem("#bigger_fish:fish", "minecraft:fishes", true)
 	tagHelper.tagItem("#bigger_fish:fish", "c:foods/raw_fish", true)
 	tagHelper.tagItem("copper_rod", "c:tools/fishing_rod", true)
 	tagHelper.tagItem("copper_rod", "minecraft:enchantable/fishing", true)
+	tagHelper.tagItem("copper_rod", "requires_minigame_to_catch", true)
 
-	tagHelper.tagItems(["aquaculture:worm", "aquaculture:minnow", "bigger_fish:sardine", "minecraft:raw_chicken"], "bait", true)
+	tagHelper.tagItems(["aquaculture:worm", "aquaculture:minnow", "bigger_fish:sardine", "minecraft:chicken"], "bait", true)
 
 	tagHelper.tagItems(fish, "fish", true)
 	tagHelper.tagItems(bait, "bait", true)
