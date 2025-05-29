@@ -41,6 +41,56 @@ function writeShapelessRecipe(ingredients, result, quantity, addon, components) 
 	}
 }
 
+function writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, recipeCategory, fileNameSuffix) {
+	if (fileNameSuffix === undefined) {
+		fileNameSuffix = ""
+	}
+	if (recipeCategory !== undefined) {
+		fileNameSuffix += "_from_" +recipeCategory
+	}
+	let recipe = recipeHelper.generateSmeltingRecipe(result, ingredient, type, cookingTime, experience, recipeCategory)
+	if ((recipe !== "")) {
+		if (result.includes(":")) {
+			result = result.split(":")[1]
+		}
+		helpers.writeFile(`${helpers.recipePath}${result}${fileNameSuffix}.json`, recipe)
+	}
+}
+
+function writeCampfireRecipe(ingredient, result, type, cookingTime, experience, fileNameSuffix) {
+	if (type === undefined) {
+		type = "food"
+	}
+	if (cookingTime === undefined) {
+		cookingTime = 600
+	}
+	if (experience === undefined) {
+		experience = 0.35
+	}
+
+	writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, "campfire_cooking", fileNameSuffix)
+}
+
+function writeSmokingRecipe(ingredient, result, type, cookingTime, experience, fileNameSuffix) {
+	if (type === undefined) {
+		type = "food"
+	}
+	if (cookingTime === undefined) {
+		cookingTime = 100
+	}
+	if (experience === undefined) {
+		experience = 0.1
+	}
+
+	writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, "smoking", fileNameSuffix)
+}
+
+function writeFoodCookingRecipes(ingredient, result, cookingTime, experience, recipeCategory, fileNameSuffix) {
+	writeSmeltingRecipe(ingredient, result, undefined, cookingTime, experience, recipeCategory, fileNameSuffix)
+	writeCampfireRecipe(ingredient, result, undefined, cookingTime, experience, fileNameSuffix)
+	writeSmokingRecipe(ingredient, result, undefined, cookingTime, experience, fileNameSuffix)
+}
+
 function writeDyeRecipe(ingredient, result, dye, addon) {
 	if (addon === undefined) {
 		addon = ""
@@ -102,6 +152,8 @@ module.exports = {
     writeRecipes: writeRecipes,
     writeShapedRecipe, writeShapedRecipe,
     writeShapelessRecipe, writeShapelessRecipe,
+	writeSmeltingRecipe: writeSmeltingRecipe,
+	writeFoodCookingRecipes: writeFoodCookingRecipes,
     writeStonecutterRecipe: writeStonecutterRecipe, 
 	writeStonecutterRecipes: writeStonecutterRecipes,
 	writeDyeRecipe: writeDyeRecipe,

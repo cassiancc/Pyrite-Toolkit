@@ -656,6 +656,7 @@ else if (modID == "raspberry") {
 else if (modID == "bigger_fish") {
 	const cold_saltwater = [
 		"minecraft:salmon",
+		"aquaculture:pink_salmon",
 		"minecraft:cod",
 		"herring",
 		"char",
@@ -665,13 +666,22 @@ else if (modID == "bigger_fish") {
 		"aquaculture:pacific_halibut",
 		"aquaculture:atlantic_halibut",
 		"aquaculture:pollock",
-		"aquaculture:rainbow_trout"
+		"aquaculture:atlantic_herring",
+		"aquaculture:rainbow_trout",
 	]
 	const temperate_saltwater = [
 		"minecraft:salmon",
 		"minecraft:cod",
 		"herring",
-		"mackerel"
+		"mackerel",
+		"upgrade_aquatic:lionfish",
+		"aquaculture:gar",
+
+	]
+
+	const mushroom_fields = [
+		"aquaculture:brown_shrooma",
+		"aquaculture:red_shrooma",
 	]
 	const hot_saltwater = [
 		"minecraft:salmon",
@@ -684,16 +694,27 @@ else if (modID == "bigger_fish") {
 		"surgeonfish",
 		"minecraft:pufferfish",
 		"grouper",
+		"aquaculture:red_grouper",
 		"tuna",
+		"aquaculture:tuna",
+		"upgrade_aquatic:lionfish",
 	]
 	const cold_freshwater = [
 		"minecraft:salmon",
+		"aquaculture:pink_salmon",
 		"carp",
+		"aquaculture:carp",
 		"koi",
 		"trout",
 		"pike",
 		"goldeye",
-		"walleye"
+		"walleye",
+		"upgrade_aquatic:pike",
+		"aquaculture:minnow",
+   		"aquaculture:bluegill",
+		"aquaculture:catfish",
+		"aquaculture:muskellunge",
+
 	]
 	const temperate_freshwater = [
 		"minecraft:salmon",
@@ -703,6 +724,13 @@ else if (modID == "bigger_fish") {
 		"goldfish",
 		"bass",
 		"bluegill",
+		"aquaculture:gar",
+		"aquaculture:minnow",
+   		"aquaculture:bluegill",
+		"aquaculture:catfish",
+		"aquaculture:smallmouth_bass",
+		"aquaculture:brown_trout",
+
 	]
 	const hot_freshwater = [
 		"minecraft:salmon",
@@ -712,7 +740,19 @@ else if (modID == "bigger_fish") {
 		"tilapia",
 		"perch",
 		"aquaculture:perch",
-		"aquaculture:carp"
+		"upgrade_aquatic:perch",
+		"aquaculture:bayad",
+		"aquaculture:boulti",
+		"aquaculture:capitaine",
+		"aquaculture:synodontis",
+		"aquaculture:carp",
+		"aquaculture:minnow",
+    	"aquaculture:bluegill",
+		"aquaculture:catfish",
+		"aquaculture:piranha",
+		"aquaculture:arapaima",
+    	"aquaculture:tambaqui",
+
 	]
 	tagHelper.tagItems(cold_freshwater, "cold_freshwater_fish", true)
 	tagHelper.tagItems(temperate_freshwater, "temperate_freshwater_fish", true)
@@ -720,35 +760,59 @@ else if (modID == "bigger_fish") {
 	tagHelper.tagItems(cold_saltwater, "cold_saltwater_fish", true)
 	tagHelper.tagItems(hot_saltwater, "hot_saltwater_fish", true)
 	tagHelper.tagItems(temperate_saltwater, "temperate_saltwater_fish", true)
+	tagHelper.tagItems(mushroom_fields, "shroomy_fish", true)
+	tagHelper.tagItems(["soulfish"], "deep_dark_fish", true)
 
 	const fish = [
 		"bass",
+		"butterflyfish",
 		"bluegill",
 		"carp",
+		"char",
 		"flounder",
 		"goldfish",
+		"goldeye",
 		"grouper",
+		"haddock",
 		"herring",
 		"koi",
 		"mackerel",
 		"perch",
+		"pike",
 		"sardine",
+		"surgeonfish",
 		"soulfish",
 		"swordfish",
 		"tilapia",
 		"trout",
 		"tuna",
+		"walleye",
 	]
 	const bait = [
 		"worm",
-		"leech"
+		"leech",
+	]
+	const modded_bait = [
+		"aquaculture:worm",
+		"aquaculture:leech",
+		"aquaculture:minnow"
+	]
+	const food = [
+		"fried_fish"
 	]
 	fish.forEach(function(ish) {
-		writeItem(ish)
+		langHelper.generateLang(ish, "item", modID)
+		itemModelWriter.writeFishItemModels(ish)
 	})
 	bait.forEach(function(b) {
 		writeItem(b)
+
 	})
+	food.forEach(function(b) {
+		writeItem(b)
+	})
+	recipeWriter.writeFoodCookingRecipes("#bigger_fish:fish", "fried_fish")
+	recipeWriter.writeFoodCookingRecipes("minecraft:tropical_fish", "fried_fish", undefined, undefined, undefined, "_tropical")
 
 	recipeWriter.writeShapedRecipe({
 		"#": "#c:strings",
@@ -762,14 +826,18 @@ else if (modID == "bigger_fish") {
 
 	tagHelper.tagItem("#bigger_fish:fish", "minecraft:fishes", true)
 	tagHelper.tagItem("#bigger_fish:fish", "c:foods/raw_fish", true)
+	tagHelper.tagItem("fried_fish", "c:foods/cooked_fish", true)
+	tagHelper.tagItem("worm", "minecraft:chicken_food", true)
+
 	tagHelper.tagItem("copper_rod", "c:tools/fishing_rod", true)
 	tagHelper.tagItem("copper_rod", "minecraft:enchantable/fishing", true)
 	tagHelper.tagItem("copper_rod", "requires_minigame_to_catch", true)
 
-	tagHelper.tagItems(["aquaculture:worm", "aquaculture:minnow", "bigger_fish:sardine", "minecraft:chicken"], "bait", true)
 
 	tagHelper.tagItems(fish, "fish", true)
 	tagHelper.tagItems(bait, "bait", true)
+	tagHelper.tagItems(modded_bait, "bait", true)
+
 	langHelper.writeLang()
 }
 

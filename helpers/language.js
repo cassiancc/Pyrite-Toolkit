@@ -34,12 +34,15 @@ function countBlocksInLang() {
 	return count
 }
 
-function generateLang(block, type, namespace) {
+function generateLang(block, type, namespace, addon) {
   if (blockTranslations == null) {
 	blockTranslations = {}
   }
   if (type === undefined) {
 	type = "block"
+  }
+  if (type === undefined) {
+	addon = ""
   }
   block = helpers.getPath(block)
   let langBlock = block
@@ -78,6 +81,10 @@ function generateLang(block, type, namespace) {
 
 function generateBlockLang(block) {
   return generateLang(block, "block", modID)
+}
+
+function generateConfigLang(option) {
+  return generateLang(option, "config", modID, "config")
 }
 
 function flipTranslationFile(path) {
@@ -315,6 +322,7 @@ module.exports = {
   flipTranslationFile: flipTranslationFile,
 
   generateBlockLang: generateBlockLang,
+  generateConfigLang: generateConfigLang,
 
   writeLang: writeLang,
 
