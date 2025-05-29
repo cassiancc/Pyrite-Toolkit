@@ -12,7 +12,7 @@ function writeGeneratedItemModel(item) {
 	writeProvidedItemModel(item, `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${item}"}}`)
 }
 
-const fish_sizes = 4;
+const fish_sizes = 25;
 
 
 // Writes the necessary item models for fish (Always a Bigger Fish), creating a client item (1.21.4+) and multiple item models of various scales.
@@ -20,7 +20,7 @@ function writeFishItemModels(item) {
 	if (helpers.versionAbove("1.21.4")) {
 		writeFishClientItem(item)
 		var i = 0;
-		var scale = 0;
+		var scale = 0.2;
 		var scaleModel = [ scale, scale, scale ]
 		while (i <= fish_sizes) {
 			writeProvidedItemModel(`${item}_${i}`, {
@@ -50,7 +50,8 @@ function writeFishItemModels(item) {
 				}
 			})
 			i++;
-			scale+=0.5
+			scale+=0.150
+			scale = parseFloat(scale.toFixed(2)) 
 			scaleModel = [ scale, scale, scale ]
 		}
 	} else { 
@@ -58,6 +59,30 @@ function writeFishItemModels(item) {
 		writeProvidedItemModel(item, `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${item}"}}`)
 	}
 	
+}
+
+function writeFishClientItem(item) {
+	const itemID = id(item)
+	var model =	{
+		"model": {
+			"type": "minecraft:range_dispatch",
+			"property": "minecraft:custom_model_data",
+			"scale": 0.2,
+			"entries": []
+		}
+	}
+	var i = 0;
+	while (i <= fish_sizes) {
+		model.model.entries.push({
+				"threshold": i,
+				"model": {
+				"type": "minecraft:model",
+				"model": `${helpers.getNamespace(itemID)}:item/${helpers.getPath(itemID)}_${i}`
+				}
+			})
+		i++;
+	}
+	writeProvidedClientItem(helpers.getPath(itemID), model)
 }
 
 function writeProvidedItemModel(item, modelItem) {
@@ -133,30 +158,6 @@ function writeClientItem(namespace, folder, path, model) {
 		path = helpers.getPath(path)
 	}
 	writeProvidedClientItem(path, item)
-}
-
-function writeFishClientItem(item) {
-	const itemID = id(item)
-	var model =	{
-		"model": {
-			"type": "minecraft:range_dispatch",
-			"property": "minecraft:custom_model_data",
-			"scale": 0.25,
-			"entries": []
-		}
-	}
-	var i = 0;
-	while (i <= fish_sizes) {
-		model.model.entries.push({
-				"threshold": i,
-				"model": {
-				"type": "minecraft:model",
-				"model": `${helpers.getNamespace(itemID)}:item/${helpers.getPath(itemID)}_${i}`
-				}
-			})
-		i++;
-	}
-	writeProvidedClientItem(helpers.getPath(itemID), model)
 }
 
 function writeProvidedClientItem(path, item) {
