@@ -83,6 +83,20 @@ function getTrialPlural() {
     }
 }
 
+function getItemModelsPath(id) {
+    if (id == undefined) {
+        id = modID
+    }
+    return `${resourcesPath}assets/${id}/models/item/`
+}
+
+function getClientItemPath(id) {
+    if (id == undefined) {
+        id = modID
+    }
+    return `${resourcesPath}assets/${id}/items/`
+}
+
 const paths = {
     base: `${resourcesPath}`,
     assets: `${resourcesPath}assets/${modID}/`,
@@ -321,6 +335,9 @@ module.exports = {
             return namespacedString;
         }
     },
+
+    getClientItemPath: getClientItemPath,
+    getItemModelsPath: getItemModelsPath,
 
     getDyeNamespace: getDyeNamespace,
     getDyeIngredient: getDyeIngredient,

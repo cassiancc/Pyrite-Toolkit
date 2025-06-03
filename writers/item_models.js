@@ -82,11 +82,14 @@ function writeFishClientItem(item) {
 			})
 		i++;
 	}
-	writeProvidedClientItem(helpers.getPath(itemID), model)
+	writeProvidedClientItem(itemID, model)
 }
 
 function writeProvidedItemModel(item, modelItem) {
-	helpers.writeFile(`${helpers.paths.itemModels}${item}.json`, modelItem);
+	item = id(item)
+	namespace = helpers.getNamespace(item)
+	path = helpers.getPath(item)
+	helpers.writeFile(`${helpers.getItemModelsPath(namespace)}${path}.json`, modelItem);
 }
 
 // Writes an block item model for blocks with a unique inventory model (e.g. signs), creating a client item (1.21.4+) and item model.
@@ -153,15 +156,14 @@ function writeClientItem(namespace, folder, path, model) {
 			"tints": tints
 		}
 	}
-	if (path.includes(":")) {
-		namespace = helpers.getNamespace(path)
-		path = helpers.getPath(path)
-	}
 	writeProvidedClientItem(path, item)
 }
 
-function writeProvidedClientItem(path, item) {
-	helpers.writeFile(`${helpers.paths.assets}items/${path}.json`, item);
+function writeProvidedClientItem(item, providedClientItem) {
+	item = id(item)
+	namespace = helpers.getNamespace(item)
+	path = helpers.getPath(item)
+	helpers.writeFile(`${helpers.getClientItemPath(namespace)}/${path}.json`, providedClientItem);
 }
 
 // Writes a block item model, passing data to create either a client item or legacy item model, depending on the version.

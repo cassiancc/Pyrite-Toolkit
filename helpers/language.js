@@ -7,20 +7,34 @@ let catTranslations = readFileAsJson(`./overrides/${helpers.modID}/lang/lol_us.j
 let upsideDownTranslations = flipTranslationFile(`./overrides/${helpers.modID}/lang/en_us.json`)
 const modID = helpers.modID
 
+function sortLang(unordered) {
+	if (unordered != null) {
+	return Object.keys(unordered).sort().reduce((obj, key) => {
+		obj[key] = unordered[key];
+		return obj;
+	}, {});
+	} else {
+		return {};
+	}
+}
+
 function writeLang() {
   helpers.writeFile(
 	`${helpers.paths.assets}lang/en_us.json`,
-	JSON.stringify(blockTranslations, undefined, " "),
+	JSON.stringify(sortLang(blockTranslations), undefined, " "),
 	false
   )
-  helpers.writeFile(
+  if (catTranslations != null) {
+ helpers.writeFile(
 	`${helpers.paths.assets}lang/lol_us.json`,
-	JSON.stringify(catTranslations, undefined, " "),
+	JSON.stringify(sortLang(catTranslations), undefined, " "),
 	false
   )
+  }
+ 
   helpers.writeFile(
 	`${helpers.paths.assets}lang/en_ud.json`,
-	JSON.stringify(upsideDownTranslations, undefined, " "),
+	JSON.stringify(sortLang(upsideDownTranslations), undefined, " "),
 	false
   )
 }

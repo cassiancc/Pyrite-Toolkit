@@ -45,8 +45,8 @@ function writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, 
 	if (fileNameSuffix === undefined) {
 		fileNameSuffix = ""
 	}
-	if (recipeCategory !== undefined) {
-		fileNameSuffix += "_from_" +recipeCategory
+	if (type !== undefined) {
+		fileNameSuffix += "_from_" +type
 	}
 	let recipe = recipeHelper.generateSmeltingRecipe(result, ingredient, type, cookingTime, experience, recipeCategory)
 	if ((recipe !== "")) {
@@ -57,9 +57,9 @@ function writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, 
 	}
 }
 
-function writeCampfireRecipe(ingredient, result, type, cookingTime, experience, fileNameSuffix) {
-	if (type === undefined) {
-		type = "food"
+function writeCampfireRecipe(ingredient, result, recipeCategory, cookingTime, experience, fileNameSuffix) {
+	if (recipeCategory === undefined) {
+		recipeCategory = "food"
 	}
 	if (cookingTime === undefined) {
 		cookingTime = 600
@@ -68,12 +68,12 @@ function writeCampfireRecipe(ingredient, result, type, cookingTime, experience, 
 		experience = 0.35
 	}
 
-	writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, "campfire_cooking", fileNameSuffix)
+	writeSmeltingRecipe(ingredient, result, "campfire_cooking", cookingTime, experience, recipeCategory, fileNameSuffix)
 }
 
-function writeSmokingRecipe(ingredient, result, type, cookingTime, experience, fileNameSuffix) {
-	if (type === undefined) {
-		type = "food"
+function writeSmokingRecipe(ingredient, result, recipeCategory, cookingTime, experience, fileNameSuffix) {
+	if (recipeCategory === undefined) {
+		recipeCategory = "food"
 	}
 	if (cookingTime === undefined) {
 		cookingTime = 100
@@ -82,7 +82,7 @@ function writeSmokingRecipe(ingredient, result, type, cookingTime, experience, f
 		experience = 0.1
 	}
 
-	writeSmeltingRecipe(ingredient, result, type, cookingTime, experience, "smoking", fileNameSuffix)
+	writeSmeltingRecipe(ingredient, result, "smoking", cookingTime, experience, recipeCategory, fileNameSuffix)
 }
 
 function writeFoodCookingRecipes(ingredient, result, cookingTime, experience, recipeCategory, fileNameSuffix) {
