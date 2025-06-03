@@ -4,13 +4,92 @@ const mc = helpers.mc
 const modID = helpers.modID
 const id = helpers.id
 
-// Writes an block item model for items (e.g. dye), creating a client item (1.21.4+) and item model.
+// Writes a generated item model for items (e.g. Pyrite's dye), creating a client item (1.21.4+) and item model.
 function writeGeneratedItemModel(item) {
 	if (helpers.versionAbove("1.21.4")) {
 		writeClientItem(modID, "item", item, item)
 	}
-	let modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${item}"}}`
-	helpers.writeFile(`${helpers.paths.itemModels}${item}.json`, modelItem);
+	writeProvidedItemModel(item, `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${item}"}}`)
+}
+
+const fish_sizes = 25;
+
+
+// Writes the necessary item models for fish (Always a Bigger Fish), creating a client item (1.21.4+) and multiple item models of various scales.
+function writeFishItemModels(item) {
+	if (helpers.versionAbove("1.21.4")) {
+		writeFishClientItem(item)
+		var i = 0;
+		var scale = 0.2;
+		var scaleModel = [ scale, scale, scale ]
+		while (i <= fish_sizes) {
+			writeProvidedItemModel(`${item}_${i}`, {
+				"parent": "minecraft:item/generated",
+				"textures": {
+					"layer0": `bigger_fish:item/${item}`
+				},
+				"display": {
+					"firstperson_righthand": {
+						"scale": scaleModel
+					},
+					"firstperson_lefthand": {
+						"scale": scaleModel
+					},
+					"thirdperson_righthand": {
+						"scale": scaleModel
+					},
+					"thirdperson_lefthand": {
+						"scale": scaleModel
+					},
+					"fixed": {
+						"scale": scaleModel
+					},
+					"ground": {
+						"scale": scaleModel
+					}
+				}
+			})
+			i++;
+			scale+=0.150
+			scale = parseFloat(scale.toFixed(2)) 
+			scaleModel = [ scale, scale, scale ]
+		}
+	} else { 
+		// i'll figure out a way to translate these to overrides later
+		writeProvidedItemModel(item, `{"parent": "minecraft:item/generated","textures": {"layer0": "${modID}:item/${item}"}}`)
+	}
+	
+}
+
+function writeFishClientItem(item) {
+	const itemID = id(item)
+	var model =	{
+		"model": {
+			"type": "minecraft:range_dispatch",
+			"property": "minecraft:custom_model_data",
+			"scale": 0.2,
+			"entries": []
+		}
+	}
+	var i = 0;
+	while (i <= fish_sizes) {
+		model.model.entries.push({
+				"threshold": i,
+				"model": {
+				"type": "minecraft:model",
+				"model": `${helpers.getNamespace(itemID)}:item/${helpers.getPath(itemID)}_${i}`
+				}
+			})
+		i++;
+	}
+	writeProvidedClientItem(itemID, model)
+}
+
+function writeProvidedItemModel(item, modelItem) {
+	item = id(item)
+	namespace = helpers.getNamespace(item)
+	path = helpers.getPath(item)
+	helpers.writeFile(`${helpers.getItemModelsPath(namespace)}${path}.json`, modelItem);
 }
 
 // Writes an block item model for blocks with a unique inventory model (e.g. signs), creating a client item (1.21.4+) and item model.
@@ -27,8 +106,7 @@ function writeUniqueBlockItemModel(block, namespace, textureNamespace, texture) 
 	if (helpers.versionAbove("1.21.4")) {
 		writeClientItem(textureNamespace, "item", block, texture)
 	}
-	const modelItem = `{"parent": "minecraft:item/generated","textures": {"layer0": "${textureNamespace}:block/${texture}"}}`
-	helpers.writeFile(`${helpers.paths.itemModels}${block}.json`, modelItem)
+	writeProvidedItemModel(block, `{"parent": "minecraft:item/generated","textures": {"layer0": "${textureNamespace}:block/${texture}"}}`)
 }
 
 // Writes an block item model for blocks with a different inventory model (e.g. walls), passing data to create either a client item or legacy item model, depending on the version.
@@ -78,11 +156,14 @@ function writeClientItem(namespace, folder, path, model) {
 			"tints": tints
 		}
 	}
-	if (path.includes(":")) {
-		namespace = helpers.getNamespace(path)
-		path = helpers.getPath(path)
-	}
-	helpers.writeFile(`${helpers.paths.assets}items/${path}.json`, item);
+	writeProvidedClientItem(path, item)
+}
+
+function writeProvidedClientItem(item, providedClientItem) {
+	item = id(item)
+	namespace = helpers.getNamespace(item)
+	path = helpers.getPath(item)
+	helpers.writeFile(`${helpers.getClientItemPath(namespace)}/${path}.json`, providedClientItem);
 }
 
 // Writes a block item model, passing data to create either a client item or legacy item model, depending on the version.
@@ -125,5 +206,6 @@ module.exports = {
     writeInventoryModel: writeInventoryModel,
     writeGeneratedItemModel: writeGeneratedItemModel,
     writeBlockItemModel: writeBlockItemModel,
-    writeTrapdoorItemModel: writeTrapdoorItemModel
+    writeTrapdoorItemModel: writeTrapdoorItemModel,
+	writeFishItemModels: writeFishItemModels
 }

@@ -68,6 +68,14 @@ function tagContent(arg, tag, folder, optional) {
 		}
 	}
 }
+function tagBiome(block, tag, optional) {
+	tagContent(block, tag, "worldgen/biome", optional)
+}
+function tagBiomes(blocks, tag, optional) {
+	blocks.forEach(function (block) {
+		tagBiome(block, tag, optional)
+	})
+}
 function tagBlock(block, tag, optional) {
 	tagContent(block, tag, "block" + helpers.getTrialPlural(), optional)
 }
@@ -227,6 +235,8 @@ module.exports = {
 	tagItem: tagItem,
 	tagItems: tagItems,
 	tagBoth: tagBoth,
+	tagBiome: tagBiome,
+	tagBiomes: tagBiomes,
 	tagBothFromArray: tagBothFromArray,
 	checkAndAddStainedTag: checkAndAddStainedTag,
 	checkAndAddDyedTag: checkAndAddDyedTag,

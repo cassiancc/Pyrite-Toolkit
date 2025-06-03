@@ -8,6 +8,7 @@ const itemModelWriter = require('./writers/item_models');
 const vanillaConstants = require('./helpers/constants');
 const fs = require('fs');
 
+const advancements = require('./writers/advancements');
 
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
@@ -662,6 +663,308 @@ else if (modID == "raspberry") {
 	blockWriter.writeBlock("ash_block", modID, "ash", undefined, undefined, false, false, undefined, false)
 
 	// langHelper.writeLang()
+}
+else if (modID == "bigger_fish") {
+
+	const fishery = [
+		"fishery:nullfin",
+	]
+
+	const end = [
+		"fishery:dragonfish",
+		"fishery:voidskipper",
+	]
+
+	const aether = [
+		"fishery:aerbaia",
+		"fishery:aersucker"
+	]
+
+	const mushroom_fields = [
+		"aquaculture:brown_shrooma",
+		"aquaculture:red_shrooma",
+	]
+	const deep_dark = [
+		"sculkfish", 		
+		"fishery:echofin",
+		"fishery:sculkamander",
+	]
+
+	const cavefish = [
+		"blind_cavefish",
+		"cave_angel_fish",
+		"cave_pupfish",
+		"northern_cavefish",
+		"red_cavefish",
+		"white_cavefish",
+		"toothless_blindcat",
+		"fishery:salamander",
+		"fishery:ghostfish",
+		"fishery:pale_bass",
+
+	]
+	
+	const cold_saltwater = [
+		"#bigger_fish:cosmopolitan_saltwater_fish",
+		"aquaculture:pink_salmon",
+		"char",
+		"haddock",
+		"capelin",
+		"aquaculture:atlantic_cod",
+		"aquaculture:blackfish",
+		"aquaculture:pacific_halibut",
+		"aquaculture:atlantic_halibut",
+		"aquaculture:pollock",
+		"aquaculture:atlantic_herring",
+		"aquaculture:rainbow_trout",
+		"fishofthieves:battlegill",
+		"fishofthieves:wrecker",
+		"fishery:anglerfish",
+	]
+	const temperate_saltwater = [
+		"#bigger_fish:cosmopolitan_saltwater_fish",
+		"mackerel",
+		"upgrade_aquatic:lionfish",
+		"aquaculture:gar",
+		"fishofthieves:splashtail",
+		"fishofthieves:islehopper",
+		"fishofthieves:ancientscale",
+		"fishofthieves:plentifin",
+		"fishofthieves:devilfish",
+		"fishery:sunfish",
+
+	]
+
+	
+	const hot_saltwater = [
+		"#bigger_fish:cosmopolitan_saltwater_fish",
+		"swordfish",
+		"minecraft:tropical_fish",
+		"flounder",
+		"butterflyfish",
+		"surgeonfish",
+		"minecraft:pufferfish",
+		"grouper",
+		"aquaculture:red_grouper",
+		"tuna",
+		"aquaculture:tuna",
+		"fishery:tuna",
+		"upgrade_aquatic:lionfish",
+		"fishofthieves:splashtail",
+		"fishofthieves:islehopper",
+		"fishofthieves:plentifin",
+		"fishofthieves:devilfish",
+		"fishery:sunfish",
+
+	]
+	const cold_freshwater = [
+		"#bigger_fish:cosmopolitan_freshwater_fish",
+		"aquaculture:pink_salmon",
+		"carp",
+		"aquaculture:carp",
+		"koi",
+		"trout",
+		"pike",
+		"goldeye",
+		"walleye",
+		"rudd",
+		"upgrade_aquatic:pike",
+		"aquaculture:minnow",
+   		"aquaculture:bluegill",
+		"fishery:bluegill",
+		"aquaculture:catfish",
+		"fishery:catfish",
+		"aquaculture:muskellunge",
+
+	]
+	const temperate_freshwater = [
+		"#bigger_fish:cosmopolitan_freshwater_fish",
+		"carp",
+		"koi",
+		"trout",
+		"goldfish",
+		"bass",
+		"bluegill",
+		"rainbow_trout",
+		"clingfish",
+		"aquaculture:gar",
+		"aquaculture:minnow",
+   		"aquaculture:bluegill",
+		"aquaculture:catfish",
+		"aquaculture:smallmouth_bass",
+		"aquaculture:brown_trout",
+		"fishofthieves:splashtail",
+    	"fishofthieves:pondie",
+		"fishery:leafskimmer",
+		"fishery:walleye",
+		"fishery:branch_eel",
+
+	]
+	const hot_freshwater = [
+		"#bigger_fish:cosmopolitan_freshwater_fish",
+		"carp",
+		"koi",
+		"trout",
+		"tilapia",
+		"perch",
+		"roach",
+		"catfish",
+		"gar",
+		"aquaculture:perch",
+		"upgrade_aquatic:perch",
+		"aquaculture:bayad",
+		"aquaculture:boulti",
+		"aquaculture:capitaine",
+		"aquaculture:synodontis",
+		"aquaculture:carp",
+		"aquaculture:minnow",
+    	"aquaculture:bluegill",
+		"aquaculture:catfish",
+		"aquaculture:piranha",
+		"aquaculture:arapaima",
+    	"aquaculture:tambaqui",
+		"fishofthieves:splashtail",
+    	"fishofthieves:pondie",
+		"fishofthieves:wildsplash",
+		"fishofthieves:stormfish",
+		"fishery:crab_claw",
+		"fishery:crayfish",
+	]
+	const freshwater = [
+		"bream",
+		"shad",
+		"carp",
+		"koi",
+		"trout",
+		"minecraft:salmon",
+		"fishery:largemouth_bass",
+	]
+	const saltwater = [
+		"fishery:red_snapper",
+		"minecraft:cod",
+		"minecraft:salmon",
+		"herring"
+
+	]
+	const lava = [
+		"cinder_eel",
+		"fire_bass",
+		"fire_mackerel",
+		"lava_jellyfish",
+		"fishery:jellyfish",
+		"fishery:ghast_brood",
+		"fishery:soul_leech",
+	]
+
+	tagHelper.tagItems(freshwater, "cosmopolitan_freshwater_fish", true)
+	tagHelper.tagItems(saltwater, "cosmopolitan_saltwater_fish", true)
+
+	tagHelper.tagItems(cold_freshwater, "cold_freshwater_fish", true)
+	tagHelper.tagItems(temperate_freshwater, "temperate_freshwater_fish", true)
+	tagHelper.tagItems(hot_freshwater, "hot_freshwater_fish", true)
+	tagHelper.tagItems(cold_saltwater, "cold_saltwater_fish", true)
+	tagHelper.tagItems(hot_saltwater, "hot_saltwater_fish", true)
+	tagHelper.tagItems(temperate_saltwater, "temperate_saltwater_fish", true)
+	tagHelper.tagItems(mushroom_fields, "shroomy_fish", true)
+	tagHelper.tagItems(deep_dark, "deep_dark_fish", true)
+	tagHelper.tagItems(lava, "lava_fish", true)
+	tagHelper.tagItems(cavefish, "cave_fish", true)
+
+
+	const fish = deep_dark.concat(cavefish, cold_freshwater, cold_saltwater, temperate_freshwater, temperate_saltwater, hot_freshwater, hot_saltwater, freshwater, saltwater, lava)
+
+	const bait = [
+		"worm",
+		"leech",
+	]
+	const modded_bait = [
+		"aquaculture:worm",
+		"aquaculture:leech",
+		"aquaculture:minnow",
+		"fishofthieves:grubs",
+		"fishofthieves:earthworms",
+		"fishofthieves:leeches"
+	]
+	const food = [
+		"fried_fish",
+		"fish_kebab",
+		"fish_stew",
+		"fish_taco",
+		"sashimi",
+		"sushi",
+		"canned_fish",
+		"fish_fingers"
+	]
+	const junk = [
+		"fish_bones",
+		"can"
+	]
+	fish.forEach(function(ish) {
+		if (!ish.includes(":")) {
+			langHelper.generateLang(ish, "item", modID)
+			itemModelWriter.writeFishItemModels(ish)
+			tagHelper.tagItem(ish, "fish", true)
+		}
+	})
+	bait.forEach(function(b) {
+		writeItem(b)
+
+	})
+	food.forEach(function(b) {
+		writeItem(b)
+	})
+	junk.forEach(function(b) {
+		writeItem(b)
+	})
+	recipeWriter.writeFoodCookingRecipes("#bigger_fish:fish", "fried_fish")
+	recipeWriter.writeFoodCookingRecipes("minecraft:tropical_fish", "fried_fish", undefined, undefined, undefined, "_tropical")
+
+	const fishingRods = [
+	"copper_rod",
+	"netherite_rod"
+	]
+	tagHelper.tagItems(fishingRods, "c:tools/fishing_rod", true)
+	tagHelper.tagItems(fishingRods, "minecraft:enchantable/fishing", true)
+	tagHelper.tagItems(fishingRods, "requires_minigame_to_catch", true)
+	// copper rod
+	recipeWriter.writeShapedRecipe({
+		"#": "#c:strings",
+		"C": "#c:ingots/copper",
+	  }, "bigger_fish:copper_rod", 1, [
+		"  C",
+		" C#",
+		"C #"
+	  ], undefined, true)
+	advancements.writeRecipeAdvancement("copper_rod", "#minecraft:fishes")
+	// netherite rod
+	recipeWriter.writeShapedRecipe({
+		"#": "#c:strings",
+		"C": "minecraft:netherite_scrap",
+	  }, "bigger_fish:netherite_rod", 1, [
+		"  C",
+		" C#",
+		"C #"
+	  ], undefined, true)
+	advancements.writeRecipeAdvancement("netherite_rod", "minecraft:netherite_scrap")
+	//sushi
+	recipeWriter.writeShapelessRecipe(["#c:foods/raw_fish", "minecraft:dried_kelp"], 
+		"bigger_fish:sushi", 1)
+	//sushi
+	recipeWriter.writeShapelessRecipe(["#c:foods/cooked_fish", "minecraft:stick"], 
+		"bigger_fish:fish_kebab", 1)
+	//sushi
+	recipeWriter.writeShapelessRecipe(["#c:foods/cooked_fish", "minecraft:bowl", "minecraft:carrot", "minecraft:potato"], 
+		"bigger_fish:fish_stew", 1)
+
+	tagHelper.tagItem("#bigger_fish:fish", "minecraft:fishes", true)
+	tagHelper.tagItem("#bigger_fish:fish", "c:foods/raw_fish", true)
+	tagHelper.tagItem("fried_fish", "c:foods/cooked_fish", true)
+	tagHelper.tagItem("worm", "minecraft:chicken_food", true)
+
+
+	tagHelper.tagItems(bait.concat(modded_bait), "bait", true)
+
+	langHelper.writeLang()
 }
 
 else if (modID == "lemonade") {

@@ -40,7 +40,8 @@ function addIngredients(ingredientArray, ingredient) {
 }
 
 function generateModLoadCondition(mod) {
-	if ((mod != "#minecraft") && (mod != "c")) {
+	mod = mod.replace("#", "")
+	if ((mod != "minecraft") && (mod != "c") && (mod != "forge")) {
 		let loadCondition;
 		if (majorVersion > 20) {
 			loadCondition = {
@@ -125,18 +126,29 @@ function generateStonecutterRecipe(block, ingredient, quantity, type) {
 	return recipe;
 }
 
-function generateSmeltingRecipe(block, ingredient, quantity, cookingtime, experience) {
-	if (!block.includes(":"))
-		block = id(block)
-
+function generateSmeltingRecipe(result, ingredient, type, cookingtime, experience, category) {
+	if (!result.includes(":"))
+		result = id(result)
+	if (type == undefined) {
+		type = "smelting"
+	}
+	if (category == undefined) {
+		category = "blocks"
+	}
+	if (cookingtime == undefined) {
+		cookingtime = 200
+	}
+	if (experience == undefined) {
+		experience = 0.35
+	}
     let recipe = JSON.parse(`{
-        "type": "minecraft:smelting",
-        "category": "blocks",
+        "type": "minecraft:${type}",
+        "category": "${category}",
         "cookingtime": ${cookingtime},
         "experience": ${experience},
         "ingredient": "",
         "result": {
-            "${itemOrId()}": "${block}"
+            "${itemOrId()}": "${result}"
         }
     }`)
 	if (useRecipesFrom21dot1AndBelow()) {
@@ -487,6 +499,7 @@ module.exports = {
     generateRecipes: generateRecipes,
     generateShapedRecipe: generateShapedRecipe,
 	generateStonecutterRecipe: generateStonecutterRecipe,
+	generateSmeltingRecipe: generateSmeltingRecipe,
     generateShapelessRecipe: generateShapelessRecipe,
 	generateModLoadCondition: generateModLoadCondition,
 	generateDyeRecipe: generateDyeRecipe

@@ -7,21 +7,35 @@ let catTranslations = readFileAsJson(`./overrides/${helpers.modID}/lang/lol_us.j
 let upsideDownTranslations = flipTranslationFile(`./overrides/${helpers.modID}/lang/en_us.json`)
 const modID = helpers.modID
 
+function sortLang(unordered) {
+	if (unordered != null) {
+	return Object.keys(unordered).sort().reduce((obj, key) => {
+		obj[key] = unordered[key];
+		return obj;
+	}, {});
+	} else {
+		return {};
+	}
+}
+
 function writeLang() {
   helpers.writeFile(
-    `${helpers.paths.assets}lang/en_us.json`,
-    JSON.stringify(blockTranslations, undefined, " "),
-    false
+	`${helpers.paths.assets}lang/en_us.json`,
+	JSON.stringify(sortLang(blockTranslations), undefined, " "),
+	false
   )
-  helpers.writeFile(
-    `${helpers.paths.assets}lang/lol_us.json`,
-    JSON.stringify(catTranslations, undefined, " "),
-    false
+  if (catTranslations != null) {
+ helpers.writeFile(
+	`${helpers.paths.assets}lang/lol_us.json`,
+	JSON.stringify(sortLang(catTranslations), undefined, " "),
+	false
   )
+  }
+ 
   helpers.writeFile(
-    `${helpers.paths.assets}lang/en_ud.json`,
-    JSON.stringify(upsideDownTranslations, undefined, " "),
-    false
+	`${helpers.paths.assets}lang/en_ud.json`,
+	JSON.stringify(sortLang(upsideDownTranslations), undefined, " "),
+	false
   )
 }
 
@@ -34,46 +48,47 @@ function countBlocksInLang() {
 	return count
 }
 
-function generateLang(block, type, namespace) {
+function generateLang(block, type, namespace, addon) {
+  if (blockTranslations == null) {
+	blockTranslations = {}
+  }
   if (type === undefined) {
-    type = "block"
+	type = "block"
+  }
+  if (type === undefined) {
+	addon = ""
   }
   block = helpers.getPath(block)
   let langBlock = block
   langBlock = langBlock.replaceAll("_", " ")
   langBlock = langBlock.replaceAll("/", " ")
   langBlock = langBlock.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
+	return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
   })
   const key = `${type}.${namespace}.${block.replace("/", ".")}`
   const value = langBlock
-  return addLang(key, value)
-}
-
-function addLang(key, value) {
-  if (blockTranslations != null) {
-    if (!blockTranslations.hasOwnProperty(key)) {
-      blockTranslations = Object.assign(
-        blockTranslations,
-        JSON.parse(`{"${key}": "${value}"}`)
-      )
-    }
-    if (catTranslations != null) {
-      if (!catTranslations.hasOwnProperty(key)) {
-        catTranslations = Object.assign(
-          catTranslations,
-          JSON.parse(`{"${key}": "${catify(value)}"}`)
-        )
-      }
-      if (!upsideDownTranslations.hasOwnProperty(key)) {
-        upsideDownTranslations = Object.assign(
-          upsideDownTranslations,
-          JSON.parse(`{"${key}": "${upsideDownify(value)}"}`)
-        )
-      }
-    }
-    
+  if (!blockTranslations.hasOwnProperty(key)) {
+	blockTranslations = Object.assign(
+	  blockTranslations,
+	  JSON.parse(`{"${key}": "${value}"}`)
+	)
   }
+  if (catTranslations != null) {
+	if (!catTranslations.hasOwnProperty(key)) {
+	  catTranslations = Object.assign(
+		catTranslations,
+		JSON.parse(`{"${key}": "${catify(value)}"}`)
+	  )
+	}
+	if (!upsideDownTranslations.hasOwnProperty(key)) {
+	  upsideDownTranslations = Object.assign(
+		upsideDownTranslations,
+		JSON.parse(`{"${key}": "${upsideDownify(value)}"}`)
+	  )
+	}
+  }
+	
+  
   
   return value
 }
@@ -82,22 +97,26 @@ function generateBlockLang(block) {
   return generateLang(block, "block", modID)
 }
 
+function generateConfigLang(option) {
+  return generateLang(option, "config", modID, "config")
+}
+
 function flipTranslationFile(path) {
   let file
   let upsideDownTranslations = {}
   if (path == Object) {
-    file = path
+	file = path
   } else if (existsSync(path)) file = readFileAsJson(path)
   else file = path
 
   for (const [key, value] of Object.entries(file)) {
-    if (!upsideDownTranslations.hasOwnProperty(key)) {
-      let values = new Map([[key, upsideDownify(value)]])
-      upsideDownTranslations = Object.assign(
-        upsideDownTranslations,
-        Object.fromEntries(values)
-      )
-    }
+	if (!upsideDownTranslations.hasOwnProperty(key)) {
+	  let values = new Map([[key, upsideDownify(value)]])
+	  upsideDownTranslations = Object.assign(
+		upsideDownTranslations,
+		Object.fromEntries(values)
+	  )
+	}
   }
   return upsideDownTranslations
 }
@@ -106,107 +125,107 @@ function upsideDownify(value) {
   value = value.replace("Gray", "Grey").replace("Shovel", "Spade")
   let newValue = ""
   value.split("").forEach((char) => {
-    const upsideDownTable = {
-      A: "Ɐ",
-      B: "ᗺ",
-      C: "Ɔ",
-      D: "ᗡ",
-      E: "Ǝ",
-      F: "Ⅎ",
-      G: "⅁",
-      // H: "H",
-      // I: "I",
-      J: "Ր",
-      K: "Ʞ",
-      L: "Ꞁ",
-      M: "W",
-      // N: "N",
-      // O: "O",
-      P: "Ԁ",
-      Q: "Ꝺ",
-      R: "ᴚ",
-      S: "S",
-      T: "⟘",
-      U: "∩",
-      V: "Ʌ",
-      W: "M",
-      // X: "X",
-      Y: "⅄",
-      // Z: "Z",
+	const upsideDownTable = {
+	  A: "Ɐ",
+	  B: "ᗺ",
+	  C: "Ɔ",
+	  D: "ᗡ",
+	  E: "Ǝ",
+	  F: "Ⅎ",
+	  G: "⅁",
+	  // H: "H",
+	  // I: "I",
+	  J: "Ր",
+	  K: "Ʞ",
+	  L: "Ꞁ",
+	  M: "W",
+	  // N: "N",
+	  // O: "O",
+	  P: "Ԁ",
+	  Q: "Ꝺ",
+	  R: "ᴚ",
+	  S: "S",
+	  T: "⟘",
+	  U: "∩",
+	  V: "Ʌ",
+	  W: "M",
+	  // X: "X",
+	  Y: "⅄",
+	  // Z: "Z",
 
-      a: "ɐ",
-      b: "q",
-      c: "ɔ",
-      d: "p",
-      e: "ǝ",
-      f: "ɟ",
-      g: "ᵷ",
-      h: "ɥ",
-      i: "ᴉ",
-      j: "ɾ",
-      k: "ʞ",
-      l: "ן",
-      m: "ɯ",
-      n: "u",
-      // o: "o",
-      p: "d",
-      q: "b",
-      r: "ɹ",
-      // s: "s",
-      t: "ʇ",
-      u: "n",
-      v: "ʌ",
-      w: "ʍ",
-      // x: "x",
-      y: "ʎ",
-      // z: "z",
+	  a: "ɐ",
+	  b: "q",
+	  c: "ɔ",
+	  d: "p",
+	  e: "ǝ",
+	  f: "ɟ",
+	  g: "ᵷ",
+	  h: "ɥ",
+	  i: "ᴉ",
+	  j: "ɾ",
+	  k: "ʞ",
+	  l: "ן",
+	  m: "ɯ",
+	  n: "u",
+	  // o: "o",
+	  p: "d",
+	  q: "b",
+	  r: "ɹ",
+	  // s: "s",
+	  t: "ʇ",
+	  u: "n",
+	  v: "ʌ",
+	  w: "ʍ",
+	  // x: "x",
+	  y: "ʎ",
+	  // z: "z",
 
-      1: "⥝",
-      2: "↊",
-      3: "↋",
-      4: "߈",
-      // 5: "5",
-      6: "9",
-      7: "𝘓",
-      // 8: "8",
-      9: "6",
-      // 0: "0",
+	  1: "⥝",
+	  2: "↊",
+	  3: "↋",
+	  4: "߈",
+	  // 5: "5",
+	  6: "9",
+	  7: "𝘓",
+	  // 8: "8",
+	  9: "6",
+	  // 0: "0",
 
-      ".": "˙",
-      ",": "‘",
-      ";": "⸵",
-      "!": "¡",
-      "?": "¿",
-      "&": "⅋",
-      '"': "„",
-      "'": ",",
-      "(": ")",
-      ")": "(",
-      "[": "]",
-      "]": "[",
-      "{": "}",
-      "}": "{",
-      "<": ">",
-      ">": "<",
-      "→": "←",
-      "↓": "↑",
-      "←": "→",
-      "↑": "↓",
-    }
+	  ".": "˙",
+	  ",": "‘",
+	  ";": "⸵",
+	  "!": "¡",
+	  "?": "¿",
+	  "&": "⅋",
+	  '"': "„",
+	  "'": ",",
+	  "(": ")",
+	  ")": "(",
+	  "[": "]",
+	  "]": "[",
+	  "{": "}",
+	  "}": "{",
+	  "<": ">",
+	  ">": "<",
+	  "→": "←",
+	  "↓": "↑",
+	  "←": "→",
+	  "↑": "↓",
+	}
 
-    newValue = (upsideDownTable[char] || char) + newValue
+	newValue = (upsideDownTable[char] || char) + newValue
   })
   newValue = newValue.replaceAll(/(.)§/g, "§$1")
 
   const count = (newValue.match(/%s/g) || []).length
   if (count > 1) {
-    let countRemaining = count
-    console.log(count)
+	let countRemaining = count
+	console.log(count)
 
-    for (let i = 0; i < count; i++) {
-      newValue = newValue.replace("%s", `%${countRemaining}$s`)
-      countRemaining--
-    }
+	for (let i = 0; i < count; i++) {
+	  newValue = newValue.replace("%s", `%${countRemaining}$s`)
+	  countRemaining--
+	}
   }
   return newValue
 }
@@ -283,27 +302,27 @@ function catify(value) {
   value = value.replace(" Dye", " powder")
 
   if (Math.floor(Math.random() * 2) == 0) {
-    value = value.replace("Stained", "Staned")
+	value = value.replace("Stained", "Staned")
   } else {
-    value = value.replace("Stained", "Stainedly")
+	value = value.replace("Stained", "Stainedly")
   }
 
   if (Math.floor(Math.random() * 2) == 0) {
-    value = value.replace("Copper", "cuprr")
+	value = value.replace("Copper", "cuprr")
   } else {
-    value = value.replace("Copper", "copurr")
+	value = value.replace("Copper", "copurr")
   }
 
   if (Math.floor(Math.random() * 2) == 0) {
-    value = value.replace("Block", "Blak")
+	value = value.replace("Block", "Blak")
   } else {
-    value = value.replace("Block", "bluk")
+	value = value.replace("Block", "bluk")
   }
 
   if (Math.floor(Math.random() * 2) == 0) {
-    value = value.replace("Slab", "Sleb")
+	value = value.replace("Slab", "Sleb")
   } else {
-    value = value.replace("Slab", "half blok")
+	value = value.replace("Slab", "half blok")
   }
 
   return value
