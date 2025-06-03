@@ -336,8 +336,6 @@ module.exports = {
   flipTranslationFile: flipTranslationFile,
 
   generateBlockLang: generateBlockLang,
-  addLang: addLang,
-
   writeLang: writeLang,
 
   generateLang: generateLang,
