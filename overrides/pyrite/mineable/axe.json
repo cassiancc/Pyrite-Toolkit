@@ -1,5 +1,6 @@
 [
     "pyrite:locked_chest",
+    "#pyrite:chests",
     "#pyrite:mushroom_stem",
     "#pyrite:crafting_tables"
 ]

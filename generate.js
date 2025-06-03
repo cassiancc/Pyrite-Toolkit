@@ -6,6 +6,8 @@ const blockWriter = require("./writers/blocks")
 const { writeRecipeAdvancement } = require('./writers/advancements');
 const itemModelWriter = require('./writers/item_models');
 const vanillaConstants = require('./helpers/constants');
+const fs = require('fs');
+
 
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
@@ -127,6 +129,9 @@ class Block {  // Create a class
 		}
 		else if (blockType === "crafting_table") {
 			blockWriter.writeCraftingTableBlock(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
+		}
+		else if (blockType === "chest") {
+			blockWriter.writeChestBlock(this.blockID, this.namespace, this.baseBlock, this.baseNamespace)
 		}
 		else if (blockType === "button") {
 			blockWriter.writeButtons(this.blockID, id(this.baseNamespace, this.baseBlock), id(this.baseNamespace, this.baseBlock))
@@ -616,6 +621,10 @@ function generatePyriteResources() {
 	newConventionTags.forEach(function(tag) {
 		langHelper.generateLang(tag, "tag.item", "c")
 	})
+	tagHelper.tagBoth("#pyrite:chests", "c:chests/wooden", true)
+	tagHelper.tagBlock("#pyrite:chests", "quad:cats_on_blocks/sit", true)
+	tagHelper.tagBoth("#pyrite:chests", "minecraft:guarded_by_piglins", true)
+
 
 	recipeWriter.writeShapedRecipe({
 		"#": "minecraft:iron_ingot",
@@ -648,10 +657,148 @@ else if (modID == "holiday-server-mod") {
 else if (modID == "raspberry") {
 	// blockWriter.writeStoveBlock("silt_stove", modID, "stove", "twigs:silt_bricks")
 	// blockWriter.writeStoveBlock("ash_stove", modID, "stove", "supplementaries:ash_bricks")
-	blockWriter.writeBlock("lead_grate", modID, "grate", "oreganized:lead_block", undefined, true, true, undefined, false)
+	// blockWriter.writeBlock("deepslate_gravel", modID, "gravel", undefined, undefined, false, false, undefined, false)
+	// blockWriter.writeBlock("blackstone_gravel", modID, "gravel", undefined, undefined, false, false, undefined, false)
+	blockWriter.writeBlock("ash_block", modID, "ash", undefined, undefined, false, false, undefined, false)
 
-	langHelper.writeLang()
+	// langHelper.writeLang()
 }
+
+else if (modID == "lemonade") {
+	// blockWriter.writeBlock("crimson_wart_block", "crumbling", "minecraft:nether_wart_block", undefined, "minecraft:nether_wart_block")
+	
+	// recipeWriter.writeShapedRecipe({
+	// 	"#": "minecraft:chiseled_stone_bricks",
+	// 	"I": "minecraft:iron_ingot"
+	//   }, "minecraft:lodestone", 1, [
+	// 	"###",
+	// 	"#I#",
+	// 	"###"
+	//   ], "minecraft")
+	//   recipeWriter.writeShapedRecipe({
+	// 	"#": "minecraft:leather",
+	// 	"I": "minecraft:string"
+	//   }, "minecraft:bundle", 1, [
+	// 	"#",
+	// 	"I"
+	//   ])
+	//   recipeWriter.writeShapedRecipe({
+	// 	"#": "#c:rods/wooden",
+	// 	"I": "#minecraft:logs_that_burn"
+	//   }, "minecraft:campfire", 1, [
+	// 	"##",
+	// 	"II"
+	//   ], "minecraft")
+
+	blockWriter.writeBlock("cobbled_granite", "cobblestone", "granite", undefined, "cobbled_granite", true, true, undefined, undefined)
+	blockWriter.writeBlock("cobbled_andesite", "cobblestone", "andesite", undefined, "cobbled_andesite", true, true, undefined, undefined)
+	blockWriter.writeBlock("cobbled_diorite", "cobblestone", "diorite", undefined, "cobbled_diorite", true, true, undefined, undefined)
+
+	tagHelper.tagBlocks(["cobbled_granite", "cobbled_diorite", "cobbled_andesite"], "cobblestones", true)
+	// tagHelper.tagBlocks(["lemonade:cobblestones"], "minecraft:mineable/pickaxe", true)
+
+	// tagHelper.tagItems(["minecraft:leather_horse_armor", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor"], "c:horse_armor", true)
+
+	// stones = ["minecraft:granite", "minecraft:andesite", "minecraft:diorite", "minecraft:cobbled_deepslate", "minecraft:deepslate", "minecraft:tuff"]
+	//   tagHelper.tagItems(stones, "minecraft:stone_tool_materials", true)
+	//   tagHelper.tagItems(stones, "minecraft:stone_crafting_materials", true) 
+	//   tagHelper.tagItems(["minecraft:chest"], "c:chests/untrapped", true) 
+
+	//   langHelper.generateLang("horse_armor", "tag.item", "c")
+	//   tagHelper.tagItems(["cobbled_granite", "cobbled_diorite", "cobbled_andesite", "minecraft:granite", "minecraft:andesite", "minecraft:diorite", "minecraft:cobbled_deepslate", "minecraft:deepslate"], "minecraft:stone_tool_materials", true)
+	//   tagHelper.tagItems(["cobbled_granite", "cobbled_diorite", "cobbled_andesite", "minecraft:granite", "minecraft:andesite", "minecraft:diorite", "minecraft:cobbled_deepslate", "minecraft:deepslate"], "minecraft:stone_crafting_materials", true) 
+	//   blockWriter.writeBlock("cobbled_granite", "cobblestone")
+	//   blockWriter.writeBlock("cobbled_diorite", "cobblestone")
+	//   blockWriter.writeBlock("cobbled_andesite", "cobblestone")
+	//   langHelper.writeLang()
+
+	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/pickaxe.json"), "minecraft:mineable/pickaxe", true)
+	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/axe.json"), "minecraft:mineable/axe")
+	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/shovel.json"), "minecraft:mineable/shovel", true)
+	tagHelper.tagBlocks(["warped_wart_block", "crimson_wart_block"], "minecraft:leaves", true)
+
+	itemModelWriter.writeGeneratedItemModel("smithing_template")
+	tagHelper.tagItem("minecraft:stick", "flammable_sticks", true)
+
+
+	disabledItems = readFileAsJson("overrides/lemonade/disabled.json")
+
+	tagHelper.tagItems(disabledItems, "c:hidden_from_recipe_viewers", true)
+
+
+	start = `{
+		// -----------------------------------------------------------
+		//              Item Obliterator by ElocinDev
+		// -----------------------------------------------------------
+		//  
+		// How to add items?
+		//   - They are json strings, so you need to separate each
+		//     entry with a comma, except the last
+		//   - If you start an entry with !, it will be treated as a regular expression
+		//     Example: "!minecraft:.*_sword" to disable all swords
+		//  
+		// -----------------------------------------------------------
+		// Do not touch this
+		"configVersion": 2,
+		// -----------------------------------------------------------
+		// Items here will be unusable completely
+		//    Example: minecraft:diamond
+		"blacklisted_items": `
+
+end = `,
+  // -----------------------------------------------------------
+  // Removes an item if it contains certain nbt tag. If the whole entry (or expression) is present, the item gets removed.
+  // Use with caution! This is a very expensive operation and can cause lag if you have a lot of items blacklisted.
+  // 	
+  // 	 Example to disable a regeneration potion: Potion:"minecraft:regeneration"
+  // 	
+  // 	 You can also use regular expressions by starting the value with !
+  "blacklisted_nbt": [],
+  // -----------------------------------------------------------
+  // Items here will not be able to be right-clicked (Interact)
+  //    Example: minecraft:apple
+  "only_disable_interactions": [
+    "examplemod:example_item"
+  ],
+  // -----------------------------------------------------------
+  // Items here will not be able to be used to attack
+  //    Example: minecraft:diamond_sword
+  "only_disable_attacks": [
+    "examplemod:example_item"
+  ],
+  // -----------------------------------------------------------
+  // Items here will get their recipes disabled
+  // Keep in mind this already is applied to blacklisted items
+  "only_disable_recipes": [
+    "examplemod:example_item"
+  ],
+  // -----------------------------------------------------------
+  // If true, the mod will use a hashset to handle the blacklisted items
+  // This is a more optimized approach only if you have a lot of items blacklisted (20 or more is recommended)
+  // If you just have a small amount of items blacklisted, keep this false
+  //  
+  // [!] Enabling this will disable all regular expressions
+  // [!] Does not apply to NBT, only item blacklist / interaction / attack
+  "use_hashmap_optimizations": false
+}`
+
+	var sorbet = "C:/Users/cassi/Documents/Minecraft/Modpacks/Lemon-Sorbet/"
+	var lemonade = 'C:/Users/cassi/Documents/Minecraft/Mods/Lemonade/'
+	helpers.writeFile(sorbet+"config/item_obliterator.json5", start + JSON.stringify(disabledItems) + end)
+	const { exec } = require('child_process');
+	exec('gradlew.bat build', {cwd: lemonade},(error, stdout, stderr) => {
+		if (error) {
+			console.error(`exec error: ${error}`);
+			return;
+		}
+		console.log(`stdout: ${stdout}`);
+		var jar = "lemonade-fabric-0.1.8+1.21.1.jar"
+		fs.copyFile(lemonade+"fabric/build/libs/"+jar, sorbet+"mods/"+jar, (err) => { if (err) throw err} )
+	
+	});
+
+
+	}
 
 function writeDye(item) {
 	item = item + "_dye"
@@ -692,6 +839,8 @@ function generateWoodSet(template, baseBlock, hasStrippedLog) {
 	new Block(template + "_sign", "sign", stainedPlankBase, "wood")
 	new Block(template + "_hanging_sign", "hanging_sign", hangingSignBase, "wood")
 	new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
+	new Block(template + "_chest", "chest", stainedPlankBase, "wood")
+
 	
 	// bibliocraft integration
 	// new Block(id("bibliocraft", `${modID}_${template}_bookcase`), "bibliocraft_bookcase", stainedPlankBase, "wood")

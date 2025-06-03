@@ -243,6 +243,15 @@ module.exports = {
         blockModel = modelHelper.generateCraftingTableBlockModel(block, namespace, baseBlock, altNamespace)
         writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, blockModel)
     },
+
+    writeChests: function writeChestBlockModels(block, namespace, baseBlock, altNamespace) {
+        let modelSubdirectory = ""
+        if ((altNamespace != "pyrite") && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+        }
+        blockModel = modelHelper.generateChestBlockModel(block, namespace, baseBlock, altNamespace)
+        writeFile(`${helpers.modelPath}${modelSubdirectory}${block}.json`, blockModel)
+    },
     
     writeLevers: function writeLeverBlockModels(block, namespace, baseBlock, altNamespace) {
         const generate = modelHelper.genLevers

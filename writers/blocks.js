@@ -270,6 +270,34 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	lootTableWriter.writeLootTables(block, namespace, undefined, altNamespace)
 }
 
+function writeChestBlock(block, namespace, baseBlock, altNamespace) {
+	if (altNamespace === undefined) {
+		altNamespace = namespace
+	}
+	baseBlock = getPath(baseBlock)
+	const blockState = stateHelper.gen(block, namespace, altNamespace)
+	blockstateHelper.writeBlockstate(block, blockState, namespace)
+	modelWriter.writeChests(block, namespace, baseBlock, altNamespace)
+	itemModelWriter.writeBlockItemModel(block, namespace, altNamespace)
+	lang = langHelper.generateBlockLang(block)
+	langHelper.addLang("container.lolmcv."+block, lang)
+	langHelper.addLang("container.lolmcv."+block+"Double", "Large "+ lang)
+
+
+	tagHelper.tagBoth(block, "chests", true)
+	tagHelper.checkAndAddStainedTag(block, baseBlock, true)
+	recipeWriter.writeShapedRecipe({
+		"I": `${altNamespace}:${baseBlock}`,
+	  }, id(block), 1, [
+		"III",
+		"I I",
+		"III"
+	  ], undefined, true)
+	// recipeWriter.writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
+	// writeRecipeAdvancement(id(block), id(altNamespace, baseBlock))
+	lootTableWriter.writeLootTables(block, namespace, undefined, altNamespace)
+}
+
 function writeLadders(block, namespace, baseBlock, altNamespace) {
 	if (altNamespace === undefined) {
 		altNamespace = namespace
@@ -553,7 +581,7 @@ function writeColumns(block, baseBlockID, texture) {
 			tagHelper.checkAndAddResourceTag(block, baseBlockID, true)
 		}
 		writeRecipeAdvancement(block, baseBlockID)
-		recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"])
+		recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"], undefined, "columns")
 		recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
 	}
 }
@@ -833,6 +861,7 @@ module.exports = {
 	writePoweredBlock: writePoweredBlock,
 	writeBibliocraftBlock: writeBibliocraftBlock,
 	writeColumns: writeColumns,
-	writeStoveBlock: writeStoveBlock
+	writeStoveBlock: writeStoveBlock,
+	writeChestBlock: writeChestBlock
 
 }

@@ -26,7 +26,7 @@ function readConfigFile() {
 }
 
 const rootFolder = config.modPath
-const resourcesPath = rootFolder+`${commonPath()}/src/main/resources/`
+const resourcesPath = getProjectPath()
 
 const modID = config.modID
 const mc = "minecraft";
@@ -36,13 +36,23 @@ const minorVersion = parseInt(mcVersion.split(".")[2]);
 
 const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
 
-function commonPath() {
-    const projectType = config.projectType
+function commonPath(projectType) {
     if (projectType == "architectury") {
         return "common"
     }
     else {
         return ""
+    }
+}
+
+function getProjectPath() {
+    const projectType = config.projectType
+    if (projectType != "datapack") {
+        return rootFolder+`${commonPath(projectType)}/src/main/resources/`
+
+    }
+    else {
+        return rootFolder
     }
 }
 
@@ -97,6 +107,10 @@ const paths = {
     datamaps: `${rootFolder}/${neoPath()}/src/main/resources/data/neoforge/data_maps/block/`,
 
 
+}
+
+function getRecipePath(namespace) {
+    return `${resourcesPath}data/${namespace}/recipe${s}/`
 }
 
 const columnsEnabled = true;
@@ -330,5 +344,6 @@ module.exports = {
     generateNeoWaxables: generateNeoWaxables,
     generateNeoOxidizables: generateNeoOxidizables,
     columnsEnabled: columnsEnabled,
-    getTrialPlural: getTrialPlural
+    getTrialPlural: getTrialPlural,
+    getRecipePath: getRecipePath
 }

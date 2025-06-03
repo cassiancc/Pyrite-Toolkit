@@ -93,13 +93,16 @@ function tagBothFromArray(array, tag, optional) {
 	tagItems(array, tag, optional)
 }
 
-function checkAndAddStainedTag(block, baseBlock) {
+function checkAndAddStainedTag(block, baseBlock, optional) {
+	if (optional == undefined) {
+		optional = false
+	}
 	block = getPath(block)
 	baseBlock = getPath(block)
 	if (block.includes("stained")) {
 		const colour = baseBlock.split("_stained")[0]
 		if (dyes.includes(colour)) {
-			tagBoth(block, `c:dyed/${colour}`)
+			tagBoth(block, `c:dyed/${colour}`, optional)
 		}
 	}
 }

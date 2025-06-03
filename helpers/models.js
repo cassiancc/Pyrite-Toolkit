@@ -122,6 +122,23 @@ module.exports = {
             }
         }`
     },
+
+    generateChestBlockModel: function generateChestBlockModel(block, namespace, baseBlock, altNamespace) {
+        let modelSubdirectory = "", textureSubdirectory = ""
+        if ((altNamespace != helpers.modID) && (altNamespace != "minecraft")) {
+            modelSubdirectory = altNamespace + "/"
+            if (altNamespace == "aether") {
+                textureSubdirectory = "construction/"
+            }
+        }
+        return `{
+            "parent": "lolmcv:block/chests/chest_base",
+            "textures": {
+                "wood_type": "lolmcv:entity/chest/${baseBlock.replace("_planks", "")}",
+                "particle": "${altNamespace}:block/${baseBlock}"
+            }
+        }`
+    },
     
     generateCubeColumnBlockModel: function generateCubeColumnBlockModel(block, namespace, texture, model) {
         return `{"parent":"minecraft:block/${model}","textures":{"end":"${namespace}:block/${texture}_top","side":"${namespace}:block/${texture}"}}`

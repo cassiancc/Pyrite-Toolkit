@@ -171,7 +171,7 @@ function generateShapelessRecipe(ingredients, result, quantity, components) {
 
 }
 
-function generateShapedRecipe(ingredients, result, quantity, shape, disableLoadedChecks) {
+function generateShapedRecipe(ingredients, result, quantity, shape, customLoadedChecks) {
 	let newIngredients = {}, loadCondition;
 	if (useRecipesFrom21dot1AndBelow()) {
 		const keys = Object.keys(ingredients)
@@ -188,7 +188,10 @@ function generateShapedRecipe(ingredients, result, quantity, shape, disableLoade
 				itemOrTag = "item"
 			}
 			const valueNamespace = value.split(":")[0].replace("#", "")
-			if ((valueNamespace !== modID) && (valueNamespace !== mc) && (disableLoadedChecks !== true)) {
+			if (customLoadedChecks == "columns") {
+				loadCondition = generateModLoadCondition(customLoadedChecks)
+			}
+			else if ((valueNamespace !== modID) && (valueNamespace !== mc) && (customLoadedChecks !== true)) {
 				loadCondition = generateModLoadCondition(valueNamespace)
 			}
 			Object.assign(newIngredients, JSON.parse(`{"${keys[i]}": {"${itemOrTag}": "${value}"}}`))

@@ -18,13 +18,17 @@ function writeRecipes(block, type, other, namespace, altNamespace) {
 	}
 }
 
-function writeShapedRecipe(ingredients, result, quantity, shape, pattern, disableLoadedChecks) {
-	let recipe = recipeHelper.generateShapedRecipe(ingredients, result, quantity, shape, disableLoadedChecks)
+function writeShapedRecipe(ingredients, result, quantity, shape, overrideNamespace, customLoadedChecks) {
+	if (overrideNamespace == undefined) {
+		namespace = helpers.modID
+	}
+	else namespace = overrideNamespace
+	let recipe = recipeHelper.generateShapedRecipe(ingredients, result, quantity, shape, customLoadedChecks)
 	if ((recipe !== "")) {
 		if (result.includes(":")) {
 			result = result.split(":")[1]
 		}
-		helpers.writeFile(`${helpers.recipePath}${result}.json`, recipe)
+		helpers.writeFile(`${helpers.getRecipePath(namespace)}${result}.json`, recipe)
 	}
 }
 

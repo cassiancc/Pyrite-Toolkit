@@ -47,6 +47,10 @@ function generateLang(block, type, namespace) {
   })
   const key = `${type}.${namespace}.${block.replace("/", ".")}`
   const value = langBlock
+  return addLang(key, value)
+}
+
+function addLang(key, value) {
   if (blockTranslations != null) {
     if (!blockTranslations.hasOwnProperty(key)) {
       blockTranslations = Object.assign(
@@ -313,6 +317,7 @@ module.exports = {
   flipTranslationFile: flipTranslationFile,
 
   generateBlockLang: generateBlockLang,
+  addLang: addLang,
 
   writeLang: writeLang,
 
