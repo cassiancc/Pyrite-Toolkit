@@ -302,7 +302,7 @@ function generatePyriteResources() {
 	generateBrickSet("cobblestone_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
 	recipeWriter.writeShortcutRecipes(["brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:cobblestone")
 	//Cobbled Deepslate Bricks
-	generateBrickSet("cobbled_deepslate_bricks", "terracotta_bricks", "minecraft:cobblestone", true)
+	generateBrickSet("cobbled_deepslate_bricks", "terracotta_bricks", "minecraft:cobbled_deepslate", true)
 	recipeWriter.writeShortcutRecipes(["brick_stairs", "brick_slab", "brick_wall", "brick_wall_gate"], "minecraft:cobbled_deepslate")
 	// Sandstone
 	generateBrickSet("sandstone_bricks", "terracotta_bricks", "minecraft:cut_sandstone", false)
@@ -404,6 +404,7 @@ function generatePyriteResources() {
 	recipeWriter.writeStonecutterRecipes(["polished_blackstone_wall_gate", "polished_blackstone_brick_wall_gate"], "minecraft:blackstone", 1, undefined, "from_blackstone")
 	recipeWriter.writeStonecutterRecipes(["deepslate_brick_wall_gate", "deepslate_tile_wall_gate"], "minecraft:polished_deepslate", 1, undefined, "from_polished_deepslate")
 	recipeWriter.writeStonecutterRecipes(["deepslate_brick_wall_gate", "deepslate_tile_wall_gate", "polished_deepslate_wall_gate"], "minecraft:cobbled_deepslate", 1, undefined, "from_cobbled_deepslate")
+	recipeWriter.writeStonecutterRecipe("deepslate_tile_wall_gate", "minecraft:deepslate", 1, undefined, "from_deepslate")
 	recipeWriter.writeStonecutterRecipe("deepslate_tile_wall_gate", "minecraft:deepslate_bricks", 1, undefined, "from_deepslate_bricks")
 	recipeWriter.writeStonecutterRecipe("stone_brick_wall_gate", "minecraft:stone", 1, undefined, "from_stone")
 	recipeWriter.writeStonecutterRecipe("end_stone_brick_wall_gate", "minecraft:end_stone", 1, undefined, "from_end_stone")
@@ -637,8 +638,9 @@ function generatePyriteResources() {
 		"#C#",
 		"RDR"
 	  ])
+	recipeWriter.writeSmeltingRecipe("pyrite:azalea_log", "minecraft:charcoal", undefined, undefined, undefined, undefined, "_azalea_log")
 
-
+	recipeWriter.writeSmeltingRecipe("pyrite:azalea_wood", "minecraft:charcoal", undefined, undefined, undefined, undefined, "_azalea_wood")
 	// Write final language file.
 	langHelper.writeLang()
 	count = langHelper.countBlocks()
@@ -665,6 +667,8 @@ else if (modID == "raspberry") {
 	// langHelper.writeLang()
 }
 else if (modID == "bigger_fish") {
+	
+
 
 	const fishery = [
 		"fishery:nullfin",
@@ -680,6 +684,263 @@ else if (modID == "bigger_fish") {
 		"fishery:aersucker"
 	]
 
+
+
+
+
+
+	const tier_one_cosmopolitan_freshwater = [
+		"bream",
+		"carp",
+		"trout",
+		"aquaculture:carp",
+		"minecraft:salmon",
+		"aquaculture:minnow",
+	]
+
+	const tier_two_cosmopolitan_freshwater = [
+		"koi",
+		"shad",
+	]
+
+	const tier_three_cosmopolitan_freshwater = [
+		"fishery:largemouth_bass",
+	]
+
+	const tier_one_cosmopolitan_saltwater = [
+		"minecraft:cod",
+		"minecraft:salmon",
+		"minecraft:cod",
+		"herring",
+		"aquaculture:atlantic_herring",
+	]
+
+	const tier_two_cosmopolitan_saltwater = [
+		"fishery:red_snapper",
+		"tarpon",
+		"jellyfish"
+	]
+
+	const tier_three_cosmopolitan_saltwater = [
+
+	]
+
+	const tier_one_temperate_freshwater = [
+		"goldfish",
+		"bass",
+		"bluegill",
+		"aquaculture:bluegill",
+		"fishery:bluegill",
+		"#bigger_fish:tier_one_cosmopolitan_freshwater_fish",
+		"fishofthieves:splashtail",
+		"fishery:leafskimmer",
+    	"fishofthieves:pondie",
+
+	]
+
+	const tier_two_temperate_freshwater = [
+		"#bigger_fish:tier_two_cosmopolitan_freshwater_fish",
+		"darter",
+		"rainbow_trout",
+		"aquaculture:rainbow_trout",
+		"aquaculture:brown_trout",
+		"aquaculture:smallmouth_bass",
+
+	]
+
+	const tier_three_temperate_freshwater = [
+		"#bigger_fish:tier_three_cosmopolitan_freshwater_fish",
+		"bowfin",
+		"loach",
+		"fishery:branch_eel",
+	]
+
+	const tier_one_temperate_saltwater = [
+		"#bigger_fish:tier_one_cosmopolitan_saltwater_fish",
+		"mackerel",
+		"starfish",
+		"sturgeon",
+		"fishofthieves:splashtail",
+		"fishofthieves:plentifin",
+	]
+
+	const tier_two_temperate_saltwater = [
+		"#bigger_fish:tier_two_cosmopolitan_saltwater_fish",
+		"clingfish",
+		"fishofthieves:islehopper",
+		"fishery:sunfish",
+	]
+
+	const tier_three_temperate_saltwater = [
+		"#bigger_fish:tier_three_cosmopolitan_saltwater_fish",
+		"oarfish",
+		"fishofthieves:ancientscale",
+		"fishofthieves:devilfish",
+		"upgrade_aquatic:lionfish",
+
+	]
+
+	const tier_one_hot_freshwater = [
+		"#bigger_fish:tier_one_cosmopolitan_freshwater_fish",
+		"catfish",
+		"piranha",
+		"betta",
+		"aquaculture:catfish",
+		"aquaculture:piranha",
+		"fishofthieves:splashtail",
+    	"fishofthieves:pondie",
+			"aquaculture:bayad",
+	]
+
+	const tier_two_hot_freshwater = [
+		"#bigger_fish:tier_two_cosmopolitan_freshwater_fish",
+		"gar",
+		"aquaculture:gar",
+		"perch",
+		"aquaculture:perch",
+		"upgrade_aquatic:perch",
+		"tilapia",
+		"aquaculture:capitaine",
+		"aquaculture:boulti",
+		"aquaculture:synodontis",
+		"aquaculture:arapaima",
+    	"aquaculture:tambaqui",
+
+	]
+
+	const tier_three_hot_freshwater = [
+		"#bigger_fish:tier_three_cosmopolitan_freshwater_fish",
+		"arapaima",
+		"roach",
+		"gourami",
+		"pacu",
+		"fishofthieves:stormfish",
+		"fishofthieves:wildsplash",
+		"fishery:crab_claw",
+		"fishery:crayfish",
+	]
+
+	const tier_one_hot_saltwater = [
+		"#bigger_fish:tier_one_cosmopolitan_saltwater_fish",
+		"sardine",
+		"flounder",
+		"minecraft:pufferfish",
+		"minecraft:tropical_fish",
+		"fishofthieves:splashtail",
+		"fishofthieves:islehopper",
+		"fishofthieves:plentifin",
+	]
+
+	const tier_two_hot_saltwater = [
+		"#bigger_fish:tier_two_cosmopolitan_saltwater_fish",
+		"butterflyfish",
+		"surgeonfish",
+		"stingray",
+		"upgrade_aquatic:lionfish",
+		"fishery:sunfish",
+
+
+	]
+
+	const tier_three_hot_saltwater = [
+		"#bigger_fish:tier_three_cosmopolitan_saltwater_fish",
+		"swordfish",
+		"grouper",
+		"aquaculture:red_grouper",
+		"tuna",
+		"aquaculture:tuna",
+		"fishery:tuna",
+		"moray_eel",
+		"fishofthieves:devilfish",
+
+	]
+
+	const tier_one_cold_freshwater = [
+		"#bigger_fish:tier_one_cosmopolitan_freshwater_fish",
+		"goldeye",
+
+	]
+
+	const tier_two_cold_freshwater = [
+		"#bigger_fish:tier_two_cosmopolitan_freshwater_fish",
+		"rudd",
+		"pike",
+		"upgrade_aquatic:pike",
+		"aquaculture:muskellunge",
+
+
+	]
+
+	const tier_three_cold_freshwater = [
+		"#bigger_fish:tier_three_cosmopolitan_freshwater_fish",
+		"walleye",
+		"fishery:walleye",
+		"white_sucker",
+
+	]
+
+
+	const tier_one_cold_saltwater = [
+		"#bigger_fish:tier_one_cosmopolitan_saltwater_fish",
+		"capelin",
+		"polar_cod",
+		"aquaculture:atlantic_cod",
+		"aquaculture:pink_salmon",
+		"aquaculture:pacific_halibut",
+		"aquaculture:atlantic_halibut",
+	]
+
+	const tier_two_cold_saltwater = [
+		"#bigger_fish:tier_two_cosmopolitan_saltwater_fish",
+		"char",
+		"haddock",
+		"aquaculture:pollock",
+
+	]
+
+	const tier_three_cold_saltwater = [
+		"#bigger_fish:tier_three_cosmopolitan_saltwater_fish",
+		"spiny_lumpsucker",
+		"twohorn_sculpin",
+		"aquaculture:blackfish",
+		"fishofthieves:battlegill",
+		"fishofthieves:wrecker",
+		"fishery:anglerfish",
+
+	]
+
+
+	
+	const tier_one_brackish = [
+		"brackish_mudskipper",
+		"violet_goby",
+
+	]
+	const tier_two_brackish = [
+
+		"green_chromide",
+		"brackish_tigerfish",
+		"mangrove_moony",
+	]
+	const tier_three_brackish = [
+		"knifefish",
+		"shark_catfish",
+	]
+	const tier_one_brackish_cave = [
+		"shortfin_molly",
+		"cichlid",
+	]
+
+	const tier_two_brackish_cave = [
+
+		"blue_blanquillo",
+		"brackish_goby",
+	]
+
+	const tier_three_brackish_cave = [
+		"dripstone_garra"
+	]
+
 	const mushroom_fields = [
 		"aquaculture:brown_shrooma",
 		"aquaculture:red_shrooma",
@@ -690,162 +951,29 @@ else if (modID == "bigger_fish") {
 		"fishery:sculkamander",
 	]
 
-	const cavefish = [
+	const tier_one_caves = [
 		"blind_cavefish",
-		"cave_angel_fish",
 		"cave_pupfish",
+		"fishery:pale_bass",
+		"fishery:salamander",
+
+	]
+
+	const tier_two_caves = [
 		"northern_cavefish",
 		"red_cavefish",
 		"white_cavefish",
-		"toothless_blindcat",
-		"fishery:salamander",
+
+	]
+
+	const tier_three_caves = [
 		"fishery:ghostfish",
-		"fishery:pale_bass",
+		"cave_angel_fish",
+		"toothless_blindcat",
 
-	]
-	
-	const cold_saltwater = [
-		"#bigger_fish:cosmopolitan_saltwater_fish",
-		"aquaculture:pink_salmon",
-		"char",
-		"haddock",
-		"capelin",
-		"aquaculture:atlantic_cod",
-		"aquaculture:blackfish",
-		"aquaculture:pacific_halibut",
-		"aquaculture:atlantic_halibut",
-		"aquaculture:pollock",
-		"aquaculture:atlantic_herring",
-		"aquaculture:rainbow_trout",
-		"fishofthieves:battlegill",
-		"fishofthieves:wrecker",
-		"fishery:anglerfish",
-	]
-	const temperate_saltwater = [
-		"#bigger_fish:cosmopolitan_saltwater_fish",
-		"mackerel",
-		"upgrade_aquatic:lionfish",
-		"aquaculture:gar",
-		"fishofthieves:splashtail",
-		"fishofthieves:islehopper",
-		"fishofthieves:ancientscale",
-		"fishofthieves:plentifin",
-		"fishofthieves:devilfish",
-		"fishery:sunfish",
 
 	]
 
-	
-	const hot_saltwater = [
-		"#bigger_fish:cosmopolitan_saltwater_fish",
-		"swordfish",
-		"minecraft:tropical_fish",
-		"flounder",
-		"butterflyfish",
-		"surgeonfish",
-		"minecraft:pufferfish",
-		"grouper",
-		"aquaculture:red_grouper",
-		"tuna",
-		"aquaculture:tuna",
-		"fishery:tuna",
-		"upgrade_aquatic:lionfish",
-		"fishofthieves:splashtail",
-		"fishofthieves:islehopper",
-		"fishofthieves:plentifin",
-		"fishofthieves:devilfish",
-		"fishery:sunfish",
-
-	]
-	const cold_freshwater = [
-		"#bigger_fish:cosmopolitan_freshwater_fish",
-		"aquaculture:pink_salmon",
-		"carp",
-		"aquaculture:carp",
-		"koi",
-		"trout",
-		"pike",
-		"goldeye",
-		"walleye",
-		"rudd",
-		"upgrade_aquatic:pike",
-		"aquaculture:minnow",
-   		"aquaculture:bluegill",
-		"fishery:bluegill",
-		"aquaculture:catfish",
-		"fishery:catfish",
-		"aquaculture:muskellunge",
-
-	]
-	const temperate_freshwater = [
-		"#bigger_fish:cosmopolitan_freshwater_fish",
-		"carp",
-		"koi",
-		"trout",
-		"goldfish",
-		"bass",
-		"bluegill",
-		"rainbow_trout",
-		"clingfish",
-		"aquaculture:gar",
-		"aquaculture:minnow",
-   		"aquaculture:bluegill",
-		"aquaculture:catfish",
-		"aquaculture:smallmouth_bass",
-		"aquaculture:brown_trout",
-		"fishofthieves:splashtail",
-    	"fishofthieves:pondie",
-		"fishery:leafskimmer",
-		"fishery:walleye",
-		"fishery:branch_eel",
-
-	]
-	const hot_freshwater = [
-		"#bigger_fish:cosmopolitan_freshwater_fish",
-		"carp",
-		"koi",
-		"trout",
-		"tilapia",
-		"perch",
-		"roach",
-		"catfish",
-		"gar",
-		"aquaculture:perch",
-		"upgrade_aquatic:perch",
-		"aquaculture:bayad",
-		"aquaculture:boulti",
-		"aquaculture:capitaine",
-		"aquaculture:synodontis",
-		"aquaculture:carp",
-		"aquaculture:minnow",
-    	"aquaculture:bluegill",
-		"aquaculture:catfish",
-		"aquaculture:piranha",
-		"aquaculture:arapaima",
-    	"aquaculture:tambaqui",
-		"fishofthieves:splashtail",
-    	"fishofthieves:pondie",
-		"fishofthieves:wildsplash",
-		"fishofthieves:stormfish",
-		"fishery:crab_claw",
-		"fishery:crayfish",
-	]
-	const freshwater = [
-		"bream",
-		"shad",
-		"carp",
-		"koi",
-		"trout",
-		"minecraft:salmon",
-		"fishery:largemouth_bass",
-	]
-	const saltwater = [
-		"fishery:red_snapper",
-		"minecraft:cod",
-		"minecraft:salmon",
-		"herring"
-
-	]
 	const lava = [
 		"cinder_eel",
 		"fire_bass",
@@ -856,35 +984,108 @@ else if (modID == "bigger_fish") {
 		"fishery:soul_leech",
 	]
 
-	tagHelper.tagItems(freshwater, "cosmopolitan_freshwater_fish", true)
-	tagHelper.tagItems(saltwater, "cosmopolitan_saltwater_fish", true)
+	// Cosmopolitan
+	tagHelper.tagItems(tier_one_cosmopolitan_freshwater, "tier_one_cosmopolitan_freshwater_fish", true)
+	tagHelper.tagItems(tier_two_cosmopolitan_freshwater, "tier_two_cosmopolitan_freshwater_fish", true)
+	tagHelper.tagItems(tier_three_cosmopolitan_freshwater, "tier_three_cosmopolitan_freshwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_cosmopolitan_freshwater_fish", "#bigger_fish:tier_two_cosmopolitan_freshwater_fish", "#bigger_fish:tier_three_cosmopolitan_freshwater_fish"], "cosmopolitan_freshwater_fish", true)
 
-	tagHelper.tagItems(cold_freshwater, "cold_freshwater_fish", true)
-	tagHelper.tagItems(temperate_freshwater, "temperate_freshwater_fish", true)
-	tagHelper.tagItems(hot_freshwater, "hot_freshwater_fish", true)
-	tagHelper.tagItems(cold_saltwater, "cold_saltwater_fish", true)
-	tagHelper.tagItems(hot_saltwater, "hot_saltwater_fish", true)
-	tagHelper.tagItems(temperate_saltwater, "temperate_saltwater_fish", true)
+	tagHelper.tagItems(tier_one_cosmopolitan_saltwater, "tier_one_cosmopolitan_saltwater_fish", true)
+	tagHelper.tagItems(tier_two_cosmopolitan_saltwater, "tier_two_cosmopolitan_saltwater_fish", true)
+	tagHelper.tagItems(tier_three_cosmopolitan_saltwater, "tier_three_cosmopolitan_saltwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_cosmopolitan_saltwater_fish", "#bigger_fish:tier_two_cosmopolitan_saltwater_fish", "#bigger_fish:tier_three_cosmopolitan_saltwater_fish"], "cosmopolitan_saltwater_fish", true)
+
+	tagHelper.tagItems(tier_one_cold_freshwater, "tier_one_cold_freshwater_fish", true)
+	tagHelper.tagItems(tier_two_cold_freshwater, "tier_two_cold_freshwater_fish", true)
+	tagHelper.tagItems(tier_three_cold_freshwater, "tier_three_cold_freshwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_cold_freshwater_fish", "#bigger_fish:tier_two_cold_freshwater_fish", "#bigger_fish:tier_three_cold_freshwater_fish"], "cold_freshwater_fish", true)
+
+	tagHelper.tagItems(tier_one_cold_saltwater, "tier_one_cold_saltwater_fish", true)
+	tagHelper.tagItems(tier_two_cold_saltwater, "tier_two_cold_saltwater_fish", true)
+	tagHelper.tagItems(tier_three_cold_saltwater, "tier_three_cold_saltwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_cold_saltwater_fish", "#bigger_fish:tier_two_cold_saltwater_fish", "#bigger_fish:tier_three_cold_saltwater_fish"], "cold_saltwater_fish", true)
+
+	tagHelper.tagItems(tier_one_hot_freshwater, "tier_one_hot_freshwater_fish", true)
+	tagHelper.tagItems(tier_two_hot_freshwater, "tier_two_hot_freshwater_fish", true)
+	tagHelper.tagItems(tier_three_hot_freshwater, "tier_three_hot_freshwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_hot_freshwater_fish", "#bigger_fish:tier_two_hot_freshwater_fish", "#bigger_fish:tier_three_hot_freshwater_fish"], "hot_freshwater_fish", true)
+
+	tagHelper.tagItems(tier_one_hot_saltwater, "tier_one_hot_saltwater_fish", true)
+	tagHelper.tagItems(tier_two_hot_saltwater, "tier_two_hot_saltwater_fish", true)
+	tagHelper.tagItems(tier_three_hot_saltwater, "tier_three_hot_saltwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_hot_saltwater_fish", "#bigger_fish:tier_two_hot_saltwater_fish", "#bigger_fish:tier_three_hot_saltwater_fish"], "hot_saltwater_fish", true)
+
+	tagHelper.tagItems(tier_one_temperate_freshwater, "tier_one_temperate_freshwater_fish", true)
+	tagHelper.tagItems(tier_two_temperate_freshwater, "tier_two_temperate_freshwater_fish", true)
+	tagHelper.tagItems(tier_three_temperate_freshwater, "tier_three_temperate_freshwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_temperate_freshwater_fish", "#bigger_fish:tier_two_temperate_freshwater_fish", "#bigger_fish:tier_three_temperate_freshwater_fish"], "temperate_freshwater_fish", true)
+	
+	tagHelper.tagItems(tier_one_temperate_saltwater, "tier_one_temperate_saltwater_fish", true)
+	tagHelper.tagItems(tier_two_temperate_saltwater, "tier_two_temperate_saltwater_fish", true)
+	tagHelper.tagItems(tier_three_temperate_saltwater, "tier_three_temperate_saltwater_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_temperate_saltwater_fish", "#bigger_fish:tier_two_temperate_saltwater_fish", "#bigger_fish:tier_three_temperate_saltwater_fish"], "temperate_saltwater_fish", true)
+
+	tagHelper.tagItems(tier_one_brackish, "tier_one_brackish_fish", true)
+	tagHelper.tagItems(tier_two_brackish, "tier_two_brackish_fish", true)
+	tagHelper.tagItems(tier_three_brackish, "tier_three_brackish_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_brackish_fish", "#bigger_fish:tier_two_brackish_fish", "#bigger_fish:tier_three_brackish_fish"], "brackish_fish", true)
+
+
 	tagHelper.tagItems(mushroom_fields, "shroomy_fish", true)
 	tagHelper.tagItems(deep_dark, "deep_dark_fish", true)
 	tagHelper.tagItems(lava, "lava_fish", true)
-	tagHelper.tagItems(cavefish, "cave_fish", true)
+
+	tagHelper.tagItems(tier_one_caves, "tier_one_cave_fish", true)
+	tagHelper.tagItems(tier_two_caves, "tier_two_cave_fish", true)
+	tagHelper.tagItems(tier_three_caves, "tier_three_cave_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_cave_fish", "#bigger_fish:tier_two_cave_fish", "#bigger_fish:tier_three_cave_fish"], "cave_fish", true)
+
+	tagHelper.tagItems(tier_one_brackish_cave, "tier_one_brackish_cave_fish", true)
+	tagHelper.tagItems(tier_two_brackish_cave, "tier_two_brackish_cave_fish", true)
+	tagHelper.tagItems(tier_three_brackish_cave, "tier_three_brackish_cave_fish", true)
+	tagHelper.tagItems(["#bigger_fish:tier_one_brackish_cave_fish", "#bigger_fish:tier_two_brackish_cave_fish", "#bigger_fish:tier_three_brackish_cave_fish"], "brackish_cave_fish", true)
+
+	tagHelper.tagItems(["minecraft:lily_pad", "minecraft:leather", "minecraft:leather_boots", "minecraft:bone", "minecraft:string", "minecraft:fishing_rod", "minecraft:bowl", "minecraft:stick", "minecraft:ink_sac", "minecraft:tripwire_hook", "minecraft:rotten_flesh", "minecraft:bamboo", "fish_bones", "can"], "junk", true)
+	tagHelper.tagItems(["minecraft:name_tag", "minecraft:saddle", "minecraft:bow", "minecraft:fishing_rod", "minecraft:nautilus_shell"], "treasure", true)
 
 
-	const fish = deep_dark.concat(cavefish, cold_freshwater, cold_saltwater, temperate_freshwater, temperate_saltwater, hot_freshwater, hot_saltwater, freshwater, saltwater, lava)
+	const fish = deep_dark.concat(
+		tier_one_caves, tier_two_caves, tier_three_caves, 
+		tier_one_brackish_cave, tier_two_brackish_cave, tier_three_brackish_cave, 
+		tier_one_cold_freshwater, tier_two_cold_freshwater, tier_three_cold_freshwater, 
+		tier_one_cosmopolitan_freshwater, tier_two_cosmopolitan_freshwater, tier_three_cosmopolitan_freshwater, 
+		tier_one_cold_saltwater, tier_two_cold_saltwater, tier_three_cold_saltwater, 
+		tier_one_temperate_freshwater, tier_two_temperate_freshwater, tier_three_temperate_freshwater, 
+		tier_one_temperate_saltwater, tier_two_temperate_saltwater, tier_three_temperate_saltwater, 
+		tier_one_hot_freshwater, tier_two_hot_freshwater, tier_three_hot_freshwater, 
+		tier_one_hot_saltwater, tier_two_hot_saltwater, tier_three_hot_saltwater, 
+		tier_one_cosmopolitan_freshwater, tier_two_cosmopolitan_freshwater, tier_three_cosmopolitan_freshwater, 
+		tier_one_cosmopolitan_saltwater, tier_two_cosmopolitan_saltwater, tier_three_cosmopolitan_saltwater,  
+		lava, 
+		tier_one_brackish, tier_two_brackish, tier_three_brackish
+	)
 
-	const bait = [
+	const level_one_bait = [
 		"worm",
-		"leech",
-	]
-	const modded_bait = [
 		"aquaculture:worm",
-		"aquaculture:leech",
-		"aquaculture:minnow",
-		"fishofthieves:grubs",
 		"fishofthieves:earthworms",
+	]
+
+	const level_two_bait = [
+		"leech",
+		"fishofthieves:grubs",
+		"aquaculture:leech",
 		"fishofthieves:leeches"
 	]
+
+	const level_three_bait = [
+		"aquaculture:minnow",
+		"bigger_fish:sardine",
+		"#c:foods/raw_fish"
+	]
+
+	const bait = level_one_bait.concat(level_two_bait, level_three_bait)
+
 	const food = [
 		"fried_fish",
 		"fish_kebab",
@@ -899,6 +1100,7 @@ else if (modID == "bigger_fish") {
 		"fish_bones",
 		"can"
 	]
+
 	fish.forEach(function(ish) {
 		if (!ish.includes(":")) {
 			langHelper.generateLang(ish, "item", modID)
@@ -907,15 +1109,19 @@ else if (modID == "bigger_fish") {
 		}
 	})
 	bait.forEach(function(b) {
-		writeItem(b)
-
+		if (!b.includes(":")) { 
+			writeItem(b)
+		}
 	})
+
 	food.forEach(function(b) {
 		writeItem(b)
 	})
+
 	junk.forEach(function(b) {
 		writeItem(b)
 	})
+
 	recipeWriter.writeFoodCookingRecipes("#bigger_fish:fish", "fried_fish")
 	recipeWriter.writeFoodCookingRecipes("minecraft:tropical_fish", "fried_fish", undefined, undefined, undefined, "_tropical")
 
@@ -923,6 +1129,7 @@ else if (modID == "bigger_fish") {
 	"copper_rod",
 	"netherite_rod"
 	]
+	
 	tagHelper.tagItems(fishingRods, "c:tools/fishing_rod", true)
 	tagHelper.tagItems(fishingRods, "minecraft:enchantable/fishing", true)
 	tagHelper.tagItems(fishingRods, "requires_minigame_to_catch", true)
@@ -947,22 +1154,38 @@ else if (modID == "bigger_fish") {
 	  ], undefined, true)
 	advancements.writeRecipeAdvancement("netherite_rod", "minecraft:netherite_scrap")
 	//sushi
+	advancements.writeRecipeAdvancement("sushi", "minecraft:dried_kelp")
 	recipeWriter.writeShapelessRecipe(["#c:foods/raw_fish", "minecraft:dried_kelp"], 
-		"bigger_fish:sushi", 1)
-	//sushi
+		"bigger_fish:sushi", 1, undefined, undefined, "food")
+	// canned fish
+	advancements.writeRecipeAdvancement("canned_fish", "bigger_fish:can")
+	recipeWriter.writeShapelessRecipe(["#c:foods/raw_fish", "bigger_fish:can"], 
+		"bigger_fish:canned_fish", 1, undefined, undefined, "food")
+	//fish kebab
+	advancements.writeRecipeAdvancement("fish_kebab", "#c:foods/cooked_fish")
 	recipeWriter.writeShapelessRecipe(["#c:foods/cooked_fish", "minecraft:stick"], 
-		"bigger_fish:fish_kebab", 1)
-	//sushi
+		"bigger_fish:fish_kebab", 1, undefined, undefined, "food")
+	//fish stew
+	advancements.writeRecipeAdvancement("fish_stew", "#c:foods/cooked_fish")
 	recipeWriter.writeShapelessRecipe(["#c:foods/cooked_fish", "minecraft:bowl", "minecraft:carrot", "minecraft:potato"], 
-		"bigger_fish:fish_stew", 1)
-
+		"bigger_fish:fish_stew", 1, undefined, undefined, "food")
+		// advancements.writeRecipeAdvancement("minecraft:bone_meal", "bigger_fish:fish_bones")
+	recipeWriter.writeShapelessRecipe(["bigger_fish:fish_bones"], 
+		"minecraft:bone_meal", 1, "_from_fish_bones", undefined, "misc")
+	// advancements.writeRecipeAdvancement("minecraft:iron_nugget", "bigger_fish:can")
+	recipeWriter.writeSmeltingRecipe(["bigger_fish:can"], 
+		"minecraft:iron_nugget", undefined, undefined, undefined, "misc", "_from_can")
 	tagHelper.tagItem("#bigger_fish:fish", "minecraft:fishes", true)
 	tagHelper.tagItem("#bigger_fish:fish", "c:foods/raw_fish", true)
 	tagHelper.tagItem("fried_fish", "c:foods/cooked_fish", true)
 	tagHelper.tagItem("worm", "minecraft:chicken_food", true)
+	tagHelper.tagItem("fish_bones", "c:bones", true)
 
+	tagHelper.tagItems(level_one_bait, "level_one_bait", true)
+	tagHelper.tagItems(level_two_bait, "level_two_bait", true)
+	tagHelper.tagItems(level_three_bait, "level_three_bait", true)
 
-	tagHelper.tagItems(bait.concat(modded_bait), "bait", true)
+	tagHelper.tagItems(["#bigger_fish:level_one_bait", "#bigger_fish:level_two_bait", "#bigger_fish:level_three_bait"], "bait", true)
 
 	langHelper.writeLang()
 }
@@ -993,11 +1216,17 @@ else if (modID == "lemonade") {
 	// 	"II"
 	//   ], "minecraft")
 
-	blockWriter.writeBlock("cobbled_granite", "cobblestone", "granite", undefined, "cobbled_granite", true, true, undefined, undefined)
-	blockWriter.writeBlock("cobbled_andesite", "cobblestone", "andesite", undefined, "cobbled_andesite", true, true, undefined, undefined)
-	blockWriter.writeBlock("cobbled_diorite", "cobblestone", "diorite", undefined, "cobbled_diorite", true, true, undefined, undefined)
+	// blockWriter.writeBlock("cobbled_granite", "cobblestone", "granite", undefined, "cobbled_granite", true, true, undefined, undefined)
+	// blockWriter.writeBlock("cobbled_andesite", "cobblestone", "andesite", undefined, "cobbled_andesite", true, true, undefined, undefined)
+	// blockWriter.writeBlock("cobbled_diorite", "cobblestone", "diorite", undefined, "cobbled_diorite", true, true, undefined, undefined)
 
-	tagHelper.tagBlocks(["cobbled_granite", "cobbled_diorite", "cobbled_andesite"], "cobblestones", true)
+	// tagHelper.tagBlocks(["cobbled_granite", "cobbled_diorite", "cobbled_andesite"], "cobblestones", true)
+
+
+
+	createVariantSwapWoodSet("minecraft:birch")
+
+
 	// tagHelper.tagBlocks(["lemonade:cobblestones"], "minecraft:mineable/pickaxe", true)
 
 	// tagHelper.tagItems(["minecraft:leather_horse_armor", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor"], "c:horse_armor", true)
@@ -1020,7 +1249,7 @@ else if (modID == "lemonade") {
 	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/shovel.json"), "minecraft:mineable/shovel", true)
 	tagHelper.tagBlocks(["warped_wart_block", "crimson_wart_block"], "minecraft:leaves", true)
 
-	itemModelWriter.writeGeneratedItemModel("smithing_template")
+	// itemModelWriter.writeGeneratedItemModel("smithing_template")
 	tagHelper.tagItem("minecraft:stick", "flammable_sticks", true)
 
 
@@ -1085,17 +1314,17 @@ end = `,
   "use_hashmap_optimizations": false
 }`
 
-	var sorbet = "C:/Users/cassi/Documents/Minecraft/Modpacks/Lemon-Sorbet/"
-	var lemonade = 'C:/Users/cassi/Documents/Minecraft/Mods/Lemonade/'
+	var sorbet = "/home/deck/Documents/GitHub/Lemon-Sorbet/"
+	var lemonade = '/home/deck/Documents/GitHub/Lemonade/'
 	helpers.writeFile(sorbet+"config/item_obliterator.json5", start + JSON.stringify(disabledItems) + end)
 	const { exec } = require('child_process');
-	exec('gradlew.bat build', {cwd: lemonade},(error, stdout, stderr) => {
+	exec('./gradlew fabric:build', {cwd: lemonade},(error, stdout, stderr) => {
 		if (error) {
 			console.error(`exec error: ${error}`);
 			return;
 		}
 		console.log(`stdout: ${stdout}`);
-		var jar = "lemonade-fabric-0.1.8+1.21.1.jar"
+		var jar = "lemonade-fabric-0.1.13+1.21.1.jar"
 		fs.copyFile(lemonade+"fabric/build/libs/"+jar, sorbet+"mods/"+jar, (err) => { if (err) throw err} )
 	
 	});
@@ -1137,7 +1366,6 @@ function generateWoodSet(template, baseBlock, hasStrippedLog) {
 	new Block(template + "_planks", "planks", baseBlock, "wood")
 	new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
 	new Block(template + "_ladder", "ladder", stainedPlankBase, "wood")
-	// chest = new Block(template + "_chest", globalNamespace, globalNamespace, "chest", stainedPlankBase, "wood")
 	new Block(template + "_door", "door", stainedPlankBase, "wood")
 	new Block(template + "_sign", "sign", stainedPlankBase, "wood")
 	new Block(template + "_hanging_sign", "hanging_sign", hangingSignBase, "wood")
@@ -1246,4 +1474,47 @@ function generateTurfSet(block, baseBlockID) {
 	new Block(block + "_slab", "slab", turf, "turf", texture)
 	new Block(block + "_stairs", "stairs", turf, "turf", texture)
 	blockWriter.writeCarpet(block + "_carpet", modID, texture, modID)
+}
+
+function createVariantSwapWoodSet(id, extshape, generateLogs, generatePlanks) {
+	const namespace = helpers.getNamespace(id)
+	const path = helpers.getPath(id)
+	if (extshape == undefined) {
+		extshape = "extshape"
+	}
+
+	const logs = [
+		`${namespace}:${path}_log`,
+		`${extshape}:${path}_log_stairs`,
+		`${extshape}:${path}_log_slab`,
+		`${extshape}:${path}_log_vertical_slab`,
+
+		`${namespace}:${path}_wood`,
+		`${extshape}:${path}_wood_fence`,
+		`${extshape}:${path}_wood_fence_gate`,
+		`${extshape}:${path}_wood_wall`,
+		`${extshape}:${path}_wood_fence_gate`,
+		`${extshape}:${path}_wood_pressure_plate`,
+		`${extshape}:${path}_wood_button`,
+	]
+	const stripped_logs = [
+
+
+		`${namespace}:stripped_${path}_log`,
+		`${extshape}:stripped_${path}_log_stairs`,
+		`${extshape}:stripped_${path}_log_slab`,
+		`${extshape}:stripped_${path}_log_vertical_slab`,
+		`${extshape}:stripped_${path}_log_fence`,
+		`${namespace}:stripped_${path}_wood`,
+		`${extshape}:stripped_${path}_wood_fence`,
+		`${extshape}:stripped_${path}_wood_fence_gate`,
+		`${extshape}:stripped_${path}_wood_wall`,
+		`${extshape}:stripped_${path}_wood_fence_gate`,
+		`${extshape}:stripped_${path}_wood_pressure_plate`,
+		`${extshape}:stripped_${path}_wood_button`,
+	]
+
+	tagHelper.tagItems(logs, `variant_swap:${path}_logs`)
+	tagHelper.tagItems(stripped_logs, `variant_swap:stripped_${path}_logs`)
+
 }

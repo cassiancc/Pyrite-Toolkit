@@ -131,13 +131,22 @@ module.exports = {
                 textureSubdirectory = "construction/"
             }
         }
-        return `{
-            "parent": "lolmcv:block/chests/chest_base",
+        if (helpers.versionAbove("1.21.3")) {
+            return `{
             "textures": {
-                "wood_type": "lolmcv:entity/chest/${baseBlock.replace("_planks", "")}",
                 "particle": "${altNamespace}:block/${baseBlock}"
             }
         }`
+        } else {
+        return `{
+            "parent": "lolmcv:block/chests/chest_base",
+            "textures": {
+                "wood_type": "lolmcv:entity/chest/${altNamespace}_${baseBlock.replace("_planks", "")}",
+                "particle": "${altNamespace}:block/${baseBlock}"
+            }
+        }`
+        }
+        
     },
     
     generateCubeColumnBlockModel: function generateCubeColumnBlockModel(block, namespace, texture, model) {

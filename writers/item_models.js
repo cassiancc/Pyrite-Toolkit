@@ -148,6 +148,18 @@ function writeClientItem(namespace, folder, path, model) {
 			}
 		]
 	}
+	if (model.includes("chest") && !model.includes("locked")) {
+		writeProvidedClientItem(path, `{
+			"model": {
+				"type": "minecraft:special",
+				"base": "minecraft:item/chest",
+				"model": {
+				"type": "minecraft:chest",
+				"texture": "lolmcv:${namespace}_${path.replace("_chest", "")}"
+				}
+			}
+			}`)
+	} else {
 	const item =
 	{
 		"model": {
@@ -157,6 +169,8 @@ function writeClientItem(namespace, folder, path, model) {
 		}
 	}
 	writeProvidedClientItem(path, item)
+	}
+
 }
 
 function writeProvidedClientItem(item, providedClientItem) {

@@ -1,7 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-const dir = `C://Users/cassi/Documents/Minecraft/Mods/additionaladditions/src/main/resources/data/additionaladditions/recipes`
+const dir = `/home/deck/Documents/GitHub/Cultural-Delights-Refabricated/src/main/resources/data/culturalrecipes/recipe/`
 
 
 fs.readdir(dir, (err, files) => {
@@ -27,7 +27,7 @@ fs.readdir(dir, (err, files) => {
 
                         }
                     }
-                    else if (jContents.type == "minecraft:crafting_shaped") {
+                    else if (jContents.type == "minecraft:crafting_shaped" || jContents.type == "minecraft:crafting_shapeless") {
                         if (jContents.result.id == undefined) {
                             //Convert recipe to 1.20.5+
                             console.log(jContents.result)
@@ -48,12 +48,11 @@ fs.readdir(dir, (err, files) => {
                                 }
                                 jContents.result = {
                                     id: jContents.result.item,
-                                    item: jContents.result.item,
                                     count: count
                                 }
                             }                            
                             //Write file.
-                            fs.writeFile(filePath, JSON.stringify(jContents), function (err) { if (err) throw err; });
+                            fs.writeFile(filePath, JSON.stringify(jContents, undefined, 2), function (err) { if (err) throw err; });
 
                         }
                     }

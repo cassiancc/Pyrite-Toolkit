@@ -88,9 +88,15 @@ function tagItem(item, tag, optional) {
 	tagContent(item, tag, "item" + helpers.getTrialPlural(), optional)
 }
 function tagItems(items, tag, optional) {
-	items.forEach(function (item) {
-		tagItem(item, tag, optional)
-	})
+	if (!(items instanceof Array)) {
+		console.warn(items + " is not an array!")
+		tagItem(items, tag, optional)
+		readFileAsJson
+	} else {
+		items.forEach(function (item) {
+			tagItem(item, tag, optional)
+		})
+	}
 }
 function tagBoth(arg, tag, optional) {
 	tagBlock(arg, tag, optional)

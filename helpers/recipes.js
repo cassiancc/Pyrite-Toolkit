@@ -159,10 +159,13 @@ function generateSmeltingRecipe(result, ingredient, type, cookingtime, experienc
 	return recipe
 }
 
-function generateShapelessRecipe(ingredients, result, quantity, components) {
+function generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory) {
+	if (recipeCategory == undefined) {
+		recipeCategory = "building"
+	}
 	let recipe = {
 		"type": "minecraft:crafting_shapeless",
-		"category": "building",
+		"category": recipeCategory,
 		"ingredients": []
 	}
 	if (ingredients instanceof Array) {
@@ -358,7 +361,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		altNamespace = getDyeNamespace(base)
 		recipe = generateShapedRecipe({ "D": id(altNamespace, base), "C": `minecraft:bricks` }, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
 	} else if (block === "charred_nether_bricks") {
-		recipe = generateSmeltingRecipe(block, "minecraft:nether_bricks", 1, 200, 0.1)
+		recipe = generateSmeltingRecipe(block, "minecraft:nether_bricks", undefined, 200, 0.1)
 	} else if (type === "blue_nether_bricks") {
 		recipe = generateShapedRecipe({ "N": `minecraft:nether_brick`, "W": `minecraft:warped_fungus` }, `pyrite:${block}`, 1, [
 			"NW",

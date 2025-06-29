@@ -1,7 +1,7 @@
 [
     {
         "modID": "pyrite",
-        "modPath": "/home/cassian/Desktop/Minecraft/Mods/Pyrite/Pyrite (1.21)/",
+        "modPath": "/home/deck/Documents/GitHub/Pyrite/",
         "projectType": "architectury",
         "disableWriting": false
     },
@@ -24,5 +24,12 @@
         "projectType": "architectury",
         "disableWriting": false,
         "version": "1.21.5"
+    },
+    {
+        "modID": "lemonade",
+        "modPath": "/home/deck/Documents/GitHub/Lemonade/fabric/src/main/resources/resourcepacks/lemon_sorbet/",
+        "projectType": "datapack",
+        "disableWriting": false,
+        "version": "1.21.1"
     }
 ]

@@ -280,8 +280,8 @@ function writeChestBlock(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writeChests(block, namespace, baseBlock, altNamespace)
 	itemModelWriter.writeBlockItemModel(block, namespace, altNamespace)
 	lang = langHelper.generateBlockLang(block)
-	langHelper.addLang("container.lolmcv."+block, lang)
-	langHelper.addLang("container.lolmcv."+block+"Double", "Large "+ lang)
+	langHelper.addLang("container.lolmcv."+modID+"_"+block, lang)
+	langHelper.addLang("container.lolmcv."+modID+"_"+block+"Double", "Large "+ lang)
 
 
 	tagHelper.tagBoth(block, "chests", true)

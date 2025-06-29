@@ -32,11 +32,11 @@ function writeShapedRecipe(ingredients, result, quantity, shape, overrideNamespa
 	}
 }
 
-function writeShapelessRecipe(ingredients, result, quantity, addon, components) {
+function writeShapelessRecipe(ingredients, result, quantity, addon, components, recipeCategory) {
 	if (addon === undefined) {
 		addon = ""
 	}
-	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity, components)
+	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory)
 	if ((recipe !== "")) {
 		if (result.includes(":")) {
 			result = result.split(":")[1]
