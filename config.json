@@ -7,9 +7,10 @@
     },
     {
         "modID": "infinity",
-        "modPath": "/home/cassian/Desktop/Minecraft/Mods/Infinite-Dimensions/",
+        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/ProjectInfinity/",
         "projectType": "architectury",
-        "disableWriting": true
+        "version": "1.21.4",
+        "disableWriting": false
     },
     {
         "modID": "holiday-server-mod",

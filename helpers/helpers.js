@@ -5,7 +5,7 @@ const config = readConfigFile()
 function readConfigFile() {
     let arg = process.argv[2]
     let configPath = "./config.json"
-    if (arg.includes(".json")) {
+    if (arg != undefined && arg.includes(".json")) {
         configPath = arg
     }
     let returnedConfig;
