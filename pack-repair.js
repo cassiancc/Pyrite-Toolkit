@@ -30,7 +30,7 @@ async function* walk(dir) {
 async function main(dir) {
     if (dir == undefined) {
         console.error("Please provide a path to the unzipped resource pack you wish to repair as a command line argument.")
-        console.error("For example: node standalones/pack-repair \"/home/username/Minecraft/resourcepacks/resourcepackname\"")
+        console.error("For example: node pack-repair \"/home/username/Minecraft/resourcepacks/resourcepackname\"")
         return
     }
     repair(dir)
