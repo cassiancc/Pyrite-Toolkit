@@ -2,6 +2,7 @@ const helpers = require('./helpers');
 
 const id = helpers.id
 const getDyeNamespace = helpers.getDyeNamespace
+const generateModLoadCondition = helpers.generateModLoadCondition
 const majorVersion = helpers.majorVersion
 const minorVersion = helpers.minorVersion
 const modID = helpers.modID
@@ -39,53 +40,7 @@ function addIngredients(ingredientArray, ingredient) {
 	}
 }
 
-function generateModLoadCondition(mod) {
-	mod = mod.replace("#", "")
-	if ((mod != "minecraft") && (mod != "c") && (mod != "forge")) {
-		let loadCondition;
-		if (majorVersion > 20) {
-			loadCondition = {
-				"fabric:load_conditions": [
-					{
-						"condition": "fabric:all_mods_loaded",
-						"values": [
-							mod
-						]
-					}
-				],
-				"neoforge:conditions": [
-					{
-					"type": "neoforge:mod_loaded",
-					"modid": mod
-					}
-				]
-			}
-		}
-		else {
-			loadCondition = {
-				"fabric:load_conditions": [
-					{
-						"condition": "fabric:all_mods_loaded",
-						"values": [
-							mod
-						]
-					}
-				],
-				"forge:conditional": [
-					{
-					"type": "forge:mod_loaded",
-					"modid": mod
-					}
-				]
-			}
-		}
-		return loadCondition;
-		
-	}
-		
-}
-
-function generateStonecutterRecipe(block, ingredient, quantity, type) {
+function generateStonecutterRecipe(block, ingredient, quantity, type, customLoadedChecks) {
 	if (block === ingredient) {
 		return
 	}
@@ -123,6 +78,9 @@ function generateStonecutterRecipe(block, ingredient, quantity, type) {
 	if ((ingredientNamespace !== helpers.modID) && (ingredientNamespace !== helpers.mc)) { 
 		Object.assign(recipe, generateModLoadCondition(ingredientNamespace))
 	}
+	if (customLoadedChecks != undefined) {
+		Object.assign(recipe, generateModLoadCondition(customLoadedChecks))
+	}
 	return recipe;
 }
 
@@ -157,6 +115,39 @@ function generateSmeltingRecipe(result, ingredient, type, cookingtime, experienc
 		recipe.ingredient = ingredient
 	}
 	return recipe
+}
+
+function generateCuttingRecipe(ingredients, result, quantity, action) {
+	let recipe = {
+		"type": "farmersdelight:cutting",
+		 "tool": {
+			"type": "farmersdelight:item_ability",
+			"fabric:type": "farmersdelight:item_ability",
+			"action": action
+		},
+		"ingredients": []
+	}
+	if (ingredients instanceof Array) {
+		ingredients.forEach(function (i) {
+			addIngredients(recipe.ingredients, i)
+		})
+	} else {
+		addIngredients(recipe.ingredients, ingredients)
+	}
+	
+
+	recipe.result = [
+		{
+      "item": {
+        "count": quantity,
+        "id": result
+      }
+    }
+	]
+	Object.assign(recipe, generateModLoadCondition("farmersdelight"))
+
+	return recipe
+
 }
 
 function generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory) {
@@ -203,7 +194,7 @@ function generateShapedRecipe(ingredients, result, quantity, shape, customLoaded
 				itemOrTag = "item"
 			}
 			const valueNamespace = value.split(":")[0].replace("#", "")
-			if (customLoadedChecks == "columns") {
+			if (customLoadedChecks != undefined && customLoadedChecks != true) {
 				loadCondition = generateModLoadCondition(customLoadedChecks)
 			}
 			else if ((valueNamespace !== modID) && (valueNamespace !== mc) && (customLoadedChecks !== true)) {
@@ -245,11 +236,11 @@ function createDyeRecipe(block, namespace, altBlock, other, baseNamespace) {
 	if (baseNamespace === undefined) {
 		baseNamespace = namespace
 	}
-	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": id(namespace, other) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
+	return generateShapedRecipe({ "C": id(baseNamespace, altBlock), "D": "#"+ id("c", "dyes/"+ other) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
 }
 
 function generateDyeRecipe(blockID, baseBlockID, dyeID) {
-	return generateShapedRecipe({ "C": baseBlockID, "D": dyeID }, id(blockID), 8, ["CCC", "CDC", "CCC"])
+	return generateShapedRecipe({ "C": baseBlockID, "D": "#"+ dyeID }, id(blockID), 8, ["CCC", "CDC", "CCC"])
 }
 
 function generateRecipes(block, type, base, namespace, altNamespace) {
@@ -267,9 +258,8 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		} else if (base.includes("log")) {
 			recipe = generateShapelessRecipe(`#pyrite:${base}s`, id(namespace, block), 4)
 		} else if (base.includes("stained")) {
-			base = base.replace("stained", "dye")
-			altNamespace = getDyeNamespace(base)
-			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": id(altNamespace, base) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
+			base = base.replace("_stained", "")
+			recipe = generateShapedRecipe({ "C": `#minecraft:planks`, "D": "#"+ id("c", "dyes/"+ base) }, id(modID, block), 8, ["CCC", "CDC", "CCC"])
 		}
 		else {
 			recipe = generateShapelessRecipe(`pyrite:${base}_stem`, id(namespace, block), 4)
@@ -280,20 +270,16 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	} else if (type === "ladder") {
 		recipe = generateShapedRecipe({ "C": `minecraft:stick`, "D": id(altNamespace, base) }, id(namespace, block), 3, ["C C", "CDC", "C C"])
 	} else if (type === "terracotta") {
-		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
 		recipe = createDyeRecipe(block, altNamespace, id(mc, "terracotta"), base)
 	} else if (type === "concrete_powder") {
-		base = `${base}_dye`
 		altNamespace = getDyeNamespace(base)
 		recipe = generateShapelessRecipe(["minecraft:sand", "minecraft:sand", "minecraft:sand", "minecraft:sand", "minecraft:gravel", "minecraft:gravel", "minecraft:gravel", "minecraft:gravel", id(altNamespace, base)], id(namespace, block), 8)
 	} else if (type === "terracotta_bricks") {
 		altNamespace = getDyeNamespace(base)
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 4, ["CC", "CC"])
 	} else if (type === "torch") {
-		base = `${base}_dye`
-		altNamespace = getDyeNamespace(base)
-		let ingredients = [id(altNamespace, base), id(mc, "torch")]
+		let ingredients = ["#"+ id("c", "dyes/"+ base), id(mc, "torch")]
 		let result = id(namespace, block)
 
 		recipe = generateShapelessRecipe(ingredients, result, 1)
@@ -326,16 +312,10 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 			"X#X"
 		])
 	} else if ((type === "dyed_framed_glass") || (type === "stained_framed_glass")) {
-		const dye = `${base}_dye`
-		altNamespace = getDyeNamespace(dye)
-		recipe = createDyeRecipe(block, altNamespace, "framed_glass", dye, namespace)
+		recipe = createDyeRecipe(block, altNamespace, "framed_glass", base, namespace)
 	} else if ((type === "stained_glass")) {
-		const dye = `${base}_dye`
-		altNamespace = getDyeNamespace(dye)
-		recipe = createDyeRecipe(block, altNamespace, "minecraft:glass", dye, namespace)
+		recipe = createDyeRecipe(block, altNamespace, "minecraft:glass", base, namespace)
 	} else if (type === "glass_pane") {
-		const dye = `${base}_dye`
-		altNamespace = getDyeNamespace(dye)
 		recipe = generateShapedRecipe({ "C": id(namespace, block.replace("_pane", "")) }, id(namespace, block), 16, ["CCC", "CCC"])
 	} else if (type === "lamps") {
 		if (block === "glowstone_lamp") {
@@ -347,19 +327,13 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		} else if (block === "lit_redstone_lamp") {
 			recipe = generateShapelessRecipe([id(mc, "redstone_torch"), id(mc, "redstone_lamp")], id(modID, block), 1)
 		} else {
-			base = `${base}_dye`
-			altNamespace = getDyeNamespace(base)
 			recipe = createDyeRecipe(block, altNamespace, "glowstone_lamp", base, namespace)
 		}
 
 	} else if (type === "lamp") {
-		base = `${base}_dye`
-		altNamespace = getDyeNamespace(base)
 		recipe = createDyeRecipe(block, altNamespace, "glowstone_lamp", base, namespace)
 	} else if (type === "bricks") {
-		base = `${base}_dye`
-		altNamespace = getDyeNamespace(base)
-		recipe = generateShapedRecipe({ "D": id(altNamespace, base), "C": `minecraft:bricks` }, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
+		recipe = generateShapedRecipe({ "D": "#"+ id("c", "dyes/"+ base), "C": `minecraft:bricks` }, `pyrite:${block}`, 8, ["CCC", "CDC", "CCC"])
 	} else if (block === "charred_nether_bricks") {
 		recipe = generateSmeltingRecipe(block, "minecraft:nether_bricks", undefined, 200, 0.1)
 	} else if (type === "blue_nether_bricks") {
@@ -505,6 +479,7 @@ module.exports = {
 	generateSmeltingRecipe: generateSmeltingRecipe,
     generateShapelessRecipe: generateShapelessRecipe,
 	generateModLoadCondition: generateModLoadCondition,
-	generateDyeRecipe: generateDyeRecipe
+	generateDyeRecipe: generateDyeRecipe,
+	generateCuttingRecipe: generateCuttingRecipe
 
 }

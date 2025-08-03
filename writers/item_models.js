@@ -23,7 +23,7 @@ function writeFishItemModels(item) {
 		var scale = 0.2;
 		var scaleModel = [ scale, scale, scale ]
 		while (i <= fish_sizes) {
-			writeProvidedItemModel(`${item}_${i}`, {
+			writeProvidedItemModel(`${item}/${item}_${i}`, {
 				"parent": "minecraft:item/generated",
 				"textures": {
 					"layer0": `bigger_fish:item/${item}`
@@ -77,7 +77,7 @@ function writeFishClientItem(item) {
 				"threshold": i,
 				"model": {
 				"type": "minecraft:model",
-				"model": `${helpers.getNamespace(itemID)}:item/${helpers.getPath(itemID)}_${i}`
+				"model": `${helpers.getNamespace(itemID)}:item/${helpers.getPath(itemID)}/${helpers.getPath(itemID)}_${i}`
 				}
 			})
 		i++;

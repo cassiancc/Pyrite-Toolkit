@@ -88,6 +88,11 @@ function generateLang(block, type, namespace, addon) {
 	}
 	block = helpers.getPath(block)
 	let langBlock = block
+	if (langBlock == undefined) {
+		langBlock = ""
+		block = ""
+		return;
+	}
 	langBlock = langBlock.replaceAll("_", " ")
 	langBlock = langBlock.replaceAll("/", " ")
 	langBlock = langBlock.replace(/\w\S*/g, function (txt) {

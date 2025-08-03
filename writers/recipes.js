@@ -89,6 +89,11 @@ function writeSmokingRecipe(ingredient, result, recipeCategory, cookingTime, exp
 	writeSmeltingRecipe(ingredient, result, "smoking", cookingTime, experience, recipeCategory, fileNameSuffix)
 }
 
+function writeCuttingRecipe(ingredients, result, quantity, action) {
+	helpers.writeFile(`${helpers.recipePath}cutting/${helpers.getPath(result)}_from_${helpers.getPath(ingredients)}.json`, recipeHelper.generateCuttingRecipe(ingredients, result, quantity, action))
+
+}
+
 function writeFoodCookingRecipes(ingredient, result, cookingTime, experience, recipeCategory, fileNameSuffix) {
 	writeSmeltingRecipe(ingredient, result, undefined, cookingTime, experience, recipeCategory, fileNameSuffix)
 	writeCampfireRecipe(ingredient, result, undefined, cookingTime, experience, fileNameSuffix)
@@ -99,7 +104,7 @@ function writeDyeRecipe(ingredient, result, dye, addon) {
 	if (addon === undefined) {
 		addon = ""
 	}
-	const dyeID = id(helpers.getDyeNamespace(dye), dye) + "_dye"
+	const dyeID = id("c", "dyes/"+ dye)
 	let recipe =  recipeHelper.generateDyeRecipe(result, ingredient, dyeID)
 
 	if ((recipe !== "")) {
@@ -110,7 +115,7 @@ function writeDyeRecipe(ingredient, result, dye, addon) {
 	}
 }
 
-function writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonAfter) {
+function writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonAfter, customLoadedChecks) {
 	if (block === ingredient) {
 		return
 	}
@@ -124,7 +129,7 @@ function writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonA
 	else {
 		path = block.split(":")[1]
 	}
-	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity, "stonecutting")
+	const recipe = recipeHelper.generateStonecutterRecipe(block, ingredient, quantity, "stonecutting", customLoadedChecks)
 	const fullPath = `${addonBefore}${path}_stonecutting${addonAfter}`
 	writeRecipeAdvancement(id(fullPath), ingredient)
 	if (recipe !== undefined) {
@@ -132,14 +137,14 @@ function writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonA
 	}
 }
 
-function writeStonecutterRecipes(blocks, ingredient, quantity, addonBefore, addonAfter) {
+function writeStonecutterRecipes(blocks, ingredient, quantity, addonBefore, addonAfter, customLoadedChecks) {
 	if (blocks instanceof Array) {
 		blocks.forEach(block => {
-			writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonAfter)
+			writeStonecutterRecipe(block, ingredient, quantity, addonBefore, addonAfter, customLoadedChecks)
 		});
 	}
 	else {
-		writeStonecutterRecipe(blocks, ingredient, quantity, addonBefore, addonAfter)
+		writeStonecutterRecipe(blocks, ingredient, quantity, addonBefore, addonAfter, customLoadedChecks)
 	}
 }
 
@@ -161,5 +166,6 @@ module.exports = {
     writeStonecutterRecipe: writeStonecutterRecipe, 
 	writeStonecutterRecipes: writeStonecutterRecipes,
 	writeDyeRecipe: writeDyeRecipe,
-	writeShortcutRecipes: writeShortcutRecipes
+	writeShortcutRecipes: writeShortcutRecipes,
+	writeCuttingRecipe: writeCuttingRecipe
 }

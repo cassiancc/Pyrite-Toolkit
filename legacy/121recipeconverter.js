@@ -1,7 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-const dir = `/home/deck/Documents/GitHub/Cultural-Delights-Refabricated/src/main/resources/data/culturalrecipes/recipe/`
+const dir = `C:/Users/cassi/Documents/Minecraft/Mods/Cultural-Delights-1.21/src/main/resources/data/culturalrecipes/recipe/`
 
 
 fs.readdir(dir, (err, files) => {

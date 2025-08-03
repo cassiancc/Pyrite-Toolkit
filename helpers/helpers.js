@@ -11,7 +11,7 @@ function readConfigFile() {
     let returnedConfig;
     let localConfig = readFileAsJson(configPath)
     if (localConfig instanceof Array) {
-        localConfig.forEach(function(configOption) {
+        localConfig.forEach(function (configOption) {
             if (arg == configOption.modID) {
                 returnedConfig = configOption
             }
@@ -48,7 +48,7 @@ function commonPath(projectType) {
 function getProjectPath() {
     const projectType = config.projectType
     if (projectType != "datapack") {
-        return rootFolder+`${commonPath(projectType)}/src/main/resources/`
+        return rootFolder + `${commonPath(projectType)}/src/main/resources/`
 
     }
     else {
@@ -69,7 +69,7 @@ function neoPath() {
 function getVersion() {
     if (config.version == null) {
         try {
-            let gradleProperties = readFile(rootFolder+"gradle.properties")
+            let gradleProperties = readFile(rootFolder + "gradle.properties")
             gradleProperties = gradleProperties.split("minecraft_version")[1]
             gradleProperties = gradleProperties.split("\n")[0]
             gradleProperties = gradleProperties.replace("=", "").trim()
@@ -80,7 +80,7 @@ function getVersion() {
         }
     }
     else return config.version
-    
+
 }
 
 const s = getTrialPlural()
@@ -145,15 +145,15 @@ function readFileAsJson(path) {
 }
 
 function writeFile(path, data, minify) {
-	if (data instanceof Object) {
+    if (data instanceof Object) {
         if (minify !== false) {
             data = JSON.stringify(data)
         }
         else {
             data = JSON.stringify(data, null, " ")
         }
-	}
-	else {
+    }
+    else {
         if (minify !== false) {
             try {
                 data = JSON.parse(data)
@@ -161,36 +161,36 @@ function writeFile(path, data, minify) {
             }
             catch { }
         }
-	}
-	if (config.disableWriting === false) {
+    }
+    if (config.disableWriting !== true) {
         if (!path.includes("undefined") && data !== "" && data !== undefined) {
             fs.writeFileSync(path, data, function (err) { if (err) throw err; })
         }
         else {
             // console.log("Preventing write of " + path)
         }
-	}
+    }
 }
 
 function writeFileSafe(path, data) {
-	if (!fs.existsSync(path)) {
-		writeFile(path, data)
-	}
+    if (!fs.existsSync(path)) {
+        writeFile(path, data)
+    }
 }
 
 function getDyeNamespace(dye) {
-	if (dye.includes(":")) {
-		return dye.split(":")[0]
-	}
-	if (dye.includes("terracotta")) {
-		dye = dye.replace("terracotta", "")
-	}
-	else if (dye.includes("_dye")) {
-		dye = dye.replace("_dye", "")
-	}
+    if (dye.includes(":")) {
+        return dye.split(":")[0]
+    }
+    if (dye.includes("terracotta")) {
+        dye = dye.replace("terracotta", "")
+    }
+    else if (dye.includes("_dye")) {
+        dye = dye.replace("_dye", "")
+    }
     else if (dye.includes("_framed_glass")) {
-		dye = dye.replace("_framed_glass", "")
-	}
+        dye = dye.replace("_framed_glass", "")
+    }
     if (vanillaDyes.includes(dye)) {
         return mc
     }
@@ -200,44 +200,44 @@ function getDyeNamespace(dye) {
 }
 
 function getDyeIngredient(dye) {
-	switch (dye) {
-		case "glow_dye":
-			return "minecraft:glow_ink_sac"
-		case "dragon_dye":
-			return "minecraft:dragon_breath"
-		case "star_dye":
-			return "minecraft:nether_star"
-		case "honey_dye":
-			return "minecraft:honeycomb"
-		case "rose_dye":
-			return ["minecraft:red_dye", "minecraft:pink_dye"]
-		case "nostalgia_dye":
-			return "minecraft:apple"
-		case "poisonous_dye":
-			return "minecraft:poisonous_potato"
-	}
+    switch (dye) {
+        case "glow_dye":
+            return "minecraft:glow_ink_sac"
+        case "dragon_dye":
+            return "minecraft:dragon_breath"
+        case "star_dye":
+            return "minecraft:nether_star"
+        case "honey_dye":
+            return "minecraft:honeycomb"
+        case "rose_dye":
+            return ["minecraft:red_dye", "minecraft:pink_dye"]
+        case "nostalgia_dye":
+            return "minecraft:apple"
+        case "poisonous_dye":
+            return "minecraft:poisonous_potato"
+    }
 }
 
 function versionAbove(version) {
-	const localMajor = parseInt(version.split(".")[1])
-	const localMinor = parseInt(version.split(".")[2])
+    const localMajor = parseInt(version.split(".")[1])
+    const localMinor = parseInt(version.split(".")[2])
 
-	if ((localMajor < majorVersion)) {
-		return true;
+    if ((localMajor < majorVersion)) {
+        return true;
     } else if ((majorVersion === localMajor) && (minorVersion >= localMinor)) {
-		return true;
-	} else {
-		return false;
-	}
+        return true;
+    } else {
+        return false;
+    }
 
 }
 
 function populateTemplates() {
-	const templatePath = `./overrides/${modID}/models/templates/`
-	const templates = fs.readdirSync(templatePath)
-	templates.forEach(function(template) {
-		writeFileSafe(`${paths.models}${template}`, readFile(templatePath + template))
-	})
+    const templatePath = `./overrides/${modID}/models/templates/`
+    const templates = fs.readdirSync(templatePath)
+    templates.forEach(function (template) {
+        writeFileSafe(`${paths.models}${template}`, readFile(templatePath + template))
+    })
 }
 
 function generateNeoWaxables(waxedBlocks) {
@@ -254,11 +254,11 @@ function generateNeoWaxables(waxedBlocks) {
             template = file
         }
     }
-    
-    waxedBlocks.forEach(function(waxedBlock) {
-        waxedBlock = "pyrite:"+waxedBlock
+
+    waxedBlocks.forEach(function (waxedBlock) {
+        waxedBlock = modID + ":" + waxedBlock
         var base = waxedBlock.replace("waxed_", "")
-        template.values[base] = {waxed: waxedBlock}
+        template.values[base] = { waxed: waxedBlock }
     })
 
     writeFile(path, template)
@@ -278,27 +278,89 @@ function generateNeoOxidizables(waxedBlocks, stage) {
             template = file
         }
     }
-    
-    waxedBlocks.forEach(function(waxedBlock) {
-        let base = "pyrite:"+waxedBlock.replace("waxed_", "")
+
+    waxedBlocks.forEach(function (waxedBlock) {
+        let base = modID + ":" + waxedBlock.replace("waxed_", "")
         let nextStage;
-        if (stage == "copper") {
-            nextStage = base.replace("copper", "exposed_copper")
+        if (stage == undefined) {
+            if (base.includes("oxidized")) {
+                return;
+            }
+            else if (base.includes("weathered")) {
+                nextStage = base.replace("weathered", "oxidized")
+            }
+            else if (base.includes("exposed")) {
+                nextStage = base.replace("exposed", "weathered")
+            }
+            else {
+                nextStage = base.replace("cut_", "cut_exposed_")
+            }
+        } else {
+            if (base.includes("oxidized")) {
+                nextStage = base.replace("copper", "exposed_copper")
+            }
+            else if (stage == "exposed_copper") {
+                nextStage = base.replace("exposed_copper", "weathered_copper")
+            }
+            else if (stage == "weathered_copper") {
+                nextStage = base.replace("weathered_copper", "oxidized_copper")
+            }
+            else {
+                return;
+            }
         }
-        else if (stage == "exposed_copper") {
-            nextStage = base.replace("exposed_copper", "weathered_copper")
-        }
-        else if (stage == "weathered_copper") {
-            nextStage = base.replace("weathered_copper", "oxidized_copper")
-        }
-        else {
-            return;
-        }
-        template.values[base] = {next_oxidation_stage: nextStage}
+
+        template.values[base] = { next_oxidation_stage: nextStage }
     })
 
-    writeFile(path, template)
+    // writeFile(path, template)
 }
+
+function generateModLoadCondition(mod) {
+        mod = mod.replace("#", "")
+        if ((mod != "minecraft") && (mod != "c") && (mod != "forge") && (mod != modID)) {
+            let loadCondition;
+            if (majorVersion > 20) {
+                loadCondition = {
+                    "fabric:load_conditions": [
+                        {
+                            "condition": "fabric:all_mods_loaded",
+                            "values": [
+                                mod
+                            ]
+                        }
+                    ],
+                    "neoforge:conditions": [
+                        {
+                        "type": "neoforge:mod_loaded",
+                        "modid": mod
+                        }
+                    ]
+                }
+            }
+            else {
+                loadCondition = {
+                    "fabric:load_conditions": [
+                        {
+                            "condition": "fabric:all_mods_loaded",
+                            "values": [
+                                mod
+                            ]
+                        }
+                    ],
+                    "forge:conditional": [
+                        {
+                        "type": "forge:mod_loaded",
+                        "modid": mod
+                        }
+                    ]
+                }
+            }
+            return loadCondition;
+            
+        }
+            
+    }
 
 module.exports = {
     modID: modID,
@@ -327,7 +389,7 @@ module.exports = {
     vanillaDyes: vanillaDyes,
     config: config,
 
-    
+
     readFile: readFile,
     writeFile, writeFile,
     writeFileSafe, writeFileSafe,
@@ -335,13 +397,13 @@ module.exports = {
     readFileAsJson: readFileAsJson,
 
     getPath: function getPath(namespacedString) {
-        if (namespacedString.includes(":")) {
+        if (namespacedString != undefined && namespacedString.includes(":")) {
             return namespacedString.split(":")[1]
         } else {
             return namespacedString;
         }
     },
-    
+
     getNamespace: function getNamespace(namespacedString) {
         if (namespacedString.includes(":")) {
             return namespacedString.split(":")[0]
@@ -362,5 +424,6 @@ module.exports = {
     generateNeoOxidizables: generateNeoOxidizables,
     columnsEnabled: columnsEnabled,
     getTrialPlural: getTrialPlural,
-    getRecipePath: getRecipePath
+    getRecipePath: getRecipePath,
+    generateModLoadCondition: generateModLoadCondition
 }

@@ -627,6 +627,44 @@ module.exports = {
             }
           }
     },
+    genCabinet: function generateCabinetBlockState(block) {
+        const namespace = helpers.getNamespace(block)
+        const path = helpers.getPath(block)
+        return {
+  "variants": {
+    "facing=east,open=false": {
+      "model": `${namespace}:block/${path}`,
+      "y": 90
+    },
+    "facing=east,open=true": {
+      "model": `${namespace}:block/${path}_open`,
+      "y": 90
+    },
+    "facing=north,open=false": {
+      "model": `${namespace}:block/${path}`,
+    },
+    "facing=north,open=true": {
+      "model": `${namespace}:block/${path}_open`,
+    },
+    "facing=south,open=false": {
+      "model": `${namespace}:block/${path}`,
+      "y": 180
+    },
+    "facing=south,open=true": {
+      "model": `${namespace}:block/${path}_open`,
+      "y": 180
+    },
+    "facing=west,open=false": {
+      "model": `${namespace}:block/${path}`,
+      "y": 270
+    },
+    "facing=west,open=true": {
+      "model": `${namespace}:block/${path}_open`,
+      "y": 270
+    }
+  }
+}
+    },
     gen: function generateBasicBlockstate(block, namespace, altNamespace) {
         if (altNamespace == undefined) {
             altNamespace = namespace

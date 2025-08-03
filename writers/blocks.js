@@ -127,7 +127,7 @@ function writeTrapdoors(block, namespace, baseBlock) {
 	recipeWriter.writeRecipes(block, "trapdoor", baseBlock)
 }
 
-function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements, customModel, shatters) {
+function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldGenerateStonecutterRecipes, shouldGenerateRecipeAdvancements, customModel, shatters, defaultRecipe) {
 	// Setup
 	let namespace, block;
 	if (blockID.includes(":")) {
@@ -151,16 +151,21 @@ function writeBlock(blockID, blockType, baseBlock, render_type, texture, shouldG
 	tagHelper.checkAndAddBlockTypeTag(block, baseBlock, blockType)
 
 	// Generate recipes
-	recipeWriter.writeRecipes(block, blockType, baseBlock, namespace)
-	if (shouldGenerateStonecutterRecipes === true) {
-		recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
-	}
-	if (shouldGenerateRecipeAdvancements !== undefined) {
-		if (shouldGenerateRecipeAdvancements === true)
-			writeRecipeAdvancement(block, baseBlock)
-		else if (shouldGenerateRecipeAdvancements === false) { }
-		else {
-			writeRecipeAdvancement(block, shouldGenerateRecipeAdvancements)
+	if (customModel !== false) {
+		recipeWriter.writeRecipes(block, blockType, baseBlock, namespace)
+		if (shouldGenerateStonecutterRecipes === true) {
+			recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
+		}
+		else if (!isNaN(parseFloat(shouldGenerateStonecutterRecipes)) && !isNaN(shouldGenerateStonecutterRecipes-0)) {
+			recipeWriter.writeStonecutterRecipe(block, baseBlock, shouldGenerateStonecutterRecipes)
+		}
+		if (shouldGenerateRecipeAdvancements !== undefined) {
+			if (shouldGenerateRecipeAdvancements === true)
+				writeRecipeAdvancement(block, baseBlock)
+			else if (shouldGenerateRecipeAdvancements === false) { }
+			else {
+				writeRecipeAdvancement(block, shouldGenerateRecipeAdvancements)
+			}
 		}
 	}
 	lootTableWriter.writeLootTables(block)
@@ -204,11 +209,11 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 		baseBlock += "_torch"
 	}
 	baseBlock = getPath(baseBlock)
-
 	const blockState = `{"variants":{"face=ceiling,facing=east,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180,"y":270},"face=ceiling,facing=east,powered=true":{"model":"${namespace}:block/${block}","x":180,"y":270},"face=ceiling,facing=north,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180,"y":180},"face=ceiling,facing=north,powered=true":{"model":"${namespace}:block/${block}","x":180,"y":180},"face=ceiling,facing=south,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180},"face=ceiling,facing=south,powered=true":{"model":"${namespace}:block/${block}","x":180},"face=ceiling,facing=west,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","x":180,"y":90},"face=ceiling,facing=west,powered=true":{"model":"${namespace}:block/${block}","x":180,"y":90},"face=floor,facing=east,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","y":90},"face=floor,facing=east,powered=true":{"model":"${namespace}:block/${block}","y":90},"face=floor,facing=north,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright"},"face=floor,facing=north,powered=true":{"model":"${namespace}:block/${block}"},"face=floor,facing=south,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","y":180},"face=floor,facing=south,powered=true":{"model":"${namespace}:block/${block}","y":180},"face=floor,facing=west,powered=false":{"model":"${namespace}:block/${uprightBlock}_upright","y":270},"face=floor,facing=west,powered=true":{"model":"${namespace}:block/${block}","y":270},"face=wall,facing=east,powered=false":{"model":"${namespace}:block/${block}_wall"},"face=wall,facing=east,powered=true":{"model":"${namespace}:block/${block}","x":90,"y":90},"face=wall,facing=north,powered=false":{"model":"${namespace}:block/${block}_wall","y":270},"face=wall,facing=north,powered=true":{"model":"${namespace}:block/${block}","x":90},"face=wall,facing=south,powered=false":{"model":"${namespace}:block/${block}_wall","y":90},"face=wall,facing=south,powered=true":{"model":"${namespace}:block/${block}","x":90,"y":180},"face=wall,facing=west,powered=false":{"model":"${namespace}:block/${block}_wall","y":180},"face=wall,facing=west,powered=true":{"model":"${namespace}:block/${block}","x":90,"y":270}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
 	modelWriter.writeLevers(block, namespace, baseBlock, altNamespace)
-	itemModelWriter.writeUniqueBlockItemModel(block, namespace, altNamespace, baseBlock)
+	// modelWriter.writeTorches(block, namespace, block, altNamespace)
+	itemModelWriter.writeUniqueBlockItemModel(block, namespace, namespace,block)
 	lootTableWriter.writeLootTables(block, namespace)
 	recipeWriter.writeRecipes(block, "torch_lever", baseBlock, namespace, altNamespace)
 	writeRecipeAdvancement(id(namespace, block), id(altNamespace, baseBlock))
@@ -280,22 +285,22 @@ function writeChestBlock(block, namespace, baseBlock, altNamespace) {
 	modelWriter.writeChests(block, namespace, baseBlock, altNamespace)
 	itemModelWriter.writeBlockItemModel(block, namespace, altNamespace)
 	lang = langHelper.generateBlockLang(block)
-	langHelper.addLang("container.lolmcv."+modID+"_"+block, lang)
-	langHelper.addLang("container.lolmcv."+modID+"_"+block+"Double", "Large "+ lang)
+	langHelper.addLang("container.lolmcv." + modID + "_" + block, lang)
+	langHelper.addLang("container.lolmcv." + modID + "_" + block + "Double", "Large " + lang)
 
 
 	tagHelper.tagBoth(block, "chests", true)
 	tagHelper.checkAndAddStainedTag(block, baseBlock, true)
 	recipeWriter.writeShapedRecipe({
 		"I": `${altNamespace}:${baseBlock}`,
-	  }, id(block), 1, [
+	}, id(block), 1, [
 		"III",
 		"I I",
 		"III"
-	  ], undefined, true)
+	], undefined, "lolmcv")
 	// recipeWriter.writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
 	// writeRecipeAdvancement(id(block), id(altNamespace, baseBlock))
-	lootTableWriter.writeLootTables(block, namespace, undefined, altNamespace)
+	lootTableWriter.writeLootTables(block, namespace, undefined, "lolmcv")
 }
 
 function writeLadders(block, namespace, baseBlock, altNamespace) {
@@ -311,19 +316,6 @@ function writeLadders(block, namespace, baseBlock, altNamespace) {
 	recipeWriter.writeRecipes(block, "ladder", baseBlock, namespace, altNamespace)
 	writeRecipeAdvancement(block, id(altNamespace, baseBlock))
 	lootTableWriter.writeLootTables(block)
-}
-
-function writeChests(block, dye, namespace, baseBlock, altNamespace) {
-	if (altNamespace === undefined) {
-		altNamespace = namespace
-	}
-	block += "_chest"
-	const blockState = stateHelper.gen(block, namespace)
-	blockstateHelper.writeBlockstate(block, blockState, namespace)
-	modelWriter.writeBlockModel(block, namespace, baseBlock)
-	itemModelWriter.writeUniqueBlockItemModel(block, namespace)
-	lootTableWriter.writeLootTables(block, namespace)
-	recipeWriter.writeRecipes(block, "chest", baseBlock, namespace, altNamespace)
 }
 
 function writeFlower(block) {
@@ -346,10 +338,11 @@ function writeFlower(block) {
 		})
 	writeRecipeAdvancement(block, id(mc, "poppy"))
 	writeFlowerPot(block)
+	tagHelper.tagItem(block, "enabled", true)
 }
 
 function writeFlowerPot(baseBlock) {
-	const block = "potted_"+baseBlock
+	const block = "potted_" + baseBlock
 	const blockState = stateHelper.gen(block, modID)
 	blockstateHelper.writeBlockstate(block, blockState, modID)
 	const model = modelHelper.generateBlockModel(block, modID, baseBlock, "minecraft:block/flower_pot_cross", "cutout", "plant")
@@ -359,7 +352,7 @@ function writeFlowerPot(baseBlock) {
 	lootTableWriter.writeFlowerPotLootTables(block, id(baseBlock))
 }
 
-function writeChiseledBlock(block, baseBlock, special, texture) {
+function writeChiseledBlock(block, baseBlock, special, texture, defaultRecipe) {
 	let namespace;
 	if (block.includes(":"))
 		namespace = helpers.getNamespace(block)
@@ -377,12 +370,15 @@ function writeChiseledBlock(block, baseBlock, special, texture) {
 	const blockType = getPath(baseBlock).split("_block")[0]
 	tagHelper.tagBoth(block, blockType)
 	tagHelper.checkAndAddBeaconTag(block, blockType)
-	recipeWriter.writeStonecutterRecipe(block, baseBlock, 1)
 	if (baseBlock == "minecraft:copper") {
 		baseBlock += "_block"
 	}
-	writeRecipeAdvancement(block, baseBlock)
-	recipeWriter.writeRecipes(block, special, baseBlock)
+	if (defaultRecipe !== false) {
+		recipeWriter.writeStonecutterRecipe(block, baseBlock, 4)
+		writeRecipeAdvancement(block, baseBlock)
+		recipeWriter.writeRecipes(block, special, baseBlock)
+	}
+
 	return block;
 }
 
@@ -407,6 +403,40 @@ function writeOrientableBlock(block, namespace, blockType, baseBlock) {
 	recipeWriter.writeRecipes(block, blockType, baseBlock)
 }
 
+function writeCabinetBlock(block, namespace, blockType, baseBlock) {
+	var path = helpers.getPath(block)
+	blockstateHelper.writeBlockstate(block, stateHelper.genCabinet(id(modID, block)), namespace)
+	modelWriter.writeProvided(block, {
+		"parent": "minecraft:block/orientable",
+		"textures": {
+			"top": `${namespace}:block/${path}_top`,
+			"front": `${namespace}:block/${path}_front`,
+			"side": `${namespace}:block/${path}_side`
+		}
+	})
+	modelWriter.writeProvided(block + "_open", {
+		"parent": "minecraft:block/orientable",
+		"textures": {
+			"top": `${namespace}:block/${path}_top`,
+			"front": `${namespace}:block/${path}_front_open`,
+			"side": `${namespace}:block/${path}_side`
+		}
+	})
+	itemModelWriter.writeBlockItemModel(block, namespace)
+	langHelper.generateBlockLang(block)
+	lootTableWriter.writeLootTables(block, namespace, undefined, undefined, "farmersdelight")
+	tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
+	tagHelper.tagItem(block, "farmersdelight:cabinets", true)
+	recipeWriter.writeShapedRecipe({
+		"D": id(namespace, baseBlock).replace("planks", "trapdoor"),
+		"_": id(namespace, baseBlock).replace("planks", "slab")
+		  }, id(namespace, block), 1, [
+			"___",
+			"D D",
+			"___"
+		  ], undefined, "farmersdelight")
+}
+
 function writeStoveBlock(block, namespace, blockType, baseBlock) {
 	// blockstateHelper.writeBlockstate(block, stateHelper.genOrientable(id(modID, block)), namespace)
 	// modelWriter.writeProvided(block, modelHelper.genOrientable(id(modID, block)))
@@ -414,14 +444,14 @@ function writeStoveBlock(block, namespace, blockType, baseBlock) {
 	langHelper.generateBlockLang(block)
 	lootTableWriter.writeLootTables(block, namespace)
 	recipeWriter.writeShapedRecipe({
-			"I": "minecraft:iron_ingot",
-			"C": "minecraft:campfire",
-			"#": baseBlock,
-		  }, id(block), 1, [
-			"III",
-			"# #",
-			"#C#"
-		  ], undefined, true)
+		"I": "minecraft:iron_ingot",
+		"C": "minecraft:campfire",
+		"#": baseBlock,
+	}, id(block), 1, [
+		"III",
+		"# #",
+		"#C#"
+	], undefined, true)
 	tagHelper.tagBlock(block, "farmersdelight:heat_sources", true)
 	tagHelper.tagBlock(block, "minecraft:mineable/pickaxe", true)
 	tagHelper.tagBlock(block, "create:passive_boiler_heaters", true)
@@ -536,7 +566,7 @@ function writeLogs(block, namespace, baseBlock) {
 	return block;
 }
 
-function writeWalls(block, baseBlockID, texture) {
+function writeWalls(block, baseBlockID, texture, defaultRecipe) {
 	if (texture == undefined)
 		texture = baseBlockID
 	wallBlockState = stateHelper.genWalls(block, modID)
@@ -552,13 +582,16 @@ function writeWalls(block, baseBlockID, texture) {
 	} else {
 		tagHelper.checkAndAddResourceTag(block, baseBlockID)
 	}
-	writeRecipeAdvancement(block, baseBlockID)
-	recipeWriter.writeShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC", "CCC"])
-	recipeWriter.writeStonecutterRecipe(id(block), baseBlockID, 1)
+	if (defaultRecipe !== false) {
+		writeRecipeAdvancement(block, baseBlockID)
+		recipeWriter.writeShapedRecipe({ "C": `${baseBlockID}` }, id(modID, block), 6, ["CCC", "CCC"])
+		recipeWriter.writeStonecutterRecipe(id(block), baseBlockID, 1)
+	}
+
 	return block;
 }
 
-function writeColumns(block, baseBlockID, texture) {
+function writeColumns(block, baseBlockID, texture, defaultRecipe) {
 	if (helpers.columnsEnabled) {
 		if (texture == undefined)
 			texture = baseBlockID
@@ -566,23 +599,26 @@ function writeColumns(block, baseBlockID, texture) {
 		// 	console.log(texture)
 		// }
 		blockstateHelper.writeBlockstate(block, stateHelper.genColumn(id(block)), modID)
-		modelWriter.writeProvided(block +"_center", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_center", undefined, "all"))
-		modelWriter.writeProvided(block+"_end", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_end", undefined, "all"))
-		modelWriter.writeProvided(block+"_inventory", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_inventory", undefined, "all"))
-	
+		modelWriter.writeProvided(block + "_center", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_center", undefined, "all"))
+		modelWriter.writeProvided(block + "_end", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_end", undefined, "all"))
+		modelWriter.writeProvided(block + "_inventory", modelHelper.generateBlockModel(block, modID, texture, "columns:block/column_inventory", undefined, "all"))
+
 		itemModelWriter.writeInventoryModel(block, modID)
-		lootTableWriter.writeLootTables(block)
+		lootTableWriter.writeLootTables(block, undefined, undefined, "columns")
 		langHelper.generateBlockLang(block)
-	
+
 		tagHelper.tagBoth(block, "columns:columns", true)
 		if (baseBlockID.includes("bricks")) {
 			tagHelper.tagBoth(block, "brick_columns", true)
 		} else {
 			tagHelper.checkAndAddResourceTag(block, baseBlockID, true)
 		}
-		writeRecipeAdvancement(block, baseBlockID)
-		recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"], undefined, "columns")
-		recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1)
+		if (defaultRecipe !== false) {
+			writeRecipeAdvancement(block, baseBlockID)
+			recipeWriter.writeShapedRecipe({ "#": `${baseBlockID}` }, id(modID, block), 6, ["###", " # ", "###"], undefined, "columns")
+			recipeWriter.writeStonecutterRecipes(id(block), baseBlockID, 1, undefined, undefined, "columns")
+		}
+		tagHelper.tagItem(block, "enabled", true)
 	}
 }
 
@@ -776,6 +812,7 @@ function writeTerracotta(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `terracotta`)
 	writeRecipeAdvancement(block, id(dye + "_dye"))
+	tagHelper.tagItem(block, "enabled", true)
 	return writeBlock(id(namespace, block), "terracotta", dye)
 }
 
@@ -784,6 +821,7 @@ function writeConcrete(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	tagHelper.tagBoth(block, `c:concrete`)
 	tagHelper.tagBlock(block, `minecraft:mineable/pickaxe`)
+	tagHelper.tagItem(block, "enabled", true)
 	return writeBlock(id(namespace, block), "concrete", dye)
 }
 
@@ -793,17 +831,20 @@ function writeConcretePowder(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:concrete_powder`)
 	tagHelper.tagBlock(block, `minecraft:mineable/shovel`)
 	writeRecipeAdvancement(block, id(dye + "_dye"))
+	tagHelper.tagItem(block, "enabled", true)
 	return writeBlock(id(namespace, block), "concrete_powder", dye, undefined, block)
 }
 
 function writeLamps(block, type, texture) {
 	writeRecipeAdvancement(id(block), id(mc, "redstone_lamp"))
+	tagHelper.tagItem(block, "enabled", true)
 	return writeBlock(block, "lamps", type, undefined, texture, false)
 }
 
 function writeWool(block, dye, namespace) {
 	tagHelper.tagBoth(block, `c:dyed/${dye}`)
 	writeRecipeAdvancement(id(block), id(dye + "_dye"))
+	tagHelper.tagItem(block, "enabled", true)
 	return writeBlock(id(namespace, block), "wool", dye, undefined, undefined, undefined, false)
 }
 
@@ -856,6 +897,7 @@ module.exports = {
 	writeLogs: writeLogs,
 	writeUprightColumnBlock: writeUprightColumnBlock,
 	writeOrientableBlock: writeOrientableBlock,
+	writeCabinetBlock: writeCabinetBlock,
 	writeChiseledBlock: writeChiseledBlock,
 	writeFlower: writeFlower,
 	writePoweredBlock: writePoweredBlock,

@@ -1,7 +1,7 @@
 [
     {
         "modID": "pyrite",
-        "modPath": "/home/deck/Documents/GitHub/Pyrite/",
+        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Pyrite/Pyrite 1.21/",
         "projectType": "architectury",
         "disableWriting": false
     },
@@ -13,24 +13,23 @@
         "disableWriting": false
     },
     {
-        "modID": "holiday-server-mod",
-        "modPath": "/home/cassian/Desktop/Minecraft/Modpacks/holiday-server-pack/mod",
-        "projectType": "fabric",
-        "disableWriting": false,
-        "version": "1.21.4"
-    },
-    {
         "modID": "bigger_fish",
         "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Always-a-Bigger-Fish/",
         "projectType": "architectury",
-        "disableWriting": false,
-        "version": "1.21.5"
+        "disableWriting": false
     },
     {
         "modID": "lemonade",
-        "modPath": "/home/deck/Documents/GitHub/Lemonade/fabric/src/main/resources/resourcepacks/lemon_sorbet/",
-        "projectType": "datapack",
+        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Lemonade-1.21.5",
+        "projectType": "mod",
         "disableWriting": false,
-        "version": "1.21.1"
+        "version": "1.21.5"
+    },
+      {
+        "modID": "cookscollection",
+        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Cooks-Collection-1.21",
+        "projectType": "fabric",
+        "disableWriting": false,
+        "version": "1.21.5"
     }
 ]
