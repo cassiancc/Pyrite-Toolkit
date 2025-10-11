@@ -1,7 +1,7 @@
 [
     {
         "modID": "pyrite",
-        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Pyrite/Pyrite 1.21/",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite 1.21.1/",
         "projectType": "architectury",
         "disableWriting": false
     },
@@ -14,8 +14,9 @@
     },
     {
         "modID": "bigger_fish",
-        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Always-a-Bigger-Fish/",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/",
         "projectType": "architectury",
+        "version": "1.21.5",
         "disableWriting": false
     },
     {
@@ -26,10 +27,10 @@
         "version": "1.21.5"
     },
       {
-        "modID": "cookscollection",
-        "modPath": "C:/Users/cassi/Documents/Minecraft/Mods/Cooks-Collection-1.21",
+        "modID": "alloyed",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Create-Alloyed",
         "projectType": "fabric",
         "disableWriting": false,
-        "version": "1.21.5"
+        "version": "1.21.8"
     }
 ]

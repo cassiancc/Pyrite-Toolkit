@@ -220,15 +220,19 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 	lootTableWriter.writeLootTables(block)
 }
 
-function writeTorchBlock(block, namespace, baseBlock, altNamespace) {
+function writeTorchBlock(block, namespace, baseBlock, altNamespace, generateRecipes) {
+	console.log(generateRecipes)
 	const blockState = `{"variants":{"face=ceiling,facing=east":{"model":"${namespace}:block/${block}_upright","x":180,"y":270},"face=ceiling,facing=north":{"model":"${namespace}:block/${block}_upright","x":180,"y":180},"face=ceiling,facing=south":{"model":"${namespace}:block/${block}_upright","x":180},"face=ceiling,facing=west":{"model":"${namespace}:block/${block}_upright","x":180,"y":90},"face=floor,facing=east":{"model":"${namespace}:block/${block}_upright","y":90},"face=floor,facing=north":{"model":"${namespace}:block/${block}_upright"},"face=floor,facing=south":{"model":"${namespace}:block/${block}_upright","y":180},"face=floor,facing=west":{"model":"${namespace}:block/${block}_upright","y":270},"face=wall,facing=east":{"model":"${namespace}:block/${block}_wall"},"face=wall,facing=north":{"model":"${namespace}:block/${block}_wall","y":270},"face=wall,facing=south":{"model":"${namespace}:block/${block}_wall","y":90},"face=wall,facing=west":{"model":"${namespace}:block/${block}_wall","y":180}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
 	modelWriter.writeTorches(block, namespace, block, altNamespace)
 	itemModelWriter.writeUniqueBlockItemModel(block, namespace, namespace, block)
 	lootTableWriter.writeLootTables(block, namespace)
-	tagHelper.tagBoth(block, `c:dyed/${baseBlock}`)
-	recipeWriter.writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
-	writeRecipeAdvancement(id(block), "minecraft:torch")
+	tagHelper.tagBoth(block, `c:dyed/${baseBlock}`, true)
+	if (generateRecipes === true || generateRecipes === undefined) {
+		console.log("Generating torch recipe for " + block + generateRecipes)
+		recipeWriter.writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
+		writeRecipeAdvancement(id(block), "minecraft:torch")
+	}
 	lootTableWriter.writeLootTables(block)
 }
 

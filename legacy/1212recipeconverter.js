@@ -1,7 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-const dir = `C:/Users/cassi/Documents/Minecraft/Mods/Cooks-Collection-1.21/src/main/resources/data/farmersdelight/recipe/cooking`
+const dir = `/home/cassian/Documents/Minecraft/Mods/Create-Alloyed/src/generated/resources/data/alloyed/recipe/stonecutting/`
 
 function loop() {
     fs.readdir(dir, (err, files) => {

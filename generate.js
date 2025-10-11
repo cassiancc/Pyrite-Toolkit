@@ -9,6 +9,7 @@ const vanillaConstants = require('./helpers/constants');
 const fs = require('fs');
 
 const advancements = require('./writers/advancements');
+const blocks = require('./writers/blocks');
 
 
 // Shorthand for helper functions. These will likely be removed later as the code is fully modularized.
@@ -340,7 +341,8 @@ function generatePyriteResources() {
 		new Block(dye + "_lamp", "lamp", dye, "lamp")
 		//Torches
 		new Block(dye + "_torch", "torch", dye, "torch")
-		new Block("unlit_" + dye + "_torch", "torch", dye, "torch")
+		blockWriter.writeTorchBlock("unlit_" + dye + "_torch", modID, dye, "pyrite", false)
+		langHelper.generateLang("unlit_" + dye + "_torch", "block", modID)
 		//Torch Levers
 		new Block(dye + "_torch_lever", "torch_lever", dye, "torch")
 		//Framed Glass
@@ -476,12 +478,14 @@ function generatePyriteResources() {
 		blockWriter.writeChiseledBlock(`waxed_${block}_pillar`, id(mc, block), "resource_pillar", `${block}_pillar`, false)
 		recipeWriter.writeStonecutterRecipes([`waxed_${block}_bricks`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`], id(mc, "waxed_"+ baseBlock), 1, undefined, "from_"+block)
 		recipeWriter.writeStonecutterRecipes([`waxed_${smooth}_slab`], id(mc, "waxed_"+ baseBlock), 2, undefined, "from_"+block)
-		blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID, block+"_bars")
+		// blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID, block+"_bars")
 
 		let waxedBlocks = [
 			`waxed_${cutBlock}_wall`, `waxed_${cutBlock}_wall_gate`, 
 			"waxed_"+smooth, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`,
-			`waxed_${block}_bricks`, `waxed_${block}_pillar`, "waxed_"+block+"_bars", `waxed_${smooth}_column`, `waxed_${cutBlock}_column`
+			`waxed_${block}_bricks`, `waxed_${block}_pillar`,
+			//  "waxed_"+block+"_bars", 
+			 `waxed_${smooth}_column`, `waxed_${cutBlock}_column`
 		]
 		tagHelper.tagItems(waxedBlocks, "enabled", true)
 		waxedBlocks.forEach(function(waxedBlock) {
@@ -555,7 +559,7 @@ function generatePyriteResources() {
 		}
 
 		// Iron Bars already exist
-		if (!block.includes("iron")) {
+		if (!block.includes("iron") && !block.includes("copper")) {
 			blockWriter.writeBars(block, modID, baseCutBlockID)
 			tagHelper.tagItem(block + "_bars", "enabled", true)
 		}
@@ -741,7 +745,7 @@ else if (modID == "bigger_fish") {
 
 	const tier_three_cosmopolitan_freshwater = [
 		"fishery:largemouth_bass",
-		"great_white_shark"
+		"koi"
 	]
 
 	const tier_one_cosmopolitan_saltwater = [
@@ -759,7 +763,7 @@ else if (modID == "bigger_fish") {
 	]
 
 	const tier_three_cosmopolitan_saltwater = [
-
+		"great_white_shark",
 	]
 
 	const tier_one_temperate_freshwater = [
@@ -1037,8 +1041,8 @@ else if (modID == "bigger_fish") {
 		"#bigger_fish:tier_one_temperate_freshwater_fish",
 		"#bigger_fish:tier_one_temperate_saltwater_fish",
 		"#bigger_fish:tier_one_brackish_fish",
-		"bigger_fish:tier_one_cave_fish",
-		"bigger_fish:tier_one_brackish_cave_fish"]
+		"#bigger_fish:tier_one_cave_fish",
+		"#bigger_fish:tier_one_brackish_cave_fish"]
 		, "tier_one_fish")
 	tagHelper.tagItems(
 [		"#bigger_fish:tier_two_cosmopolitan_freshwater_fish", 
@@ -1437,14 +1441,100 @@ end = `,
 }
 
 else if (modID == "alloyed") {
-	const waxedBlocks = ["waxed_cut_bronze", "waxed_cut_bronze_slab", "waxed_cut_bronze_stairs", "waxed_cut_exposed_bronze", "waxed_cut_exposed_bronze_slab", "waxed_cut_exposed_bronze_stairs", "waxed_cut_weathered_bronze", "waxed_cut_weathered_bronze_slab", "waxed_cut_weathered_bronze_stairs", "waxed_cut_oxidized_bronze", "waxed_cut_oxidized_bronze_slab", "waxed_cut_oxidized_bronze_stairs"]
-	waxedBlocks.forEach(function(block) {
-		recipeWriter.writeShapelessRecipe([id(block.replace("waxed_", "")), "minecraft:honeycomb"], id(block), 1)
+	// const waxedBlocks = ["waxed_cut_bronze", "waxed_cut_bronze_slab", "waxed_cut_bronze_stairs", "waxed_cut_exposed_bronze", "waxed_cut_exposed_bronze_slab", "waxed_cut_exposed_bronze_stairs", "waxed_cut_weathered_bronze", "waxed_cut_weathered_bronze_slab", "waxed_cut_weathered_bronze_stairs", "waxed_cut_oxidized_bronze", "waxed_cut_oxidized_bronze_slab", "waxed_cut_oxidized_bronze_stairs"]
+	// waxedBlocks.forEach(function(block) {
+	// 	recipeWriter.writeShapelessRecipe([id(block.replace("waxed_", "")), "minecraft:honeycomb"], id(block), 1)
+	// })
+	const items = [
+		// "steel_ingot",
+		// "steel_block",
+		// "steel_helmet",
+		// "steel_chestplate",
+		// "steel_leggings",
+		// "steel_boots",
+		// "steel_sword",
+		// "steel_shovel",
+		// "steel_pickaxe",
+		// "steel_axe",
+		// "steel_hoe",
+		// "bronze_ingot",
+		// "bronze_block",
+		// "steel_horse_armor",
+		// "steel_nugget",
+		// "bronze_nugget",
+		// "steel_sheet",
+		// "bronze_sheet",
+		// "steel_ladder",
+		// "steel_knife",
+		// "steel_trapdoor",
+		// "steel_bars",
+		// "steel_sheet_slab",
+		// "steel_sheet_stairs",
+		// "steel_sheet_metal",
+		// "locked_steel_door",
+		// "steel_door",
+		// "steel_scaffolding",
+		// "bronze_casing"
+		// "waxed_bronze_block",
+		// "exposed_bronze_block",
+		// "weathered_bronze_block",
+		// "oxidized_bronze_block",
+		// "cut_bronze",
+		// "cut_exposed_bronze",
+		// "cut_weathered_bronze",
+		// "cut_oxidized_bronze",
+		// "waxed_cut_bronze",
+		// "waxed_cut_exposed_bronze",
+		// "waxed_cut_weathered_bronze",
+		// "waxed_cut_oxidized_bronze",
+		// "cut_exposed_bronze_slab",
+		// "cut_exposed_bronze_stairs",
+		// "cut_weathered_bronze_slab",
+		// "cut_weathered_bronze_stairs",
+		// "cut_oxidized_bronze_slab",
+		// "cut_oxidized_bronze_stairs",
+		// "waxed_cut_bronze_slab",
+		// "waxed_cut_bronze_stairs",
+		// "waxed_cut_exposed_bronze_slab",
+		// "waxed_cut_exposed_bronze_stairs",
+		// "waxed_cut_weathered_bronze_slab",
+		// "waxed_cut_weathered_bronze_stairs",
+		// "waxed_cut_oxidized_bronze_slab",
+		// "waxed_cut_oxidized_bronze_stairs",
+		// "bronze_encased_shaft",
+		// "steel_encased_shaft",
+		// "steel_encased_cogwheel",
+		// "bronze_encased_cogwheel",
+		// "steel_encased_large_cogwheel",
+		// "bronze_encased_large_cogwheel",
+		// "steel_mesh_fence",
+		// "steel_upgrade_smithing_template",
+		// "incomplete_steel_upgrade_smithing_template",
+		// "steel_shears",
+		// "steel_fishing_rod",
+		// "waxed_exposed_bronze_block",
+		// "waxed_oxidized_bronze_block",
+		// "cut_bronze_stairs",
+		// "cut_bronze_slab",
+		// "bronze_pillar",
+		// "waxed_bronze_pillar",
+		// "exposed_bronze_pillar",
+		// "waxed_exposed_bronze_pillar",
+		// "weathered_bronze_pillar",
+		// "waxed_weathered_bronze_pillar",
+		// "oxidized_bronze_pillar",
+		// "waxed_oxidized_bronze_pillar",
+		// "bronze_bell",
+		// "steel_casing",
+		"waxed_weathered_bronze_block",
+	]
+	items.forEach(function(item) {
+		writeItem(item)
 	})
 
 }
 else if (modID == "cookscollection") {
-	items = [    "chocolate_muffin", "cooking_oil", "fish_and_chips", "fruiting_lemon_leaves", "lemon", "lemon_crate", "lemon_leaves",
+	const items = [    "chocolate_muffin", "cooking_oil", "fish_and_chips", "fruiting_lemon_leaves", "lemon", "lemon_crate", "lemon_leaves",
 		"lemon_log", "lemon_muffin", "lemon_sapling", "lemon_wood", "lemonade", "oven", "rustic_loaf", "rustic_loaf_slice", "salt",
 		"salted_dripstone_block", "salted_pointed_dripstone", "sunflower_seeds"
 	]

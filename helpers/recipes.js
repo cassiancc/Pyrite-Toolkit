@@ -75,8 +75,12 @@ function generateStonecutterRecipe(block, ingredient, quantity, type, customLoad
 	}
 
 	const ingredientNamespace = ingredient.split(":")[0];
-	if ((ingredientNamespace !== helpers.modID) && (ingredientNamespace !== helpers.mc)) { 
+	const resultNamespace = block.split(":")[0];
+	if (((ingredientNamespace !== helpers.modID) && (ingredientNamespace !== helpers.mc))) { 
 		Object.assign(recipe, generateModLoadCondition(ingredientNamespace))
+	}
+	if (((resultNamespace !== helpers.modID) && (resultNamespace !== helpers.mc))) { 
+		Object.assign(recipe, generateModLoadCondition(resultNamespace))
 	}
 	if (customLoadedChecks != undefined) {
 		Object.assign(recipe, generateModLoadCondition(customLoadedChecks))

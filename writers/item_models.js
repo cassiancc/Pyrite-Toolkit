@@ -219,5 +219,6 @@ module.exports = {
     writeGeneratedItemModel: writeGeneratedItemModel,
     writeBlockItemModel: writeBlockItemModel,
     writeTrapdoorItemModel: writeTrapdoorItemModel,
-	writeFishItemModels: writeFishItemModels
+	writeFishItemModels: writeFishItemModels,
+	writeClientItem: writeClientItem,
 }
