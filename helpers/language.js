@@ -227,6 +227,9 @@ function upsideDownify(value) {
 	})
 	newValue = newValue.replaceAll(/(.)§/g, "§$1")
 
+	//unflip %s
+	newValue = newValue.replaceAll("s%", "%s")
+
 	const count = (newValue.match(/%s/g) || []).length
 	if (count > 1) {
 		let countRemaining = count
