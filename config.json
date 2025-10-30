@@ -27,10 +27,10 @@
         "version": "1.21.5"
     },
       {
-        "modID": "alloyed",
-        "modPath": "/home/cassian/Documents/Minecraft/Mods/Create-Alloyed",
-        "projectType": "fabric",
+        "modID": "rounded",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/rounded/src/client/resources/",
+        "projectType": "datapack",
         "disableWriting": false,
-        "version": "1.21.8"
+        "version": "1.21.10"
     }
 ]

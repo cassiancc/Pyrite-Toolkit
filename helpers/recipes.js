@@ -215,6 +215,9 @@ function generateShapedRecipe(ingredients, result, quantity, shape, customLoaded
 			if ((valueNamespace !== modID) && (valueNamespace !== mc)) {
 				loadCondition = generateModLoadCondition(valueNamespace);
 			}
+			if (customLoadedChecks != undefined && customLoadedChecks != true) {
+				loadCondition = generateModLoadCondition(customLoadedChecks)
+			}
 		}
 		
 	}

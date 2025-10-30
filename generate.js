@@ -478,13 +478,14 @@ function generatePyriteResources() {
 		blockWriter.writeChiseledBlock(`waxed_${block}_pillar`, id(mc, block), "resource_pillar", `${block}_pillar`, false)
 		recipeWriter.writeStonecutterRecipes([`waxed_${block}_bricks`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`], id(mc, "waxed_"+ baseBlock), 1, undefined, "from_"+block)
 		recipeWriter.writeStonecutterRecipes([`waxed_${smooth}_slab`], id(mc, "waxed_"+ baseBlock), 2, undefined, "from_"+block)
-		// blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID, block+"_bars")
-
+		if (minorVersion <= 9) {
+			blockWriter.writeBars("waxed_"+block, modID, baseWaxedCutBlockID, block+"_bars")
+		}
 		let waxedBlocks = [
 			`waxed_${cutBlock}_wall`, `waxed_${cutBlock}_wall_gate`, 
 			"waxed_"+smooth, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`,
 			`waxed_${block}_bricks`, `waxed_${block}_pillar`,
-			//  "waxed_"+block+"_bars", 
+			 "waxed_"+block+"_bars", 
 			 `waxed_${smooth}_column`, `waxed_${cutBlock}_column`
 		]
 		tagHelper.tagItems(waxedBlocks, "enabled", true)
@@ -494,7 +495,11 @@ function generatePyriteResources() {
 			if (block.includes("slab")) {
 				count = 8
 			}
-			recipeWriter.writeStonecutterRecipe(id(waxedBlock), id("minecraft", "waxed_"+ baseBlock), count)
+			let loadedCheck = undefined
+			if (waxedBlock.includes("column")) {
+				loadedCheck = `columns`
+			}
+			recipeWriter.writeStonecutterRecipe(id(waxedBlock), id("minecraft", "waxed_"+ baseBlock), count, undefined, undefined, loadedCheck)
 		})
 		
 		helpers.generateNeoWaxables(waxedBlocks)
@@ -559,9 +564,11 @@ function generatePyriteResources() {
 		}
 
 		// Iron Bars already exist
-		if (!block.includes("iron") && !block.includes("copper")) {
-			blockWriter.writeBars(block, modID, baseCutBlockID)
-			tagHelper.tagItem(block + "_bars", "enabled", true)
+		if (!block.includes("iron") ) {
+			if (!(majorVersion >= 21 && minorVersion >= 9) || !block.includes("copper")) {
+				blockWriter.writeBars(block, modID, baseCutBlockID)
+				tagHelper.tagItem(block + "_bars", "enabled", true) 
+			}
 		}
 		// Copper Doors and Trapdoors should be generated only if version is 1.20 or below.
 		if (block.includes("copper")) {
@@ -610,7 +617,7 @@ function generatePyriteResources() {
 	tagHelper.tagBlock("#pyrite:ladders", "minecraft:climbable")
 	tagHelper.tagBlock("#pyrite:carpet", "minecraft:combination_step_sound_blocks")
 	tagHelper.tagItem("#pyrite:gold", "minecraft:piglin_loved")
-	tagHelper.tagBothFromArray(["#c:dyed/honey", "#c:dyed/glow", "#c:dyed/nostalgia", "#c:dyed/dragon", "#c:dyed/star", "#c:dyed/poisonous", "#c:dyed/rose"], "c:dyed")
+	// tagHelper.tagBothFromArray(["#c:dyed/honey", "#c:dyed/glow", "#c:dyed/nostalgia", "#c:dyed/dragon", "#c:dyed/star", "#c:dyed/poisonous", "#c:dyed/rose"], "c:dyed")
 
 	// Add Pyrite tags to tool tags
 	tagHelper.tagBlocks(["#pyrite:wall_gates", "#pyrite:bricks"], "minecraft:needs_wood_tool")
@@ -1533,10 +1540,8 @@ else if (modID == "alloyed") {
 	})
 
 }
-else if (modID == "cookscollection") {
-	const items = [    "chocolate_muffin", "cooking_oil", "fish_and_chips", "fruiting_lemon_leaves", "lemon", "lemon_crate", "lemon_leaves",
-		"lemon_log", "lemon_muffin", "lemon_sapling", "lemon_wood", "lemonade", "oven", "rustic_loaf", "rustic_loaf_slice", "salt",
-		"salted_dripstone_block", "salted_pointed_dripstone", "sunflower_seeds"
+else if (modID == "rounded") {
+	const items = [    "treated_mangrove_planks"
 	]
 	items.forEach(function(item) {
 		writeItem(item)

@@ -229,7 +229,6 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace, generateReci
 	lootTableWriter.writeLootTables(block, namespace)
 	tagHelper.tagBoth(block, `c:dyed/${baseBlock}`, true)
 	if (generateRecipes === true || generateRecipes === undefined) {
-		console.log("Generating torch recipe for " + block + generateRecipes)
 		recipeWriter.writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
 		writeRecipeAdvancement(id(block), "minecraft:torch")
 	}
