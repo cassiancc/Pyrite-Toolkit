@@ -63,6 +63,18 @@ module.exports = {
         "render_type": "translucent"
       }`
     },
+    
+    generateShelfBlockModels: function generateShelfBlockModels(block, namespace, baseBlock, model) {
+
+        
+        return `{
+        "parent": "minecraft:block/${model}",
+        "textures": {
+          "all": "${namespace}:block/${block}",
+          "particle": "${namespace}:block/${baseBlock}"
+        }
+      }`
+    },
 
     generateSlabBlockModel: function generateSlabBlockModel(namespace, baseBlock, model) {
         if (baseBlock === "grass_block_top") {

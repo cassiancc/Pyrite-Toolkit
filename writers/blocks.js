@@ -220,7 +220,7 @@ function writeLeverBlock(block, namespace, baseBlock, altNamespace) {
 	lootTableWriter.writeLootTables(block)
 }
 
-function writeTorchBlock(block, namespace, baseBlock, altNamespace, generateRecipes) {
+function writeTorchBlock(block, namespace, baseBlock, altNamespace, generateRecipes, requireMod) {
 	console.log(generateRecipes)
 	const blockState = `{"variants":{"face=ceiling,facing=east":{"model":"${namespace}:block/${block}_upright","x":180,"y":270},"face=ceiling,facing=north":{"model":"${namespace}:block/${block}_upright","x":180,"y":180},"face=ceiling,facing=south":{"model":"${namespace}:block/${block}_upright","x":180},"face=ceiling,facing=west":{"model":"${namespace}:block/${block}_upright","x":180,"y":90},"face=floor,facing=east":{"model":"${namespace}:block/${block}_upright","y":90},"face=floor,facing=north":{"model":"${namespace}:block/${block}_upright"},"face=floor,facing=south":{"model":"${namespace}:block/${block}_upright","y":180},"face=floor,facing=west":{"model":"${namespace}:block/${block}_upright","y":270},"face=wall,facing=east":{"model":"${namespace}:block/${block}_wall"},"face=wall,facing=north":{"model":"${namespace}:block/${block}_wall","y":270},"face=wall,facing=south":{"model":"${namespace}:block/${block}_wall","y":90},"face=wall,facing=west":{"model":"${namespace}:block/${block}_wall","y":180}}}`
 	blockstateHelper.writeBlockstate(block, blockState, namespace)
@@ -232,7 +232,7 @@ function writeTorchBlock(block, namespace, baseBlock, altNamespace, generateReci
 		recipeWriter.writeRecipes(block, "torch", baseBlock, namespace, altNamespace)
 		writeRecipeAdvancement(id(block), "minecraft:torch")
 	}
-	lootTableWriter.writeLootTables(block)
+	lootTableWriter.writeLootTables(block, undefined, undefined, requireMod)
 }
 
 function writePoweredBlock(block) {
@@ -273,7 +273,7 @@ function writeCraftingTableBlock(block, namespace, baseBlock, altNamespace) {
 	langHelper.generateBlockLang(block)
 	tagHelper.tagBoth(block, "crafting_tables", true)
 	tagHelper.checkAndAddStainedTag(block, baseBlock)
-	recipeWriter.writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
+	recipeWriter.writeShapedRecipe({ "C": id(altNamespace, baseBlock) }, id(namespace, block), 1, ["CC","CC"])
 	writeRecipeAdvancement(id(block), id(altNamespace, baseBlock))
 	lootTableWriter.writeLootTables(block, namespace, undefined, altNamespace)
 }
@@ -301,7 +301,6 @@ function writeChestBlock(block, namespace, baseBlock, altNamespace) {
 		"I I",
 		"III"
 	], undefined, "lolmcv")
-	// recipeWriter.writeRecipes(block, "crafting_table", baseBlock, namespace, altNamespace)
 	// writeRecipeAdvancement(id(block), id(altNamespace, baseBlock))
 	lootTableWriter.writeLootTables(block, namespace, undefined, "lolmcv")
 }
@@ -438,6 +437,444 @@ function writeCabinetBlock(block, namespace, blockType, baseBlock) {
 			"D D",
 			"___"
 		  ], undefined, "farmersdelight")
+}
+
+function writeShelfBlock(block, namespace, blockType, baseBlock) {
+	var path = helpers.getPath(block)
+	let sideChain = "side_chain_part"
+	if (helpers.versionAbove("1.21.3")) { 
+		sideChain = "side_chain"
+	}
+	blockstateHelper.writeBlockstate(block, JSON.parse(`{
+		"multipart": [
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}"
+			},
+			"when": {
+				"facing": "north"
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}",
+				"y": 90
+			},
+			"when": {
+				"facing": "east"
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}",
+				"y": 180
+			},
+			"when": {
+				"facing": "south"
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}",
+				"y": 270
+			},
+			"when": {
+				"facing": "west"
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unpowered"
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "north"
+				},
+				{
+					"powered": "false"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unpowered",
+				"y": 90
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "east"
+				},
+				{
+					"powered": "false"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unpowered",
+				"y": 180
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "south"
+				},
+				{
+					"powered": "false"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unpowered",
+				"y": 270
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "west"
+				},
+				{
+					"powered": "false"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unconnected"
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "north"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "unconnected"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unconnected",
+				"y": 90
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "east"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "unconnected"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unconnected",
+				"y": 180
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "south"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "unconnected"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_unconnected",
+				"y": 270
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "west"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "unconnected"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_left"
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "north"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "left"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_left",
+				"y": 90
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "east"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "left"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_left",
+				"y": 180
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "south"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "left"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_left",
+				"y": 270
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "west"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "left"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_center"
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "north"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "center"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_center",
+				"y": 90
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "east"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "center"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_center",
+				"y": 180
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "south"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "center"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_center",
+				"y": 270
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "west"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "center"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_right"
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "north"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "right"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_right",
+				"y": 90
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "east"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "right"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_right",
+				"y": 180
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "south"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "right"
+				}
+				]
+			}
+			},
+			{
+			"apply": {
+				"model": "${namespace}:block/${block}_right",
+				"y": 270
+			},
+			"when": {
+				"AND": [
+				{
+					"facing": "west"
+				},
+				{
+					"powered": "true"
+				},
+				{
+					"${sideChain}": "right"
+				}
+				]
+			}
+			}
+		]
+		}`))
+	// modelWriter.writeProvided(block + "_open", {
+	// 	"parent": "minecraft:block/orientable",
+	// 	"textures": {
+	// 		"top": `${namespace}:block/${path}_top`,
+	// 		"front": `${namespace}:block/${path}_front_open`,
+	// 		"side": `${namespace}:block/${path}_side`
+	// 	}
+	// })
+	modelWriter.writeProvided(block, modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_body", undefined, "all"))
+	modelWriter.writeProvided(block + "_left", modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_left", undefined, "all"))
+	modelWriter.writeProvided(block + "_right", modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_right", undefined, "right"))
+	modelWriter.writeProvided(block + "_center", modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_center", undefined, "center"))
+	modelWriter.writeProvided(block + "_unpowered", modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_unpowered", undefined, "all"))
+	modelWriter.writeProvided(block + "_powered", modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_powered", undefined, "all"))
+	modelWriter.writeProvided(block + "_inventory", modelHelper.generateShelfBlockModels(block, modID, block, "template_shelf_inventory", undefined, "all"))
+
+	itemModelWriter.writeInventoryModel(block, namespace)
+	langHelper.generateBlockLang(block)
+	lootTableWriter.writeLootTables(block, namespace, undefined, undefined)
+	tagHelper.tagBlock(block, "minecraft:mineable/axe", true)
+	tagHelper.tagBlock(block, "minecraft:wooden_shelves", true)
+	recipeWriter.writeShapedRecipe({
+		"D": id(namespace, baseBlock),
+		  }, id(namespace, block), 1, [
+			"DDD",
+			"   ",
+			"DDD"
+		  ], undefined)
 }
 
 function writeStoveBlock(block, namespace, blockType, baseBlock) {
@@ -901,6 +1338,7 @@ module.exports = {
 	writeUprightColumnBlock: writeUprightColumnBlock,
 	writeOrientableBlock: writeOrientableBlock,
 	writeCabinetBlock: writeCabinetBlock,
+	writeShelfBlock: writeShelfBlock,
 	writeChiseledBlock: writeChiseledBlock,
 	writeFlower: writeFlower,
 	writePoweredBlock: writePoweredBlock,

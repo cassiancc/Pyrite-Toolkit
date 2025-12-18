@@ -16,7 +16,7 @@ const blocks = require('./writers/blocks');
 const id = helpers.id;
 const readFileAsJson = helpers.readFileAsJson
 
-const modID = helpers.modID;
+let modID = helpers.modID;
 const mc = helpers.mc;
 const mcVersion = helpers.mcVersion;
 const majorVersion = helpers.majorVersion
@@ -206,6 +206,9 @@ class Block {  // Create a class
 		else if ((blockType == "cabinet")) {
 			blockWriter.writeCabinetBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
 		}
+		else if ((blockType == "shelf")) {
+			blockWriter.writeShelfBlock(this.blockID, this.namespace, this.blockType, this.baseBlock)
+		}
 		else if (blockType == "nostalgia_grass_block") {
 			blockWriter.writeUprightColumnBlock(this.blockID, this.namespace, this.blockType, id(mc, this.baseBlock), this.blockID)
 		}
@@ -265,7 +268,7 @@ function generatePyriteOddities() {
 		new Block(dye + "_stained_glass_pane", "glass_pane", dye + "_stained_glass", "stained_framed_glass_pane")
 	})
 	pyriteDyes.forEach(function(dye) {
-		recipeWriter.writeStonecutteRecipes([`${dye}_terracotta_brick_column`], `pyrite:${dye}_terracotta`, 1, undefined, `from_${dye}_terracotta`, "columns")
+		recipeWriter.writeStonecutterRecipes([`${dye}_terracotta_brick_column`], `pyrite:${dye}_terracotta`, 1, undefined, `from_${dye}_terracotta`, "columns")
 	})
 	blockWriter.writeBlock("nostalgia_cobblestone", "nostalgia_cobblestone", "nostalgia_cobblestone")
 	blockWriter.writeBlock("nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone", "nostalgia_mossy_cobblestone")
@@ -279,8 +282,9 @@ function generatePyriteOddities() {
 
 
 	vanillaConstants.vanillaResourceBlocks.forEach(function (block) {
-		new Block(`nostalgia_${block}_block`, "nostalgia_resource", id(mc, baseBlock), block)
+		new Block(`nostalgia_${block}_block`, "nostalgia_resource", id(mc, block), block)
 	})
+	const copperBlocks = ["copper", "exposed_copper", "weathered_copper", "oxidized_copper"]
 	copperBlocks.forEach(function(block) {
 		blockWriter.writeBlock(`waxed_nostalgia_${block}_block`, "nostalgia_resource", id(mc, block), undefined, id(`nostalgia_${block}_block`), false, true, false, false)
 	})
@@ -294,16 +298,13 @@ function generatePyriteOddities() {
 	blockWriter.writeFlower("pink_daisy")
 	blockWriter.writeFlower("buttercup")
 
-
-	// Azalea
-	const azalea = "azalea_log"
-	generateWoodSet("azalea", azalea, true)
-	new Block(azalea, "log", azalea, "wood")
-	new Block("stripped_"+azalea, "log", "stripped_"+azalea, "wood")
-	new Block("azalea_wood", "wood", azalea, "wood", "azalea_log")
-	new Block("stripped_azalea_wood", "wood", "stripped_azalea_log", "wood")
+	// Switchable Glass
 	blockWriter.writePoweredBlock(id(modID, "switchable_glass"))
-		// Red Mushroom
+	
+}
+
+function generatePyriteMushrooms() {
+	// Red Mushroom
 	const redShroom = "red_mushroom"
 	generateWoodSet(redShroom)
 	new Block(redShroom + "_stem", "mushroom_stem", "minecraft:mushroom_stem", "wood")
@@ -311,13 +312,28 @@ function generatePyriteOddities() {
 	const brownShroom = "brown_mushroom"
 	generateWoodSet(brownShroom)
 	new Block(brownShroom + "_stem", "mushroom_stem", "minecraft:mushroom_stem", "wood")
+}
+
+function generatePyriteCraftingTables() {
 	// Vanilla Crafting Tables
 	writeCraftingTablesFromArray(vanillaWood, mc)
 	if (helpers.versionAbove("1.21.4")) {
 		writeCraftingTablesFromArray(["pale_oak"], mc)
 	}
 	writeCraftingTablesFromArray(["skyroot"], "aether")
+	helpers.vanillaDyes.forEach(function (dye) {
+		writeCraftingTablesFromArray([dye + "_stained"], "pyrite")
+	})
+}
 
+function generatePyriteAzalea() {
+	// Azalea
+	const azalea = "azalea_log"
+	generateWoodSet("azalea", azalea, true)
+	new Block(azalea, "log", azalea, "wood")
+	new Block("stripped_"+azalea, "log", "stripped_"+azalea, "wood")
+	new Block("azalea_wood", "wood", azalea, "wood", "azalea_log")
+	new Block("stripped_azalea_wood", "wood", "stripped_azalea_log", "wood")
 }
 
 function generatePyriteResources() {
@@ -341,7 +357,7 @@ function generatePyriteResources() {
 		new Block(dye + "_lamp", "lamp", dye, "lamp")
 		//Torches
 		new Block(dye + "_torch", "torch", dye, "torch")
-		blockWriter.writeTorchBlock("unlit_" + dye + "_torch", modID, dye, "pyrite", false)
+		blockWriter.writeTorchBlock("unlit_" + dye + "_torch", modID, dye, "pyrite", false, "totally_lit")
 		langHelper.generateLang("unlit_" + dye + "_torch", "block", modID)
 		//Torch Levers
 		new Block(dye + "_torch_lever", "torch_lever", dye, "torch")
@@ -485,7 +501,7 @@ function generatePyriteResources() {
 			`waxed_${cutBlock}_wall`, `waxed_${cutBlock}_wall_gate`, 
 			"waxed_"+smooth, `waxed_${smooth}_slab`, `waxed_${smooth}_stairs`, `waxed_${smooth}_wall`, `waxed_${smooth}_wall_gate`,
 			`waxed_${block}_bricks`, `waxed_${block}_pillar`,
-			 "waxed_"+block+"_bars", 
+			//  "waxed_"+block+"_bars", 
 			 `waxed_${smooth}_column`, `waxed_${cutBlock}_column`
 		]
 		tagHelper.tagItems(waxedBlocks, "enabled", true)
@@ -611,7 +627,7 @@ function generatePyriteResources() {
 	new Block("nether_brick_fence_gate", "fence_gate", id(mc, "nether_bricks"), "nether_bricks")
 
 	// Add Pyrite tags to MC/convention tags.
-	tagHelper.tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
+	// tagHelper.tagBoth("#pyrite:dyed_bricks", "c:bricks/normal", true)
 	tagHelper.tagBoth("#pyrite:crafting_tables", "c:player_workstations/crafting_tables", true)
 	tagHelper.tagBlock("#pyrite:obsidian", "minecraft:dragon_immune")
 	tagHelper.tagBlock("#pyrite:ladders", "minecraft:climbable")
@@ -694,29 +710,25 @@ function generatePyriteResources() {
 	console.log(`Pyrite Toolkit generated ${count} blocks in the ${mcVersion} format.`)
 }
 
-if (process.argv[2] == "pyrite") {
+
+function generate(mod) {
+	if (mod == "pyrite") {
 	generatePyriteResources()
 }
-else if (modID == "holiday-server-mod") {
-	// writeItem("tater_banner_pattern")
-	// recipeWriter.writeShapelessRecipe(["minecraft:paper", "minecraft:potato"], id("tater_banner_pattern"), 1)
-	// writeItem("fabric_banner_pattern")
-	// recipeWriter.writeShapelessRecipe(["minecraft:paper", "minecraft:loom"], id("fabric_banner_pattern"), 1)
-
+else if (mod == "pyrite_azalea") {
+	generatePyriteAzalea()
 }
-else if (modID == "raspberry") {
-	// blockWriter.writeStoveBlock("silt_stove", modID, "stove", "twigs:silt_bricks")
-	// blockWriter.writeStoveBlock("ash_stove", modID, "stove", "supplementaries:ash_bricks")
-	// blockWriter.writeBlock("deepslate_gravel", modID, "gravel", undefined, undefined, false, false, undefined, false)
-	// blockWriter.writeBlock("blackstone_gravel", modID, "gravel", undefined, undefined, false, false, undefined, false)
-	blockWriter.writeBlock("ash_block", modID, "ash", undefined, undefined, false, false, undefined, false)
-
-	// langHelper.writeLang()
+else if (mod == "pyrite_oddities") {
+	generatePyriteOddities()
 }
-else if (modID == "bigger_fish") {
+else if (mod == "pyrite_mushrooms") {
+	generatePyriteMushrooms()
+}
+else if (mod == "pyrite_crafting_tables") {
+	generatePyriteCraftingTables()
+}
+else if (mod == "bigger_fish") {
 	
-
-
 	const fishery = [
 		"fishery:nullfin",
 	]
@@ -1273,10 +1285,21 @@ else if (modID == "bigger_fish") {
 	recipeWriter.writeShapelessRecipe(["bigger_fish:fish_bones"], 
 		"minecraft:bone_meal", 1, "_from_fish_bones", undefined, "misc")
 	// advancements.writeRecipeAdvancement("minecraft:iron_nugget", "bigger_fish:can")
-	recipeWriter.writeSmeltingRecipe(["bigger_fish:can"], 
+	// can
+	recipeWriter.writeSmeltingRecipe("bigger_fish:can", 
 		"minecraft:iron_nugget", undefined, undefined, undefined, "misc", "_from_can")
+	// fish taco
+	recipeWriter.writeShapelessRecipe(["#c:foods/cooked_fish", "minecraft:wheat", "minecraft:carrot", "#c:foods/leafy_green"], 
+		"bigger_fish:fish_taco", 1, undefined, undefined, "food", "farmersdelight")
+	// sashimi
+		//TODO
+	// fish fingers
+	recipeWriter.writeShapelessRecipe(["#c:foods/cooked_fish", "minecraft:wheat"], 
+		"bigger_fish:fish_fingers", 1, undefined, undefined, "food", "farmersdelight")
+	// add to vanilla tags
 	tagHelper.tagItem("#bigger_fish:fish", "minecraft:fishes", true)
 	tagHelper.tagItem("#bigger_fish:fish", "c:foods/raw_fish", true)
+	tagHelper.tagItem("#bigger_fish:fish", "minecraft:cat_food", true)
 	tagHelper.tagItem("fried_fish", "c:foods/cooked_fish", true)
 	tagHelper.tagItem("worm", "minecraft:chicken_food", true)
 	tagHelper.tagItem("fish_bones", "c:bones", true)
@@ -1298,257 +1321,15 @@ else if (modID == "bigger_fish") {
 	langHelper.generateLang()
 
 	langHelper.writeLang()
-}
-
-else if (modID == "lemonade") {
-	// blockWriter.writeBlock("crimson_wart_block", "crumbling", "minecraft:nether_wart_block", undefined, "minecraft:nether_wart_block")
-	
-	// recipeWriter.writeShapedRecipe({
-	// 	"#": "minecraft:chiseled_stone_bricks",
-	// 	"I": "minecraft:iron_ingot"
-	//   }, "minecraft:lodestone", 1, [
-	// 	"###",
-	// 	"#I#",
-	// 	"###"
-	//   ], "minecraft")
-	//   recipeWriter.writeShapedRecipe({
-	// 	"#": "minecraft:leather",
-	// 	"I": "minecraft:string"
-	//   }, "minecraft:bundle", 1, [
-	// 	"#",
-	// 	"I"
-	//   ])
-	//   recipeWriter.writeShapedRecipe({
-	// 	"#": "#c:rods/wooden",
-	// 	"I": "#minecraft:logs_that_burn"
-	//   }, "minecraft:campfire", 1, [
-	// 	"##",
-	// 	"II"
-	//   ], "minecraft")
-
-	// blockWriter.writeBlock("cobbled_granite", "cobblestone", "granite", undefined, "cobbled_granite", true, true, undefined, undefined)
-	// blockWriter.writeBlock("cobbled_andesite", "cobblestone", "andesite", undefined, "cobbled_andesite", true, true, undefined, undefined)
-	// blockWriter.writeBlock("cobbled_diorite", "cobblestone", "diorite", undefined, "cobbled_diorite", true, true, undefined, undefined)
-
-	// tagHelper.tagBlocks(["cobbled_granite", "cobbled_diorite", "cobbled_andesite"], "cobblestones", true)
-
-
-
-	// createVariantSwapWoodSet("minecraft:birch")
-
-
-	// tagHelper.tagBlocks(["lemonade:cobblestones"], "minecraft:mineable/pickaxe", true)
-
-	// tagHelper.tagItems(["minecraft:leather_horse_armor", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor"], "c:horse_armor", true)
-
-	// stones = ["minecraft:granite", "minecraft:andesite", "minecraft:diorite", "minecraft:cobbled_deepslate", "minecraft:deepslate", "minecraft:tuff"]
-	//   tagHelper.tagItems(stones, "minecraft:stone_tool_materials", true)
-	//   tagHelper.tagItems(stones, "minecraft:stone_crafting_materials", true) 
-	//   tagHelper.tagItems(["minecraft:chest"], "c:chests/untrapped", true) 
-
-	//   langHelper.generateLang("horse_armor", "tag.item", "c")
-	//   tagHelper.tagItems(["cobbled_granite", "cobbled_diorite", "cobbled_andesite", "minecraft:granite", "minecraft:andesite", "minecraft:diorite", "minecraft:cobbled_deepslate", "minecraft:deepslate"], "minecraft:stone_tool_materials", true)
-	//   tagHelper.tagItems(["cobbled_granite", "cobbled_diorite", "cobbled_andesite", "minecraft:granite", "minecraft:andesite", "minecraft:diorite", "minecraft:cobbled_deepslate", "minecraft:deepslate"], "minecraft:stone_crafting_materials", true) 
-	//   blockWriter.writeBlock("cobbled_granite", "cobblestone")
-	//   blockWriter.writeBlock("cobbled_diorite", "cobblestone")
-	//   blockWriter.writeBlock("cobbled_andesite", "cobblestone")
-	//   langHelper.writeLang()
-
-// 	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/pickaxe.json"), "minecraft:mineable/pickaxe", true)
-// 	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/axe.json"), "minecraft:mineable/axe")
-// 	tagHelper.tagBlocks(readFileAsJson("./overrides/lemonade/mineable/shovel.json"), "minecraft:mineable/shovel", true)
-// 	tagHelper.tagBlocks(["warped_wart_block", "crimson_wart_block"], "minecraft:leaves", true)
-
-// 	// itemModelWriter.writeGeneratedItemModel("smithing_template")
-// 	tagHelper.tagItem("minecraft:stick", "flammable_sticks", true)
-
-
-	disabledItems = readFileAsJson("overrides/lemonade/disabled.json")
-
-	tagHelper.tagItems(disabledItems, "c:hidden_from_recipe_viewers", true)
-
-
-	start = `{
-		// -----------------------------------------------------------
-		//              Item Obliterator by ElocinDev
-		// -----------------------------------------------------------
-		//  
-		// How to add items?
-		//   - They are json strings, so you need to separate each
-		//     entry with a comma, except the last
-		//   - If you start an entry with !, it will be treated as a regular expression
-		//     Example: "!minecraft:.*_sword" to disable all swords
-		//  
-		// -----------------------------------------------------------
-		// Do not touch this
-		"configVersion": 2,
-		// -----------------------------------------------------------
-		// Items here will be unusable completely
-		//    Example: minecraft:diamond
-		"blacklisted_items": `
-
-end = `,
-  // -----------------------------------------------------------
-  // Removes an item if it contains certain nbt tag. If the whole entry (or expression) is present, the item gets removed.
-  // Use with caution! This is a very expensive operation and can cause lag if you have a lot of items blacklisted.
-  // 	
-  // 	 Example to disable a regeneration potion: Potion:"minecraft:regeneration"
-  // 	
-  // 	 You can also use regular expressions by starting the value with !
-  "blacklisted_nbt": [],
-  // -----------------------------------------------------------
-  // Items here will not be able to be right-clicked (Interact)
-  //    Example: minecraft:apple
-  "only_disable_interactions": [
-    "examplemod:example_item"
-  ],
-  // -----------------------------------------------------------
-  // Items here will not be able to be used to attack
-  //    Example: minecraft:diamond_sword
-  "only_disable_attacks": [
-    "examplemod:example_item"
-  ],
-  // -----------------------------------------------------------
-  // Items here will get their recipes disabled
-  // Keep in mind this already is applied to blacklisted items
-  "only_disable_recipes": [
-    "examplemod:example_item"
-  ],
-  // -----------------------------------------------------------
-  // If true, the mod will use a hashset to handle the blacklisted items
-  // This is a more optimized approach only if you have a lot of items blacklisted (20 or more is recommended)
-  // If you just have a small amount of items blacklisted, keep this false
-  //  
-  // [!] Enabling this will disable all regular expressions
-  // [!] Does not apply to NBT, only item blacklist / interaction / attack
-  "use_hashmap_optimizations": false
-}`
-
-	// var sorbet = "/home/deck/Documents/GitHub/Lemon-Sorbet/"
-	// var lemonade = '/home/deck/Documents/GitHub/Lemonade/'
-	// helpers.writeFile(sorbet+"config/item_obliterator.json5", start + JSON.stringify(disabledItems) + end)
-	// const { exec } = require('child_process');
-	// exec('./gradlew fabric:build', {cwd: lemonade},(error, stdout, stderr) => {
-	// 	if (error) {
-	// 		console.error(`exec error: ${error}`);
-	// 		return;
-	// 	}
-	// 	console.log(`stdout: ${stdout}`);
-	// 	var jar = "lemonade-fabric-0.1.13+1.21.1.jar"
-	// 	fs.copyFile(lemonade+"fabric/build/libs/"+jar, sorbet+"mods/"+jar, (err) => { if (err) throw err} )
-	
-	// });
-
-	recipeWriter.writeShortcutRecipes()
-	// writeItem("copper_helmet")
-	// writeItem("copper_chestplate")
-	// writeItem("copper_leggings")
-	// writeItem("copper_boots")
-
-}
-
-else if (modID == "alloyed") {
-	// const waxedBlocks = ["waxed_cut_bronze", "waxed_cut_bronze_slab", "waxed_cut_bronze_stairs", "waxed_cut_exposed_bronze", "waxed_cut_exposed_bronze_slab", "waxed_cut_exposed_bronze_stairs", "waxed_cut_weathered_bronze", "waxed_cut_weathered_bronze_slab", "waxed_cut_weathered_bronze_stairs", "waxed_cut_oxidized_bronze", "waxed_cut_oxidized_bronze_slab", "waxed_cut_oxidized_bronze_stairs"]
-	// waxedBlocks.forEach(function(block) {
-	// 	recipeWriter.writeShapelessRecipe([id(block.replace("waxed_", "")), "minecraft:honeycomb"], id(block), 1)
-	// })
-	const items = [
-		// "steel_ingot",
-		// "steel_block",
-		// "steel_helmet",
-		// "steel_chestplate",
-		// "steel_leggings",
-		// "steel_boots",
-		// "steel_sword",
-		// "steel_shovel",
-		// "steel_pickaxe",
-		// "steel_axe",
-		// "steel_hoe",
-		// "bronze_ingot",
-		// "bronze_block",
-		// "steel_horse_armor",
-		// "steel_nugget",
-		// "bronze_nugget",
-		// "steel_sheet",
-		// "bronze_sheet",
-		// "steel_ladder",
-		// "steel_knife",
-		// "steel_trapdoor",
-		// "steel_bars",
-		// "steel_sheet_slab",
-		// "steel_sheet_stairs",
-		// "steel_sheet_metal",
-		// "locked_steel_door",
-		// "steel_door",
-		// "steel_scaffolding",
-		// "bronze_casing"
-		// "waxed_bronze_block",
-		// "exposed_bronze_block",
-		// "weathered_bronze_block",
-		// "oxidized_bronze_block",
-		// "cut_bronze",
-		// "cut_exposed_bronze",
-		// "cut_weathered_bronze",
-		// "cut_oxidized_bronze",
-		// "waxed_cut_bronze",
-		// "waxed_cut_exposed_bronze",
-		// "waxed_cut_weathered_bronze",
-		// "waxed_cut_oxidized_bronze",
-		// "cut_exposed_bronze_slab",
-		// "cut_exposed_bronze_stairs",
-		// "cut_weathered_bronze_slab",
-		// "cut_weathered_bronze_stairs",
-		// "cut_oxidized_bronze_slab",
-		// "cut_oxidized_bronze_stairs",
-		// "waxed_cut_bronze_slab",
-		// "waxed_cut_bronze_stairs",
-		// "waxed_cut_exposed_bronze_slab",
-		// "waxed_cut_exposed_bronze_stairs",
-		// "waxed_cut_weathered_bronze_slab",
-		// "waxed_cut_weathered_bronze_stairs",
-		// "waxed_cut_oxidized_bronze_slab",
-		// "waxed_cut_oxidized_bronze_stairs",
-		// "bronze_encased_shaft",
-		// "steel_encased_shaft",
-		// "steel_encased_cogwheel",
-		// "bronze_encased_cogwheel",
-		// "steel_encased_large_cogwheel",
-		// "bronze_encased_large_cogwheel",
-		// "steel_mesh_fence",
-		// "steel_upgrade_smithing_template",
-		// "incomplete_steel_upgrade_smithing_template",
-		// "steel_shears",
-		// "steel_fishing_rod",
-		// "waxed_exposed_bronze_block",
-		// "waxed_oxidized_bronze_block",
-		// "cut_bronze_stairs",
-		// "cut_bronze_slab",
-		// "bronze_pillar",
-		// "waxed_bronze_pillar",
-		// "exposed_bronze_pillar",
-		// "waxed_exposed_bronze_pillar",
-		// "weathered_bronze_pillar",
-		// "waxed_weathered_bronze_pillar",
-		// "oxidized_bronze_pillar",
-		// "waxed_oxidized_bronze_pillar",
-		// "bronze_bell",
-		// "steel_casing",
-		"waxed_weathered_bronze_block",
-	]
-	items.forEach(function(item) {
-		writeItem(item)
-	})
-
-}
-else if (modID == "rounded") {
-	const items = [    "treated_mangrove_planks"
-	]
-	items.forEach(function(item) {
-		writeItem(item)
-	})
 } else {
 	console.log("Mod has no associated generator")
 }
+}
+
+
+generate(process.argv[2])
+
+
 function writeDye(item) {
 	item = item + "_dye"
 	const itemID = id(item)
@@ -1582,7 +1363,7 @@ function generateWoodSet(template, baseBlock, hasStrippedLog) {
 	new Block(template + "_fence", "fence", stainedPlankBase, "wood")
 	new Block(template + "_fence_gate", "fence_gate", stainedPlankBase, "wood")
 	new Block(template + "_planks", "planks", baseBlock, "wood")
-	new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
+	// new Block(template + "_crafting_table", "crafting_table", stainedPlankBase, "wood")
 	new Block(template + "_ladder", "ladder", stainedPlankBase, "wood")
 	new Block(template + "_door", "door", stainedPlankBase, "wood")
 	new Block(template + "_sign", "sign", stainedPlankBase, "wood")
@@ -1590,6 +1371,7 @@ function generateWoodSet(template, baseBlock, hasStrippedLog) {
 	new Block(template + "_trapdoor", "trapdoor", stainedPlankBase, "wood")
 	new Block(template + "_chest", "chest", stainedPlankBase, "wood")
 	new Block(template + "_cabinet", "cabinet", stainedPlankBase, "wood")
+	new Block(template + "_shelf", "shelf", stainedPlankBase, "wood")
 
 	recipeWriter.writeCuttingRecipe(id(template + "_door"), id(stainedPlankBase), 1, "axe_dig")
 	recipeWriter.writeCuttingRecipe(id(template + "_trapdoor"), id(stainedPlankBase), 1, "axe_dig")

@@ -114,22 +114,36 @@ function generateSmeltingRecipe(result, ingredient, type, cookingtime, experienc
         }
     }`)
 	if (useRecipesFrom21dot1AndBelow()) {
-		recipe.ingredient = {item: ingredient}
+		if (ingredient.includes("#")) {
+			recipe.ingredient = { tag: ingredient.replace("#", "") }
+		} else {
+			recipe.ingredient = { item: ingredient }
+		}
 	} else {
 		recipe.ingredient = ingredient
 	}
+	console.log(recipe)
 	return recipe
 }
 
 function generateCuttingRecipe(ingredients, result, quantity, action) {
 	let recipe = {
 		"type": "farmersdelight:cutting",
-		 "tool": {
-			"type": "farmersdelight:item_ability",
-			"fabric:type": "farmersdelight:item_ability",
-			"action": action
+		"tool": {
 		},
 		"ingredients": []
+	}
+	if (action.includes(":")) { 
+
+		Object.assign(recipe.tool, { 
+			"tag": action 
+		})
+	} else {
+		Object.assign(recipe.tool, { 
+			"type": "farmersdelight:item_ability",
+			"fabric:type": "farmersdelight:item_ability",
+			"item": action 
+		})
 	}
 	if (ingredients instanceof Array) {
 		ingredients.forEach(function (i) {
@@ -154,7 +168,7 @@ function generateCuttingRecipe(ingredients, result, quantity, action) {
 
 }
 
-function generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory) {
+function generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory, customLoadedChecks) {
 	if (recipeCategory == undefined) {
 		recipeCategory = "building"
 	}
@@ -170,6 +184,8 @@ function generateShapelessRecipe(ingredients, result, quantity, components, reci
 	} else {
 		addIngredients(recipe.ingredients, ingredients)
 	}
+
+	Object.assign(recipe, generateModLoadCondition(customLoadedChecks))
 	
 
 	recipe.result = JSON.parse(`{"${itemOrId()}": "${result}","count": ${quantity}}`)
@@ -386,13 +402,15 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 	} else if (type === "sign") {
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "stick") }, id(namespace, block), 3, ["CCC", "CCC", " S "])
 	} else if (type === "hanging_sign") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, "chain") }, id(namespace, block), 6, ["S S", "CCC", "CCC"])
+		var chain = "chain"
+		if (majorVersion >= 21 && minorVersion >= 9) {
+			chain = "iron_chain"
+		}
+		recipe = generateShapedRecipe({ "C": id(altNamespace, base), "S": id(mc, chain) }, id(namespace, block), 6, ["S S", "CCC", "CCC"])
 	} else if (type === "door") {
 		base.replace("gold_block", "gold_ingot")
 		base.replace("netherite_block", "netherite_ingot")
 		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 3, ["CC","CC","CC"])
-	} else if (type === "crafting_table") {
-		recipe = generateShapedRecipe({ "C": id(altNamespace, base) }, id(namespace, block), 1, ["CC","CC"])
 	} else if (type === "trapdoor") {
 		base.replace("gold_block", "gold_ingot")
 		base.replace("netherite_block", "netherite_ingot")
@@ -447,7 +465,7 @@ function generateRecipes(block, type, base, namespace, altNamespace) {
 		}
 		base = base.replace("nostalgia_", "")
 		base = base.replace("locked_chest", "chest")
-		recipe = generateShapelessRecipe([id(modID, "nostalgia_dye"), id(mc, base)], id(modID, block), 1)
+		recipe = generateShapelessRecipe(["#"+ id(modID, "antique_items"), id(mc, base)], id(modID, block), 1)
 	} else if (type == "flower") {
 		let vanillaFlower;
 		if (block === "rose") {

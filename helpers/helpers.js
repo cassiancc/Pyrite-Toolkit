@@ -28,7 +28,7 @@ function readConfigFile() {
 const rootFolder = config.modPath
 const resourcesPath = getProjectPath()
 
-const modID = config.modID
+const modID = config.namespace || config.modID
 const mc = "minecraft";
 const mcVersion = getVersion();
 const majorVersion = parseInt(mcVersion.split(".")[1]);
@@ -47,7 +47,7 @@ function commonPath(projectType) {
 
 function getProjectPath() {
     const projectType = config.projectType
-    if (projectType != "datapack") {
+    if (projectType != "datapack" && projectType != "resourcepack") {
         return rootFolder + `${commonPath(projectType)}/src/main/resources/`
 
     }
@@ -163,8 +163,8 @@ function writeFile(path, data, minify) {
         }
     }
     if (config.disableWriting !== true) {
-        if (!path.includes("undefined") && data !== "" && data !== undefined) {
-            fs.writeFileSync(path, data, function (err) { if (err) throw err; })
+        if (!path.includes("undefined") && !path.includes("aether") && (!path.includes("assets") || config.projectType !== "datapack") && (!path.includes("data") || config.projectType !== "resourcepack") && data !== "" && data !== undefined) {
+            fs.writeFileSync(path, data, function (err) { if (err) console.log(err); })
         }
         else {
             // console.log("Preventing write of " + path)
@@ -317,6 +317,9 @@ function generateNeoOxidizables(waxedBlocks, stage) {
 }
 
 function generateModLoadCondition(mod) {
+    if (mod== undefined) {
+        return {};
+    }
         mod = mod.replace("#", "")
         if ((mod != "minecraft") && (mod != "c") && (mod != "forge") && (mod != modID)) {
             let loadCondition;

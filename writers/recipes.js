@@ -32,11 +32,11 @@ function writeShapedRecipe(ingredients, result, quantity, shape, overrideNamespa
 	}
 }
 
-function writeShapelessRecipe(ingredients, result, quantity, addon, components, recipeCategory) {
+function writeShapelessRecipe(ingredients, result, quantity, addon, components, recipeCategory, customLoadedChecks) {
 	if (addon === undefined) {
 		addon = ""
 	}
-	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory)
+	let recipe = recipeHelper.generateShapelessRecipe(ingredients, result, quantity, components, recipeCategory, customLoadedChecks)
 	if ((recipe !== "")) {
 		if (result.includes(":")) {
 			result = result.split(":")[1]
@@ -90,7 +90,7 @@ function writeSmokingRecipe(ingredient, result, recipeCategory, cookingTime, exp
 }
 
 function writeCuttingRecipe(ingredients, result, quantity, action) {
-	helpers.writeFile(`${helpers.recipePath}cutting/${helpers.getPath(result)}_from_${helpers.getPath(ingredients)}.json`, recipeHelper.generateCuttingRecipe(ingredients, result, quantity, action))
+	helpers.writeFile(`${helpers.recipePath}cutting/${helpers.getPath(result)}_from_${helpers.getPath(ingredients.replace("#", "").replace("/", "_"))}.json`, recipeHelper.generateCuttingRecipe(ingredients, result, quantity, action))
 
 }
 

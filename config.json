@@ -1,8 +1,42 @@
 [
     {
+        "namespace": "pyrite",
         "modID": "pyrite",
-        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite 1.21.1/",
-        "projectType": "architectury",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite/",
+        "projectType": "fabric",
+        "version": "1.21.10",
+        "disableWriting": false
+    },
+    {
+        "namespace": "pyrite",
+        "modID": "pyrite_azalea",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite/src/main/resources/resourcepacks/pyrite_azalea/",
+        "projectType": "datapack",
+        "version": "1.21.1",
+        "disableWriting": false
+    },
+    {
+        "namespace": "pyrite",
+        "modID": "pyrite_oddities",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite/src/main/resources/resourcepacks/pyrite_oddities/",
+        "projectType": "datapack",
+        "version": "1.21.1",
+        "disableWriting": false
+    },
+        {
+        "namespace": "pyrite",
+        "modID": "pyrite_crafting_tables",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite/src/main/resources/resourcepacks/pyrite_crafting_tables/",
+        "projectType": "datapack",
+        "version": "1.21.1",
+        "disableWriting": false
+    },
+    {
+        "namespace": "pyrite",
+        "modID": "pyrite_mushrooms",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Pyrite/Pyrite/src/main/resources/resourcepacks/pyrite_mushrooms/",
+        "projectType": "resourcepack",
+        "version": "1.21.1",
         "disableWriting": false
     },
     {
@@ -14,9 +48,17 @@
     },
     {
         "modID": "bigger_fish",
-        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/",
-        "projectType": "architectury",
-        "version": "1.21.5",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/versions/1.21.10-fabric/src/main/resources/",
+        "projectType": "datapack",
+        "version": "1.21.10",
+        "disableWriting": false
+    },
+    {
+        "namespace": "bigger_fish",
+        "modID": "bigger_fish_old",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/versions/1.21.1-fabric/src/main/resources/",
+        "projectType": "datapack",
+        "version": "1.21.1",
         "disableWriting": false
     },
     {
