@@ -69,7 +69,7 @@ function generateStonecutterRecipe(block, ingredient, quantity, type, customLoad
 	} else {
 		recipe.ingredient = ingredient
 	}
-	if (helpers.mcVersion == "1.20.1") {
+	if (helpers.mcVersion() == "1.20.1") {
 		recipe.result = block
 		recipe.count = quantity
 	}
@@ -122,7 +122,6 @@ function generateSmeltingRecipe(result, ingredient, type, cookingtime, experienc
 	} else {
 		recipe.ingredient = ingredient
 	}
-	console.log(recipe)
 	return recipe
 }
 

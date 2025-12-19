@@ -48,17 +48,13 @@
     },
     {
         "modID": "bigger_fish",
-        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/versions/1.21.10-fabric/src/main/resources/",
-        "projectType": "datapack",
-        "version": "1.21.10",
-        "disableWriting": false
-    },
-    {
-        "namespace": "bigger_fish",
-        "modID": "bigger_fish_old",
-        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/versions/1.21.1-fabric/src/main/resources/",
-        "projectType": "datapack",
-        "version": "1.21.1",
+        "modPath": "/home/cassian/Documents/Minecraft/Mods/Always-a-Bigger-Fish/",
+        "versions": [
+            "1.21.10",
+            "1.21.1",
+            "1.21.11"
+        ],
+        "projectType": "stonecutter",
         "disableWriting": false
     },
     {

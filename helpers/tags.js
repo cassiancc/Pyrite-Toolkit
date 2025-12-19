@@ -26,7 +26,7 @@ function tagContent(arg, tag, folder, optional) {
 		namespace = modID;
 	}
 	// Create path to tag file.
-	let dir = `${helpers.paths.base}/data/${namespace}/tags/${folder}/`
+	let dir = `${helpers.basePath()}/data/${namespace}/tags/${folder}/`
 	if (tag.includes("/")) {
 		dir += tag.split("/")[0];
 		tag = tag.split("/")[1];

@@ -25,20 +25,28 @@ function readConfigFile() {
     return returnedConfig
 }
 
-const rootFolder = config.modPath
-const resourcesPath = getProjectPath()
+let index = 0;
+const mcVersions = getVersions();
+let majorVersion = parseInt(mcVersion().split(".")[1]);
+let minorVersion = parseInt(mcVersion().split(".")[2]);
+console.log("Preparing to generate for: " + mcVersions.join(", "))
+
+let rootFolder = config.modPath
 
 const modID = config.namespace || config.modID
 const mc = "minecraft";
-const mcVersion = getVersion();
-const majorVersion = parseInt(mcVersion.split(".")[1]);
-const minorVersion = parseInt(mcVersion.split(".")[2]);
+
 
 const vanillaDyes = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
+
+function mcVersion() { return mcVersions[index]; }
 
 function commonPath(projectType) {
     if (projectType == "architectury") {
         return "common"
+    }
+    else if (projectType == "stonecutter") {
+        return "versions/" + mcVersion() + "-fabric"
     }
     else {
         return ""
@@ -48,11 +56,10 @@ function commonPath(projectType) {
 function getProjectPath() {
     const projectType = config.projectType
     if (projectType != "datapack" && projectType != "resourcepack") {
-        return rootFolder + `${commonPath(projectType)}/src/main/resources/`
+        return config.modPath + `${commonPath(projectType)}/src/main/resources/`
 
-    }
-    else {
-        return rootFolder
+    } else {
+        return config.modPath
     }
 }
 
@@ -83,6 +90,13 @@ function getVersion() {
 
 }
 
+function getVersions() {
+    if (config.versions != null) {
+        return config.versions
+    }
+    else return [getVersion()]
+}
+
 const s = getTrialPlural()
 
 function getTrialPlural() {
@@ -97,34 +111,34 @@ function getItemModelsPath(id) {
     if (id == undefined) {
         id = modID
     }
-    return `${resourcesPath}assets/${id}/models/item/`
+    return `${getProjectPath()}assets/${id}/models/item/`
 }
 
 function getClientItemPath(id) {
     if (id == undefined) {
         id = modID
     }
-    return `${resourcesPath}assets/${id}/items/`
+    return `${getProjectPath()}assets/${id}/items/`
 }
 
-const paths = {
-    base: `${resourcesPath}`,
-    assets: `${resourcesPath}assets/${modID}/`,
-    data: `${resourcesPath}data/${modID}/`,
-    recipes: `${resourcesPath}data/${modID}/recipe${s}/`,
-    models: `${resourcesPath}assets/${modID}/models/block/`,
-    itemModels: `${resourcesPath}assets/${modID}/models/item/`,
-    blockstates: `${resourcesPath}assets/${modID}/blockstates/`,
-    items: `${resourcesPath}assets/${modID}/items/`,
-    loot: `${resourcesPath}data/${modID}/loot_table${s}/blocks/`,
-    advancementRecipes: `${resourcesPath}data/${modID}/advancement${s}/recipes/`,
+let paths = {
+    base: `${getProjectPath()}`,
+    assets: `${getProjectPath()}assets/${modID}/`,
+    data: `${getProjectPath()}data/${modID}/`,
+    recipes: `${getProjectPath()}data/${modID}/recipe${s}/`,
+    models: `${getProjectPath()}assets/${modID}/models/block/`,
+    itemModels: `${getProjectPath()}assets/${modID}/models/item/`,
+    blockstates: `${getProjectPath()}assets/${modID}/blockstates/`,
+    items: `${getProjectPath()}assets/${modID}/items/`,
+    loot: `${getProjectPath()}data/${modID}/loot_table${s}/blocks/`,
+    advancementRecipes: `${getProjectPath()}data/${modID}/advancement${s}/recipes/`,
     datamaps: `${rootFolder}/${neoPath()}/src/main/resources/data/neoforge/data_maps/block/`,
 
 
 }
 
 function getRecipePath(namespace) {
-    return `${resourcesPath}data/${namespace}/recipe${s}/`
+    return `${getProjectPath()}data/${namespace}/recipe${s}/`
 }
 
 const columnsEnabled = true;
@@ -163,11 +177,15 @@ function writeFile(path, data, minify) {
         }
     }
     if (config.disableWriting !== true) {
-        if (!path.includes("undefined") && !path.includes("aether") && (!path.includes("assets") || config.projectType !== "datapack") && (!path.includes("data") || config.projectType !== "resourcepack") && data !== "" && data !== undefined) {
+        if (path.includes("assets") && (config.projectType == "datapack" || config.projectType == "stonecutter")) return;
+        else if (path.includes("data") && config.projectType == "resourcepack") return;
+        else if (!path.includes("undefined") && !path.includes("aether") && data !== "" && data !== undefined) {
+            path = path.replace(mcVersions[0], mcVersion()) // fixme - terrible workaround for multi-version paths
+            console.log("Writing file to " + path)
             fs.writeFileSync(path, data, function (err) { if (err) console.log(err); })
         }
         else {
-            // console.log("Preventing write of " + path)
+            console.log("Preventing write of " + path)
         }
     }
 }
@@ -385,7 +403,7 @@ module.exports = {
         return namespace + ":" + path
     },
 
-    basePath: resourcesPath,
+    basePath: getProjectPath(),
     recipePath: paths.recipes,
     modelPath: paths.models,
     paths: paths,
@@ -393,6 +411,7 @@ module.exports = {
     config: config,
 
 
+    basePath: getProjectPath,
     readFile: readFile,
     writeFile, writeFile,
     writeFileSafe, writeFileSafe,
@@ -426,6 +445,36 @@ module.exports = {
     generateNeoWaxables: generateNeoWaxables,
     generateNeoOxidizables: generateNeoOxidizables,
     columnsEnabled: columnsEnabled,
+    completeVersion: function completeVersion() {
+        console.log("Finished generating version " + mcVersion())
+        index += 1;
+        if (index >= mcVersions.length) {
+            console.log(index, mcVersions.length)
+            return false;
+        }
+        if (mcVersion() != undefined) {
+            majorVersion = parseInt(mcVersion().split(".")[1]);
+            minorVersion = parseInt(mcVersion().split(".")[2]);
+            console.log("Generating for next version: " + mcVersion())
+            paths = {
+                base: `${getProjectPath()}`,
+                assets: `${getProjectPath()}assets/${modID}/`,
+                data: `${getProjectPath()}data/${modID}/`,
+                recipes: `${getProjectPath()}data/${modID}/recipe${s}/`,
+                models: `${getProjectPath()}assets/${modID}/models/block/`,
+                itemModels: `${getProjectPath()}assets/${modID}/models/item/`,
+                blockstates: `${getProjectPath()}assets/${modID}/blockstates/`,
+                items: `${getProjectPath()}assets/${modID}/items/`,
+                loot: `${getProjectPath()}data/${modID}/loot_table${s}/blocks/`,
+                advancementRecipes: `${getProjectPath()}data/${modID}/advancement${s}/recipes/`,
+                datamaps: `${rootFolder}/${neoPath()}/src/main/resources/data/neoforge/data_maps/block/`,
+            }
+            console.log(paths.recipes)
+            return true;
+        }
+    },
+    getVersion: getVersion,
+    getVersions: getVersions,
     getTrialPlural: getTrialPlural,
     getRecipePath: getRecipePath,
     generateModLoadCondition: generateModLoadCondition
