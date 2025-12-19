@@ -1,7 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-const dir = `/home/cassian/Documents/Minecraft/Mods/Verdant/common/src/main/resources/data/verdant/recipe`
+const dir = `C:/Users/cassi/Documents/Minecraft/Mods/Spelunkery/common/src/main/resources/data/spelunkery/recipe`
 
 
 fs.readdir(dir, (err, files) => {
@@ -13,7 +13,7 @@ fs.readdir(dir, (err, files) => {
             fs.readFile(filePath, 'utf8', (err, contents) => {
                 try {
                     const jContents = JSON.parse(contents)
-                    if (jContents.type == 'minecraft:stonecutting') {
+                    if (jContents.type == 'minecraft:stonecutting' || jContents.type == 'minecraft:smelting' || jContents.type == 'minecraft:blasting' || jContents.type == 'minecraft:smoking' || jContents.type == 'minecraft:campfire_cooking') {
                         //Find if the recipe is 1.20.5+ compatible.
                         if (jContents.result.id == undefined) {
                             //Convert recipe to 1.20.5+
